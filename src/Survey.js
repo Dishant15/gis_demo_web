@@ -8,6 +8,9 @@ import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import SendIcon from "@material-ui/icons/Send";
 
+import Api from "./api.utils";
+import Urls, { apiAddArea } from "./url.constants";
+
 import "./Survey.css";
 
 const render = (status) => {
@@ -34,6 +37,9 @@ const Survey = () => {
     mapRef.current.data.setControls(null);
     mapRef.current.data.toGeoJson((data) => {
       console.log("🚀 ~ file: survey.js ~ line 38 ~ handleSubmit ~ data", data);
+      Api.post(apiAddArea(), data)
+        .then((res) => console.log("res", res))
+        .catch((err) => console.log("err", err));
     });
   };
 
