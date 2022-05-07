@@ -1,20 +1,32 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavigationBar from "../components/NavigationBar/NavigationBar";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+import NavigationBar from "../components/NavigationBar";
 import HomePage from "../pages/HomePage";
+import GeoSurveyPage from "../pages/GeoSurveyPage/GeoSurveyPage";
+
+import { getGeoSurveyPath, getHomePath } from "../utils/url.constants";
+import "./global.scss";
+
+// test imports
 import SurveyPage from "../pages/Survey";
 
-import "./global.scss";
+const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <NavigationBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="survey" element={<SurveyPage />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <NavigationBar />
+        <Routes>
+          <Route path={getHomePath()} element={<HomePage />} />
+          <Route path={getGeoSurveyPath()} element={<GeoSurveyPage />} />
+          {/* testing routes */}
+          <Route path={"/survey"} element={<SurveyPage />} />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
