@@ -65,12 +65,16 @@ const AreaPocketMap = ({ surveyList }) => {
     });
   };
 
+  return <div ref={ref} id="map" />;
+};
+
+const WrapperComponent = ({ surveyList }) => {
   return (
     <div className="survey-page page-wrapper">
       <Wrapper apiKey={GOOGLE_MAP_KEY} libraries={["drawing"]} render={render}>
-        <div ref={ref} id="map" />
+        <AreaPocketMap surveyList={surveyList} />
       </Wrapper>
     </div>
   );
 };
-export default AreaPocketMap;
+export default WrapperComponent;
