@@ -73,7 +73,7 @@ const Survey = () => {
   }
 
   return (
-    <div className="survey-page">
+    <div className="survey-page page-wrapper">
       <Wrapper apiKey={GOOGLE_MAP_KEY} libraries={["drawing"]} render={render}>
         <MapComponent center={center} zoom={zoom} ref={ref} mapRef={mapRef} />
         {fabContent}
