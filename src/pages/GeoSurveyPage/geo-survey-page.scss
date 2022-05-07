@@ -31,6 +31,10 @@
           padding: 0.5em;
           border-bottom: 1px solid silver;
 
+          &.active {
+            color: orange;
+          }
+
           &:hover {
             font-weight: bolder;
           }
