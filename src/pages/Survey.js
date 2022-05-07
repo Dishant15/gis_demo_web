@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { GOOGLE_MAP_KEY } from "./constant";
+import { GOOGLE_MAP_KEY } from "../utils/constant";
 import MapComponent from "./MapComponent";
 
 import Fab from "@material-ui/core/Fab";
@@ -9,7 +9,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import SendIcon from "@material-ui/icons/Send";
 
 import Api from "./api.utils";
-import Urls, { apiAddArea } from "./url.constants";
+import { apiAddArea } from "../utils/url.constants";
 
 import "./Survey.css";
 
