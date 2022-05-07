@@ -1,12 +1,18 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "../pages/HomePage";
+import SurveyPage from "../pages/Survey";
 
 import "./global.scss";
 
 const App = () => {
   return (
-    <div>
-      <h1>This is App</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="survey" element={<SurveyPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
