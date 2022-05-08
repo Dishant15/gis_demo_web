@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 
 import AreaPocketMap from "./AreaPocketMap";
+import NewLibMap from "./NewLibMap";
 import Loader from "../../components/common/Loader";
 
 import { fetchAreaPockets } from "./services";
@@ -54,7 +55,9 @@ const GeoSurveyPage = () => {
         <div className="gsp-content">
           <div className="gsp-map-title">Survey map</div>
           <div className="gsp-map-container">
-            <AreaPocketMap />
+            <NewLibMap
+              surveyList={data.filter((d) => selectedSurvey.has(d.id))}
+            />
           </div>
         </div>
       </div>
