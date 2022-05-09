@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Polyline,
-  Polygon,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Polygon } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY } from "../../utils/constant";
 
@@ -12,84 +7,77 @@ const containerStyle = {
   width: "100%",
   height: "100%",
 };
-const center = {
-  lat: 0,
-  lng: -180,
-};
-
-const onLoad = (polyline) => {
-  console.log("polyline: ", polyline.paths);
-};
-
-const path = [
-  { lat: 37.772, lng: -122.214 },
-  { lat: 21.291, lng: -157.821 },
-  { lat: -18.142, lng: 178.431 },
-  { lat: -27.467, lng: 153.027 },
-];
-
-const polyGonPath = [
-  {
-    lat: 25.339061458818374,
-    lng: 141.49154663085938,
-  },
-  {
-    lat: 25.81472706309741,
-    lng: 174.01107788085938,
-  },
-  {
-    lat: 3.1789097955033068,
-    lng: 152.21420288085938,
-  },
-];
+const center = { lat: 23.033863, lng: 72.585022 };
 
 const options = {
-  strokeColor: "#FF0000",
-  strokeOpacity: 0.8,
+  fillColor: "lightblue",
+  fillOpacity: 1,
+  strokeColor: "red",
+  strokeOpacity: 1,
   strokeWeight: 2,
-  fillColor: "#FF0000",
-  fillOpacity: 0.35,
-  clickable: true,
+  clickable: false,
   draggable: false,
   editable: false,
-  visible: true,
-  radius: 30000,
-  paths: [
-    { lat: 37.772, lng: -122.214 },
-    { lat: 21.291, lng: -157.821 },
-    { lat: -18.142, lng: 178.431 },
-    { lat: -27.467, lng: 153.027 },
-  ],
+  geodesic: false,
   zIndex: 1,
 };
 
-function AreaPocketMap() {
-  const [isMounted, setIsMounted] = useState(false);
+const testpath = [
+  {
+    lat: 72.51221179962158,
+    lng: 23.03870536238185,
+  },
+  {
+    lat: 72.51540899276732,
+    lng: 23.04486604308907,
+  },
+  {
+    lat: 72.5159078836441,
+    lng: 23.04610011993259,
+  },
+  {
+    lat: 72.51736164093018,
+    lng: 23.044964769652672,
+  },
+  {
+    lat: 72.51782834529875,
+    lng: 23.04448100879958,
+  },
+  {
+    lat: 72.52025842666626,
+    lng: 23.043562845667385,
+  },
+  {
+    lat: 72.51706123352051,
+    lng: 23.038132720697696,
+  },
+  {
+    lat: 72.51638531684877,
+    lng: 23.036888697617638,
+  },
+  {
+    lat: 72.51530170440674,
+    lng: 23.03732311968093,
+  },
+  {
+    lat: 72.51221179962158,
+    lng: 23.03870536238185,
+  },
+];
+
+function AreaPocketMap({ surveyList }) {
+  console.log(
+    "🚀 ~ file: NewLibMap.js ~ line 67 ~ AreaPocketMap ~ surveyList",
+    surveyList
+  );
   const [isEditable, setEditable] = useState(false);
-  useEffect(() => setIsMounted(true), []);
 
   return (
-    <>
-      {/* <button onClick={() => setEditable((curr) => !curr)}>Set editable</button> */}
-      <LoadScript googleMapsApiKey={GOOGLE_MAP_KEY}>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={3}>
-          <Polyline
-            onLoad={onLoad}
-            path={path}
-            options={options}
-            editable={isEditable}
-            onClick={(e) => {
-              setEditable((curr) => !curr);
-              console.log(
-                "🚀 ~ file: NewLibMap.js ~ line 65 ~ AreaPocketMap ~ e",
-                e
-              );
-            }}
-          />
-          <Polygon path={polyGonPath} />
-        </GoogleMap>
-      </LoadScript>
-    </>
+    <LoadScript googleMapsApiKey={GOOGLE_MAP_KEY}>
+      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
+        <Polygon options={options} paths={testpath} />
+      </GoogleMap>
+    </LoadScript>
   );
 }
 

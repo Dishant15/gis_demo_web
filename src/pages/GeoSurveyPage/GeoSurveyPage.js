@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 import AreaPocketMap from "./AreaPocketMap";
@@ -10,7 +10,24 @@ import { fetchAreaPockets } from "./services";
 import "./geo-survey-page.scss";
 
 const GeoSurveyPage = () => {
-  const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets);
+  const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
+    select: (queryData) => {
+      return queryData.map((d) => {
+        // [ [lat, lng], ...]
+        const { coordinates } = d;
+        const path = [];
+        for (let cInd = 0; cInd < coordinates.length; cInd++) {
+          const coord = coordinates[cInd];
+          path.push({
+            lat: coord[0],
+            lng: coord[1],
+          });
+        }
+        d.path = path;
+        return d;
+      });
+    },
+  });
   const [selectedSurvey, setSelectedSurvey] = useState(new Set([]));
 
   const handleSurveyClick = useCallback((surveyId) => {
@@ -21,6 +38,14 @@ const GeoSurveyPage = () => {
       return newSet;
     });
   }, []);
+
+  const selectedSurveyData = useMemo(() => {
+    if (data) {
+      return data.filter((d) => selectedSurvey.has(d.id));
+    } else {
+      return [];
+    }
+  }, [selectedSurvey, data]);
 
   if (isLoading) {
     return <Loader />;
@@ -55,9 +80,7 @@ const GeoSurveyPage = () => {
         <div className="gsp-content">
           <div className="gsp-map-title">Survey map</div>
           <div className="gsp-map-container">
-            <NewLibMap
-              surveyList={data.filter((d) => selectedSurvey.has(d.id))}
-            />
+            <NewLibMap surveyList={selectedSurveyData} />
           </div>
         </div>
       </div>
