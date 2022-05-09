@@ -1,82 +1,43 @@
-import React, { useEffect, useRef } from "react";
-
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import React from "react";
+import { GoogleMap, LoadScript, Polygon } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY } from "../../utils/constant";
-import { size } from "lodash";
 
-const render = (status) => {
-  if (status === Status.LOADING) return <h3>{status} ...</h3>;
-  if (status === Status.FAILURE) return <h3>{status} ...</h3>;
-  return null;
+const containerStyle = {
+  width: "100%",
+  height: "100%",
+};
+const center = { lat: 23.033863, lng: 72.585022 };
+
+const options = {
+  fillColor: "lightblue",
+  fillOpacity: 0.5,
+  strokeColor: "orange",
+  strokeOpacity: 1,
+  strokeWeight: 2,
+  clickable: false,
+  draggable: false,
+  editable: false,
+  geodesic: false,
+  zIndex: 1,
 };
 
-const AreaPocketMap = ({ surveyList }) => {
-  const center = { lat: 23.033863, lng: 72.585022 };
-  const zoom = 13;
-  const ref = useRef();
-  const mapRef = useRef();
-  const featureRef = useRef();
-
-  useEffect(() => {
-    const map = new window.google.maps.Map(ref.current, {
-      center,
-      zoom,
-    });
-
-    map.data.addListener("click", (event) => {
-      console.log(
-        "🚀 ~ file: AreaPocketMap.js ~ line 29 ~ map.data.addListener ~ event.feature.getId();",
-        event.feature.getId()
-      );
-    });
-
-    map.data.addListener("addfeature", (event) => {
-      mapRef.current.data.setDrawingMode(null);
-    });
-
-    mapRef.current = map;
-  }, []);
-
-  useEffect(() => {
-    if (!!mapRef.current) {
-      if (!!featureRef.current) {
-        // empty map data
-        for (let i = 0; i < featureRef.current.length; i++) {
-          mapRef.current.data.remove(featureRef.current[i]);
-        }
-      }
-      const mapFeatures = surveyList.map((survey) => {
-        return {
-          type: "Feature",
-          geometry: survey.geo_json,
-        };
-      });
-      featureRef.current = mapRef.current.data.addGeoJson({
-        type: "FeatureCollection",
-        features: mapFeatures,
-      });
-    }
-  }, [surveyList]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    mapRef.current.data.setControls(null);
-    mapRef.current.data.toGeoJson((data) => {
-      console.log("🚀 ~ file: survey.js ~ line 38 ~ handleSubmit ~ data", data);
-    });
-  };
-
-  return <div ref={ref} id="map" />;
-};
-
-const WrapperComponent = ({ surveyList }) => {
+function AreaPocketMap({ surveyList }) {
   return (
-    <div className="survey-page page-wrapper">
-      <Wrapper apiKey={GOOGLE_MAP_KEY} libraries={["drawing"]} render={render}>
-        <AreaPocketMap surveyList={surveyList} />
-      </Wrapper>
-    </div>
+    <LoadScript googleMapsApiKey={GOOGLE_MAP_KEY}>
+      <GoogleMap
+        clickableIcons={false}
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={5}
+      >
+        {surveyList.map((survey) => {
+          const { id, path } = survey;
+          return <Polygon key={id} options={options} paths={path} />;
+        })}
+      </GoogleMap>
+    </LoadScript>
   );
-};
-export default WrapperComponent;
+}
+
+export default React.memo(AreaPocketMap);

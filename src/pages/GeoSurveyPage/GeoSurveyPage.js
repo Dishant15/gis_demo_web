@@ -2,12 +2,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 import AreaPocketMap from "./AreaPocketMap";
-import NewLibMap from "./NewLibMap";
 import Loader from "../../components/common/Loader";
 
 import { fetchAreaPockets } from "./services";
+import { coordsToLatLongMap } from "../../utils/map.utils";
 
 import "./geo-survey-page.scss";
+import CreateAreaPocket from "./CreateAreaPocket";
 
 const GeoSurveyPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
@@ -15,20 +16,13 @@ const GeoSurveyPage = () => {
       return queryData.map((d) => {
         // [ [lat, lng], ...]
         const { coordinates } = d;
-        const path = [];
-        for (let cInd = 0; cInd < coordinates.length; cInd++) {
-          const coord = coordinates[cInd];
-          path.push({
-            lat: Number(coord[1]),
-            lng: Number(coord[0]),
-          });
-        }
-        d.path = path;
+        d.path = coordsToLatLongMap(coordinates);
         return d;
       });
     },
   });
   const [selectedSurvey, setSelectedSurvey] = useState(new Set([]));
+  const [createPocket, setCreatePocket] = useState(false);
 
   const handleSurveyClick = useCallback((surveyId) => {
     setSelectedSurvey((surveySet) => {
@@ -60,6 +54,7 @@ const GeoSurveyPage = () => {
           <div className="gsp-list-wrapper">
             <div className="gsp-list-header-pill">List of Pockets</div>
 
+            <div onClick={() => setCreatePocket(true)}>Create New Pocket</div>
             {data.map((survey) => {
               const { id, name } = survey;
               const isActive = selectedSurvey.has(id);
@@ -80,7 +75,11 @@ const GeoSurveyPage = () => {
         <div className="gsp-content">
           <div className="gsp-map-title">Survey map</div>
           <div className="gsp-map-container">
-            <NewLibMap surveyList={selectedSurveyData} />
+            {createPocket ? (
+              <CreateAreaPocket />
+            ) : (
+              <AreaPocketMap surveyList={selectedSurveyData} />
+            )}
           </div>
         </div>
       </div>
