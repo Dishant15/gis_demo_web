@@ -19,8 +19,8 @@ const GeoSurveyPage = () => {
         for (let cInd = 0; cInd < coordinates.length; cInd++) {
           const coord = coordinates[cInd];
           path.push({
-            lat: coord[0],
-            lng: coord[1],
+            lat: Number(coord[1]),
+            lng: Number(coord[0]),
           });
         }
         d.path = path;
