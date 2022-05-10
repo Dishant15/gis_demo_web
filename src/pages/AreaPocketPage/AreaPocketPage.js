@@ -7,7 +7,7 @@ import Loader from "../../components/common/Loader";
 import { fetchAreaPockets } from "./services";
 import { coordsToLatLongMap } from "../../utils/map.utils";
 
-import "./geo-survey-page.scss";
+import "./area-pocket-page.scss";
 import CreateAreaPocket from "./CreateAreaPocket";
 
 const GeoSurveyPage = () => {

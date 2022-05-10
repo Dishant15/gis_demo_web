@@ -40,6 +40,10 @@ export default function CreateAreaPocket() {
   const onPolygonComplete = (polygon) => {
     mapRef.current = polygon;
     setDrawingMode(null);
+    // other option is to save polygon to a state and remove new drawn
+    // if(destroy) {
+    //   polygon.setMap(null);
+    // }
   };
 
   const handleSave = () => {

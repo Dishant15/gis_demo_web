@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { getGeoSurveyPath, getHomePath } from "../../utils/url.constants";
+import {
+  getAreaPocketPath,
+  getGeoSurveyPath,
+  getHomePath,
+} from "../../utils/url.constants";
 
 import "./navigation-bar.scss";
 
@@ -11,11 +15,8 @@ const NavigationBar = () => {
         <Link className="nav-link" to={getHomePath()}>
           Home
         </Link>
-        <Link className="nav-link" to={getGeoSurveyPath()}>
-          Geo graphic Survey
-        </Link>
-        <Link className="nav-link" to={"/survey"}>
-          Survey
+        <Link className="nav-link" to={getAreaPocketPath()}>
+          Area Pockets
         </Link>
       </div>
     </div>

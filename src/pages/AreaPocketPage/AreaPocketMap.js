@@ -29,7 +29,7 @@ function AreaPocketMap({ surveyList }) {
         clickableIcons={false}
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={5}
+        zoom={12}
       >
         {surveyList.map((survey) => {
           const { id, path } = survey;
