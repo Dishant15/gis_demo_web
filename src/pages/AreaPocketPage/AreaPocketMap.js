@@ -61,6 +61,15 @@ const AreaPocketMap = ({
           mapContainerStyle={containerStyle}
           center={center}
           zoom={12}
+          options={{
+            // disableDefaultUI: true,
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: true,
+            streetViewControl: false,
+            rotateControl: true,
+            fullscreenControl: false,
+          }}
         >
           <DrawingManager
             options={{
