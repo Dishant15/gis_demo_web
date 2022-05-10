@@ -14,6 +14,7 @@ import {
 import "./global.scss";
 import { Box, ThemeProvider } from "@mui/material";
 import { theme } from "./theme";
+import Layout from "./Layout";
 
 // test imports
 
@@ -30,12 +31,19 @@ const App = () => {
             sx={{
               backgroundColor: "background.default",
               color: "primary.contrastText",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <NavigationBar />
             <Routes>
-              <Route path={getHomePath()} element={<HomePage />} />
-              <Route path={getAreaPocketPath()} element={<AreaPocketPage />} />
+              <Route path={getHomePath()} element={<Layout />}>
+                <Route index path={getHomePath()} element={<HomePage />} />
+                <Route
+                  path={getAreaPocketPath()}
+                  element={<AreaPocketPage />}
+                />
+              </Route>
               {/* testing routes */}
             </Routes>
           </Box>

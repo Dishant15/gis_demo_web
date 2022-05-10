@@ -64,7 +64,7 @@ const AreaPocketMap = ({
         >
           <DrawingManager
             options={{
-              drawingControl: true,
+              drawingControl: false,
               polygonOptions: {
                 fillColor: "lightblue",
                 fillOpacity: 0.5,

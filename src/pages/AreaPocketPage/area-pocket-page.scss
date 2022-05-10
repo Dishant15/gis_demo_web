@@ -1,15 +1,19 @@
 #geo-survey-page {
   margin: 0px;
   padding: 0px;
+  display: flex;
+  flex-direction: column;
 
   .page-title {
     font-size: 1.5em;
     font-weight: bolder;
+    height: 2em;
+    line-height: 2em;
   }
 
   .gsp-content-wrapper {
     display: flex;
-    height: 100%;
+    height: calc(100% - 2em);
     width: 100%;
 
     .gsp-pocket-list {
