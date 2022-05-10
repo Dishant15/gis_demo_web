@@ -29,6 +29,7 @@ const App = () => {
             width="100%"
             sx={{
               backgroundColor: "background.default",
+              color: "primary.contrastText",
             }}
           >
             <NavigationBar />

@@ -5,11 +5,13 @@ import {
   Polygon,
   DrawingManager,
   OverlayView,
+  Data,
 } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
 import { getCoordinatesFromFeature } from "../../utils/map.utils";
 import { Box, Button } from "@mui/material";
+import { isNull } from "lodash";
 
 const containerStyle = {
   width: "100%",
@@ -30,30 +32,25 @@ const options = {
   zIndex: 1,
 };
 
-function AreaPocketMap({ surveyList, editMode, onEditComplete }) {
-  const [drawingMode, setDrawingMode] = useState("polygon");
+const AreaPocketMap = ({
+  surveyList,
+  onAreaSelect,
+  editMode,
+  onDrawComplete,
+  onSubmit,
+}) => {
   const mapRef = useRef();
-
-  const onLoad = (drawingManager) => {
-    console.log(drawingManager);
-    mapRef.current = drawingManager.getMap();
-  };
+  const [showSubmit, setShowSubmit] = useState(false);
 
   const onPolygonComplete = (polygon) => {
     mapRef.current = polygon;
-    setDrawingMode(null);
-    onEditComplete();
-    // other option is to save polygon to a state and remove new drawn
-    // if(destroy) {
-    //   polygon.setMap(null);
-    // }
+    onDrawComplete();
+    setShowSubmit(true);
   };
 
   const handleSave = () => {
-    console.log(
-      "🚀 ~ file: CreateAreaPocket.js ~ line 57 ~ handleSave ~ handleSave",
-      getCoordinatesFromFeature(mapRef.current)
-    );
+    onSubmit(getCoordinatesFromFeature(mapRef.current));
+    mapRef.current.setMap(null);
   };
 
   return (
@@ -65,27 +62,25 @@ function AreaPocketMap({ surveyList, editMode, onEditComplete }) {
           center={center}
           zoom={12}
         >
-          {editMode ? (
-            <DrawingManager
-              options={{
-                polygonOptions: {
-                  fillColor: "lightblue",
-                  fillOpacity: 0.5,
-                  strokeColor: "blue",
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                  clickable: false,
-                  draggable: false,
-                  editable: true,
-                  geodesic: false,
-                  zIndex: 1,
-                },
-              }}
-              drawingMode={drawingMode}
-              onLoad={onLoad}
-              onPolygonComplete={onPolygonComplete}
-            />
-          ) : null}
+          <DrawingManager
+            options={{
+              controls: null,
+              polygonOptions: {
+                fillColor: "lightblue",
+                fillOpacity: 0.5,
+                strokeColor: "blue",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: true,
+                geodesic: false,
+                zIndex: 1,
+              },
+            }}
+            drawingMode={editMode}
+            onPolygonComplete={onPolygonComplete}
+          />
           {surveyList.map((survey) => {
             const { id, path } = survey;
             return (
@@ -94,16 +89,16 @@ function AreaPocketMap({ surveyList, editMode, onEditComplete }) {
                 options={options}
                 paths={path}
                 onClick={() => {
-                  console.log(id);
+                  onAreaSelect(id);
                 }}
               />
             );
           })}
         </GoogleMap>
       </LoadScript>
-      <Button onClick={handleSave}>Save</Button>
+      {showSubmit ? <Button onClick={handleSave}>Save</Button> : null}
     </Box>
   );
-}
+};
 
-export default React.memo(AreaPocketMap);
+export default AreaPocketMap;
