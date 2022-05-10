@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
-import AreaPocketMap from "./AreaPocketMap";
+import { find, isNull } from "lodash";
+import { Box, Paper, Typography } from "@mui/material";
 import Loader from "../../components/common/Loader";
+import AreaPocketMap from "./AreaPocketMap";
+import AddAreaForm from "./AddAreaForm";
 
 import { fetchAreaPockets } from "./services";
-import { coordsToLatLongMap } from "../../utils/map.utils";
+import { coordsToLatLongMap, latLongMapToCoords } from "../../utils/map.utils";
 
 import "./area-pocket-page.scss";
-import { Box, Paper, Typography } from "@mui/material";
-import { find, isNull } from "lodash";
-import AddAreaForm from "./AddAreaForm";
 
 const GeoSurveyPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
@@ -59,21 +59,20 @@ const GeoSurveyPage = () => {
     [showSurveyDetails]
   );
 
-  const handleAreaCreate = useCallback(
-    (step) => {
-      setCreatePocket(step);
-      setShowSurveyDetails(null);
-    },
-    [setCreatePocket]
-  );
+  const handleAreaCreate = useCallback((step) => {
+    setCreatePocket(step);
+    setShowSurveyDetails(null);
+  }, []);
 
   const handleMapSubmit = useCallback((coords) => {
-    console.log(
-      "🚀 ~ file: AreaPocketPage.js ~ line 68 ~ handleMapSubmit ~ coords",
-      coords
-    );
     setCreatePocket("D");
-    setNewAreaCoords(coords);
+    setNewAreaCoords(latLongMapToCoords(coords));
+  }, []);
+
+  const onNewAreaCreate = useCallback((surveyId) => {
+    setCreatePocket(null);
+    setNewAreaCoords([]);
+    setShowSurveyDetails(null);
   }, []);
 
   const selectedSurveyData = useMemo(() => {
@@ -89,15 +88,7 @@ const GeoSurveyPage = () => {
   }
 
   return (
-    <Box
-      id="geo-survey-page"
-      className="page-wrapper"
-      sx={{
-        color: "primary.contrastText",
-      }}
-    >
-      <div className="page-title">Geo graphic survey</div>
-
+    <Box id="geo-survey-page" className="page-wrapper">
       <div className="gsp-content-wrapper">
         <div className="gsp-pocket-list">
           <div className="gsp-list-wrapper">
@@ -151,13 +142,19 @@ const GeoSurveyPage = () => {
               </div>
             ) : createPocket === "D" ? (
               <div className="gsp-map-details">
-                <AddAreaForm />
+                <AddAreaForm
+                  key="add"
+                  data={{ coordinates: newAreaCoords }}
+                  onAreaCreate={onNewAreaCreate}
+                />
               </div>
             ) : null}
             {isNull(showSurveyDetails) ? null : (
               <div className="gsp-map-details">
-                <AreaDetailsComponent
+                <AddAreaForm
+                  key={showSurveyDetails}
                   data={find(data, ["id", showSurveyDetails])}
+                  onAreaCreate={onNewAreaCreate}
                 />
               </div>
             )}
@@ -165,23 +162,6 @@ const GeoSurveyPage = () => {
         </div>
       </div>
     </Box>
-  );
-};
-
-const AreaDetailsComponent = ({ data }) => {
-  const { name } = data;
-  return (
-    <Paper elevation={4}>
-      <Box
-        p={2}
-        sx={{
-          textAlign: "center",
-          backgroundColor: "background.default",
-        }}
-      >
-        <Typography variant="h5">{name}</Typography>
-      </Box>
-    </Paper>
   );
 };
 

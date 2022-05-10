@@ -11,6 +11,23 @@ export const coordsToLatLongMap = (coordinates) => {
   return latLongMap;
 };
 
+// latLongMap :- [ {lat, lng}, ...]
+export const latLongMapToCoords = (latLongMap) => {
+  const coordinates = [];
+  for (let lInd = 0; lInd < latLongMap.length; lInd++) {
+    const currLatLong = latLongMap[lInd];
+    coordinates.push([currLatLong.lng, currLatLong.lat]);
+  }
+  // create a closed polygon
+  if (
+    coordinates[0][0] !== coordinates[coordinates.length - 1][0] ||
+    coordinates[0][1] !== coordinates[coordinates.length - 1][1]
+  ) {
+    coordinates.push(coordinates[0]);
+  }
+  return coordinates;
+};
+
 export const getCoordinatesFromFeature = (feature) => {
   let coords = feature.getPath().getArray();
   const resultLatLongs = [];
