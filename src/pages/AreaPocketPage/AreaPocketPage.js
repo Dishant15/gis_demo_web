@@ -69,7 +69,7 @@ const GeoSurveyPage = () => {
     setNewAreaCoords(latLongMapToCoords(coords));
   }, []);
 
-  const onNewAreaCreate = useCallback((surveyId) => {
+  const onNewAreaCreate = useCallback(() => {
     setCreatePocket(null);
     setNewAreaCoords([]);
     setShowSurveyDetails(null);
@@ -88,7 +88,7 @@ const GeoSurveyPage = () => {
   }
 
   return (
-    <Box id="geo-survey-page" className="page-wrapper">
+    <div id="geo-survey-page" className="page-wrapper">
       <div className="gsp-content-wrapper">
         <div className="gsp-pocket-list">
           <div className="gsp-list-wrapper">
@@ -131,16 +131,9 @@ const GeoSurveyPage = () => {
               editMode={createPocket === "M" ? "polygon" : null}
               onDrawComplete={() => setCreatePocket("E")}
               onSubmit={handleMapSubmit}
+              onCancel={onNewAreaCreate}
             />
-            {createPocket === "M" ? (
-              <div className="gsp-map-details">
-                <Paper>
-                  <Box>
-                    <Typography variant="h4">Draw a Polygon</Typography>
-                  </Box>
-                </Paper>
-              </div>
-            ) : createPocket === "D" ? (
+            {createPocket === "D" ? (
               <div className="gsp-map-details">
                 <AddAreaForm
                   key="add"
@@ -161,7 +154,7 @@ const GeoSurveyPage = () => {
           </div>
         </div>
       </div>
-    </Box>
+    </div>
   );
 };
 

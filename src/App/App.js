@@ -27,6 +27,7 @@ const App = () => {
             height="100%"
             width="100%"
             sx={{
+              padding: "0px",
               display: "flex",
               flexDirection: "column",
             }}

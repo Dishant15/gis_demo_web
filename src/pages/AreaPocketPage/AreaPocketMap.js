@@ -1,17 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import {
   GoogleMap,
   LoadScript,
   Polygon,
   DrawingManager,
-  OverlayView,
-  Data,
 } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
 import { getCoordinatesFromFeature } from "../../utils/map.utils";
-import { Box, Button } from "@mui/material";
-import { isNull } from "lodash";
 
 const containerStyle = {
   width: "100%",
@@ -38,23 +35,50 @@ const AreaPocketMap = ({
   editMode,
   onDrawComplete,
   onSubmit,
+  onCancel,
 }) => {
   const mapRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
 
-  const onPolygonComplete = (polygon) => {
+  const onPolygonComplete = useCallback((polygon) => {
     mapRef.current = polygon;
     onDrawComplete();
     setShowSubmit(true);
-  };
+  }, []);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     onSubmit(getCoordinatesFromFeature(mapRef.current));
+    setShowSubmit(false);
     mapRef.current.setMap(null);
-  };
+  }, [mapRef.current]);
 
   return (
     <Box width="100%" height="100%">
+      {editMode === "polygon" ? (
+        <div className="gsp-map-details">
+          <Paper>
+            <Box p={3}>
+              <Typography variant="h4">Draw a Polygon</Typography>
+            </Box>
+            <Button onClick={onCancel}>Cancel</Button>
+          </Paper>
+        </div>
+      ) : null}
+      {showSubmit ? (
+        <div className="gsp-map-details">
+          <Paper>
+            <Stack spacing={2}>
+              <Box p={3}>
+                <Typography variant="h4">
+                  Finalise area polygon than add details
+                </Typography>
+              </Box>
+              <Button onClick={handleSave}>Add</Button>
+              <Button onClick={onCancel}>Cancel</Button>
+            </Stack>
+          </Paper>
+        </div>
+      ) : null}
       <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
         <GoogleMap
           clickableIcons={false}
@@ -105,7 +129,6 @@ const AreaPocketMap = ({
           })}
         </GoogleMap>
       </LoadScript>
-      {showSubmit ? <Button onClick={handleSave}>Save</Button> : null}
     </Box>
   );
 };

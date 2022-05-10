@@ -43,7 +43,7 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
       onSuccess: ({ data }) => {
         // refetch list after add success
         queryClient.invalidateQueries("areaPocketList");
-        onAreaCreate(data.id);
+        onAreaCreate();
       },
     }
   );
@@ -93,7 +93,12 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
               label="Pincode"
               {...register("pincode", { required: true })}
             />
-            <Button type="submit">{!!data.id ? "Update" : "Add"}</Button>
+            <Stack direction="row" spacing={2}>
+              <Button type="submit" color="secondary" onClick={onAreaCreate}>
+                Cancel
+              </Button>
+              <Button type="submit">{!!data.id ? "Update" : "Add"}</Button>
+            </Stack>
           </Stack>
         </Box>
       </Box>
