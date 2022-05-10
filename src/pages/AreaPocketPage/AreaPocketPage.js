@@ -8,7 +8,6 @@ import { fetchAreaPockets } from "./services";
 import { coordsToLatLongMap } from "../../utils/map.utils";
 
 import "./area-pocket-page.scss";
-import CreateAreaPocket from "./CreateAreaPocket";
 
 const GeoSurveyPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
@@ -73,13 +72,12 @@ const GeoSurveyPage = () => {
         </div>
 
         <div className="gsp-content">
-          <div className="gsp-map-title">Survey map</div>
           <div className="gsp-map-container">
-            {createPocket ? (
-              <CreateAreaPocket />
-            ) : (
-              <AreaPocketMap surveyList={selectedSurveyData} />
-            )}
+            <AreaPocketMap
+              surveyList={selectedSurveyData}
+              editMode={createPocket}
+              onEditComplete={() => setCreatePocket(false)}
+            />
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { AppBar, Button, Stack, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -10,16 +11,22 @@ import "./navigation-bar.scss";
 
 const NavigationBar = () => {
   return (
-    <div id="navigation-bar">
-      <div className="nav-link-wrapper">
-        <Link className="nav-link" to={getHomePath()}>
-          Home
-        </Link>
-        <Link className="nav-link" to={getAreaPocketPath()}>
-          Area Pockets
-        </Link>
-      </div>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Network GIS
+        </Typography>
+
+        <Stack direction="row" spacing={2}>
+          <Button to={getHomePath()} component={Link} color="inherit">
+            Home
+          </Button>
+          <Button component={Link} to={getAreaPocketPath()} color="inherit">
+            Area Pockets
+          </Button>
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 };
 

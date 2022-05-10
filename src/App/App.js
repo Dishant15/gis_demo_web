@@ -12,6 +12,8 @@ import {
   getHomePath,
 } from "../utils/url.constants";
 import "./global.scss";
+import { Box, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 // test imports
 
@@ -20,14 +22,24 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <NavigationBar />
-        <Routes>
-          <Route path={getHomePath()} element={<HomePage />} />
-          <Route path={getAreaPocketPath()} element={<AreaPocketPage />} />
-          {/* testing routes */}
-        </Routes>
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Box // set global background
+            height="100%"
+            width="100%"
+            sx={{
+              backgroundColor: "background.default",
+            }}
+          >
+            <NavigationBar />
+            <Routes>
+              <Route path={getHomePath()} element={<HomePage />} />
+              <Route path={getAreaPocketPath()} element={<AreaPocketPage />} />
+              {/* testing routes */}
+            </Routes>
+          </Box>
+        </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

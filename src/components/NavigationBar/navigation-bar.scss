@@ -1,19 +1,2 @@
 #navigation-bar {
-  width: 100%;
-  padding: 0.3em;
-
-  .nav-link-wrapper {
-    display: flex;
-    height: 40px;
-    line-height: 40px;
-
-    .nav-link {
-      text-align: center;
-      flex: 1;
-
-      &:hover {
-        background-color: silver;
-      }
-    }
-  }
 }
