@@ -74,7 +74,6 @@ const AreaPocketMap = ({
                 </Typography>
               </Box>
               <Button onClick={handleSave}>Add</Button>
-              <Button onClick={onCancel}>Cancel</Button>
             </Stack>
           </Paper>
         </div>

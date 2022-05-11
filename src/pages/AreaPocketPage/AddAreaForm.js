@@ -2,6 +2,8 @@ import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Box,
   Paper,
@@ -11,9 +13,12 @@ import {
   Stack,
 } from "@mui/material";
 
-import { apiPostAreaPocketAdd } from "../../utils/url.constants";
+import {
+  apiPostAreaPocketAdd,
+  apiPutAreaPocketEdit,
+} from "../../utils/url.constants";
 import Api from "../../utils/api.utils";
-import { pick } from "lodash";
+import { has, pick } from "lodash";
 
 const DEFAULT_DATA = {
   name: "",
@@ -26,21 +31,36 @@ const DEFAULT_DATA = {
 
 const AddAreaForm = ({ data = {}, onAreaCreate }) => {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
-    (data) =>
-      Api.post(apiPostAreaPocketAdd(), {
-        unique_id: "p",
-        ...pick(data, [
-          "name",
-          "area",
-          "city",
-          "state",
-          "pincode",
-          "coordinates",
-        ]),
-      }),
+  const { mutate, isLoading } = useMutation(
+    (data) => {
+      if (has(data, "id")) {
+        Api.put(apiPutAreaPocketEdit(data.id), {
+          unique_id: "p",
+          ...pick(data, [
+            "name",
+            "area",
+            "city",
+            "state",
+            "pincode",
+            "coordinates",
+          ]),
+        });
+      } else {
+        Api.post(apiPostAreaPocketAdd(), {
+          unique_id: "p",
+          ...pick(data, [
+            "name",
+            "area",
+            "city",
+            "state",
+            "pincode",
+            "coordinates",
+          ]),
+        });
+      }
+    },
     {
-      onSuccess: ({ data }) => {
+      onSuccess: () => {
         // refetch list after add success
         queryClient.invalidateQueries("areaPocketList");
         onAreaCreate();
@@ -93,12 +113,18 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
               label="Pincode"
               {...register("pincode", { required: true })}
             />
-            <Stack direction="row" spacing={2}>
-              <Button type="submit" color="secondary" onClick={onAreaCreate}>
-                Cancel
-              </Button>
-              <Button type="submit">{!!data.id ? "Update" : "Add"}</Button>
-            </Stack>
+            {isLoading ? (
+              <LoadingButton loading>Loading...</LoadingButton>
+            ) : (
+              <Stack direction="row" spacing={2}>
+                <Button type="submit" color="secondary" onClick={onAreaCreate}>
+                  Cancel
+                </Button>
+                <Button type="submit" startIcon={<SaveIcon />}>
+                  {!!data.id ? "Update" : "Add"}
+                </Button>
+              </Stack>
+            )}
           </Stack>
         </Box>
       </Box>
