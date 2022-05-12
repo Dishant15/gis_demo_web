@@ -2,7 +2,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 import { find, isNull } from "lodash";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import Loader from "../../components/common/Loader";
 import AreaPocketMap from "./AreaPocketMap";
 import AddAreaForm from "./AddAreaForm";
@@ -94,15 +95,6 @@ const GeoSurveyPage = () => {
           <div className="gsp-list-wrapper">
             <div className="gsp-list-header-pill">List of Pockets</div>
 
-            <div
-              onClick={() => {
-                if (isNull(createPocket)) {
-                  handleAreaCreate("M");
-                }
-              }}
-            >
-              Create New Pocket
-            </div>
             {data.map((survey) => {
               const { id, name } = survey;
               const isActive = selectedSurvey.has(id);
@@ -120,6 +112,16 @@ const GeoSurveyPage = () => {
                 </Box>
               );
             })}
+            <Button
+              startIcon={<AddIcon />}
+              onClick={() => {
+                if (isNull(createPocket)) {
+                  handleAreaCreate("M");
+                }
+              }}
+            >
+              Create New Pocket
+            </Button>
           </div>
         </div>
 
