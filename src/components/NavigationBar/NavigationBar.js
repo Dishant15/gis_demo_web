@@ -13,10 +13,13 @@ import {
 } from "@mui/material";
 
 import { getAreaPocketPath, getHomePath } from "../../utils/url.constants";
+import { useDispatch } from "react-redux";
 
 import "./navigation-bar.scss";
+import { logout } from "../../redux/reducers/auth.reducer";
 
 const NavigationBar = () => {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = useCallback(() => {
@@ -79,6 +82,7 @@ const NavigationBar = () => {
           </MenuItem>
           <MenuItem>Users & Permissions</MenuItem>
           <MenuItem>Network</MenuItem>
+          <MenuItem onClick={() => dispatch(logout())}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

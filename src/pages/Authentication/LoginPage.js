@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
 import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useMutation } from "react-query";
 
 import { postLogin } from "./services";
 import { parseErrorMessage } from "../../utils/api.utils";
-import "./login-page.scss";
+import { login } from "../../redux/reducers/auth.reducer";
+import { getIsUserLoggedIn } from "../../redux/selectors/auth.selectors";
+import { getHomePath } from "../../utils/url.constants";
 
-const LoginPage = () => {
+import "./login-page.scss";
+/**
+ * Parent:
+ *    App
+ */
+const LoginPage = (props) => {
+  const navigate = useNavigate();
+  const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      navigate(getHomePath());
+    }
+  }, [isUserLoggedIn]);
+
   return (
     <div className="auth-page">
       <div className="shadow" />
@@ -36,10 +54,11 @@ const LoginForm = () => {
     handleSubmit,
     setError,
   } = useForm();
+  const dispatch = useDispatch();
 
   const { mutate, isLoading } = useMutation(postLogin, {
     onSuccess: (res) => {
-      // dispatch(login(res.token));
+      dispatch(login(res.token));
     },
     onError: (err) => {
       const errorMessage = parseErrorMessage(err);
