@@ -9,8 +9,13 @@ import NavigationBar from "../components/NavigationBar";
 import HomePage from "../pages/HomePage";
 import AreaPocketPage from "../pages/AreaPocketPage";
 import Layout from "./Layout";
+import LoginPage from "../pages/Authentication/LoginPage";
 
-import { getAreaPocketPath, getHomePath } from "../utils/url.constants";
+import {
+  getAreaPocketPath,
+  getHomePath,
+  getLoginPath,
+} from "../utils/url.constants";
 import { theme } from "./theme";
 import "./global.scss";
 
@@ -42,6 +47,7 @@ const App = () => {
                   element={<AreaPocketPage />}
                 />
               </Route>
+              <Route path={getLoginPath()} element={<LoginPage />} />
               {/* testing routes */}
             </Routes>
           </Box>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isNil, map, keys, join } from "lodash";
+import { isNil, map, keys, join, get } from "lodash";
 // import store from '../store';
 
 export function convertObjectToQueryParams(object) {
@@ -25,7 +25,7 @@ const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(function (config) {
   // const token = store.getState().auth.token;
-  const token = "";
+  // const token = "";
   // if (config.headers) config.headers.Authorization = token;
 
   return config;
@@ -81,3 +81,26 @@ class Api {
 }
 
 export default Api;
+
+/**
+ * Parse axios error and return simple error message
+ */
+export const parseErrorMessage = (error) => {
+  let errorMessage = "Something Went Wrong";
+  const status = get(error, "response.status");
+  if (status) {
+    console.log("err", error.response);
+    if (status === 400) {
+      errorMessage = get(
+        error,
+        "response.data.non_field_errors.0",
+        "Bad request"
+      );
+    } else if (status === 403) {
+      errorMessage = "Unauthorized";
+    }
+  } else {
+    errorMessage = error.message;
+  }
+  return errorMessage;
+};
