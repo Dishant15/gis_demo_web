@@ -1,6 +1,7 @@
 import axios from "axios";
 import { isNil, map, keys, join, get } from "lodash";
-// import store from '../store';
+
+import store from "../redux/store";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
@@ -24,9 +25,9 @@ export const apiRequestConfig = {
 const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(function (config) {
-  // const token = store.getState().auth.token;
-  // const token = "";
-  // if (config.headers) config.headers.Authorization = token;
+  const token = store.getState().auth.token;
+  console.log("🚀 ~ file: api.utils.js ~ line 28 ~ token", token);
+  if (config.headers) config.headers.Authorization = `Token ${token}`;
 
   return config;
 });
