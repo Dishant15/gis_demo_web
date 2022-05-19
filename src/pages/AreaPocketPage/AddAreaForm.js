@@ -33,30 +33,19 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     (data) => {
+      let submitData = pick(data, [
+        "parentId",
+        "name",
+        "area",
+        "city",
+        "state",
+        "pincode",
+        "coordinates",
+      ]);
       if (has(data, "id")) {
-        Api.put(apiPutAreaPocketEdit(data.id), {
-          unique_id: "p",
-          ...pick(data, [
-            "name",
-            "area",
-            "city",
-            "state",
-            "pincode",
-            "coordinates",
-          ]),
-        });
+        Api.put(apiPutAreaPocketEdit(data.id), submitData);
       } else {
-        Api.post(apiPostAreaPocketAdd(), {
-          unique_id: "p",
-          ...pick(data, [
-            "name",
-            "area",
-            "city",
-            "state",
-            "pincode",
-            "coordinates",
-          ]),
-        });
+        Api.post(apiPostAreaPocketAdd(), submitData);
       }
     },
     {
