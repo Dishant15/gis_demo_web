@@ -1,17 +1,15 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
+
 import Container from "@mui/material/Container";
+import NavigationBar from "../components/NavigationBar";
 
 const Layout = () => {
   return (
-    <Container
-      maxWidth="100%"
-      sx={{
-        flex: 1,
-      }}
-    >
+    <div id="layout">
+      <NavigationBar />
       <Outlet />
-    </Container>
+    </div>
   );
 };
 

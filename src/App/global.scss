@@ -17,6 +17,13 @@ code {
   height: 100vh;
 }
 
+#layout {
+  flex: 1;
+  max-width: 100%;
+  // full height - navbar height
+  height: calc(100% - 64px);
+}
+
 .page-wrapper,
 #map {
   width: 100%;

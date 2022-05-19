@@ -8,7 +8,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Box, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import NavigationBar from "../components/NavigationBar";
 import HomePage from "../pages/HomePage";
 import AreaPocketPage from "../pages/AreaPocketPage";
 import Layout from "./Layout";
@@ -23,6 +22,7 @@ import { theme } from "./theme";
 import store, { persistor } from "../redux/store";
 
 import "./global.scss";
+import { RequireAuth } from "./RequireAuth";
 // test imports
 
 const queryClient = new QueryClient();
@@ -35,28 +35,21 @@ const App = () => {
           <ThemeProvider theme={theme}>
             <CssBaseline enableColorScheme />
             <BrowserRouter>
-              <Box // set global background
-                height="100%"
-                width="100%"
-                sx={{
-                  padding: "0px",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <NavigationBar />
-                <Routes>
-                  <Route path={getHomePath()} element={<Layout />}>
-                    <Route index path={getHomePath()} element={<HomePage />} />
-                    <Route
-                      path={getAreaPocketPath()}
-                      element={<AreaPocketPage />}
-                    />
-                  </Route>
-                  <Route path={getLoginPath()} element={<LoginPage />} />
-                  {/* testing routes */}
-                </Routes>
-              </Box>
+              <Routes>
+                <Route path={getHomePath()} element={<Layout />}>
+                  <Route index path={getHomePath()} element={<HomePage />} />
+                  <Route
+                    path={getAreaPocketPath()}
+                    element={
+                      <RequireAuth>
+                        <AreaPocketPage />
+                      </RequireAuth>
+                    }
+                  />
+                </Route>
+                <Route path={getLoginPath()} element={<LoginPage />} />
+                {/* testing routes */}
+              </Routes>
             </BrowserRouter>
           </ThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
