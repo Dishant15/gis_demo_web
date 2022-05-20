@@ -2,13 +2,14 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 import { find, isNull } from "lodash";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Loader from "../../components/common/Loader";
 import AreaPocketMap from "./AreaPocketMap";
 import AddAreaForm from "./AddAreaForm";
 
-import { fetchAreaPockets } from "./services";
+import { fetchAreaPockets, getFillColor } from "./services";
 import { coordsToLatLongMap, latLongMapToCoords } from "../../utils/map.utils";
 
 import "./area-pocket-page.scss";
@@ -34,6 +35,7 @@ const AreaPocketPage = () => {
   // null : not creating, "M" : map, "E": edit, "D" : details
   const [createPocket, setCreatePocket] = useState(null);
   const [newAreaCoords, setNewAreaCoords] = useState([]);
+  const [newAreaParentId, setNewAreaParentId] = useState(null);
 
   const handleSurveyDetails = useCallback(
     (surveyId) => {
@@ -64,8 +66,9 @@ const AreaPocketPage = () => {
     [showSurveyDetails]
   );
 
-  const handleAreaCreate = useCallback((step) => {
+  const handleAreaCreate = useCallback((step, parent = null) => {
     setCreatePocket(step);
+    setNewAreaParentId(parent);
     setShowSurveyDetails(null);
   }, []);
 
@@ -77,6 +80,7 @@ const AreaPocketPage = () => {
   const onNewAreaCreate = useCallback(() => {
     setCreatePocket(null);
     setNewAreaCoords([]);
+    setNewAreaParentId(null);
     setShowSurveyDetails(null);
   }, []);
 
@@ -100,19 +104,50 @@ const AreaPocketPage = () => {
             <div className="gsp-list-header-pill">List of Pockets</div>
 
             {data.map((survey) => {
-              const { id, name } = survey;
+              const { id, name, g_layer } = survey;
+              const color = getFillColor(g_layer);
               const isActive = selectedSurvey.has(id);
 
               return (
-                <Box
-                  sx={{
-                    color: isActive ? "secondary.main" : "inherit",
-                  }}
-                  className={`gsp-list-pill`}
-                  key={id}
-                  onClick={() => handleSurveyClick(id)}
-                >
-                  {name}
+                <Box className={`gsp-list-pill`} key={id}>
+                  <Stack direction="row" width="100%" spacing={2}>
+                    <Stack
+                      direction="row"
+                      width="100%"
+                      spacing={2}
+                      onClick={() => handleSurveyClick(id)}
+                    >
+                      <Box
+                        sx={{ minWidth: "15px", backgroundColor: color }}
+                      ></Box>
+                      <Box
+                        flex={1}
+                        sx={{
+                          color: isActive ? "secondary.main" : "inherit",
+                        }}
+                      >
+                        {name}
+                      </Box>
+                      <Box>
+                        <IconButton aria-label="add-area-pocket" size="small">
+                          <VisibilityIcon
+                            color={isActive ? "secondary" : "inherit"}
+                          />
+                        </IconButton>
+                      </Box>
+                    </Stack>
+                    <Box
+                      onClick={() => {
+                        if (isNull(createPocket)) {
+                          handleAreaCreate("M", id);
+                        }
+                      }}
+                    >
+                      <IconButton aria-label="add-area-pocket" size="small">
+                        <AddIcon color="success" />
+                      </IconButton>
+                    </Box>
+                  </Stack>
                 </Box>
               );
             })}
@@ -124,7 +159,7 @@ const AreaPocketPage = () => {
                 }
               }}
             >
-              Create New Pocket
+              Create Primary Area
             </Button>
           </div>
         </div>
@@ -143,7 +178,10 @@ const AreaPocketPage = () => {
               <div className="gsp-map-details">
                 <AddAreaForm
                   key="add"
-                  data={{ coordinates: newAreaCoords }}
+                  data={{
+                    coordinates: newAreaCoords,
+                    parentId: newAreaParentId,
+                  }}
                   onAreaCreate={onNewAreaCreate}
                 />
               </div>
