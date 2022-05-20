@@ -9,25 +9,13 @@ import {
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
 import { getCoordinatesFromFeature } from "../../utils/map.utils";
+import { getFillColor } from "./services";
 
 const containerStyle = {
   width: "100%",
   height: "100%",
 };
 const center = { lat: 23.033863, lng: 72.585022 };
-
-const options = {
-  fillColor: "lightblue",
-  fillOpacity: 0.5,
-  strokeColor: "orange",
-  strokeOpacity: 1,
-  strokeWeight: 2,
-  clickable: true,
-  draggable: false,
-  editable: false,
-  geodesic: false,
-  zIndex: 1,
-};
 
 const AreaPocketMap = ({
   surveyList,
@@ -114,11 +102,23 @@ const AreaPocketMap = ({
             onPolygonComplete={onPolygonComplete}
           />
           {surveyList.map((survey) => {
-            const { id, path } = survey;
+            const { id, path, g_layer } = survey;
+            const color = getFillColor(g_layer);
             return (
               <Polygon
                 key={id}
-                options={options}
+                options={{
+                  fillColor: color,
+                  fillOpacity: 0.3,
+                  strokeColor: color,
+                  strokeOpacity: 1,
+                  strokeWeight: 2,
+                  clickable: true,
+                  draggable: false,
+                  editable: false,
+                  geodesic: false,
+                  zIndex: 1,
+                }}
                 paths={path}
                 onClick={() => {
                   onAreaSelect(id);

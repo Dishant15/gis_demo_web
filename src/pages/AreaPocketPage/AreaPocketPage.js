@@ -13,7 +13,7 @@ import { coordsToLatLongMap, latLongMapToCoords } from "../../utils/map.utils";
 
 import "./area-pocket-page.scss";
 
-const GeoSurveyPage = () => {
+const AreaPocketPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
       console.log(
@@ -164,4 +164,4 @@ const GeoSurveyPage = () => {
   );
 };
 
-export default GeoSurveyPage;
+export default AreaPocketPage;
