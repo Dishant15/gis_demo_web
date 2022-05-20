@@ -35,7 +35,7 @@ const LoginPage = (props) => {
         <div className="login-page-content">
           <div className="heading hide-on-small-and-down">
             <div className="text">
-              An innovation towards NETWORK. <br /> Network GIS.
+              Your network under your control <br /> Network GIS
             </div>
           </div>
           <div className="form-block">
@@ -89,7 +89,9 @@ const LoginForm = () => {
           helperText={errors.password?.message}
         />
         {isLoading ? (
-          <LoadingButton loading>Loading...</LoadingButton>
+          <LoadingButton variant="contained" loading>
+            Loading...
+          </LoadingButton>
         ) : (
           <Button type="submit" variant="contained">
             Login

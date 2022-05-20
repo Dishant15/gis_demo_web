@@ -6,7 +6,7 @@ import { getIsUserLoggedIn } from "../redux/selectors/auth.selectors";
 import { getLoginPath } from "../utils/url.constants";
 
 const Redirect = ({ to, state = null }) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     navigate(to, { state });
   });

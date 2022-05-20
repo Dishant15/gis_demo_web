@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { KeyboardArrowDown } from "@mui/icons-material";
 import {
@@ -12,7 +12,11 @@ import {
   Typography,
 } from "@mui/material";
 
-import { getAreaPocketPath, getHomePath } from "../../utils/url.constants";
+import {
+  getAreaPocketPath,
+  getHomePath,
+  getLoginPath,
+} from "../../utils/url.constants";
 import { useDispatch } from "react-redux";
 
 import "./navigation-bar.scss";
@@ -20,6 +24,7 @@ import { logout } from "../../redux/reducers/auth.reducer";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = useCallback(() => {
@@ -28,6 +33,11 @@ const NavigationBar = () => {
 
   const handleClick = useCallback((e) => {
     setAnchorEl(e.currentTarget);
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    navigate(getLoginPath());
   }, []);
 
   const open = !!anchorEl;
@@ -82,7 +92,7 @@ const NavigationBar = () => {
           </MenuItem>
           <MenuItem>Users & Permissions</MenuItem>
           <MenuItem>Network</MenuItem>
-          <MenuItem onClick={() => dispatch(logout())}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
