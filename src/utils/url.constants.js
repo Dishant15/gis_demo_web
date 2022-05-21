@@ -10,4 +10,4 @@ export const apiPutAreaPocketEdit = (areaPocketId) =>
   `/api/geo/survey/area-pocket/${areaPocketId}/edit/`;
 export const apiAddArea = () => "/api/area/add/";
 
-export const apiPostLogin = () => `/api/token`;
+export const apiPostLogin = () => "/api/token/";

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import { parseErrorMessage } from "../../utils/api.utils";
 import { login } from "../../redux/reducers/auth.reducer";
 import { getIsUserLoggedIn } from "../../redux/selectors/auth.selectors";
 import { getHomePath } from "../../utils/url.constants";
+import { CLIENT_ID } from "../../utils/constant";
 
 import "./login-page.scss";
 /**
@@ -58,6 +59,7 @@ const LoginForm = () => {
 
   const { mutate, isLoading } = useMutation(postLogin, {
     onSuccess: (res) => {
+      console.log("🚀 ~ file: LoginPage.js ~ line 62 ~ LoginForm ~ res", res);
       dispatch(login(res.token));
     },
     onError: (err) => {
@@ -66,10 +68,14 @@ const LoginForm = () => {
     },
   });
 
+  const onSubmit = useCallback((data) => {
+    mutate({ ...data, client_id: CLIENT_ID });
+  }, []);
+
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(mutate)}
+      onSubmit={handleSubmit(onSubmit)}
       id="login-form"
       className="form-inner-block"
     >
