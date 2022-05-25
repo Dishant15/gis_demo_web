@@ -17,10 +17,6 @@ import "./area-pocket-page.scss";
 const AreaPocketPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
-      console.log(
-        "🚀 ~ file: AreaPocketPage.js ~ line 19 ~ GeoSurveyPage ~ queryData",
-        queryData
-      );
       return queryData.map((d) => {
         // [ [lat, lng], ...]
         const { coordinates } = d;

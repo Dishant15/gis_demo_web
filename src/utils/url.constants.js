@@ -11,3 +11,5 @@ export const apiPutAreaPocketEdit = (areaPocketId) =>
 export const apiAddArea = () => "/api/area/add/";
 
 export const apiPostLogin = () => "/api/token/";
+
+export const apiGetUserTaskList = () => "/api/task/survey/list/";

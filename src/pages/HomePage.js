@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-import image from "../assets/under_construction.svg";
+import DashTaskList from "../user_task/DashTaskList";
 
 export default function HomePage() {
   return (
@@ -15,16 +15,7 @@ export default function HomePage() {
         justifyContent: "center",
       }}
     >
-      <div style={{ textAlign: "center", width: "100%" }}>
-        <img
-          style={{
-            width: "500px",
-            maxWidth: "40%",
-          }}
-          src={image}
-        />
-        <Typography variant="h5">Under Construction</Typography>
-      </div>
+      <DashTaskList />
     </Box>
   );
 }

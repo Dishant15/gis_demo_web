@@ -59,7 +59,6 @@ const LoginForm = () => {
 
   const { mutate, isLoading } = useMutation(postLogin, {
     onSuccess: (res) => {
-      console.log("🚀 ~ file: LoginPage.js ~ line 62 ~ LoginForm ~ res", res);
       dispatch(login(res.token));
     },
     onError: (err) => {
