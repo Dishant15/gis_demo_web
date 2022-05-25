@@ -1,12 +1,24 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { get, size } from "lodash";
+import { format } from "date-fns";
 
-import { Box, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 import TaskLoading from "./components/TaskLoading";
 
 import { fetchUserTasks } from "./data/task.services";
@@ -14,6 +26,7 @@ import { fetchUserTasks } from "./data/task.services";
 import "./styles/dash_task_list.scss";
 import TaskListMap from "./components/TaskListMap";
 import { coordsToLatLongMap } from "../utils/map.utils";
+import { DraftsTwoTone } from "@mui/icons-material";
 
 const DashTaskList = () => {
   const { isLoading, data } = useQuery("userTaskList", fetchUserTasks);
@@ -50,31 +63,34 @@ const DashTaskList = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
   const [surveyList, setSurveyList] = useState([]);
-  const [selectedSurveyInd, setSelectedSurveyInd] = useState(null);
+  const [selectedSurveyId, setSelectedSurveyId] = useState(null);
 
   const handleTaskSelect = (task) => (event, isExpanded) => {
-    console.log(
-      "🚀 ~ file: DashTaskList.js ~ line 56 ~ handleTaskSelect ~ task",
-      task
-    );
     const { id, area_pocket, survey_boundaries } = task;
 
     setSelectedTask(isExpanded ? id : null);
-    setSelectedArea(area_pocket);
-    setSurveyList(survey_boundaries);
+    setSelectedArea(isExpanded ? area_pocket : null);
+    setSurveyList(isExpanded ? survey_boundaries : []);
   };
+
+  const handleSurveySelect = useCallback(
+    (surveyId) => () => {
+      if (surveyId === selectedSurveyId) {
+        setSelectedSurveyId(null);
+      } else {
+        setSelectedSurveyId(surveyId);
+      }
+    },
+    [selectedSurveyId]
+  );
 
   if (isLoading) {
     return <TaskLoading />;
   }
 
   return (
-    <Box id="dash-task-list">
-      <Typography
-        className="dtl-title"
-        variant="h4"
-        sx={{ backgroundColor: "primary.light", color: "whitesmoke" }}
-      >
+    <Box id="dash-task-list" sx={{ backgroundColor: "#efefef" }}>
+      <Typography className="dtl-title" variant="h5">
         Ongoing Tasks
       </Typography>
 
@@ -88,7 +104,7 @@ const DashTaskList = () => {
         <Box sx={{ flex: 2 }}>
           <Stack spacing={2}>
             {userTaskList.map((userTask) => {
-              const { id, name } = userTask;
+              const { id, name, area_pocket, survey_boundaries } = userTask;
               return (
                 <Accordion
                   key={id}
@@ -104,15 +120,53 @@ const DashTaskList = () => {
                       {name}
                     </Typography>
                     <Typography sx={{ color: "text.secondary" }}>
-                      I am an accordion
+                      {area_pocket.area}, {area_pocket.pincode}
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography>
-                      Nulla facilisi. Phasellus sollicitudin nulla et quam
-                      mattis feugiat. Aliquam eget maximus est, id dignissim
-                      quam.
-                    </Typography>
+                    {!size(survey_boundaries) ? (
+                      <Typography variant="h6" textAlign="center">
+                        No survey added to this task yet
+                      </Typography>
+                    ) : null}
+                    <List>
+                      {survey_boundaries.map((survey) => {
+                        const { id, name, created_by, updated_on } = survey;
+                        const updated_date = format(
+                          new Date(updated_on),
+                          "d MMM, HH:mm"
+                        );
+                        const isActive = id === selectedSurveyId;
+                        return (
+                          <ListItem
+                            disablePadding
+                            key={id}
+                            onClick={handleSurveySelect(id)}
+                            sx={{
+                              backgroundColor: isActive
+                                ? "primary.light"
+                                : "inherit",
+                              // color: isActive ? "white" : "inherit",
+                            }}
+                          >
+                            <ListItemButton>
+                              <ListItemIcon>
+                                {isActive ? (
+                                  <MyLocationIcon />
+                                ) : (
+                                  <LocationSearchingIcon />
+                                )}
+                              </ListItemIcon>
+
+                              <ListItemText
+                                primary={name}
+                                secondary={`- ${created_by} @ ${updated_date}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
                   </AccordionDetails>
                 </Accordion>
               );
@@ -120,7 +174,12 @@ const DashTaskList = () => {
           </Stack>
         </Box>
         <Box sx={{ flex: 4 }}>
-          <TaskListMap areaPocket={selectedArea} surveyList={surveyList} />
+          <TaskListMap
+            areaPocket={selectedArea}
+            surveyList={surveyList}
+            highlightSurvey={selectedSurveyId}
+            onSurveySelect={handleSurveySelect}
+          />
         </Box>
       </Stack>
     </Box>

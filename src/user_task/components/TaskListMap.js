@@ -1,14 +1,8 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Box } from "@mui/material";
-import {
-  GoogleMap,
-  LoadScript,
-  Polygon,
-  DrawingManager,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Polygon } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
-import { getFillColor } from "../../pages/AreaPocketPage/services";
 
 const containerStyle = {
   width: "100%",
@@ -16,7 +10,12 @@ const containerStyle = {
 };
 const center = { lat: 23.033863, lng: 72.585022 };
 
-const TaskListMap = ({ areaPocket = null, surveyList, onSurveySelect }) => {
+const TaskListMap = ({
+  areaPocket = null,
+  surveyList,
+  highlightSurvey,
+  onSurveySelect,
+}) => {
   return (
     <Box width="100%" height="100%">
       <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
@@ -38,9 +37,9 @@ const TaskListMap = ({ areaPocket = null, surveyList, onSurveySelect }) => {
           {!!areaPocket ? (
             <Polygon
               options={{
-                fillColor: "red",
+                fillColor: "#51ADAC",
                 fillOpacity: 0.2,
-                strokeColor: "red",
+                strokeColor: "#51ADAC",
                 strokeOpacity: 1,
                 strokeWeight: 2,
                 clickable: false,
@@ -53,8 +52,8 @@ const TaskListMap = ({ areaPocket = null, surveyList, onSurveySelect }) => {
             />
           ) : null}
           {surveyList.map((survey) => {
-            const { id, coordinates, g_layer } = survey;
-            const color = getFillColor(g_layer);
+            const { id, coordinates } = survey;
+            const color = id === highlightSurvey ? "red" : "orange";
             return (
               <Polygon
                 key={id}
@@ -71,9 +70,7 @@ const TaskListMap = ({ areaPocket = null, surveyList, onSurveySelect }) => {
                   zIndex: 2,
                 }}
                 paths={coordinates}
-                onClick={() => {
-                  onSurveySelect(id);
-                }}
+                onClick={onSurveySelect(id)}
               />
             );
           })}
