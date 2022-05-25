@@ -37,7 +37,15 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path={getHomePath()} element={<Layout />}>
-                  <Route index path={getHomePath()} element={<HomePage />} />
+                  <Route
+                    index
+                    path={getHomePath()}
+                    element={
+                      <RequireAuth>
+                        <HomePage />
+                      </RequireAuth>
+                    }
+                  />
                   <Route
                     path={getAreaPocketPath()}
                     element={
