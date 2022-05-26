@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
-import { get, size } from "lodash";
+import { size } from "lodash";
 import { format } from "date-fns";
 
 import {
@@ -26,7 +26,6 @@ import { fetchUserTasks } from "./data/task.services";
 import "./styles/dash_task_list.scss";
 import TaskListMap from "./components/TaskListMap";
 import { coordsToLatLongMap } from "../utils/map.utils";
-import { DraftsTwoTone } from "@mui/icons-material";
 
 const DashTaskList = () => {
   const { isLoading, data } = useQuery("userTaskList", fetchUserTasks);
@@ -71,6 +70,7 @@ const DashTaskList = () => {
     setSelectedTask(isExpanded ? id : null);
     setSelectedArea(isExpanded ? area_pocket : null);
     setSurveyList(isExpanded ? survey_boundaries : []);
+    if (isExpanded) setSelectedSurveyId(null);
   };
 
   const handleSurveySelect = useCallback(
@@ -91,7 +91,7 @@ const DashTaskList = () => {
   return (
     <Box id="dash-task-list" sx={{ backgroundColor: "#efefef" }}>
       <Typography className="dtl-title" variant="h5">
-        Ongoing Tasks
+        Survey Tasks
       </Typography>
 
       <Stack
@@ -146,7 +146,7 @@ const DashTaskList = () => {
                               backgroundColor: isActive
                                 ? "primary.light"
                                 : "inherit",
-                              // color: isActive ? "white" : "inherit",
+                              color: isActive ? "white" : "inherit",
                             }}
                           >
                             <ListItemButton>
@@ -159,8 +159,11 @@ const DashTaskList = () => {
                               </ListItemIcon>
 
                               <ListItemText
+                                color={
+                                  isActive ? "white !important" : "inherit"
+                                }
                                 primary={name}
-                                secondary={`- ${created_by} @ ${updated_date}`}
+                                secondary={`user - ${created_by}, updated on: ${updated_date}`}
                               />
                             </ListItemButton>
                           </ListItem>
