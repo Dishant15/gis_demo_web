@@ -103,6 +103,11 @@ const DashTaskList = () => {
       >
         <Box sx={{ flex: 2 }}>
           <Stack spacing={2}>
+            {!size(userTaskList) ? (
+              <Typography variant="h6" textAlign="center">
+                No available tasks for you
+              </Typography>
+            ) : null}
             {userTaskList.map((userTask) => {
               const { id, name, area_pocket, survey_boundaries } = userTask;
               return (
