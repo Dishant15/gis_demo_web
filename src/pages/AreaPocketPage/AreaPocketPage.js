@@ -12,7 +12,11 @@ import AreaPocketMap from "./AreaPocketMap";
 import AddAreaForm from "./AddAreaForm";
 
 import { fetchAreaPockets, getFillColor } from "pages/AreaPocketPage/services";
-import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
+import {
+  coordsToLatLongMap,
+  latLongMapToCoords,
+  DEFAULT_MAP_CENTER,
+} from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutAreaPocketEdit } from "utils/url.constants";
 
@@ -58,6 +62,8 @@ const AreaPocketPage = () => {
       },
     }
   );
+  // set map center
+  const [mapCenter, setMapCenter] = useState(DEFAULT_MAP_CENTER);
   // set of all selected area to show on map
   const [selectedArea, setSelectedArea] = useState(new Set([]));
   // show details on area list OR map polygon click
@@ -115,6 +121,7 @@ const AreaPocketPage = () => {
   const startEditArea = useCallback(
     (areaData) => () => {
       setEditAreaData(areaData);
+      // setMapCenter(areaData.path[0]);
       setCreatePocket("E");
       // clear selected area popups if any
       setShowAreaDetails(null);
@@ -234,6 +241,7 @@ const AreaPocketPage = () => {
           <div className="gsp-map-container">
             <AreaPocketMap
               areaList={selectedAreaData}
+              mapCenter={mapCenter}
               onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
               editAreaPocket={editAreaData}

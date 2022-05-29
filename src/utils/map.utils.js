@@ -1,3 +1,7 @@
+// Ahmedabad city center
+export const DEFAULT_MAP_CENTER = { lat: 23.033863, lng: 72.585022 };
+export const DEFAULT_MAP_ZOOM = 12;
+
 // coordinates :- [ [lng, lat], ...]
 export const coordsToLatLongMap = (coordinates) => {
   const latLongMap = [];

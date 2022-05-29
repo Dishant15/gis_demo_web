@@ -15,7 +15,6 @@ const containerStyle = {
   width: "100%",
   height: "100%",
 };
-const center = { lat: 23.033863, lng: 72.585022 };
 
 /**
  * Show all polygons of areaList
@@ -32,6 +31,7 @@ const center = { lat: 23.033863, lng: 72.585022 };
  */
 const AreaPocketMap = ({
   areaList,
+  mapCenter,
   onAreaSelect,
   editMode,
   editAreaPocket,
@@ -42,7 +42,6 @@ const AreaPocketMap = ({
   onCancel,
 }) => {
   const polyRef = useRef();
-  const mapRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -59,7 +58,7 @@ const AreaPocketMap = ({
     onSubmit(getCoordinatesFromFeature(polyRef.current));
     setShowSubmit(false);
     polyRef.current.setMap(null);
-  }, [polyRef.current, onSubmit]);
+  }, [onSubmit]);
 
   const handleEditPocketLoad = useCallback((polygon) => {
     polyRef.current = polygon;
@@ -77,13 +76,6 @@ const AreaPocketMap = ({
     setShowEdit(false);
     onCancel();
   }, [onCancel]);
-
-  const handleMapLoad = useCallback(
-    (map) => {
-      mapRef.current = map;
-    },
-    [mapRef.current]
-  );
 
   return (
     <Box width="100%" height="100%">
@@ -134,11 +126,9 @@ const AreaPocketMap = ({
         <GoogleMap
           clickableIcons={false}
           mapContainerStyle={containerStyle}
-          center={center}
-          onLoad={handleMapLoad}
+          center={mapCenter}
           zoom={12}
           options={{
-            // disableDefaultUI: true,
             zoomControl: true,
             mapTypeControl: false,
             scaleControl: true,
