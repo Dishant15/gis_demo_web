@@ -53,7 +53,7 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
         // refetch list after add success
         setTimeout(() => {
           queryClient.invalidateQueries("areaPocketList");
-        }, 500);
+        }, 10);
         onAreaCreate();
       },
     }

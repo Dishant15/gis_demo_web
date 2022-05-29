@@ -20,7 +20,7 @@ const center = { lat: 23.033863, lng: 72.585022 };
 /**
  * Show all polygons of areaList
  * pass clicked area id in onAreaSelect
- * draw editable polygon if editPocket passed
+ * draw editable polygon if editAreaPocket passed
  * pass edited coords on polygon in onEditComplete
  * show polygon draw tool on editMode = "polygon"
  * call onDrawComplete once polygon closed , edit starts
@@ -34,7 +34,7 @@ const AreaPocketMap = ({
   areaList,
   onAreaSelect,
   editMode,
-  editPocket,
+  editAreaPocket,
   onEditComplete,
   onDrawComplete,
   onSubmit,
@@ -43,6 +43,7 @@ const AreaPocketMap = ({
   const polyRef = useRef();
   const mapRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const onPolygonComplete = useCallback(
     (polygon) => {
@@ -53,16 +54,23 @@ const AreaPocketMap = ({
     [onDrawComplete]
   );
 
-  const handleEditPocketLoad = useCallback((polygon) => {
-    polyRef.current = polygon;
-    // show popup to save edited polygon coordinates
-  }, []);
-
   const handleSave = useCallback(() => {
     onSubmit(getCoordinatesFromFeature(polyRef.current));
     setShowSubmit(false);
     polyRef.current.setMap(null);
   }, [polyRef.current, onSubmit]);
+
+  const handleEditPocketLoad = useCallback((polygon) => {
+    polyRef.current = polygon;
+    // show popup to save edited polygon coordinates
+    setShowEdit(true);
+  }, []);
+
+  const handleEdit = useCallback(() => {
+    const newCoords = getCoordinatesFromFeature(polyRef.current);
+    onEditComplete({ ...editAreaPocket, path: newCoords });
+    setShowEdit(false);
+  });
 
   const handleMapLoad = useCallback(
     (map) => {
@@ -93,6 +101,20 @@ const AreaPocketMap = ({
                 </Typography>
               </Box>
               <Button onClick={handleSave}>Add</Button>
+            </Stack>
+          </Paper>
+        </div>
+      ) : null}
+      {showEdit ? (
+        <div className="gsp-map-details">
+          <Paper>
+            <Stack spacing={2}>
+              <Box p={3}>
+                <Typography variant="h4">
+                  Click and drag marker points to Edit area polygon
+                </Typography>
+              </Box>
+              <Button onClick={handleEdit}>Update</Button>
             </Stack>
           </Paper>
         </div>
@@ -133,7 +155,7 @@ const AreaPocketMap = ({
             drawingMode={editMode}
             onPolygonComplete={onPolygonComplete}
           />
-          {!!editPocket ? (
+          {!!editAreaPocket ? (
             <Polygon
               options={{
                 fillColor: "orange",
@@ -148,9 +170,9 @@ const AreaPocketMap = ({
                 zIndex: 5,
               }}
               onLoad={handleEditPocketLoad}
-              paths={editPocket.path}
+              paths={editAreaPocket.path}
               onClick={() => {
-                onAreaSelect(editPocket.id);
+                onAreaSelect(editAreaPocket.id);
               }}
             />
           ) : null}

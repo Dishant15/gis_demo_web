@@ -1,13 +1,15 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
-
 import { find, isNull } from "lodash";
+
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+
 import Loader from "components/common/Loader";
-import AreaPocketMap from "pages/AreaPocketPage/AreaPocketMap";
-import AddAreaForm from "pages/AreaPocketPage/AddAreaForm";
+import AreaPocketMap from "./AreaPocketMap";
+import AddAreaForm from "./AddAreaForm";
 
 import { fetchAreaPockets, getFillColor } from "pages/AreaPocketPage/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
@@ -50,29 +52,31 @@ const AreaPocketPage = () => {
   // set coordinates and parent Id of new Area that is being created
   const [newAreaCoords, setNewAreaCoords] = useState([]);
   const [newAreaParentId, setNewAreaParentId] = useState(null);
+  // save edit state for area
+  const [editAreaData, setEditAreaData] = useState(null);
 
   const handleAreaDetails = useCallback(
-    (surveyId) => {
+    (areaId) => {
       if (isNull(createPocket)) {
-        setShowAreaDetails(surveyId);
+        setShowAreaDetails(areaId);
       }
     },
     [setShowAreaDetails, createPocket]
   );
 
   const handleAreaClick = useCallback(
-    (surveyId) => {
+    (areaId) => {
       setSelectedArea((surveySet) => {
         let newSet = new Set(surveySet);
-        if (newSet.has(surveyId)) {
-          newSet.delete(surveyId);
+        if (newSet.has(areaId)) {
+          newSet.delete(areaId);
           // remove survey details
-          if (surveyId === showAreaDetails) {
+          if (areaId === showAreaDetails) {
             handleAreaDetails(null);
           }
         } else {
-          newSet.add(surveyId);
-          handleAreaDetails(surveyId);
+          newSet.add(areaId);
+          handleAreaDetails(areaId);
         }
         return newSet;
       });
@@ -91,6 +95,28 @@ const AreaPocketPage = () => {
     setCreatePocket("D");
     // add coordinates to state
     setNewAreaCoords(latLongMapToCoords(coords));
+  }, []);
+
+  const startEditArea = useCallback(
+    (areaData) => () => {
+      setEditAreaData(areaData);
+      setCreatePocket("E");
+      // clear selected area popups if any
+      setShowAreaDetails(null);
+    },
+    []
+  );
+
+  const handleAreaEdit = useCallback((areaData) => {
+    console.log(
+      "🚀 ~ file: AreaPocketPage.js ~ line 99 ~ handleAreaEdit ~ areaData",
+      areaData
+    );
+    // update data to be in form of server submit
+    // update area data to server
+    // reset edit area state
+    setEditAreaData(null);
+    setCreatePocket(null);
   }, []);
 
   const resetAllSelection = useCallback(() => {
@@ -119,20 +145,16 @@ const AreaPocketPage = () => {
           <div className="gsp-list-wrapper">
             <div className="gsp-list-header-pill">List of Pockets</div>
 
-            {data.map((survey) => {
-              const { id, name, g_layer } = survey;
+            {data.map((area) => {
+              const { id, name, g_layer } = area;
               const color = getFillColor(g_layer);
               const isActive = selectedArea.has(id);
+              const isEdit = editAreaData?.id === id;
 
               return (
                 <Box className={`gsp-list-pill`} key={id}>
                   <Stack direction="row" width="100%" spacing={2}>
-                    <Stack
-                      direction="row"
-                      width="100%"
-                      spacing={2}
-                      onClick={() => handleAreaClick(id)}
-                    >
+                    <Stack direction="row" width="100%" spacing={2}>
                       <Box
                         sx={{ minWidth: "15px", backgroundColor: color }}
                       ></Box>
@@ -144,11 +166,16 @@ const AreaPocketPage = () => {
                       >
                         {name}
                       </Box>
-                      <Box>
+                      <Box onClick={() => handleAreaClick(id)}>
                         <IconButton aria-label="add-area-pocket" size="small">
                           <VisibilityIcon
                             color={isActive ? "secondary" : "inherit"}
                           />
+                        </IconButton>
+                      </Box>
+                      <Box onClick={startEditArea(area)}>
+                        <IconButton aria-label="add-area-pocket" size="small">
+                          <EditIcon color={isEdit ? "secondary" : "inherit"} />
                         </IconButton>
                       </Box>
                     </Stack>
@@ -186,8 +213,9 @@ const AreaPocketPage = () => {
               areaList={selectedAreaData}
               onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
-              editPocket={null}
+              editAreaPocket={editAreaData}
               onDrawComplete={() => setCreatePocket("E")}
+              onEditComplete={handleAreaEdit}
               onSubmit={handleMapSubmit}
               onCancel={resetAllSelection}
             />
