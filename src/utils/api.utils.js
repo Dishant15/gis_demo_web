@@ -2,6 +2,7 @@ import axios from "axios";
 import { isNil, map, keys, join, get } from "lodash";
 
 import store from "redux/store";
+import { logout } from "redux/reducers/auth.reducer";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
@@ -31,6 +32,22 @@ axiosInstance.interceptors.request.use(function (config) {
 
   return config;
 });
+
+axiosInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    const token = store.getState().auth.token;
+    // dispatch logout action if request unauthorised.
+    const status = get(error, "response.status");
+    if (status === 401 && !!token) {
+      store.dispatch(logout());
+      // fire notification
+    }
+    return Promise.reject(error);
+  }
+);
 
 class Api {
   static get(url, queryParams, config = {}) {
