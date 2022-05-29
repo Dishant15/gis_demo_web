@@ -54,7 +54,7 @@ const AreaPocketPage = () => {
       onSuccess: () => {
         setTimeout(() => {
           queryClient.invalidateQueries("areaPocketList");
-        }, 10);
+        }, 100);
       },
     }
   );
@@ -126,7 +126,6 @@ const AreaPocketPage = () => {
     // update data to be in form of server submit
     let submitData = pick(areaData, [
       "id",
-      "parentId",
       "name",
       "area",
       "city",
@@ -134,6 +133,7 @@ const AreaPocketPage = () => {
       "pincode",
     ]);
     submitData.coordinates = latLongMapToCoords(areaData.path);
+    submitData.parentId = areaData.parent;
     // update area data to server
     mutate(submitData);
     // reset edit area state
