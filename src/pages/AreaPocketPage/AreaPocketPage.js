@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useQuery } from "react-query";
-import { find, isNull } from "lodash";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { find, isNull, pick } from "lodash";
 
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -13,6 +13,8 @@ import AddAreaForm from "./AddAreaForm";
 
 import { fetchAreaPockets, getFillColor } from "pages/AreaPocketPage/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
+import Api from "utils/api.utils";
+import { apiPutAreaPocketEdit } from "utils/url.constants";
 
 import "./area-pocket-page.scss";
 
@@ -33,6 +35,7 @@ import "./area-pocket-page.scss";
  *  AddAreaForm
  */
 const AreaPocketPage = () => {
+  const queryClient = useQueryClient();
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
       return queryData.map((d) => {
@@ -43,6 +46,18 @@ const AreaPocketPage = () => {
       });
     },
   });
+  const { mutate, isLoading: editAreaLoading } = useMutation(
+    (data) => {
+      Api.put(apiPutAreaPocketEdit(data.id), data);
+    },
+    {
+      onSuccess: () => {
+        setTimeout(() => {
+          queryClient.invalidateQueries("areaPocketList");
+        }, 10);
+      },
+    }
+  );
   // set of all selected area to show on map
   const [selectedArea, setSelectedArea] = useState(new Set([]));
   // show details on area list OR map polygon click
@@ -108,12 +123,19 @@ const AreaPocketPage = () => {
   );
 
   const handleAreaEdit = useCallback((areaData) => {
-    console.log(
-      "🚀 ~ file: AreaPocketPage.js ~ line 99 ~ handleAreaEdit ~ areaData",
-      areaData
-    );
     // update data to be in form of server submit
+    let submitData = pick(areaData, [
+      "id",
+      "parentId",
+      "name",
+      "area",
+      "city",
+      "state",
+      "pincode",
+    ]);
+    submitData.coordinates = latLongMapToCoords(areaData.path);
     // update area data to server
+    mutate(submitData);
     // reset edit area state
     setEditAreaData(null);
     setCreatePocket(null);
@@ -124,6 +146,7 @@ const AreaPocketPage = () => {
     setNewAreaCoords([]);
     setNewAreaParentId(null);
     setShowAreaDetails(null);
+    setEditAreaData(null);
   }, []);
 
   const selectedAreaData = useMemo(() => {
@@ -214,8 +237,9 @@ const AreaPocketPage = () => {
               onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
               editAreaPocket={editAreaData}
-              onDrawComplete={() => setCreatePocket("E")}
+              editAreaLoading={editAreaLoading}
               onEditComplete={handleAreaEdit}
+              onDrawComplete={() => setCreatePocket("E")}
               onSubmit={handleMapSubmit}
               onCancel={resetAllSelection}
             />

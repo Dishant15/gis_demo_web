@@ -35,6 +35,7 @@ const AreaPocketMap = ({
   onAreaSelect,
   editMode,
   editAreaPocket,
+  editAreaLoading,
   onEditComplete,
   onDrawComplete,
   onSubmit,
@@ -70,7 +71,12 @@ const AreaPocketMap = ({
     const newCoords = getCoordinatesFromFeature(polyRef.current);
     onEditComplete({ ...editAreaPocket, path: newCoords });
     setShowEdit(false);
-  });
+  }, [onEditComplete, editAreaPocket]);
+
+  const handleEditCancel = useCallback(() => {
+    setShowEdit(false);
+    onCancel();
+  }, [onCancel]);
 
   const handleMapLoad = useCallback(
     (map) => {
@@ -105,7 +111,7 @@ const AreaPocketMap = ({
           </Paper>
         </div>
       ) : null}
-      {showEdit ? (
+      {showEdit || editAreaLoading ? (
         <div className="gsp-map-details">
           <Paper>
             <Stack spacing={2}>
@@ -114,7 +120,12 @@ const AreaPocketMap = ({
                   Click and drag marker points to Edit area polygon
                 </Typography>
               </Box>
-              <Button onClick={handleEdit}>Update</Button>
+              <Button onClick={handleEditCancel}>Cancel</Button>
+              {editAreaLoading ? (
+                <Button>Loading ...</Button>
+              ) : (
+                <Button onClick={handleEdit}>Update</Button>
+              )}
             </Stack>
           </Paper>
         </div>
