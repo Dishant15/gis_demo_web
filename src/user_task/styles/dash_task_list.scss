@@ -7,5 +7,11 @@
     padding: 0.3em;
     border-radius: 0.5em;
     text-align: center;
+    height: 2em;
+  }
+
+  .dtl-content-wrapper {
+    // 2em for title, 1em for padding
+    height: calc(100% - 3em);
   }
 }
