@@ -25,68 +25,72 @@ const AreaPocketPage = () => {
       });
     },
   });
-  const [selectedSurvey, setSelectedSurvey] = useState(new Set([]));
-  // show details on survey select and map polygon click
-  const [showSurveyDetails, setShowSurveyDetails] = useState(null);
+  // set of all selected area to show on map
+  const [selectedArea, setSelectedArea] = useState(new Set([]));
+  // show details on area list OR map polygon click
+  const [showAreaDetails, setShowAreaDetails] = useState(null);
   // null : not creating, "M" : map, "E": edit, "D" : details
   const [createPocket, setCreatePocket] = useState(null);
+  // set coordinates and parent Id of new Area that is being created
   const [newAreaCoords, setNewAreaCoords] = useState([]);
   const [newAreaParentId, setNewAreaParentId] = useState(null);
 
-  const handleSurveyDetails = useCallback(
+  const handleAreaDetails = useCallback(
     (surveyId) => {
       if (isNull(createPocket)) {
-        setShowSurveyDetails(surveyId);
+        setShowAreaDetails(surveyId);
       }
     },
-    [setShowSurveyDetails, createPocket]
+    [setShowAreaDetails, createPocket]
   );
 
-  const handleSurveyClick = useCallback(
+  const handleAreaClick = useCallback(
     (surveyId) => {
-      setSelectedSurvey((surveySet) => {
+      setSelectedArea((surveySet) => {
         let newSet = new Set(surveySet);
         if (newSet.has(surveyId)) {
           newSet.delete(surveyId);
           // remove survey details
-          if (surveyId === showSurveyDetails) {
-            handleSurveyDetails(null);
+          if (surveyId === showAreaDetails) {
+            handleAreaDetails(null);
           }
         } else {
           newSet.add(surveyId);
-          handleSurveyDetails(surveyId);
+          handleAreaDetails(surveyId);
         }
         return newSet;
       });
     },
-    [showSurveyDetails]
+    [showAreaDetails]
   );
 
   const handleAreaCreate = useCallback((step, parent = null) => {
     setCreatePocket(step);
     setNewAreaParentId(parent);
-    setShowSurveyDetails(null);
+    setShowAreaDetails(null);
   }, []);
 
   const handleMapSubmit = useCallback((coords) => {
+    // move page state to Detail form
     setCreatePocket("D");
+    // add coordinates to state
     setNewAreaCoords(latLongMapToCoords(coords));
   }, []);
 
-  const onNewAreaCreate = useCallback(() => {
+  const resetAllSelection = useCallback(() => {
     setCreatePocket(null);
     setNewAreaCoords([]);
     setNewAreaParentId(null);
-    setShowSurveyDetails(null);
+    setShowAreaDetails(null);
   }, []);
 
-  const selectedSurveyData = useMemo(() => {
+  const selectedAreaData = useMemo(() => {
     if (data) {
-      return data.filter((d) => selectedSurvey.has(d.id));
+      return data.filter((d) => selectedArea.has(d.id));
     } else {
       return [];
     }
-  }, [selectedSurvey, data]);
+  }, [selectedArea, data]);
 
   if (isLoading) {
     return <Loader />;
@@ -102,7 +106,7 @@ const AreaPocketPage = () => {
             {data.map((survey) => {
               const { id, name, g_layer } = survey;
               const color = getFillColor(g_layer);
-              const isActive = selectedSurvey.has(id);
+              const isActive = selectedArea.has(id);
 
               return (
                 <Box className={`gsp-list-pill`} key={id}>
@@ -111,7 +115,7 @@ const AreaPocketPage = () => {
                       direction="row"
                       width="100%"
                       spacing={2}
-                      onClick={() => handleSurveyClick(id)}
+                      onClick={() => handleAreaClick(id)}
                     >
                       <Box
                         sx={{ minWidth: "15px", backgroundColor: color }}
@@ -151,7 +155,7 @@ const AreaPocketPage = () => {
               startIcon={<AddIcon />}
               onClick={() => {
                 if (isNull(createPocket)) {
-                  handleAreaCreate("M");
+                  handleAreaCreate("M", null);
                 }
               }}
             >
@@ -163,12 +167,13 @@ const AreaPocketPage = () => {
         <div className="gsp-content">
           <div className="gsp-map-container">
             <AreaPocketMap
-              surveyList={selectedSurveyData}
-              onAreaSelect={handleSurveyDetails}
+              surveyList={selectedAreaData}
+              onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
+              editPocket={find(data, ["id", showAreaDetails])}
               onDrawComplete={() => setCreatePocket("E")}
               onSubmit={handleMapSubmit}
-              onCancel={onNewAreaCreate}
+              onCancel={resetAllSelection}
             />
             {createPocket === "D" ? (
               <div className="gsp-map-details">
@@ -178,16 +183,16 @@ const AreaPocketPage = () => {
                     coordinates: newAreaCoords,
                     parentId: newAreaParentId,
                   }}
-                  onAreaCreate={onNewAreaCreate}
+                  onAreaCreate={resetAllSelection}
                 />
               </div>
             ) : null}
-            {isNull(showSurveyDetails) ? null : (
+            {isNull(showAreaDetails) ? null : (
               <div className="gsp-map-details">
                 <AddAreaForm
-                  key={showSurveyDetails}
-                  data={find(data, ["id", showSurveyDetails])}
-                  onAreaCreate={onNewAreaCreate}
+                  key={showAreaDetails}
+                  data={find(data, ["id", showAreaDetails])}
+                  onAreaCreate={resetAllSelection}
                 />
               </div>
             )}

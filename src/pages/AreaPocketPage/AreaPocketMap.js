@@ -21,24 +21,51 @@ const AreaPocketMap = ({
   surveyList,
   onAreaSelect,
   editMode,
+  editPocket,
   onDrawComplete,
   onSubmit,
   onCancel,
 }) => {
+  console.log("🚀 ~ file: AreaPocketMap.js ~ line 29 ~ editPocket", editPocket);
+  const polyRef = useRef();
   const mapRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
 
-  const onPolygonComplete = useCallback((polygon) => {
-    mapRef.current = polygon;
-    onDrawComplete();
+  const onPolygonComplete = useCallback(
+    (polygon) => {
+      polyRef.current = polygon;
+      onDrawComplete();
+      setShowSubmit(true);
+    },
+    [onDrawComplete]
+  );
+
+  const handleEditPocketLoad = useCallback((polygon) => {
+    console.log(
+      "🚀 ~ file: AreaPocketMap.js ~ line 44 ~ handleEditPocketLoad ~ polygon",
+      polygon
+    );
+    polyRef.current = polygon;
     setShowSubmit(true);
   }, []);
 
   const handleSave = useCallback(() => {
-    onSubmit(getCoordinatesFromFeature(mapRef.current));
+    console.log(
+      "🚀 ~ file: AreaPocketMap.js ~ line 45 ~ handleSave ~ getCoordinatesFromFeature(polyRef.current)",
+      getCoordinatesFromFeature(polyRef.current)
+    );
+    return;
+    onSubmit(getCoordinatesFromFeature(polyRef.current));
     setShowSubmit(false);
-    mapRef.current.setMap(null);
-  }, [mapRef.current]);
+    polyRef.current.setMap(null);
+  }, [polyRef.current, onSubmit]);
+
+  const handleMapLoad = useCallback(
+    (map) => {
+      mapRef.current = map;
+    },
+    [mapRef.current]
+  );
 
   return (
     <Box width="100%" height="100%">
@@ -71,6 +98,7 @@ const AreaPocketMap = ({
           clickableIcons={false}
           mapContainerStyle={containerStyle}
           center={center}
+          onLoad={handleMapLoad}
           zoom={12}
           options={{
             // disableDefaultUI: true,
@@ -101,6 +129,27 @@ const AreaPocketMap = ({
             drawingMode={editMode}
             onPolygonComplete={onPolygonComplete}
           />
+          {!!editPocket ? (
+            <Polygon
+              options={{
+                fillColor: "orange",
+                fillOpacity: 0.3,
+                strokeColor: "orange",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: true,
+                geodesic: false,
+                zIndex: 5,
+              }}
+              onLoad={handleEditPocketLoad}
+              paths={editPocket.path}
+              onClick={() => {
+                onAreaSelect(editPocket.id);
+              }}
+            />
+          ) : null}
           {surveyList.map((survey) => {
             const { id, path, g_layer } = survey;
             const color = getFillColor(g_layer);
