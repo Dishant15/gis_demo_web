@@ -17,16 +17,29 @@ const containerStyle = {
 };
 const center = { lat: 23.033863, lng: 72.585022 };
 
+/**
+ * Show all polygons of areaList
+ * pass clicked area id in onAreaSelect
+ * draw editable polygon if editPocket passed
+ * pass edited coords on polygon in onEditComplete
+ * show polygon draw tool on editMode = "polygon"
+ * call onDrawComplete once polygon closed , edit starts
+ * call onSubmit with new coords once edit ends
+ * call onCancel to cancel add flow
+ *
+ * Parent
+ *  AreaPocketPage
+ */
 const AreaPocketMap = ({
-  surveyList,
+  areaList,
   onAreaSelect,
   editMode,
   editPocket,
+  onEditComplete,
   onDrawComplete,
   onSubmit,
   onCancel,
 }) => {
-  console.log("🚀 ~ file: AreaPocketMap.js ~ line 29 ~ editPocket", editPocket);
   const polyRef = useRef();
   const mapRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
@@ -41,20 +54,11 @@ const AreaPocketMap = ({
   );
 
   const handleEditPocketLoad = useCallback((polygon) => {
-    console.log(
-      "🚀 ~ file: AreaPocketMap.js ~ line 44 ~ handleEditPocketLoad ~ polygon",
-      polygon
-    );
     polyRef.current = polygon;
-    setShowSubmit(true);
+    // show popup to save edited polygon coordinates
   }, []);
 
   const handleSave = useCallback(() => {
-    console.log(
-      "🚀 ~ file: AreaPocketMap.js ~ line 45 ~ handleSave ~ getCoordinatesFromFeature(polyRef.current)",
-      getCoordinatesFromFeature(polyRef.current)
-    );
-    return;
     onSubmit(getCoordinatesFromFeature(polyRef.current));
     setShowSubmit(false);
     polyRef.current.setMap(null);
@@ -150,8 +154,8 @@ const AreaPocketMap = ({
               }}
             />
           ) : null}
-          {surveyList.map((survey) => {
-            const { id, path, g_layer } = survey;
+          {areaList.map((area) => {
+            const { id, path, g_layer } = area;
             const color = getFillColor(g_layer);
             return (
               <Polygon

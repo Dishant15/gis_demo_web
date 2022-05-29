@@ -14,6 +14,22 @@ import { coordsToLatLongMap, latLongMapToCoords } from "../../utils/map.utils";
 
 import "./area-pocket-page.scss";
 
+/**
+ * Fetch area pocket list
+ * render list of pocket sidebar
+ * render AreaPocket Map
+ * user can select multiple area to show on map
+ * user can see area details on popup
+ * user can edit selected area coordinates , update details in popup
+ * user can add new area, add details in popup
+ *
+ * Parent
+ *  App
+ *
+ * Renders
+ *  AreaPocketMap
+ *  AddAreaForm
+ */
 const AreaPocketPage = () => {
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
@@ -167,10 +183,10 @@ const AreaPocketPage = () => {
         <div className="gsp-content">
           <div className="gsp-map-container">
             <AreaPocketMap
-              surveyList={selectedAreaData}
+              areaList={selectedAreaData}
               onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
-              editPocket={find(data, ["id", showAreaDetails])}
+              editPocket={null}
               onDrawComplete={() => setCreatePocket("E")}
               onSubmit={handleMapSubmit}
               onCancel={resetAllSelection}
