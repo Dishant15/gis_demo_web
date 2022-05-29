@@ -1,5 +1,5 @@
-import { apiGetAreaPocketList } from "../../utils/url.constants";
-import Api from "../../utils/api.utils";
+import { apiGetAreaPocketList } from "utils/url.constants";
+import Api from "utils/api.utils";
 import { get } from "lodash";
 
 export const getFillColor = (layer_index) => {

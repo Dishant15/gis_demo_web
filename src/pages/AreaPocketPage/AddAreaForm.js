@@ -16,8 +16,8 @@ import {
 import {
   apiPostAreaPocketAdd,
   apiPutAreaPocketEdit,
-} from "../../utils/url.constants";
-import Api from "../../utils/api.utils";
+} from "utils/url.constants";
+import Api from "utils/api.utils";
 import { has, pick } from "lodash";
 
 const DEFAULT_DATA = {

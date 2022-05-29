@@ -7,12 +7,12 @@ import { useMutation } from "react-query";
 import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { postLogin } from "./services";
-import { parseErrorMessage } from "../../utils/api.utils";
-import { login } from "../../redux/reducers/auth.reducer";
-import { getIsUserLoggedIn } from "../../redux/selectors/auth.selectors";
-import { getHomePath } from "../../utils/url.constants";
-import { CLIENT_ID } from "../../utils/constant";
+import { postLogin } from "pages/Authentication/services";
+import { parseErrorMessage } from "utils/api.utils";
+import { login } from "redux/reducers/auth.reducer";
+import { getIsUserLoggedIn } from "redux/selectors/auth.selectors";
+import { getHomePath } from "utils/url.constants";
+import { CLIENT_ID } from "utils/constant";
 
 import "./login-page.scss";
 /**

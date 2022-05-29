@@ -1,5 +1,5 @@
-import { Box, Stack, Typography, Skeleton } from "@mui/material";
 import React from "react";
+import { Box, Stack, Typography, Skeleton } from "@mui/material";
 
 const TaskLoading = () => {
   return (

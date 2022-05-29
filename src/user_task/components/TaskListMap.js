@@ -2,7 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import { GoogleMap, LoadScript, Polygon } from "@react-google-maps/api";
 
-import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
+import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
 
 const containerStyle = {
   width: "100%",

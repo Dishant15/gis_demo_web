@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { getIsUserLoggedIn } from "../redux/selectors/auth.selectors";
-import { getLoginPath } from "../utils/url.constants";
+import { getIsUserLoggedIn } from "redux/selectors/auth.selectors";
+import { getLoginPath } from "utils/url.constants";
 
 const Redirect = ({ to, state = null }) => {
   const navigate = useNavigate();

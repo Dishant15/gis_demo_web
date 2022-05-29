@@ -10,7 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import authReducer from "./reducers/auth.reducer";
+import authReducer from "redux/reducers/auth.reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,

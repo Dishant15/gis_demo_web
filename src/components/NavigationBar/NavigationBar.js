@@ -16,11 +16,11 @@ import {
   getAreaPocketPath,
   getHomePath,
   getLoginPath,
-} from "../../utils/url.constants";
+} from "utils/url.constants";
 import { useDispatch } from "react-redux";
 
+import { logout } from "redux/reducers/auth.reducer";
 import "./navigation-bar.scss";
-import { logout } from "../../redux/reducers/auth.reducer";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();

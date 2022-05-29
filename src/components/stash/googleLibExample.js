@@ -11,8 +11,7 @@ import React, { useEffect, useRef } from "react";
 
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 
-import { GOOGLE_MAP_KEY } from "../../utils/constant";
-import { size } from "lodash";
+import { GOOGLE_MAP_KEY } from "utils/constant";
 
 const render = (status) => {
   if (status === Status.LOADING) return <h3>{status} ...</h3>;

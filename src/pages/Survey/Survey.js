@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react";
 
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import MapComponent from "../../components/MapComponent";
+import MapComponent from "components/MapComponent";
 
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import SendIcon from "@material-ui/icons/Send";
 
-import Api from "../../utils/api.utils";
-import { GOOGLE_MAP_KEY } from "../../utils/constant";
-import { apiAddArea } from "../../utils/url.constants";
+import Api from "utils/api.utils";
+import { GOOGLE_MAP_KEY } from "utils/constant";
+import { apiAddArea } from "utils/url.constants";
 
 import "./Survey.css";
 

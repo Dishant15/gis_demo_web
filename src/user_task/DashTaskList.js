@@ -19,13 +19,14 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-import TaskLoading from "./components/TaskLoading";
 
-import { fetchUserTasks } from "./data/task.services";
+import TaskLoading from "user_task/components/TaskLoading";
+import TaskListMap from "user_task/components/TaskListMap";
+
+import { fetchUserTasks } from "user_task/data/task.services";
+import { coordsToLatLongMap } from "utils/map.utils";
 
 import "./styles/dash_task_list.scss";
-import TaskListMap from "./components/TaskListMap";
-import { coordsToLatLongMap } from "../utils/map.utils";
 
 const DashTaskList = () => {
   const { isLoading, data } = useQuery("userTaskList", fetchUserTasks);

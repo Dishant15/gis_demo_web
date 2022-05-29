@@ -1,7 +1,7 @@
 import axios from "axios";
 import { isNil, map, keys, join, get } from "lodash";
 
-import store from "../redux/store";
+import store from "redux/store";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {

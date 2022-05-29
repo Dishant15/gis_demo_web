@@ -5,12 +5,12 @@ import { find, isNull } from "lodash";
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import Loader from "../../components/common/Loader";
-import AreaPocketMap from "./AreaPocketMap";
-import AddAreaForm from "./AddAreaForm";
+import Loader from "components/common/Loader";
+import AreaPocketMap from "pages/AreaPocketPage/AreaPocketMap";
+import AddAreaForm from "pages/AreaPocketPage/AddAreaForm";
 
-import { fetchAreaPockets, getFillColor } from "./services";
-import { coordsToLatLongMap, latLongMapToCoords } from "../../utils/map.utils";
+import { fetchAreaPockets, getFillColor } from "pages/AreaPocketPage/services";
+import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 
 import "./area-pocket-page.scss";
 

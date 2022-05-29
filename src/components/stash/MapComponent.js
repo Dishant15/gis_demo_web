@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, forwardRef, useState } from "react";
+import React, { useEffect, forwardRef } from "react";
 
 const MapComponent = forwardRef((props, ref) => {
-  let { center, zoom, mapRef, drawArrow } = props;
+  let { center, zoom, mapRef } = props;
 
   useEffect(() => {
     const map = new window.google.maps.Map(ref.current, {

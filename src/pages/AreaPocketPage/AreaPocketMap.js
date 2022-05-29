@@ -7,9 +7,9 @@ import {
   DrawingManager,
 } from "@react-google-maps/api";
 
-import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "../../utils/constant";
-import { getCoordinatesFromFeature } from "../../utils/map.utils";
-import { getFillColor } from "./services";
+import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
+import { getCoordinatesFromFeature } from "utils/map.utils";
+import { getFillColor } from "pages/AreaPocketPage/services";
 
 const containerStyle = {
   width: "100%",

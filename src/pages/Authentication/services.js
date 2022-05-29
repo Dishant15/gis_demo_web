@@ -1,5 +1,5 @@
-import Api from "../../utils/api.utils";
-import { apiPostLogin } from "../../utils/url.constants";
+import Api from "utils/api.utils";
+import { apiPostLogin } from "utils/url.constants";
 
 export const postLogin = async (data) => {
   console.log("🚀 ~ file: services.js ~ line 5 ~ postLogin ~ data", data);

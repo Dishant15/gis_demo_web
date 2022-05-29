@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 
-import DashTaskList from "../user_task/DashTaskList";
+import DashTaskList from "user_task/DashTaskList";
 
 export default function HomePage() {
   return (
