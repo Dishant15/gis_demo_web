@@ -1,0 +1,9 @@
+#notification {
+  position: fixed;
+  z-index: 10;
+  bottom: 15px;
+  // add media query ---
+  // for mobile screen make this as small as 5%
+  left: 30%;
+  right: 30%;
+}

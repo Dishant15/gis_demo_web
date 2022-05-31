@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { find, isNull, pick } from "lodash";
 
@@ -19,6 +20,7 @@ import {
 } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutAreaPocketEdit } from "utils/url.constants";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 import "./area-pocket-page.scss";
 
@@ -39,6 +41,7 @@ import "./area-pocket-page.scss";
  *  AddAreaForm
  */
 const AreaPocketPage = () => {
+  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
@@ -227,6 +230,13 @@ const AreaPocketPage = () => {
             <Button
               startIcon={<AddIcon />}
               onClick={() => {
+                dispatch(
+                  addNotification({
+                    type: "info",
+                    title: "Create area",
+                    text: "Lets create a new area",
+                  })
+                );
                 if (isNull(createPocket)) {
                   handleAreaCreate("M", null);
                 }

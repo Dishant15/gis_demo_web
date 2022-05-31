@@ -11,9 +11,11 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "redux/reducers/auth.reducer";
+import notificationReducer from "./reducers/notification.reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  notifications: notificationReducer,
 });
 
 const persistConfig = {
