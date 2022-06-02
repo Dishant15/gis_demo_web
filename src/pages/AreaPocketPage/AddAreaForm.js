@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useMutation, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import { has, pick } from "lodash";
@@ -14,11 +15,12 @@ import {
   Stack,
 } from "@mui/material";
 
-import Api from "utils/api.utils";
 import {
   apiPostAreaPocketAdd,
   apiPutAreaPocketEdit,
 } from "utils/url.constants";
+import { addNotification } from "redux/reducers/notification.reducer";
+import Api from "utils/api.utils";
 
 const DEFAULT_DATA = {
   name: "",
@@ -30,6 +32,7 @@ const DEFAULT_DATA = {
 };
 
 const AddAreaForm = ({ data = {}, onAreaCreate }) => {
+  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     (data) => {
@@ -50,6 +53,12 @@ const AddAreaForm = ({ data = {}, onAreaCreate }) => {
     },
     {
       onSuccess: () => {
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "New Area created",
+          })
+        );
         // refetch list after add success
         setTimeout(() => {
           queryClient.invalidateQueries("areaPocketList");

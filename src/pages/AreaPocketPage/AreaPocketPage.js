@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { find, isNull, pick } from "lodash";
+import { find, isNull, orderBy, pick } from "lodash";
 
 import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -45,12 +45,14 @@ const AreaPocketPage = () => {
   const queryClient = useQueryClient();
   const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
     select: (queryData) => {
-      return queryData.map((d) => {
+      let resultData = queryData.map((d) => {
         // [ [lat, lng], ...]
         const { coordinates } = d;
         d.path = coordsToLatLongMap(coordinates);
         return d;
       });
+      resultData = orderBy(resultData, ["created_on"], ["desc"]);
+      return resultData;
     },
   });
   const { mutate, isLoading: editAreaLoading } = useMutation(
@@ -59,6 +61,13 @@ const AreaPocketPage = () => {
     },
     {
       onSuccess: () => {
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Area update",
+            text: "Area coordinates updated successfully",
+          })
+        );
         setTimeout(() => {
           queryClient.invalidateQueries("areaPocketList");
         }, 100);
@@ -230,13 +239,6 @@ const AreaPocketPage = () => {
             <Button
               startIcon={<AddIcon />}
               onClick={() => {
-                dispatch(
-                  addNotification({
-                    type: "info",
-                    title: "Create area",
-                    text: "Lets create a new area",
-                  })
-                );
                 if (isNull(createPocket)) {
                   handleAreaCreate("M", null);
                 }
