@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import {
   GoogleMap,
@@ -76,6 +76,33 @@ const AreaPocketMap = ({
     setShowEdit(false);
     onCancel();
   }, [onCancel]);
+
+  const mayBeEditPolygon = useMemo(() => {
+    if (!!editAreaPocket) {
+      return (
+        <Polygon
+          options={{
+            fillColor: "orange",
+            fillOpacity: 0.3,
+            strokeColor: "orange",
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            clickable: false,
+            draggable: false,
+            editable: true,
+            geodesic: false,
+            zIndex: 5,
+          }}
+          onLoad={handleEditPocketLoad}
+          paths={editAreaPocket.path}
+          onClick={() => {
+            onAreaSelect(editAreaPocket.id);
+          }}
+        />
+      );
+    }
+    return null;
+  }, [editAreaPocket, handleEditPocketLoad, onAreaSelect]);
 
   return (
     <Box width="100%" height="100%">
@@ -156,27 +183,8 @@ const AreaPocketMap = ({
             drawingMode={editMode}
             onPolygonComplete={onPolygonComplete}
           />
-          {!!editAreaPocket ? (
-            <Polygon
-              options={{
-                fillColor: "orange",
-                fillOpacity: 0.3,
-                strokeColor: "orange",
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                clickable: false,
-                draggable: false,
-                editable: true,
-                geodesic: false,
-                zIndex: 5,
-              }}
-              onLoad={handleEditPocketLoad}
-              paths={editAreaPocket.path}
-              onClick={() => {
-                onAreaSelect(editAreaPocket.id);
-              }}
-            />
-          ) : null}
+
+          {mayBeEditPolygon}
           {areaList.map((area) => {
             const { id, path, g_layer } = area;
             const color = getFillColor(g_layer);
