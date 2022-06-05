@@ -16,9 +16,9 @@ const containerStyle = {
 };
 
 /**
- * Show all polygons of areaList
- * pass clicked area id in onAreaSelect
- * draw editable polygon if editAreaPocket passed
+ * Show all polygons of regionList
+ * pass clicked region id in onRegionSelect
+ * draw editable polygon if editRegionPocket passed
  * pass edited coords on polygon in onEditComplete
  * show polygon draw tool on editMode = "polygon"
  * call onDrawComplete once polygon closed , edit starts
@@ -29,11 +29,11 @@ const containerStyle = {
  *  AreaPocketPage
  */
 const RegionMap = ({
-  areaList,
+  regionList,
   mapCenter,
-  onAreaSelect,
+  onRegionSelect,
   editMode,
-  editAreaPocket,
+  editRegionPocket,
   editRegionLoading,
   onEditComplete,
   onDrawComplete,
@@ -67,9 +67,9 @@ const RegionMap = ({
 
   const handleEdit = useCallback(() => {
     const newCoords = getCoordinatesFromFeature(polyRef.current);
-    onEditComplete({ ...editAreaPocket, coordinates: newCoords });
+    onEditComplete({ ...editRegionPocket, coordinates: newCoords });
     setShowEdit(false);
-  }, [onEditComplete, editAreaPocket]);
+  }, [onEditComplete, editRegionPocket]);
 
   const handleEditCancel = useCallback(() => {
     setShowEdit(false);
@@ -77,7 +77,7 @@ const RegionMap = ({
   }, [onCancel]);
 
   const mayBeEditPolygon = useMemo(() => {
-    if (!!editAreaPocket) {
+    if (!!editRegionPocket) {
       return (
         <Polygon
           options={{
@@ -93,15 +93,15 @@ const RegionMap = ({
             zIndex: 5,
           }}
           onLoad={handleEditPocketLoad}
-          paths={editAreaPocket.coordinates}
+          paths={editRegionPocket.coordinates}
           onClick={() => {
-            onAreaSelect(editAreaPocket.id);
+            onRegionSelect(editRegionPocket.id);
           }}
         />
       );
     }
     return null;
-  }, [editAreaPocket, handleEditPocketLoad, onAreaSelect]);
+  }, [editRegionPocket, handleEditPocketLoad, onRegionSelect]);
 
   return (
     <Box width="100%" height="100%">
@@ -184,7 +184,7 @@ const RegionMap = ({
           />
 
           {mayBeEditPolygon}
-          {areaList.map((area) => {
+          {regionList.map((area) => {
             const { id, coordinates, layer } = area;
             const color = getFillColor(layer);
             return (
@@ -204,7 +204,7 @@ const RegionMap = ({
                 }}
                 paths={coordinates}
                 onClick={() => {
-                  onAreaSelect(id);
+                  onRegionSelect(id);
                 }}
               />
             );

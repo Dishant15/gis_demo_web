@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Paper, Slide } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
@@ -8,7 +9,6 @@ import Stack from "@mui/material/Stack";
 import { removeNotification } from "redux/reducers/notification.reducer";
 
 import "./notification.scss";
-import { Slide } from "@mui/material";
 
 export const NOTIFICATION_TYPE = {
   SUCCESS: "success",
@@ -80,10 +80,12 @@ class NotificationDetail extends React.Component {
     const { type, title, text } = this.props;
     return (
       <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-        <Alert key={title} severity={type} onClose={this.removeNotification}>
-          <AlertTitle>{title}</AlertTitle>
-          {text}
-        </Alert>
+        <Paper elevation={5}>
+          <Alert key={title} severity={type} onClose={this.removeNotification}>
+            <AlertTitle>{title}</AlertTitle>
+            {text}
+          </Alert>
+        </Paper>
       </Slide>
     );
   }

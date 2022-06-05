@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { find, isNull, orderBy, pick } from "lodash";
 
-import { Box, Button, IconButton, Stack } from "@mui/material";
+import { Box, Button, Divider, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -72,106 +72,104 @@ const RegionPage = () => {
             text: "Region coordinates updated successfully",
           })
         );
-        setTimeout(() => {
-          queryClient.invalidateQueries("regionList");
-        }, 100);
+        queryClient.invalidateQueries("regionList");
       },
     }
   );
   // set map center
   const [mapCenter, setMapCenter] = useState(DEFAULT_MAP_CENTER);
   // set of all selected area to show on map
-  const [selectedArea, setSelectedArea] = useState(new Set([]));
+  const [selectedRegion, setSelectedRegion] = useState(new Set([]));
   // show details on area list OR map polygon click
-  const [showAreaDetails, setShowAreaDetails] = useState(null);
+  const [showRegionDetails, setShowRegionDetails] = useState(null);
   // null : not creating, "M" : map, "E": edit, "D" : details
-  const [createPocket, setCreatePocket] = useState(null);
+  const [createRegion, setCreateRegion] = useState(null);
   // set coordinates and parent Id of new Area that is being created
-  const [newAreaCoords, setNewAreaCoords] = useState([]);
-  const [newAreaParentId, setNewAreaParentId] = useState(null);
+  const [newRegionCoords, setNewRegionCoords] = useState([]);
+  const [newRegionParentId, setNewRegionParentId] = useState(null);
   // save edit state for area
-  const [editAreaData, setEditAreaData] = useState(null);
+  const [editRegionData, setEditRegionData] = useState(null);
 
-  const handleAreaDetails = useCallback(
-    (areaId) => {
-      if (isNull(createPocket)) {
-        setShowAreaDetails(areaId);
+  const handleRegionDetails = useCallback(
+    (regionId) => {
+      if (isNull(createRegion)) {
+        setShowRegionDetails(regionId);
       }
     },
-    [setShowAreaDetails, createPocket]
+    [setShowRegionDetails, createRegion]
   );
 
-  const handleAreaClick = useCallback(
-    (areaId) => {
-      setSelectedArea((surveySet) => {
-        let newSet = new Set(surveySet);
-        if (newSet.has(areaId)) {
-          newSet.delete(areaId);
+  const handleRegionClick = useCallback(
+    (regionId) => {
+      setSelectedRegion((regionSet) => {
+        let newSet = new Set(regionSet);
+        if (newSet.has(regionId)) {
+          newSet.delete(regionId);
           // remove survey details
-          if (areaId === showAreaDetails) {
-            handleAreaDetails(null);
+          if (regionId === showRegionDetails) {
+            handleRegionDetails(null);
           }
         } else {
-          newSet.add(areaId);
-          handleAreaDetails(areaId);
+          newSet.add(regionId);
+          handleRegionDetails(regionId);
         }
         return newSet;
       });
     },
-    [showAreaDetails]
+    [showRegionDetails]
   );
 
-  const handleAreaCreate = useCallback((step, parent = null) => {
-    setCreatePocket(step);
-    setNewAreaParentId(parent);
-    setShowAreaDetails(null);
+  const handleRegionCreate = useCallback((step, parent = null) => {
+    setCreateRegion(step);
+    setNewRegionParentId(parent);
+    setShowRegionDetails(null);
   }, []);
 
   const handleMapSubmit = useCallback((coords) => {
     // move page state to Detail form
-    setCreatePocket("D");
+    setCreateRegion("D");
     // add coordinates to state
-    setNewAreaCoords(latLongMapToCoords(coords));
+    setNewRegionCoords(latLongMapToCoords(coords));
   }, []);
 
-  const startEditArea = useCallback(
-    (areaData) => () => {
-      setEditAreaData(areaData);
-      // setMapCenter(areaData.path[0]);
-      setCreatePocket("E");
-      // clear selected area popups if any
-      setShowAreaDetails(null);
+  const startEditRegion = useCallback(
+    (regionData) => () => {
+      setEditRegionData(regionData);
+      // setMapCenter(regionData.path[0]);
+      setCreateRegion("E");
+      // clear selected region popups if any
+      setShowRegionDetails(null);
     },
     []
   );
 
-  const handleAreaEdit = useCallback((areaData) => {
+  const handleRegionEdit = useCallback((regionData) => {
     // update data to be in form of server submit
-    let submitData = pick(areaData, ["id", "name", "unique_id"]);
-    submitData.coordinates = latLongMapToCoords(areaData.coordinates);
-    submitData.parentId = areaData.parent;
+    let submitData = pick(regionData, ["id", "name", "unique_id"]);
+    submitData.coordinates = latLongMapToCoords(regionData.coordinates);
+    submitData.parentId = regionData.parent;
     // update area data to server
     mutate(submitData);
     // reset edit area state
-    setEditAreaData(null);
-    setCreatePocket(null);
+    setEditRegionData(null);
+    setCreateRegion(null);
   }, []);
 
   const resetAllSelection = useCallback(() => {
-    setCreatePocket(null);
-    setNewAreaCoords([]);
-    setNewAreaParentId(null);
-    setShowAreaDetails(null);
-    setEditAreaData(null);
+    setCreateRegion(null);
+    setNewRegionCoords([]);
+    setNewRegionParentId(null);
+    setShowRegionDetails(null);
+    setEditRegionData(null);
   }, []);
 
-  const selectedAreaData = useMemo(() => {
+  const selectedRegionData = useMemo(() => {
     if (data) {
-      return regionListData.filter((d) => selectedArea.has(d.id));
+      return regionListData.filter((d) => selectedRegion.has(d.id));
     } else {
       return [];
     }
-  }, [selectedArea, regionListData]);
+  }, [selectedRegion, regionListData]);
 
   if (isLoading) {
     return <Loader />;
@@ -182,13 +180,34 @@ const RegionPage = () => {
       <div className="reg-content-wrapper">
         <div className="reg-pocket-list">
           <div className="reg-list-wrapper">
-            <div className="reg-list-header-pill">Regions</div>
+            <Stack px={2} direction="row">
+              <Box
+                color="primary.dark"
+                flex={1}
+                className="reg-list-header-pill"
+              >
+                Regions
+              </Box>
+              <Button
+                color="success"
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  if (isNull(createRegion)) {
+                    handleRegionCreate("M", null);
+                  }
+                }}
+              >
+                Create Region
+              </Button>
+            </Stack>
+
+            <Divider flexItem orientation="horizontal" />
 
             {data.map((region) => {
               const { id, name, layer } = region;
               const color = getFillColor(layer);
-              const isActive = selectedArea.has(id);
-              const isEdit = editAreaData?.id === id;
+              const isActive = selectedRegion.has(id);
+              const isEdit = editRegionData?.id === id;
 
               return (
                 <Box className={`reg-list-pill`} key={id}>
@@ -205,14 +224,14 @@ const RegionPage = () => {
                       >
                         {name}
                       </Box>
-                      <Box onClick={() => handleAreaClick(id)}>
+                      <Box onClick={() => handleRegionClick(id)}>
                         <IconButton aria-label="add-area-pocket" size="small">
                           <VisibilityIcon
                             color={isActive ? "secondary" : "inherit"}
                           />
                         </IconButton>
                       </Box>
-                      <Box onClick={startEditArea(region)}>
+                      <Box onClick={startEditRegion(region)}>
                         <IconButton aria-label="add-area-pocket" size="small">
                           <EditIcon color={isEdit ? "secondary" : "inherit"} />
                         </IconButton>
@@ -220,8 +239,8 @@ const RegionPage = () => {
                     </Stack>
                     <Box
                       onClick={() => {
-                        if (isNull(createPocket)) {
-                          handleAreaCreate("M", id);
+                        if (isNull(createRegion)) {
+                          handleRegionCreate("M", id);
                         }
                       }}
                     >
@@ -233,50 +252,40 @@ const RegionPage = () => {
                 </Box>
               );
             })}
-            <Button
-              startIcon={<AddIcon />}
-              onClick={() => {
-                if (isNull(createPocket)) {
-                  handleAreaCreate("M", null);
-                }
-              }}
-            >
-              Create Region
-            </Button>
           </div>
         </div>
 
         <div className="reg-content">
           <div className="reg-map-container">
             <RegionMap
-              areaList={selectedAreaData}
+              regionList={selectedRegionData}
               mapCenter={mapCenter}
-              onAreaSelect={handleAreaDetails}
-              editMode={createPocket === "M" ? "polygon" : null}
-              editAreaPocket={editAreaData}
+              onRegionSelect={handleRegionDetails}
+              editMode={createRegion === "M" ? "polygon" : null}
+              editRegionPocket={editRegionData}
               editRegionLoading={editRegionLoading}
-              onEditComplete={handleAreaEdit}
-              onDrawComplete={() => setCreatePocket("E")}
+              onEditComplete={handleRegionEdit}
+              onDrawComplete={() => setCreateRegion("E")}
               onSubmit={handleMapSubmit}
               onCancel={resetAllSelection}
             />
-            {createPocket === "D" ? (
+            {createRegion === "D" ? (
               <div className="reg-map-details">
                 <AddRegionForm
                   key="add"
                   data={{
-                    coordinates: newAreaCoords,
-                    parentId: newAreaParentId,
+                    coordinates: newRegionCoords,
+                    parentId: newRegionParentId,
                   }}
                   onAreaCreate={resetAllSelection}
                 />
               </div>
             ) : null}
-            {isNull(showAreaDetails) ? null : (
+            {isNull(showRegionDetails) ? null : (
               <div className="reg-map-details">
                 <AddRegionForm
-                  key={showAreaDetails}
-                  data={find(data, ["id", showAreaDetails])}
+                  key={showRegionDetails}
+                  data={find(data, ["id", showRegionDetails])}
                   onAreaCreate={resetAllSelection}
                 />
               </div>
