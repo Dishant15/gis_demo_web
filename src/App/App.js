@@ -8,21 +8,23 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import HomePage from "pages/HomePage";
-import AreaPocketPage from "pages/AreaPocketPage";
 import Layout from "App/Layout";
+import HomePage from "pages/HomePage";
 import LoginPage from "pages/Authentication/LoginPage";
+import AreaPocketPage from "pages/AreaPocketPage";
+import RegionPage from "../region/RegionPage";
 
-import {
-  getAreaPocketPath,
-  getHomePath,
-  getLoginPath,
-} from "utils/url.constants";
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
 
 import { RequireAuth } from "App/RequireAuth";
 import "./global.scss";
+import {
+  getAreaPocketPath,
+  getHomePath,
+  getLoginPath,
+  getRegionPage,
+} from "../utils/url.constants";
 
 // test imports
 
@@ -52,6 +54,14 @@ const App = () => {
                     element={
                       <RequireAuth>
                         <AreaPocketPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path={getRegionPage()}
+                    element={
+                      <RequireAuth>
+                        <RegionPage />
                       </RequireAuth>
                     }
                   />

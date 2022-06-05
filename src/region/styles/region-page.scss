@@ -1,0 +1,54 @@
+#region-page {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+
+  .reg-content-wrapper {
+    display: flex;
+    height: calc(100% - 2em);
+    width: 100%;
+
+    .reg-pocket-list {
+      flex: 2;
+      border-right: 1px solid silver;
+      overflow-y: auto;
+
+      .reg-list-wrapper {
+        padding: 1em 0px;
+
+        .reg-list-header-pill {
+          font-size: 1.2em;
+          font-weight: bold;
+          padding: 0.5em;
+        }
+
+        .reg-list-pill {
+          font-size: 1em;
+          padding: 0.5em;
+          border: 1px solid transparent;
+          border-bottom-color: silver;
+        }
+      }
+    }
+
+    .reg-content {
+      flex: 5;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+
+      .reg-map-container {
+        position: relative;
+        flex: 1;
+
+        .reg-map-details {
+          position: absolute;
+          right: 1em;
+          top: 1em;
+          z-index: 2;
+        }
+      }
+    }
+  }
+}

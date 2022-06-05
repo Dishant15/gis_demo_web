@@ -2,6 +2,7 @@ export const getHomePath = () => "/";
 export const getGeoSurveyPath = () => "/geo/survey";
 export const getAreaPocketPath = () => "/area/pocket";
 export const getLoginPath = () => "/login";
+export const getRegionPage = () => "/regions";
 
 /* External server apis **/
 export const apiGetAreaPocketList = () => "/api/geo/survey/area-pocket/list/";

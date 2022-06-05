@@ -12,11 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import {
-  getAreaPocketPath,
-  getHomePath,
-  getLoginPath,
-} from "utils/url.constants";
+import { getHomePath, getLoginPath, getRegionPage } from "utils/url.constants";
 import { useDispatch } from "react-redux";
 
 import { logout } from "redux/reducers/auth.reducer";
@@ -83,12 +79,8 @@ const NavigationBar = () => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getAreaPocketPath()}
-          >
-            Area Pocket
+          <MenuItem onClick={handleClose} component={Link} to={getRegionPage()}>
+            Manage Regions
           </MenuItem>
           <MenuItem>Users & Permissions</MenuItem>
           <MenuItem>Network</MenuItem>
