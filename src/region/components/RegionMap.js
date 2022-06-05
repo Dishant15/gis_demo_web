@@ -34,7 +34,7 @@ const RegionMap = ({
   onAreaSelect,
   editMode,
   editAreaPocket,
-  editAreaLoading,
+  editRegionLoading,
   onEditComplete,
   onDrawComplete,
   onSubmit,
@@ -129,7 +129,7 @@ const RegionMap = ({
           </Paper>
         </div>
       ) : null}
-      {showEdit || editAreaLoading ? (
+      {showEdit || editRegionLoading ? (
         <div className="reg-map-details">
           <Paper>
             <Stack spacing={2}>
@@ -139,7 +139,7 @@ const RegionMap = ({
                 </Typography>
               </Box>
               <Button onClick={handleEditCancel}>Cancel</Button>
-              {editAreaLoading ? (
+              {editRegionLoading ? (
                 <Button>Loading ...</Button>
               ) : (
                 <Button onClick={handleEdit}>Update</Button>

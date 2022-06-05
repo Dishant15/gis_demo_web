@@ -26,13 +26,13 @@ import { getFillColor } from "../utils/map.utils";
 import "./styles/region-page.scss";
 
 /**
- * Fetch area pocket list
- * render list of pocket sidebar
- * render AreaPocket Map
- * user can select multiple area to show on map
- * user can see area details on popup
- * user can edit selected area coordinates , update details in popup
- * user can add new area, add details in popup
+ * Fetch region list
+ * render region list sidebar
+ * render RegionMap
+ * user can select multiple region to show on map
+ * user can see region data on popup
+ * user can edit selected region coordinates , update details in popup
+ * user can add new region, add details in popup
  *
  * Parent
  *  App
@@ -44,10 +44,12 @@ import "./styles/region-page.scss";
 const RegionPage = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const { isLoading, data } = useQuery("regionList", fetchRegionList);
+  const { isLoading, data } = useQuery("regionList", fetchRegionList, {
+    initialData: [],
+  });
 
   const regionListData = useMemo(() => {
-    let resultData = data || [];
+    let resultData = data;
     resultData = resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates);
@@ -57,7 +59,7 @@ const RegionPage = () => {
     return resultData;
   }, [data]);
 
-  const { mutate, isLoading: editAreaLoading } = useMutation(
+  const { mutate, isLoading: editRegionLoading } = useMutation(
     (formData) => {
       Api.put(apiPutRegionEdit(formData.id), formData);
     },
@@ -252,7 +254,7 @@ const RegionPage = () => {
               onAreaSelect={handleAreaDetails}
               editMode={createPocket === "M" ? "polygon" : null}
               editAreaPocket={editAreaData}
-              editAreaLoading={editAreaLoading}
+              editRegionLoading={editRegionLoading}
               onEditComplete={handleAreaEdit}
               onDrawComplete={() => setCreatePocket("E")}
               onSubmit={handleMapSubmit}

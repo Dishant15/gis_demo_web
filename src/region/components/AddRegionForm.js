@@ -44,7 +44,7 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
       }
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         dispatch(
           addNotification({
             type: "success",
@@ -52,9 +52,7 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
           })
         );
         // refetch list after add success
-        setTimeout(() => {
-          queryClient.invalidateQueries("regionList");
-        }, 10);
+        await queryClient.invalidateQueries("regionList");
         onAreaCreate();
       },
     }
