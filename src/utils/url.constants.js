@@ -5,11 +5,18 @@ export const getLoginPath = () => "/login";
 export const getRegionPage = () => "/regions";
 
 /* External server apis **/
+
+// area pocket apis
 export const apiGetAreaPocketList = () => "/api/geo/survey/area-pocket/list/";
 export const apiPostAreaPocketAdd = () => "/api/geo/survey/area-pocket/add/";
 export const apiPutAreaPocketEdit = (areaPocketId) =>
   `/api/geo/survey/area-pocket/${areaPocketId}/edit/`;
-export const apiAddArea = () => "/api/area/add/";
+
+// region apis
+export const apiGetRegionList = () => "/api/region/list/";
+export const apiPostRegionAdd = () => "/api/region/add/";
+export const apiPutRegionEdit = (regionId) => `/api/region/${regionId}/edit/`;
+export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 
 export const apiPostLogin = () => "/api/token/";
 

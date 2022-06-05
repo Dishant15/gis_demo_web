@@ -12,15 +12,16 @@ import Loader from "components/common/Loader";
 import RegionMap from "./components/RegionMap";
 import AddRegionForm from "./components/AddRegionForm";
 
-import { fetchAreaPockets, getFillColor } from "pages/AreaPocketPage/services";
+import { fetchRegionList } from "./data/services";
 import {
   coordsToLatLongMap,
   latLongMapToCoords,
   DEFAULT_MAP_CENTER,
 } from "utils/map.utils";
 import Api from "utils/api.utils";
-import { apiPutAreaPocketEdit } from "utils/url.constants";
+import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { getFillColor } from "../utils/map.utils";
 
 import "./styles/region-page.scss";
 
@@ -43,33 +44,34 @@ import "./styles/region-page.scss";
 const RegionPage = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const { isLoading, data } = useQuery("areaPocketList", fetchAreaPockets, {
-    select: (queryData) => {
-      let resultData = queryData.map((d) => {
-        // [ [lat, lng], ...]
-        const { coordinates } = d;
-        d.path = coordsToLatLongMap(coordinates);
-        return d;
-      });
-      resultData = orderBy(resultData, ["created_on"], ["desc"]);
-      return resultData;
-    },
-  });
+  const { isLoading, data } = useQuery("regionList", fetchRegionList);
+
+  const regionListData = useMemo(() => {
+    let resultData = data || [];
+    resultData = resultData.map((d) => {
+      // [ [lat, lng], ...] -> [{lat, lng}, ...]
+      d.coordinates = coordsToLatLongMap(d.coordinates);
+      return d;
+    });
+    resultData = orderBy(resultData, ["created_on"], ["desc"]);
+    return resultData;
+  }, [data]);
+
   const { mutate, isLoading: editAreaLoading } = useMutation(
-    (data) => {
-      Api.put(apiPutAreaPocketEdit(data.id), data);
+    (formData) => {
+      Api.put(apiPutRegionEdit(formData.id), formData);
     },
     {
       onSuccess: () => {
         dispatch(
           addNotification({
             type: "success",
-            title: "Area update",
-            text: "Area coordinates updated successfully",
+            title: "Region update",
+            text: "Region coordinates updated successfully",
           })
         );
         setTimeout(() => {
-          queryClient.invalidateQueries("areaPocketList");
+          queryClient.invalidateQueries("regionList");
         }, 100);
       },
     }
@@ -143,15 +145,8 @@ const RegionPage = () => {
 
   const handleAreaEdit = useCallback((areaData) => {
     // update data to be in form of server submit
-    let submitData = pick(areaData, [
-      "id",
-      "name",
-      "area",
-      "city",
-      "state",
-      "pincode",
-    ]);
-    submitData.coordinates = latLongMapToCoords(areaData.path);
+    let submitData = pick(areaData, ["id", "name", "unique_id"]);
+    submitData.coordinates = latLongMapToCoords(areaData.coordinates);
     submitData.parentId = areaData.parent;
     // update area data to server
     mutate(submitData);
@@ -170,11 +165,11 @@ const RegionPage = () => {
 
   const selectedAreaData = useMemo(() => {
     if (data) {
-      return data.filter((d) => selectedArea.has(d.id));
+      return regionListData.filter((d) => selectedArea.has(d.id));
     } else {
       return [];
     }
-  }, [selectedArea, data]);
+  }, [selectedArea, regionListData]);
 
   if (isLoading) {
     return <Loader />;
@@ -185,11 +180,11 @@ const RegionPage = () => {
       <div className="reg-content-wrapper">
         <div className="reg-pocket-list">
           <div className="reg-list-wrapper">
-            <div className="reg-list-header-pill">List of Pockets</div>
+            <div className="reg-list-header-pill">Regions</div>
 
-            {data.map((area) => {
-              const { id, name, g_layer } = area;
-              const color = getFillColor(g_layer);
+            {data.map((region) => {
+              const { id, name, layer } = region;
+              const color = getFillColor(layer);
               const isActive = selectedArea.has(id);
               const isEdit = editAreaData?.id === id;
 
@@ -215,7 +210,7 @@ const RegionPage = () => {
                           />
                         </IconButton>
                       </Box>
-                      <Box onClick={startEditArea(area)}>
+                      <Box onClick={startEditArea(region)}>
                         <IconButton aria-label="add-area-pocket" size="small">
                           <EditIcon color={isEdit ? "secondary" : "inherit"} />
                         </IconButton>
@@ -244,7 +239,7 @@ const RegionPage = () => {
                 }
               }}
             >
-              Create Primary Area
+              Create Region
             </Button>
           </div>
         </div>

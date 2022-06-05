@@ -8,8 +8,7 @@ import {
 } from "@react-google-maps/api";
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
-import { getCoordinatesFromFeature } from "utils/map.utils";
-import { getFillColor } from "pages/AreaPocketPage/services";
+import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
 
 const containerStyle = {
   width: "100%",
@@ -68,7 +67,7 @@ const RegionMap = ({
 
   const handleEdit = useCallback(() => {
     const newCoords = getCoordinatesFromFeature(polyRef.current);
-    onEditComplete({ ...editAreaPocket, path: newCoords });
+    onEditComplete({ ...editAreaPocket, coordinates: newCoords });
     setShowEdit(false);
   }, [onEditComplete, editAreaPocket]);
 
@@ -88,13 +87,13 @@ const RegionMap = ({
             strokeOpacity: 1,
             strokeWeight: 2,
             clickable: false,
-            draggable: false,
+            draggable: true,
             editable: true,
             geodesic: false,
             zIndex: 5,
           }}
           onLoad={handleEditPocketLoad}
-          paths={editAreaPocket.path}
+          paths={editAreaPocket.coordinates}
           onClick={() => {
             onAreaSelect(editAreaPocket.id);
           }}
@@ -122,7 +121,7 @@ const RegionMap = ({
             <Stack spacing={2}>
               <Box p={3}>
                 <Typography variant="h4">
-                  Finalise area polygon than add details
+                  Finalise region polygon than add details
                 </Typography>
               </Box>
               <Button onClick={handleSave}>Add</Button>
@@ -186,8 +185,8 @@ const RegionMap = ({
 
           {mayBeEditPolygon}
           {areaList.map((area) => {
-            const { id, path, g_layer } = area;
-            const color = getFillColor(g_layer);
+            const { id, coordinates, layer } = area;
+            const color = getFillColor(layer);
             return (
               <Polygon
                 key={id}
@@ -203,7 +202,7 @@ const RegionMap = ({
                   geodesic: false,
                   zIndex: 1,
                 }}
-                paths={path}
+                paths={coordinates}
                 onClick={() => {
                   onAreaSelect(id);
                 }}

@@ -15,19 +15,14 @@ import {
   Stack,
 } from "@mui/material";
 
-import {
-  apiPostAreaPocketAdd,
-  apiPutAreaPocketEdit,
-} from "utils/url.constants";
+import { apiPostRegionAdd, apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
 import Api from "utils/api.utils";
 
 const DEFAULT_DATA = {
   name: "",
-  area: "",
-  city: "",
-  state: "",
-  pincode: "",
+  unique_id: "",
+  parentId: "",
   coordinates: [],
 };
 
@@ -35,20 +30,17 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
-    (data) => {
-      let submitData = pick(data, [
+    (formData) => {
+      let submitData = pick(formData, [
         "parentId",
         "name",
-        "area",
-        "city",
-        "state",
-        "pincode",
+        "unique_id",
         "coordinates",
       ]);
-      if (has(data, "id")) {
-        Api.put(apiPutAreaPocketEdit(data.id), submitData);
+      if (has(formData, "id")) {
+        Api.put(apiPutRegionEdit(data.id), submitData);
       } else {
-        Api.post(apiPostAreaPocketAdd(), submitData);
+        Api.post(apiPostRegionAdd(), submitData);
       }
     },
     {
@@ -56,12 +48,12 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
         dispatch(
           addNotification({
             type: "success",
-            title: "New Area created",
+            title: "New Region created",
           })
         );
         // refetch list after add success
         setTimeout(() => {
-          queryClient.invalidateQueries("areaPocketList");
+          queryClient.invalidateQueries("regionList");
         }, 10);
         onAreaCreate();
       },
@@ -83,7 +75,7 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
     <Paper elevation={5}>
       <Box p={3}>
         <Typography mb={2} variant="h5">
-          Area Pocket Details
+          Region Details
         </Typography>
         <Box component="form" onSubmit={handleSubmit(mutate)}>
           <Stack spacing={2}>
@@ -95,23 +87,8 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
             />
             <TextField
               error={!!errors.area}
-              label="Area"
-              {...register("area", { required: true })}
-            />
-            <TextField
-              error={!!errors.city}
-              label="City"
-              {...register("city", { required: true })}
-            />
-            <TextField
-              error={!!errors.state}
-              label="State"
-              {...register("state", { required: true })}
-            />
-            <TextField
-              error={!!errors.pincode}
-              label="Pincode"
-              {...register("pincode", { required: true })}
+              label="Unique ID"
+              {...register("unique_id", { required: true })}
             />
             {isLoading ? (
               <LoadingButton loading>Loading...</LoadingButton>
