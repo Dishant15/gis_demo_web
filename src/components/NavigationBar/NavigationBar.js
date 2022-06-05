@@ -12,7 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import { getHomePath, getLoginPath, getRegionPage } from "utils/url.constants";
+import {
+  getHomePath,
+  getLoginPath,
+  getRegionPage,
+  getUserListPage,
+} from "utils/url.constants";
 import { useDispatch } from "react-redux";
 
 import { logout } from "redux/reducers/auth.reducer";
@@ -82,7 +87,13 @@ const NavigationBar = () => {
           <MenuItem onClick={handleClose} component={Link} to={getRegionPage()}>
             Manage Regions
           </MenuItem>
-          <MenuItem>Users & Permissions</MenuItem>
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getUserListPage()}
+          >
+            Users & Permissions
+          </MenuItem>
           <MenuItem>Network</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>

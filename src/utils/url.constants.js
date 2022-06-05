@@ -3,6 +3,8 @@ export const getGeoSurveyPath = () => "/geo/survey";
 export const getAreaPocketPath = () => "/area/pocket";
 export const getLoginPath = () => "/login";
 export const getRegionPage = () => "/regions";
+export const getUserListPage = () => "/users";
+export const getAddUserPage = () => "/users/add";
 
 /* External server apis **/
 
@@ -21,3 +23,6 @@ export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 export const apiPostLogin = () => "/api/token/";
 
 export const apiGetUserTaskList = () => "/api/task/survey/list/";
+
+export const apiGetUserList = () => "/api/user/list/";
+export const apiAddUser = () => "/api/user/list/";
