@@ -13,8 +13,9 @@ import HomePage from "pages/HomePage";
 import LoginPage from "pages/Authentication/LoginPage";
 import AreaPocketPage from "pages/AreaPocketPage";
 import RegionPage from "../region/RegionPage";
-import UserListPage from "gis_user/UserListPage";
-import AddUserPage from "gis_user/AddUserPage";
+import UserAdminPage from "gis_user/UserAdminPage";
+import UserListPage from "gis_user/pages/UserListPage";
+import AddUserPage from "gis_user/pages/UserAdminForm";
 
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
@@ -70,22 +71,24 @@ const App = () => {
                       </RequireAuth>
                     }
                   />
-                  <Route
-                    path={getUserListPage()}
-                    element={
-                      <RequireAuth>
-                        <UserListPage />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route
-                    path={getAddUserPage()}
-                    element={
-                      <RequireAuth>
-                        <AddUserPage />
-                      </RequireAuth>
-                    }
-                  />
+                  <Route path="/users" element={<UserAdminPage />}>
+                    <Route
+                      path={getUserListPage()}
+                      element={
+                        <RequireAuth>
+                          <UserListPage />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path={getAddUserPage()}
+                      element={
+                        <RequireAuth>
+                          <AddUserPage />
+                        </RequireAuth>
+                      }
+                    />
+                  </Route>
                 </Route>
                 <Route path={getLoginPath()} element={<LoginPage />} />
                 {/* testing routes */}
