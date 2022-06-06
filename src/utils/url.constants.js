@@ -26,3 +26,5 @@ export const apiGetUserTaskList = () => "/api/task/survey/list/";
 
 export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/list/";
+
+export const apiGetApplicationsList = () => "/api/applications/";

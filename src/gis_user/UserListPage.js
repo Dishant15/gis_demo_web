@@ -23,7 +23,7 @@ const columnDefs = [
 ];
 
 const UserListPage = () => {
-  const { isLoading, data } = useQuery("regionList", fetchUserList);
+  const { isLoading, data } = useQuery("userList", fetchUserList);
 
   return (
     <Container
