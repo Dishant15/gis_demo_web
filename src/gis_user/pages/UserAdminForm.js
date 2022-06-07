@@ -10,6 +10,8 @@ import UserRegionSelect from "gis_user/components/UserRegionSelect";
  * Wrapper around 3 step user form
  * handle user step change states
  *
+ * Parent:
+ *  App
  * Renders
  *  UserForm
  *

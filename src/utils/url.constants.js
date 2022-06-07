@@ -25,6 +25,6 @@ export const apiPostLogin = () => "/api/token/";
 export const apiGetUserTaskList = () => "/api/task/survey/list/";
 
 export const apiGetUserList = () => "/api/user/list/";
-export const apiAddUser = () => "/api/user/list/";
+export const apiAddUser = () => "/api/user/add/";
 
 export const apiGetApplicationsList = () => "/api/applications/";

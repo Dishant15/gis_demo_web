@@ -122,3 +122,11 @@ export const parseErrorMessage = (error) => {
   }
   return errorMessage;
 };
+
+export const parseBadRequest = (error) => {
+  const status = get(error, "response.status");
+  if (status === 400) {
+    return get(error, "response.data");
+  }
+  return false;
+};

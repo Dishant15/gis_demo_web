@@ -1,5 +1,10 @@
+import { map } from "lodash";
 import Api from "utils/api.utils";
-import { apiGetApplicationsList, apiGetUserList } from "utils/url.constants";
+import {
+  apiAddUser,
+  apiGetApplicationsList,
+  apiGetUserList,
+} from "utils/url.constants";
 
 export const fetchUserList = async () => {
   const res = await Api.get(apiGetUserList());
@@ -8,5 +13,19 @@ export const fetchUserList = async () => {
 
 export const fetchApplicationList = async () => {
   const res = await Api.get(apiGetApplicationsList());
+  return res.data;
+};
+
+export const addNewUser = async (data) => {
+  const postData = {
+    ...data,
+    confirm_password: undefined,
+    access_ids: map(data.access_ids, "value").join(","),
+  };
+  console.log(
+    "🚀 ~ file: services.js ~ line 21 ~ addNewUser ~ postData",
+    postData
+  );
+  const res = await Api.post(apiAddUser(), postData);
   return res.data;
 };

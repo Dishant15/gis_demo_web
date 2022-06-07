@@ -11,11 +11,15 @@ import { getAddUserPage } from "utils/url.constants";
 const columnDefs = [
   { field: "username" },
   { field: "name" },
-  { field: "is_active" },
-  { field: "is_staff" },
-  { field: "access_ids" },
+  { field: "is_active", headerName: "Active" },
+  { field: "is_staff", headerName: "Admin" },
+  { field: "access_names", headerName: "Access" },
 ];
 
+/**
+ * Parent:
+ *    App
+ */
 const UserListPage = () => {
   const { isLoading, data } = useQuery("userList", fetchUserList);
 
