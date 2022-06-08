@@ -24,6 +24,7 @@ import {
   apiRegionDelete,
 } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 
 const DEFAULT_DATA = {
@@ -38,12 +39,9 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     (formData) => {
-      let submitData = pick(formData, [
-        "parentId",
-        "name",
-        "unique_id",
-        "coordinates",
-      ]);
+      let submitData = pick(formData, ["parentId", "name", "unique_id"]);
+      // convert coordinate to list of [lat, lng]
+      submitData.coordinates = latLongMapToCoords(formData.coordinates);
       if (has(formData, "id")) {
         Api.put(apiPutRegionEdit(data.id), submitData);
       } else {
