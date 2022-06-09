@@ -1,7 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
-
-import DashTaskList from "user_task/DashTaskList";
+import { Box, Typography } from "@mui/material";
 
 export default function HomePage() {
   return (
@@ -15,7 +13,7 @@ export default function HomePage() {
         justifyContent: "center",
       }}
     >
-      <DashTaskList />
+      <Typography variant="h1">There was A dashboard here !!</Typography>
     </Box>
   );
 }
