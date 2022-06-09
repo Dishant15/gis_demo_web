@@ -16,6 +16,7 @@ import {
   getHomePath,
   getLoginPath,
   getRegionPage,
+  getTicketListPage,
   getUserListPage,
 } from "utils/url.constants";
 import { useDispatch } from "react-redux";
@@ -93,6 +94,13 @@ const NavigationBar = () => {
             to={getUserListPage()}
           >
             Users & Permissions
+          </MenuItem>
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getTicketListPage()}
+          >
+            Tickets
           </MenuItem>
           <MenuItem>Network</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>

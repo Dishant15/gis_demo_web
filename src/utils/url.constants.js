@@ -5,6 +5,8 @@ export const getLoginPath = () => "/login";
 export const getRegionPage = () => "/regions";
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
+export const getTicketListPage = () => "/ticket/list";
+export const getAddTicketPage = () => "/ticket/add";
 
 /* External server apis **/
 
@@ -28,3 +30,5 @@ export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/add/";
 
 export const apiGetApplicationsList = () => "/api/applications/";
+
+export const apiGetTicketList = () => "/api/ticket/list/";

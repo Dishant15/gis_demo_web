@@ -16,6 +16,8 @@ import RegionPage from "../region/RegionPage";
 import UserAdminPage from "gis_user/UserAdminPage";
 import UserListPage from "gis_user/pages/UserListPage";
 import AddUserPage from "gis_user/pages/UserAdminForm";
+import TicketAdminPage from "ticket/TicketAdminPage";
+import TicketListPage from "ticket/pages/TicketListPage";
 
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
@@ -27,6 +29,7 @@ import {
   getHomePath,
   getLoginPath,
   getRegionPage,
+  getTicketListPage,
   getUserListPage,
 } from "../utils/url.constants";
 
@@ -87,6 +90,16 @@ const App = () => {
                       element={
                         <RequireAuth>
                           <AddUserPage />
+                        </RequireAuth>
+                      }
+                    />
+                  </Route>
+                  <Route path="/ticket" element={<TicketAdminPage />}>
+                    <Route
+                      path={getTicketListPage()}
+                      element={
+                        <RequireAuth>
+                          <TicketListPage />
                         </RequireAuth>
                       }
                     />
