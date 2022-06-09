@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 
@@ -22,11 +22,23 @@ const columnDefs = [
  */
 const UserListPage = () => {
   const { isLoading, data } = useQuery("userList", fetchUserList);
+  const gridRef = useRef();
+
+  const onGridReady = () => {
+    gridRef.current.api.sizeColumnsToFit();
+  };
 
   return (
     <>
       <Stack divider={<Divider flexItem />}>
-        <Stack p={1} direction="row" spacing={2} width="100%">
+        <Stack
+          px={2}
+          py={1}
+          direction="row"
+          spacing={2}
+          width="100%"
+          alignItems="center"
+        >
           <Typography flex={1} className="dtl-title" variant="h5">
             Users
           </Typography>
@@ -44,7 +56,12 @@ const UserListPage = () => {
           className="ag-theme-alpine"
           style={{ height: "100vh", width: "100%" }}
         >
-          <AgGridReact rowData={data} columnDefs={columnDefs}></AgGridReact>
+          <AgGridReact
+            ref={gridRef}
+            rowData={data}
+            columnDefs={columnDefs}
+            onGridReady={onGridReady}
+          />
         </Box>
       </Stack>
     </>
