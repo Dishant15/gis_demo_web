@@ -13,7 +13,7 @@ const columnDefs = [
   { field: "name" },
   { field: "is_active", headerName: "Active" },
   { field: "is_staff", headerName: "Admin" },
-  { field: "access_names", headerName: "Access" },
+  { field: "access_ids", headerName: "Access" },
 ];
 
 /**
@@ -29,42 +29,40 @@ const UserListPage = () => {
   };
 
   return (
-    <>
-      <Stack divider={<Divider flexItem />}>
-        <Stack
-          px={2}
-          py={1}
-          direction="row"
-          spacing={2}
-          width="100%"
-          alignItems="center"
+    <Stack divider={<Divider flexItem />}>
+      <Stack
+        px={2}
+        py={1}
+        direction="row"
+        spacing={2}
+        width="100%"
+        alignItems="center"
+      >
+        <Typography flex={1} className="dtl-title" variant="h5">
+          Users
+        </Typography>
+        <Button
+          sx={{ minWidth: "150px" }}
+          component={Link}
+          to={getAddUserPage()}
         >
-          <Typography flex={1} className="dtl-title" variant="h5">
-            Users
-          </Typography>
-          <Button
-            sx={{ minWidth: "150px" }}
-            component={Link}
-            to={getAddUserPage()}
-          >
-            Add
-          </Button>
-        </Stack>
-
-        <Box
-          p={2}
-          className="ag-theme-alpine"
-          style={{ height: "100vh", width: "100%" }}
-        >
-          <AgGridReact
-            ref={gridRef}
-            rowData={data}
-            columnDefs={columnDefs}
-            onGridReady={onGridReady}
-          />
-        </Box>
+          Add
+        </Button>
       </Stack>
-    </>
+
+      <Box
+        p={2}
+        className="ag-theme-alpine"
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <AgGridReact
+          ref={gridRef}
+          rowData={data}
+          columnDefs={columnDefs}
+          onGridReady={onGridReady}
+        />
+      </Box>
+    </Stack>
   );
 };
 
