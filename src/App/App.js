@@ -18,12 +18,14 @@ import UserListPage from "gis_user/pages/UserListPage";
 import AddUserPage from "gis_user/pages/UserAdminForm";
 import TicketAdminPage from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
+import TicketAddForm from "ticket/pages/TicketAddForm";
 
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
 
 import { RequireAuth } from "App/RequireAuth";
 import {
+  getAddTicketPage,
   getAddUserPage,
   getAreaPocketPath,
   getHomePath,
@@ -36,6 +38,7 @@ import {
 import "./global.scss";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import "react-datetime-range-super-picker/dist/index.css";
 
 // test imports
 
@@ -100,6 +103,14 @@ const App = () => {
                       element={
                         <RequireAuth>
                           <TicketListPage />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path={getAddTicketPage()}
+                      element={
+                        <RequireAuth>
+                          <TicketAddForm />
                         </RequireAuth>
                       }
                     />

@@ -22,10 +22,6 @@ export const addNewUser = async (data) => {
     confirm_password: undefined,
     access_ids: map(data.access_ids, "value").join(","),
   };
-  console.log(
-    "🚀 ~ file: services.js ~ line 21 ~ addNewUser ~ postData",
-    postData
-  );
   const res = await Api.post(apiAddUser(), postData);
   return res.data;
 };

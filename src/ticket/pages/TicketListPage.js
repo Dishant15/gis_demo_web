@@ -6,6 +6,7 @@ import { Box, Stack, Typography, Button, Divider } from "@mui/material";
 import { AgGridReact } from "ag-grid-react";
 
 import { fetchTicketList } from "ticket/data/services";
+import { getAddTicketPage } from "utils/url.constants";
 
 const columnDefs = [
   { field: "unique_id" },
@@ -40,7 +41,11 @@ const TicketListPage = () => {
         <Typography flex={1} className="dtl-title" variant="h5">
           Tickets
         </Typography>
-        <Button sx={{ minWidth: "150px" }} component={Link} to={"#"}>
+        <Button
+          sx={{ minWidth: "150px" }}
+          component={Link}
+          to={getAddTicketPage()}
+        >
           Add
         </Button>
       </Stack>

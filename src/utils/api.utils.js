@@ -3,6 +3,7 @@ import { isNil, map, keys, join, get } from "lodash";
 
 import store from "redux/store";
 import { logout } from "redux/reducers/auth.reducer";
+import { format } from "date-fns";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
@@ -129,4 +130,14 @@ export const parseBadRequest = (error) => {
     return get(error, "response.data");
   }
   return false;
+};
+
+/**
+ *
+ * @param {*} date - Date object
+ *
+ * retutn formated django accepted date in String
+ */
+export const formatSubmitDate = (date) => {
+  return format(date, "yyyy-MM-dd HH:mm:ssxxx");
 };

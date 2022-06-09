@@ -32,3 +32,4 @@ export const apiAddUser = () => "/api/user/add/";
 export const apiGetApplicationsList = () => "/api/applications/";
 
 export const apiGetTicketList = () => "/api/ticket/list/";
+export const apiPostTicketAdd = () => "/api/ticket/add/";

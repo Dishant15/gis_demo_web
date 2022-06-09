@@ -1,3 +1,4 @@
 import { FormSelect } from "./FormSelect";
 import { FormCheckbox } from "./FormCheckbox";
-export { FormSelect, FormCheckbox };
+import { FormDatePicker } from "./FormDatePicker";
+export { FormSelect, FormCheckbox, FormDatePicker };
