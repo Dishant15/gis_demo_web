@@ -129,7 +129,7 @@ const RegionPage = () => {
     // move page state to Detail form
     setCreateRegion("D");
     // add coordinates to state
-    setNewRegionCoords(latLongMapToCoords(coords));
+    setNewRegionCoords(coords);
   }, []);
 
   const startEditRegion = useCallback(
