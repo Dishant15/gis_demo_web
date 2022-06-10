@@ -1,9 +1,16 @@
 import React, { useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { Box, Stack, Typography, Divider, Tab, Tabs } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Divider,
+  Tab,
+  Tabs,
+  CircularProgress,
+} from "@mui/material";
 
-import { getTicketListPage } from "utils/url.constants";
 import { useQuery } from "react-query";
 import { fetchTicketDetails } from "ticket/data/services";
 import AddTicketForm from "ticket/components/AddTicketForm";
@@ -23,16 +30,22 @@ const TicketEditPage = () => {
     ["ticketDetails", ticketId],
     fetchTicketDetails
   );
-  console.log(
-    "🚀 ~ file: TicketEditPage.js ~ line 15 ~ TicketEditPage ~ ticketData",
-    ticketData
-  );
 
   // show tabs handle tab change logic
   const [tab, setTab] = React.useState(0);
   const handleChange = useCallback((event, newValue) => {
     setTab(newValue);
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box p={2}>
+        <Stack justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Stack>

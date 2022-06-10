@@ -40,5 +40,6 @@ export const apiGetApplicationsList = () => "/api/applications/";
 
 export const apiGetTicketList = () => "/api/ticket/list/";
 export const apiPostTicketAdd = () => "/api/ticket/add/";
+export const apiPostTicketEdit = (ticketId) => `/api/ticket/${ticketId}/edit/`;
 export const apiGetTicketDetails = (ticketId) =>
   `/api/ticket/${ticketId}/details/`;

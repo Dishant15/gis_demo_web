@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
-import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
-import { map, pick } from "lodash";
+import { pick, get, find, size } from "lodash";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Cancel } from "@mui/icons-material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
@@ -14,21 +15,32 @@ import {
   TicketTypeList,
   TicketStatusList,
 } from "utils/constant";
+import { editTicket } from "ticket/data/services";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { getTicketListPage } from "utils/url.constants";
 import { coordsToLatLongMap } from "utils/map.utils";
 
 const AddTicketForm = ({ formData, onSubmit }) => {
-  console.log(
-    "🚀 ~ file: AddTicketForm.js ~ line 23 ~ AddTicketForm ~ formData",
-    formData
-  );
+  /**
+   * Parent:
+   *    TicketEditPage
+   *    TicketAddForm
+   */
+  const navigate = useNavigate();
+  const isEdit = !!size(formData);
+
   const { isLoading: regionListLoading, data: regionList } = useQuery(
     "regionList",
     fetchRegionList,
     {
       initialData: [],
+      onSuccess: (res) => {
+        const region = find(res, ["id", get(formData, "region.id")]);
+        if (region) {
+          setValue("region", region);
+        }
+      },
     }
   );
 
@@ -37,28 +49,44 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     fetchUserList,
     {
       initialData: [],
+      onSuccess: (res) => {
+        const assignee = find(res, ["id", get(formData, "assignee")]);
+        if (assignee) {
+          setValue("assignee", assignee);
+        }
+      },
     }
   );
 
+  const { mutate, isLoading: isTicketEditing } = useMutation(editTicket, {
+    onSuccess: (res) => {
+      navigate(getTicketListPage());
+    },
+  });
+
   const handleTicketDetailsSubmit = useCallback(
-    (formData) => {
-      let ticketSubmitData = pick(formData, [
+    (data) => {
+      let ticketSubmitData = pick(data, [
         "due_date",
         "name",
         "remarks",
         "unique_id",
       ]);
       // transform ticket data into server acceptable data
-      ticketSubmitData.status = formData.status.value;
-      ticketSubmitData.ticket_type = formData.ticket_type.value;
-      ticketSubmitData.network_type = formData.network_type.value;
-      ticketSubmitData.assigneeId = formData.assigneeId.value;
-      ticketSubmitData.regionId = formData.region.id;
+      ticketSubmitData.status = data.status.value;
+      ticketSubmitData.ticket_type = data.ticket_type.value;
+      ticketSubmitData.network_type = data.network_type.value;
+      ticketSubmitData.assigneeId = data.assignee.id;
+      ticketSubmitData.regionId = data.region.id;
       ticketSubmitData.regionCoords = coordsToLatLongMap(
-        formData.region.coordinates
+        data.region.coordinates
       );
-      // navigate to next step
-      onSubmit(ticketSubmitData);
+      if (isEdit) {
+        mutate({ ticketId: formData.id, data: ticketSubmitData });
+      } else {
+        // navigate to next step
+        onSubmit(ticketSubmitData);
+      }
     },
     [onSubmit]
   );
@@ -68,9 +96,24 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     formState: { errors },
     handleSubmit,
     control,
+    setValue,
   } = useForm({
     defaultValues: {
-      status: TicketStatusList[0],
+      name: get(formData, "name", ""),
+      remarks: get(formData, "remarks", ""),
+      unique_id: get(formData, "unique_id", ""),
+      status: find(TicketStatusList, ["value", get(formData, "status") || "A"]),
+      due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
+      ticket_type: find(TicketTypeList, [
+        "value",
+        get(formData, "ticket_type"),
+      ]),
+      network_type: find(NetworkTypeList, [
+        "value",
+        get(formData, "network_type"),
+      ]),
+      assignee: find(userList, ["id", get(formData, "assignee")]),
+      regionId: find(regionList, ["id", get(formData, "region.id")]),
     },
   });
 
@@ -168,8 +211,8 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             options={regionList}
             getOptionLabel={(opt) => opt.name}
             getOptionValue={(opt) => opt.id}
-            error={!!errors.regionId}
-            helperText={errors.regionId?.message}
+            error={!!errors.region}
+            helperText={errors.region?.message}
             isLoading={regionListLoading}
             rules={{
               required: "This fields is required.",
@@ -186,14 +229,13 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Assign to"
             required
-            name="assigneeId"
+            name="assignee"
             control={control}
-            options={map(userList, (d) => ({
-              value: d.id,
-              label: `${d.name} - ${d.username}`,
-            }))}
-            error={!!errors.assigneeId}
-            helperText={errors.assigneeId?.message}
+            options={userList}
+            getOptionLabel={(opt) => `${opt.name} - ${opt.username}`}
+            getOptionValue={(opt) => opt.id}
+            error={!!errors.assignee}
+            helperText={errors.assignee?.message}
             isLoading={userListLoading}
             rules={{
               required: "This fields is required.",
@@ -249,7 +291,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           />
         </Stack>
       </Stack>
-      <Stack flex={1} p={4} direction="row" sx={{ alignItems: "flex-end" }}>
+      <Stack flex={1} p={4} direction="row" justifyContent="space-between">
         <Button
           variant="contained"
           color="error"
@@ -259,14 +301,15 @@ const AddTicketForm = ({ formData, onSubmit }) => {
         >
           Cancel
         </Button>
-        <Button
+        <LoadingButton
           variant="contained"
           color="success"
           type="submit"
           startIcon={<ArrowForwardIosIcon />}
+          loading={isTicketEditing}
         >
           Next
-        </Button>
+        </LoadingButton>
       </Stack>
     </Box>
   );
