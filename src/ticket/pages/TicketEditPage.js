@@ -14,6 +14,7 @@ import {
 import { useQuery } from "react-query";
 import { fetchTicketDetails } from "ticket/data/services";
 import AddTicketForm from "ticket/components/AddTicketForm";
+import TicketEditMap from "ticket/components/TicketEditMap";
 
 function a11yProps(index) {
   return {
@@ -85,7 +86,7 @@ const TicketEditPage = () => {
           <AddTicketForm formData={ticketData} />
         </TabPanel>
         <TabPanel value={tab} index={1}>
-          Map
+          <TicketEditMap ticketData={ticketData} />
         </TabPanel>
       </Box>
     </Stack>
@@ -101,13 +102,10 @@ const TabPanel = (props) => {
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
+      style={{ width: "100%" }}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 };

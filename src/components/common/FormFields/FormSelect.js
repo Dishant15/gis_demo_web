@@ -2,6 +2,7 @@ import React from "react";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
 import { InputLabel } from "@mui/material";
+import { get } from "lodash";
 
 export const FormSelect = ({
   name,
@@ -21,6 +22,7 @@ export const FormSelect = ({
               ref={field.ref}
               value={field.value}
               onChange={field.onChange}
+              isDisabled={get(rest, "disabled", false)}
               {...rest}
             />
           </>

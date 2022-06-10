@@ -134,6 +134,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             required
             error={!!errors.unique_id}
             label="Unique Id"
+            disabled={isEdit}
             {...register("unique_id", { required: "This fields is required." })}
             helperText={errors.unique_id?.message}
           />
@@ -164,6 +165,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Ticket Type"
             required
+            disabled={isEdit}
             name="ticket_type"
             control={control}
             options={TicketTypeList}
@@ -206,6 +208,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Region"
             required
+            disabled={isEdit}
             name="region"
             control={control}
             options={regionList}
@@ -265,7 +268,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           />
           <FormDatePicker
             errors={errors}
-            label="Target Date"
+            label="Due Date"
             required
             name="due_date"
             control={control}
@@ -305,10 +308,10 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           variant="contained"
           color="success"
           type="submit"
-          startIcon={<ArrowForwardIosIcon />}
+          endIcon={<ArrowForwardIosIcon />}
           loading={isTicketEditing}
         >
-          Next
+          {isEdit ? "Update" : "Next"}
         </LoadingButton>
       </Stack>
     </Box>

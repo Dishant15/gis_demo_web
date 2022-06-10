@@ -37,8 +37,8 @@ import {
 } from "../utils/url.constants";
 
 import "./global.scss";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import "./ag-grid.scss";
+import "./ag-theme-alpine.scss";
 import "react-datetime-range-super-picker/dist/index.css";
 
 // test imports
