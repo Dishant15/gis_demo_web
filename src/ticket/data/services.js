@@ -14,7 +14,7 @@ export const addNewTicket = async (data) => {
     regionId: data.regionId.value,
     ticket_type: data.ticket_type.value,
     due_date: formatSubmitDate(data.due_date),
-    status: "A",
+    status: data.status.value,
   };
 
   const res = await Api.post(apiPostTicketAdd(), postData);

@@ -7,7 +7,11 @@ import { Box, TextField, Stack, Button, CircularProgress } from "@mui/material";
 import { Done } from "@mui/icons-material";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
-import { NetworkTypeList, TicketTypeList } from "utils/constant";
+import {
+  NetworkTypeList,
+  TicketTypeList,
+  TicketStatusList,
+} from "utils/constant";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 
@@ -35,7 +39,11 @@ const AddTicketForm = ({ onSubmit }) => {
     control,
     watch,
     setError,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      status: TicketStatusList[0],
+    },
+  });
 
   const initialLoading = userListLoading || regionListLoading;
   if (initialLoading) {
@@ -96,6 +104,9 @@ const AddTicketForm = ({ onSubmit }) => {
             options={TicketTypeList}
             error={!!errors.ticket_type}
             helperText={errors.ticket_type?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
           />
         </Stack>
         <Stack
@@ -113,6 +124,9 @@ const AddTicketForm = ({ onSubmit }) => {
             options={NetworkTypeList}
             error={!!errors.network_type}
             helperText={errors.network_type?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
           />
         </Stack>
       </Stack>
@@ -132,6 +146,9 @@ const AddTicketForm = ({ onSubmit }) => {
             options={map(regionList, (d) => ({ value: d.id, label: d.name }))}
             error={!!errors.regionId}
             helperText={errors.regionId?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
           />
         </Stack>
         <Stack
@@ -152,6 +169,9 @@ const AddTicketForm = ({ onSubmit }) => {
             }))}
             error={!!errors.assigneeId}
             helperText={errors.assigneeId?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
           />
         </Stack>
       </Stack>
@@ -163,6 +183,18 @@ const AddTicketForm = ({ onSubmit }) => {
             width: "100%",
           }}
         >
+          <FormSelect
+            label="Status"
+            required
+            name="status"
+            control={control}
+            options={TicketStatusList}
+            error={!!errors.status}
+            helperText={errors.status?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
+          />
           <FormDatePicker
             errors={errors}
             label="Target Date"
@@ -182,11 +214,10 @@ const AddTicketForm = ({ onSubmit }) => {
           }}
         >
           <TextField
-            required
             label="Remarks"
             multiline
             rows={2}
-            {...register("remarks", { required: "This fields is required." })}
+            {...register("remarks")}
             error={!!errors.remarks}
             helperText={errors.remarks?.message}
           />

@@ -12,3 +12,9 @@ export const NetworkTypeList = [
   { label: "As Build", value: "B" },
   { label: "As Planned", value: "P" },
 ];
+
+export const TicketStatusList = [
+  { label: "Active", value: "A" },
+  { label: "Completed", value: "C" },
+  { label: "In Active", value: "I" },
+];
