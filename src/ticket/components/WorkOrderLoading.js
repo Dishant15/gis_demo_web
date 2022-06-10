@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Stack, Typography, Skeleton } from "@mui/material";
 
-const TaskLoading = () => {
+const WorkOrderLoading = () => {
   return (
     <Box id="dash-task-list" sx={{ backgroundColor: "#efefef" }}>
       <Typography className="dtl-title" variant="h5">
@@ -25,4 +25,4 @@ const TaskLoading = () => {
   );
 };
 
-export default TaskLoading;
+export default WorkOrderLoading;

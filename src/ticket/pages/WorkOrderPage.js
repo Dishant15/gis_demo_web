@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { size } from "lodash";
+import { cloneDeep, size } from "lodash";
 import { format } from "date-fns";
 
 import {
@@ -20,47 +21,57 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 
-import TaskLoading from "user_task/components/TaskLoading";
-import TaskListMap from "user_task/components/TaskListMap";
+import WorkOrderLoading from "ticket/components/WorkOrderLoading";
+import WorkOrderMap from "ticket/components/WorkOrderMap";
 
-import { fetchUserTasks } from "user_task/data/task.services";
+import { fetchTicketWorkorders } from "ticket/data/services";
 import { coordsToLatLongMap } from "utils/map.utils";
 
-import "./styles/dash_task_list.scss";
+import "../styles/ticket_survey_list.scss";
 
-const DashTaskList = () => {
+const WorkOrderPage = () => {
   /**
    * Parent:
-   *    HomePage
+   *    App
    */
-  const { isLoading, data } = useQuery("userTaskList", fetchUserTasks);
+  const { ticketId } = useParams();
+  const { isLoading, data } = useQuery(
+    ["ticketWorkOrderList", ticketId],
+    fetchTicketWorkorders,
+    { initialData: {} }
+  );
+  console.log(
+    "🚀 ~ file: WorkOrderPage.js ~ line 39 ~ WorkOrderPage ~ data",
+    data
+  );
 
-  const userTaskList = useMemo(() => {
-    let resultData = data ? [...data] : [];
-    for (let r_ind = 0; r_ind < resultData.length; r_ind++) {
-      const userTask = resultData[r_ind];
-      let { area_pocket, survey_boundaries } = userTask;
+  const ticketList = useMemo(() => {
+    let ticket = cloneDeep(data);
+    if (!size(ticket)) return [];
+    // work order here is Survey workorder
+    let { area_pocket, work_orders } = ticket;
 
-      userTask.survey_count = size(survey_boundaries);
-      // convert area coordinate data
-      area_pocket.coordinates = coordsToLatLongMap(area_pocket.coordinates);
-      // convert survey_boundaries coordinate, tags data
-      for (let s_ind = 0; s_ind < survey_boundaries.length; s_ind++) {
-        const survey = survey_boundaries[s_ind];
-        const { units } = survey;
-        // convert survey_boundaries.units coordinate, tags data
-        survey.coordinates = coordsToLatLongMap(survey.coordinates);
-        survey.tags = survey.tags.toString().split(",");
-        for (let u_ind = 0; u_ind < units.length; u_ind++) {
-          const unit = units[u_ind];
-          // convert survey_boundaries.units coordinate, tags data
-          unit.coordinates = coordsToLatLongMap([unit.coordinates])[0];
-          unit.tags = unit.tags.toString().split(",");
-        }
+    ticket.survey_count = size(work_orders);
+    // convert area coordinate data
+    area_pocket.coordinates = coordsToLatLongMap(area_pocket.coordinates);
+    area_pocket.center = coordsToLatLongMap([area_pocket.center])[0];
+    // convert work_orders coordinate, tags data
+    for (let s_ind = 0; s_ind < work_orders.length; s_ind++) {
+      const survey = work_orders[s_ind];
+      const { units } = survey;
+      // convert work_orders.units coordinate, tags data
+      survey.coordinates = coordsToLatLongMap(survey.coordinates);
+      survey.center = coordsToLatLongMap([survey.center])[0];
+      survey.tags = survey.tags.toString().split(",");
+      for (let u_ind = 0; u_ind < units.length; u_ind++) {
+        const unit = units[u_ind];
+        // convert work_orders.units coordinate, tags data
+        unit.coordinates = coordsToLatLongMap([unit.coordinates])[0];
+        unit.tags = unit.tags.toString().split(",");
       }
     }
 
-    return resultData;
+    return [ticket];
   }, [data]);
 
   // on task select we will actually set area of given task
@@ -70,11 +81,11 @@ const DashTaskList = () => {
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
 
   const handleTaskSelect = (task) => (event, isExpanded) => {
-    const { id, area_pocket, survey_boundaries } = task;
+    const { id, area_pocket, work_orders } = task;
 
     setSelectedTask(isExpanded ? id : null);
     setSelectedArea(isExpanded ? area_pocket : null);
-    setSurveyList(isExpanded ? survey_boundaries : []);
+    setSurveyList(isExpanded ? work_orders : []);
     if (isExpanded) setSelectedSurveyId(null);
   };
 
@@ -90,13 +101,13 @@ const DashTaskList = () => {
   );
 
   if (isLoading) {
-    return <TaskLoading />;
+    return <WorkOrderLoading />;
   }
 
   return (
-    <Box id="dash-task-list" sx={{ backgroundColor: "#efefef" }}>
+    <Box id="dash-task-list">
       <Typography className="dtl-title" variant="h5">
-        Survey Tasks
+        Ticket Work Orders
       </Typography>
 
       <Stack
@@ -108,18 +119,18 @@ const DashTaskList = () => {
       >
         <Box sx={{ flex: 2 }}>
           <Stack spacing={2}>
-            {!size(userTaskList) ? (
+            {!size(ticketList) ? (
               <Typography variant="h6" textAlign="center">
-                No available tasks for you
+                No available Tickets
               </Typography>
             ) : null}
-            {userTaskList.map((userTask) => {
-              const { id, name, area_pocket, survey_boundaries } = userTask;
+            {ticketList.map((userTicket) => {
+              const { id, unique_id, name, work_orders } = userTicket;
               return (
                 <Accordion
                   key={id}
                   expanded={selectedTask === id}
-                  onChange={handleTaskSelect(userTask)}
+                  onChange={handleTaskSelect(userTicket)}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -130,17 +141,17 @@ const DashTaskList = () => {
                       {name}
                     </Typography>
                     <Typography sx={{ color: "text.secondary" }}>
-                      {area_pocket.area}, {area_pocket.pincode}
+                      #{unique_id}
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {!size(survey_boundaries) ? (
+                    {!size(work_orders) ? (
                       <Typography variant="h6" textAlign="center">
                         No survey added to this task yet
                       </Typography>
                     ) : null}
                     <List>
-                      {survey_boundaries.map((survey) => {
+                      {work_orders.map((survey) => {
                         const { id, name, created_by, updated_on } = survey;
                         const updated_date = format(
                           new Date(updated_on),
@@ -187,7 +198,7 @@ const DashTaskList = () => {
           </Stack>
         </Box>
         <Box sx={{ flex: 4 }}>
-          <TaskListMap
+          <WorkOrderMap
             areaPocket={selectedArea}
             surveyList={surveyList}
             highlightSurvey={selectedSurveyId}
@@ -199,4 +210,4 @@ const DashTaskList = () => {
   );
 };
 
-export default DashTaskList;
+export default WorkOrderPage;

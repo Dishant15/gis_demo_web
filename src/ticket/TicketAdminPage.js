@@ -8,8 +8,8 @@ import { Outlet } from "react-router-dom";
  */
 const TicketAdminPage = () => {
   return (
-    <Container>
-      <Paper sx={{ mt: 3 }}>
+    <Container sx={{ height: "100%" }}>
+      <Paper sx={{ mt: 3, height: "100%" }}>
         <Outlet />
       </Paper>
     </Container>

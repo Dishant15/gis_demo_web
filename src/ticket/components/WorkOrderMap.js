@@ -10,7 +10,7 @@ const containerStyle = {
 };
 const center = { lat: 23.033863, lng: 72.585022 };
 
-const TaskListMap = ({
+const WorkOrderMap = ({
   areaPocket = null,
   surveyList,
   highlightSurvey,
@@ -80,4 +80,4 @@ const TaskListMap = ({
   );
 };
 
-export default TaskListMap;
+export default WorkOrderMap;

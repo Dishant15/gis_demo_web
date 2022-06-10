@@ -17,13 +17,17 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AgGridReact } from "ag-grid-react";
 
 import { fetchTicketList } from "ticket/data/services";
-import { getAddTicketPage, getEditTicketPage } from "utils/url.constants";
+import {
+  getAddTicketPage,
+  getEditTicketPage,
+  getTicketWorkorderPage,
+} from "utils/url.constants";
 
 /**
  * Parent:
  *    App
  */
-const TicketListPage = (props) => {
+const TicketListPage = () => {
   const navigate = useNavigate();
   const { isLoading, data } = useQuery("ticketList", fetchTicketList);
   const gridRef = useRef();
@@ -33,14 +37,11 @@ const TicketListPage = (props) => {
   };
 
   const onEditClick = (ticketId) => {
-    navigate(getEditTicketPage(ticketId, "details"));
+    navigate(getEditTicketPage(ticketId));
   };
 
   const onViewClick = (ticketId) => {
-    console.log(
-      "🚀 ~ file: TicketListPage.js ~ line 54 ~ onViewClick ~ ticketId",
-      ticketId
-    );
+    navigate(getTicketWorkorderPage(ticketId));
   };
 
   return (
