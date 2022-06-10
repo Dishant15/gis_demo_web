@@ -11,7 +11,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Layout from "App/Layout";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/Authentication/LoginPage";
-import AreaPocketPage from "pages/AreaPocketPage";
+// import AreaPocketPage from "pages/AreaPocketPage";
 import RegionPage from "../region/RegionPage";
 import UserAdminPage from "gis_user/UserAdminPage";
 import UserListPage from "gis_user/pages/UserListPage";
@@ -28,7 +28,6 @@ import { RequireAuth } from "App/RequireAuth";
 import {
   getAddTicketPage,
   getAddUserPage,
-  getAreaPocketPath,
   getEditTicketPage,
   getHomePath,
   getLoginPath,
@@ -65,14 +64,14 @@ const App = () => {
                       </RequireAuth>
                     }
                   />
-                  <Route
+                  {/* <Route
                     path={getAreaPocketPath()}
                     element={
                       <RequireAuth>
                         <AreaPocketPage />
                       </RequireAuth>
                     }
-                  />
+                  /> */}
                   <Route
                     path={getRegionPage()}
                     element={

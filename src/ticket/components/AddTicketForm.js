@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useForm } from "react-hook-form";
-import { map } from "lodash";
+import { map, pick } from "lodash";
 
-import { Box, TextField, Stack, Button, CircularProgress } from "@mui/material";
-import { Done } from "@mui/icons-material";
+import { Box, TextField, Stack, Button } from "@mui/material";
+import { Cancel } from "@mui/icons-material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
 import {
@@ -14,8 +16,14 @@ import {
 } from "utils/constant";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
+import { getTicketListPage } from "utils/url.constants";
+import { coordsToLatLongMap } from "utils/map.utils";
 
-const AddTicketForm = ({ onSubmit }) => {
+const AddTicketForm = ({ formData, onSubmit }) => {
+  console.log(
+    "🚀 ~ file: AddTicketForm.js ~ line 23 ~ AddTicketForm ~ formData",
+    formData
+  );
   const { isLoading: regionListLoading, data: regionList } = useQuery(
     "regionList",
     fetchRegionList,
@@ -32,32 +40,46 @@ const AddTicketForm = ({ onSubmit }) => {
     }
   );
 
+  const handleTicketDetailsSubmit = useCallback(
+    (formData) => {
+      let ticketSubmitData = pick(formData, [
+        "due_date",
+        "name",
+        "remarks",
+        "unique_id",
+      ]);
+      // transform ticket data into server acceptable data
+      ticketSubmitData.status = formData.status.value;
+      ticketSubmitData.ticket_type = formData.ticket_type.value;
+      ticketSubmitData.network_type = formData.network_type.value;
+      ticketSubmitData.assigneeId = formData.assigneeId.value;
+      ticketSubmitData.regionId = formData.region.id;
+      ticketSubmitData.regionCoords = coordsToLatLongMap(
+        formData.region.coordinates
+      );
+      // navigate to next step
+      onSubmit(ticketSubmitData);
+    },
+    [onSubmit]
+  );
+
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-    watch,
-    setError,
   } = useForm({
     defaultValues: {
       status: TicketStatusList[0],
     },
   });
 
-  const initialLoading = userListLoading || regionListLoading;
-  if (initialLoading) {
-    return (
-      <Box p={2}>
-        <Stack justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Stack>
-      </Box>
-    );
-  }
-
   return (
-    <Box p={2} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      p={2}
+      component="form"
+      onSubmit={handleSubmit(handleTicketDetailsSubmit)}
+    >
       <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
         <Stack
           spacing={2}
@@ -141,11 +163,14 @@ const AddTicketForm = ({ onSubmit }) => {
           <FormSelect
             label="Region"
             required
-            name="regionId"
+            name="region"
             control={control}
-            options={map(regionList, (d) => ({ value: d.id, label: d.name }))}
+            options={regionList}
+            getOptionLabel={(opt) => opt.name}
+            getOptionValue={(opt) => opt.id}
             error={!!errors.regionId}
             helperText={errors.regionId?.message}
+            isLoading={regionListLoading}
             rules={{
               required: "This fields is required.",
             }}
@@ -169,6 +194,7 @@ const AddTicketForm = ({ onSubmit }) => {
             }))}
             error={!!errors.assigneeId}
             helperText={errors.assigneeId?.message}
+            isLoading={userListLoading}
             rules={{
               required: "This fields is required.",
             }}
@@ -223,9 +249,23 @@ const AddTicketForm = ({ onSubmit }) => {
           />
         </Stack>
       </Stack>
-      <Stack p={4} sx={{ alignItems: "flex-end" }}>
-        <Button type="submit" startIcon={<Done />}>
-          Submit
+      <Stack flex={1} p={4} direction="row" sx={{ alignItems: "flex-end" }}>
+        <Button
+          variant="contained"
+          color="error"
+          component={Link}
+          to={getTicketListPage()}
+          startIcon={<Cancel />}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          type="submit"
+          startIcon={<ArrowForwardIosIcon />}
+        >
+          Next
         </Button>
       </Stack>
     </Box>

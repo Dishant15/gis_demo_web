@@ -24,7 +24,7 @@ const TicketAddForm = () => {
   const FormComponent = useMemo(() => {
     switch (step) {
       case 0:
-        return <AddTicketForm onSubmit={goToNextStep} />;
+        return <AddTicketForm onSubmit={goToNextStep} formData={{}} />;
 
       case 1:
         return <TicketMap formData={formData} />;

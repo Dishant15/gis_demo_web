@@ -31,7 +31,7 @@ const TicketListPage = (props) => {
 
   const onSelectionChanged = () => {
     const selectedRows = gridRef.current.api.getSelectedRows();
-    navigate(getEditTicketPage(selectedRows[0].id, "form"));
+    navigate(getEditTicketPage(selectedRows[0].id, "details"));
   };
 
   return (

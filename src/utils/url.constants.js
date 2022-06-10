@@ -1,14 +1,19 @@
 export const getHomePath = () => "/";
-export const getGeoSurveyPath = () => "/geo/survey";
-export const getAreaPocketPath = () => "/area/pocket";
 export const getLoginPath = () => "/login";
+
+export const getGeoSurveyPath = () => "/geo/survey";
+
 export const getRegionPage = () => "/regions";
+
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
+
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";
-export const getEditTicketPage = (ticketId, pageType) =>
-  `/ticket/edit/${ticketId}/${pageType}`;
+export const getEditTicketPage = (
+  ticketId = ":ticketId",
+  pageType = ":pageType" // "details" | "map"
+) => `/ticket/edit/${ticketId}/${pageType}`;
 
 /* External server apis **/
 
@@ -35,3 +40,5 @@ export const apiGetApplicationsList = () => "/api/applications/";
 
 export const apiGetTicketList = () => "/api/ticket/list/";
 export const apiPostTicketAdd = () => "/api/ticket/add/";
+export const apiGetTicketDetails = (ticketId) =>
+  `/api/ticket/${ticketId}/details/`;
