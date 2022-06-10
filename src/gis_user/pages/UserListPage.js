@@ -2,7 +2,15 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 
-import { Box, Stack, Typography, Button, Divider } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Button,
+  Divider,
+  IconButton,
+} from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { AgGridReact } from "ag-grid-react";
 
 import { fetchUserList } from "../data/services";
@@ -58,11 +66,34 @@ const UserListPage = () => {
         <AgGridReact
           ref={gridRef}
           rowData={data}
-          columnDefs={columnDefs}
+          columnDefs={[
+            { field: "username" },
+            { field: "name" },
+            {
+              field: "is_active",
+              headerName: "Active",
+              cellRenderer: TickCell,
+            },
+            { field: "is_staff", headerName: "Admin", cellRenderer: TickCell },
+            { field: "access_ids", headerName: "Access" },
+          ]}
           onGridReady={onGridReady}
         />
       </Box>
     </Stack>
+  );
+};
+
+const TickCell = (props) => {
+  return (
+    <IconButton
+      aria-label="check-icon"
+      size="small"
+      color={!!props.value ? "success" : "error"}
+      disableRipple
+    >
+      <CheckCircleIcon fontSize="small" />
+    </IconButton>
   );
 };
 
