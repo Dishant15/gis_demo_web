@@ -59,7 +59,8 @@ const LoginForm = () => {
 
   const { mutate, isLoading } = useMutation(postLogin, {
     onSuccess: (res) => {
-      dispatch(login(res.token));
+      // {token, user}
+      dispatch(login(res));
     },
     onError: (err) => {
       const errorMessage = parseErrorMessage(err);

@@ -19,14 +19,17 @@ import {
   getTicketListPage,
   getUserListPage,
 } from "utils/url.constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { getIsAdminUser } from "redux/selectors/auth.selectors";
 import { logout } from "redux/reducers/auth.reducer";
 import "./navigation-bar.scss";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const isAdminUser = useSelector(getIsAdminUser);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = useCallback(() => {
@@ -47,7 +50,12 @@ const NavigationBar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1, cursor: "pointer" }}
+          onClick={() => navigate(getHomePath())}
+        >
           Network GIS
         </Typography>
 
@@ -88,20 +96,24 @@ const NavigationBar = () => {
           <MenuItem onClick={handleClose} component={Link} to={getRegionPage()}>
             Manage Regions
           </MenuItem>
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getUserListPage()}
-          >
-            Users & Permissions
-          </MenuItem>
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getTicketListPage()}
-          >
-            Tickets
-          </MenuItem>
+          {isAdminUser ? (
+            <>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to={getUserListPage()}
+              >
+                Users & Permissions
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to={getTicketListPage()}
+              >
+                Tickets
+              </MenuItem>
+            </>
+          ) : null}
           <MenuItem>Network</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
