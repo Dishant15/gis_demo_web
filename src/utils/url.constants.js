@@ -7,6 +7,8 @@ export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";
+export const getEditTicketPage = (ticketId, pageType) =>
+  `/ticket/edit/${ticketId}/${pageType}`;
 
 /* External server apis **/
 

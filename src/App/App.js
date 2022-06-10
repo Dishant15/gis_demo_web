@@ -19,6 +19,7 @@ import AddUserPage from "gis_user/pages/UserAdminForm";
 import TicketAdminPage from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
 import TicketAddForm from "ticket/pages/TicketAddForm";
+import TicketEditPage from "ticket/pages/TicketEditPage";
 
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
@@ -28,6 +29,7 @@ import {
   getAddTicketPage,
   getAddUserPage,
   getAreaPocketPath,
+  getEditTicketPage,
   getHomePath,
   getLoginPath,
   getRegionPage,
@@ -111,6 +113,14 @@ const App = () => {
                       element={
                         <RequireAuth>
                           <TicketAddForm />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path={getEditTicketPage()}
+                      element={
+                        <RequireAuth>
+                          <TicketEditPage />
                         </RequireAuth>
                       }
                     />

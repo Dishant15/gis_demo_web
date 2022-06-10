@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import { Box, Stack, Typography, Button, Divider } from "@mui/material";
 import { AgGridReact } from "ag-grid-react";
 
 import { fetchTicketList } from "ticket/data/services";
-import { getAddTicketPage } from "utils/url.constants";
+import { getAddTicketPage, getEditTicketPage } from "utils/url.constants";
 
 const columnDefs = [
   { field: "unique_id" },
@@ -20,12 +20,18 @@ const columnDefs = [
  * Parent:
  *    App
  */
-const TicketListPage = () => {
+const TicketListPage = (props) => {
+  const navigate = useNavigate();
   const { isLoading, data } = useQuery("ticketList", fetchTicketList);
   const gridRef = useRef();
 
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
+  };
+
+  const onSelectionChanged = () => {
+    const selectedRows = gridRef.current.api.getSelectedRows();
+    navigate(getEditTicketPage(selectedRows[0].id, "form"));
   };
 
   return (
@@ -60,6 +66,8 @@ const TicketListPage = () => {
           rowData={data}
           columnDefs={columnDefs}
           onGridReady={onGridReady}
+          rowSelection={"single"}
+          onSelectionChanged={onSelectionChanged}
         />
       </Box>
     </Stack>
