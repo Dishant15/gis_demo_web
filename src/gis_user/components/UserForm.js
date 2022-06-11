@@ -5,6 +5,8 @@ import { map } from "lodash";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
 import { Done } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { addNewUser, fetchApplicationList } from "../data/services";
 import { FormSelect, FormCheckbox } from "components/common/FormFields";
@@ -125,9 +127,13 @@ const UserForm = ({ onSubmit }) => {
         </Stack>
       </Stack>
       <Stack p={4} sx={{ alignItems: "flex-end" }}>
-        <Button type="submit" startIcon={<Done />} isLoading={isUserAdding}>
-          Submit
-        </Button>
+        <LoadingButton
+          type="submit"
+          endIcon={<ArrowForwardIosIcon />}
+          loading={isUserAdding}
+        >
+          Next
+        </LoadingButton>
       </Stack>
     </Box>
   );

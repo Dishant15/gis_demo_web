@@ -33,10 +33,12 @@ const UserAdminForm = () => {
         return <UserForm onSubmit={goToNextStep} />;
 
       case 1:
-        return <UserPermissions />;
+        return (
+          <UserPermissions onSubmit={goToNextStep} goBack={goToPrevStep} />
+        );
 
       case 2:
-        return <UserRegionSelect />;
+        return <UserRegionSelect goBack={goToPrevStep} />;
     }
   }, [step]);
 
