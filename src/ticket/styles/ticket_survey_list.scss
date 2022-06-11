@@ -14,5 +14,6 @@
   .dtl-content-wrapper {
     // 2em for title, 1em for padding
     height: calc(100% - 3em);
+    overflow: auto;
   }
 }

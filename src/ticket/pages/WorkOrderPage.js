@@ -4,20 +4,21 @@ import { useQuery } from "react-query";
 import { cloneDeep, size } from "lodash";
 import { format } from "date-fns";
 
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import { Box, Divider, Stack, Typography } from "@mui/material";
+
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import { red } from "@mui/material/colors";
+import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 
@@ -40,14 +41,10 @@ const WorkOrderPage = () => {
     fetchTicketWorkorders,
     { initialData: {} }
   );
-  console.log(
-    "🚀 ~ file: WorkOrderPage.js ~ line 39 ~ WorkOrderPage ~ data",
-    data
-  );
 
-  const ticketList = useMemo(() => {
+  const ticketData = useMemo(() => {
     let ticket = cloneDeep(data);
-    if (!size(ticket)) return [];
+    if (!size(ticket)) return {};
     // work order here is Survey workorder
     let { area_pocket, work_orders } = ticket;
 
@@ -71,23 +68,12 @@ const WorkOrderPage = () => {
       }
     }
 
-    return [ticket];
+    return ticket;
   }, [data]);
+  const { area_pocket, work_orders = [] } = ticketData;
 
-  // on task select we will actually set area of given task
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
-  const [surveyList, setSurveyList] = useState([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
-
-  const handleTaskSelect = (task) => (event, isExpanded) => {
-    const { id, area_pocket, work_orders } = task;
-
-    setSelectedTask(isExpanded ? id : null);
-    setSelectedArea(isExpanded ? area_pocket : null);
-    setSurveyList(isExpanded ? work_orders : []);
-    if (isExpanded) setSelectedSurveyId(null);
-  };
+  const [expanded, setExpanded] = React.useState(false);
 
   const handleSurveySelect = useCallback(
     (surveyId) => () => {
@@ -100,15 +86,21 @@ const WorkOrderPage = () => {
     [selectedSurveyId]
   );
 
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   if (isLoading) {
     return <WorkOrderLoading />;
   }
 
   return (
     <Box id="dash-task-list">
-      <Typography className="dtl-title" variant="h5">
-        Ticket Work Orders
+      <Typography className="dtl-title" variant="h5" color="primary.dark">
+        Workorders : {ticketData.name}
       </Typography>
+
+      <Divider flexItem />
 
       <Stack
         className="dtl-content-wrapper"
@@ -117,90 +109,93 @@ const WorkOrderPage = () => {
         height="100%"
         width="100%"
       >
-        <Box sx={{ flex: 2 }}>
+        <Box sx={{ flex: 2 }} py={2}>
           <Stack spacing={2}>
-            {!size(ticketList) ? (
+            {!size(work_orders) ? (
               <Typography variant="h6" textAlign="center">
                 No available Tickets
               </Typography>
             ) : null}
-            {ticketList.map((userTicket) => {
-              const { id, unique_id, name, work_orders } = userTicket;
-              return (
-                <Accordion
-                  key={id}
-                  expanded={selectedTask === id}
-                  onChange={handleTaskSelect(userTicket)}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1bh-content"
-                    id="panel1bh-header"
-                  >
-                    <Typography sx={{ width: "33%", flexShrink: 0 }}>
-                      {name}
-                    </Typography>
-                    <Typography sx={{ color: "text.secondary" }}>
-                      #{unique_id}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {!size(work_orders) ? (
-                      <Typography variant="h6" textAlign="center">
-                        No survey added to this task yet
-                      </Typography>
-                    ) : null}
-                    <List>
-                      {work_orders.map((survey) => {
-                        const { id, name, created_by, updated_on } = survey;
-                        const updated_date = format(
-                          new Date(updated_on),
-                          "d MMM, HH:mm"
-                        );
-                        const isActive = id === selectedSurveyId;
-                        return (
-                          <ListItem
-                            disablePadding
-                            key={id}
-                            onClick={handleSurveySelect(id)}
-                            sx={{
-                              backgroundColor: isActive
-                                ? "primary.light"
-                                : "inherit",
-                              color: isActive ? "white" : "inherit",
-                            }}
-                          >
-                            <ListItemButton>
-                              <ListItemIcon>
-                                {isActive ? (
-                                  <MyLocationIcon />
-                                ) : (
-                                  <LocationSearchingIcon />
-                                )}
-                              </ListItemIcon>
+            {work_orders.map((surveyWorkorder) => {
+              const { id, name, status, address, tags, updated_on, units } =
+                surveyWorkorder;
+              const formatedUpdatedOn = format(
+                new Date(updated_on),
+                "do MMM, hh:mm aaa"
+              );
 
-                              <ListItemText
-                                color={
-                                  isActive ? "white !important" : "inherit"
-                                }
-                                primary={name}
-                                secondary={`user - ${created_by}, updated on: ${updated_date}`}
-                              />
-                            </ListItemButton>
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </AccordionDetails>
-                </Accordion>
+              return (
+                <Card
+                  key={id}
+                  elevation={0}
+                  sx={{ maxWidth: 345, backgroundColor: "#efefef" }}
+                >
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                        {status}
+                      </Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title={name}
+                    subheader={formatedUpdatedOn}
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      {address}
+                    </Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <IconButton
+                      aria-label="add to favorites"
+                      onClick={handleSurveySelect(id)}
+                    >
+                      {id === selectedSurveyId ? (
+                        <MyLocationIcon />
+                      ) : (
+                        <LocationSearchingIcon />
+                      )}
+                    </IconButton>
+                    <IconButton aria-label="share">
+                      <ShareIcon />
+                    </IconButton>
+                    <ExpandMore
+                      expand={expanded}
+                      onClick={handleExpandClick}
+                      aria-expanded={expanded}
+                      aria-label="show more"
+                    >
+                      <ExpandMoreIcon />
+                    </ExpandMore>
+                  </CardActions>
+                  <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    {units.map((unit) => {
+                      return (
+                        <CardContent key={unit.id}>
+                          <Typography sx={{ fontWeight: "bold" }} paragraph>
+                            {unit.name}:
+                          </Typography>
+                          <Typography paragraph>
+                            Total Home pass: {unit.total_home_pass} <br />
+                            tags: {unit.tags}
+                          </Typography>
+                        </CardContent>
+                      );
+                    })}
+                  </Collapse>
+                </Card>
               );
             })}
           </Stack>
         </Box>
-        <Box sx={{ flex: 4 }}>
+        <Box sx={{ flex: 4 }} py={2}>
           <WorkOrderMap
-            areaPocket={selectedArea}
-            surveyList={surveyList}
+            areaPocket={area_pocket}
+            surveyList={work_orders}
             highlightSurvey={selectedSurveyId}
             onSurveySelect={handleSurveySelect}
           />
@@ -209,5 +204,16 @@ const WorkOrderPage = () => {
     </Box>
   );
 };
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 export default WorkOrderPage;
