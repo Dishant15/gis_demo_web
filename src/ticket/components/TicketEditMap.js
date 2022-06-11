@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Stack } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Done } from "@mui/icons-material";
 import { GoogleMap, LoadScript, Polygon } from "@react-google-maps/api";
 
@@ -18,7 +19,8 @@ import { editTicketArea } from "ticket/data/services";
 
 const containerStyle = {
   width: "100%",
-  minHeight: "100vh",
+  height: "100%",
+  // minHeight: "100vh",
 };
 
 /**
@@ -65,7 +67,13 @@ const TicketEditMap = ({ ticketData }) => {
   }, []);
 
   return (
-    <Box>
+    <Box
+      p={0}
+      height="100%"
+      sx={{
+        position: "relative",
+      }}
+    >
       <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
         <GoogleMap
           clickableIcons={false}
@@ -115,14 +123,21 @@ const TicketEditMap = ({ ticketData }) => {
         </GoogleMap>
       </LoadScript>
 
-      <Stack>
-        {isTicketAdding ? (
-          <Button>Loading...</Button>
-        ) : (
-          <Button onClick={handleSubmit} startIcon={<Done />}>
-            Complete
-          </Button>
-        )}
+      <Stack
+        sx={{
+          position: "absolute",
+          bottom: "1em",
+          right: "3.4em",
+        }}
+      >
+        <LoadingButton
+          variant="contained"
+          loading={isTicketAdding}
+          onClick={handleSubmit}
+          startIcon={<Done />}
+        >
+          Complete
+        </LoadingButton>
       </Stack>
     </Box>
   );

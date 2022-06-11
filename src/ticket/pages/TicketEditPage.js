@@ -49,7 +49,7 @@ const TicketEditPage = () => {
   }
 
   return (
-    <Stack>
+    <Stack height="100%">
       <Stack p={2} direction="row" spacing={2} width="100%">
         <Typography
           color="primary.dark"
@@ -68,7 +68,7 @@ const TicketEditPage = () => {
           flexGrow: 1,
           bgcolor: "background.paper",
           display: "flex",
-          height: "100%",
+          height: "calc(100% - 4em)",
         }}
       >
         <Tabs
@@ -82,10 +82,26 @@ const TicketEditPage = () => {
           <Tab label="Details" {...a11yProps(0)} />
           <Tab label="Map" {...a11yProps(1)} />
         </Tabs>
-        <TabPanel value={tab} index={0}>
+        <TabPanel
+          value={tab}
+          index={0}
+          style={{
+            width: "100%",
+            height: "100%",
+            overflow: "auto",
+          }}
+        >
           <AddTicketForm formData={ticketData} />
         </TabPanel>
-        <TabPanel value={tab} index={1}>
+        <TabPanel
+          value={tab}
+          index={1}
+          style={{
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
           <TicketEditMap ticketData={ticketData} />
         </TabPanel>
       </Box>
@@ -105,7 +121,11 @@ const TabPanel = (props) => {
       style={{ width: "100%" }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box height="100%" sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 };
