@@ -72,16 +72,21 @@ const NavigationBar = () => {
           <Button component={Link} to={"#"} color="inherit">
             Analysis
           </Button>
-          <Button
-            color="inherit"
-            id="administration-button"
-            onClick={handleClick}
-            aria-controls={open ? "administration-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            endIcon={<KeyboardArrowDown />}
-          >
-            Administration
+          {isAdminUser ? (
+            <Button
+              color="inherit"
+              id="administration-button"
+              onClick={handleClick}
+              aria-controls={open ? "administration-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              endIcon={<KeyboardArrowDown />}
+            >
+              Administration
+            </Button>
+          ) : null}
+          <Button onClick={handleLogout} color="inherit">
+            Logout
           </Button>
         </Stack>
         <Menu
@@ -94,28 +99,22 @@ const NavigationBar = () => {
           onClose={handleClose}
         >
           <MenuItem onClick={handleClose} component={Link} to={getRegionPage()}>
-            Manage Regions
+            Region Management
           </MenuItem>
-          {isAdminUser ? (
-            <>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to={getUserListPage()}
-              >
-                Users & Permissions
-              </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to={getTicketListPage()}
-              >
-                Tickets
-              </MenuItem>
-            </>
-          ) : null}
-          <MenuItem>Network</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getUserListPage()}
+          >
+            Users & Permissions
+          </MenuItem>
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getTicketListPage()}
+          >
+            Ticket Management
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
