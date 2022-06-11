@@ -1,7 +1,16 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { find, groupBy, isNull, get, pick } from "lodash";
+import {
+  find,
+  groupBy,
+  isNull,
+  get,
+  pick,
+  map,
+  difference,
+  orderBy,
+} from "lodash";
 
 import { Box, Button, Divider, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -56,8 +65,29 @@ const RegionPage = () => {
     return resultData;
   }, [data]);
 
-  const regionGroupData = useMemo(() => {
-    return groupBy(regionListData, "parent");
+  const [regionGroupData, baseRegionList] = useMemo(() => {
+    // group data by parent
+    let resultGroupData = groupBy(regionListData, "parent");
+    // get list of parent keys
+    const keyList = Object.keys(resultGroupData).map((k) => {
+      if (k == "null") return null;
+      return Number(k);
+    });
+    // get all the parent key list that is not in regionListData ; e.x. null, or other
+    // get list of ids
+    const idList = map(regionListData, "id");
+    // get difference on keyList and idList
+    const mergeList = difference(keyList, idList);
+    // concat list of all groups with unknown parents that is our base layer
+    let baseRegionList = [];
+    for (let mListInd = 0; mListInd < mergeList.length; mListInd++) {
+      const rId = mergeList[mListInd];
+      baseRegionList = baseRegionList.concat(resultGroupData[String(rId)]);
+    }
+    // order by layer
+    baseRegionList = orderBy(baseRegionList, ["layer"], ["asc"]);
+    // return cancat list as first base list to render
+    return [resultGroupData, baseRegionList];
   }, [regionListData]);
 
   const { mutate, isLoading: editRegionLoading } = useMutation(
@@ -219,7 +249,7 @@ const RegionPage = () => {
 
             <Divider flexItem orientation="horizontal" />
 
-            {get(regionGroupData, null, []).map((region) => {
+            {baseRegionList.map((region) => {
               return (
                 <RegionListItem
                   key={region.id}

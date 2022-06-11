@@ -13,7 +13,6 @@ import {
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
 import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
-import Add from "@mui/icons-material/Add";
 
 const containerStyle = {
   width: "100%",
