@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import UnfoldLessIcon from "@mui/icons-material/UnfoldLess";
+import FilterListOffOutlinedIcon from "@mui/icons-material/FilterListOffOutlined";
 
 import { getFillColor } from "utils/map.utils";
 
@@ -72,7 +72,7 @@ const RegionListItem = ({
         ) : (
           <Box>
             <IconButton aria-label="add-area-pocket" size="small">
-              <UnfoldLessIcon color="inherit" />
+              <FilterListOffOutlinedIcon color="inherit" />
             </IconButton>
           </Box>
         )}

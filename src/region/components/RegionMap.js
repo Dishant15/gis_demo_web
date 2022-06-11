@@ -1,5 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
+
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import {
   GoogleMap,
   LoadScript,
@@ -9,6 +13,7 @@ import {
 
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
 import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
+import Add from "@mui/icons-material/Add";
 
 const containerStyle = {
   width: "100%",
@@ -107,45 +112,65 @@ const RegionMap = ({
     <Box width="100%" height="100%">
       {editMode === "polygon" ? (
         <div className="reg-map-details">
-          <Paper>
-            <Box p={3}>
-              <Typography variant="h4">Draw a Polygon</Typography>
-            </Box>
-            <Button onClick={onCancel}>Cancel</Button>
-          </Paper>
+          <Card sx={{ maxWidth: 345 }} elevation={3}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Draw a Polygon
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Click on the map to place points of the polygon
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button color="error" onClick={onCancel} size="small">
+                Cancel
+              </Button>
+              <Button size="small">Learn More</Button>
+            </CardActions>
+          </Card>
         </div>
       ) : null}
       {showSubmit ? (
         <div className="reg-map-details">
-          <Paper>
-            <Stack spacing={2}>
-              <Box p={3}>
-                <Typography variant="h4">
-                  Finalise region polygon than add details
-                </Typography>
-              </Box>
-              <Button onClick={handleSave}>Add</Button>
-            </Stack>
-          </Paper>
+          <Card sx={{ maxWidth: 345 }} elevation={3}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Finalise region polygon
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Click and drag points on polygon edges to fine tune polygon
+                shape
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button onClick={handleSave} size="small">
+                Complete
+              </Button>
+            </CardActions>
+          </Card>
         </div>
       ) : null}
       {showEdit || editRegionLoading ? (
         <div className="reg-map-details">
-          <Paper>
-            <Stack spacing={2}>
-              <Box p={3}>
-                <Typography variant="h4">
-                  Click and drag marker points to Edit area polygon
-                </Typography>
-              </Box>
-              <Button onClick={handleEditCancel}>Cancel</Button>
+          <Card sx={{ maxWidth: 345 }} elevation={3}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Click and drag marker points to Edit region polygon
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button color="error" onClick={handleEditCancel} size="small">
+                Cancel
+              </Button>
               {editRegionLoading ? (
-                <Button>Loading ...</Button>
+                <Button size="small">Loading ...</Button>
               ) : (
-                <Button onClick={handleEdit}>Update</Button>
+                <Button size="small" onClick={handleEdit}>
+                  Update
+                </Button>
               )}
-            </Stack>
-          </Paper>
+            </CardActions>
+          </Card>
         </div>
       ) : null}
       <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
