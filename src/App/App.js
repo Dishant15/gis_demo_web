@@ -15,7 +15,7 @@ import LoginPage from "pages/Authentication/LoginPage";
 import RegionPage from "../region/RegionPage";
 import UserAdminPage from "gis_user/UserAdminPage";
 import UserListPage from "gis_user/pages/UserListPage";
-import AddUserPage from "gis_user/pages/UserAdminForm";
+import UserAdminForm from "gis_user/pages/UserAdminForm";
 
 import TicketAdminPage from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
@@ -31,6 +31,7 @@ import {
   getAddTicketPage,
   getAddUserPage,
   getEditTicketPage,
+  getEditUserPage,
   getHomePath,
   getLoginPath,
   getRegionPage,
@@ -96,7 +97,15 @@ const App = () => {
                       path={getAddUserPage()}
                       element={
                         <RequireAuth>
-                          <AddUserPage />
+                          <UserAdminForm />
+                        </RequireAuth>
+                      }
+                    />
+                    <Route
+                      path={getEditUserPage()}
+                      element={
+                        <RequireAuth>
+                          <UserAdminForm />
                         </RequireAuth>
                       }
                     />

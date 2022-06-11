@@ -7,6 +7,7 @@ export const getRegionPage = () => "/regions";
 
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
+export const getEditUserPage = (userId = ":userId") => `/users/edit/${userId}`;
 
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";
@@ -34,6 +35,8 @@ export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/add/";
 export const apiUpdateUserRegion = (userId) =>
   `/api/user/${userId}/update/regions/`;
+export const apiGetUserDetails = (userId) => `/api/user/${userId}/details/`;
+export const apiEditUserDetails = (userId) => `/api/user/${userId}/edit/`;
 
 export const apiGetApplicationsList = () => "/api/applications/";
 

@@ -1,30 +1,43 @@
 import React, { useRef } from "react";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
-import { map } from "lodash";
+import { map, size, get, split, filter } from "lodash";
 
-import { Box, TextField, Stack } from "@mui/material";
+import { Box, TextField, Stack, Button } from "@mui/material";
+import { Done } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import { addNewUser, fetchApplicationList } from "../data/services";
+import {
+  addNewUser,
+  editUserDetails,
+  fetchApplicationList,
+} from "../data/services";
 import { FormSelect, FormCheckbox } from "components/common/FormFields";
 import { parseBadRequest } from "utils/api.utils";
 
 /**
- * Render user Add / Edit form
- * display empty / filled user form data
- * Handle submit
+ * Render user Edit form
  *
  * Parent
  *  UserAdminForm
  */
-const UserForm = ({ onSubmit, setUserId }) => {
-  const { isLoading, data } = useQuery("applicationList", fetchApplicationList);
-  const { mutate, isLoading: isUserAdding } = useMutation(addNewUser, {
+const UserEditForm = ({ onSubmit, setUserId, formData }) => {
+  const { isLoading: applicationsLoading, data } = useQuery(
+    "applicationList",
+    fetchApplicationList,
+    {
+      onSuccess: (res) => {
+        const appIds = split(formData.access_ids, ",");
+        const applications = filter(res, (d) => appIds.includes(String(d.id)));
+        setValue("access_ids", applications);
+      },
+    }
+  );
+
+  const { mutate, isLoading: isUserEditing } = useMutation(editUserDetails, {
     onSuccess: (res) => {
       onSubmit();
-      setUserId(res.id);
     },
     onError: (err) => {
       const parsedError = parseBadRequest(err);
@@ -38,6 +51,13 @@ const UserForm = ({ onSubmit, setUserId }) => {
     },
   });
 
+  const onHandleSubmit = (resData) => {
+    mutate({
+      userId: formData.id,
+      data: { ...resData, access_ids: map(resData.access_ids, "id").join(",") },
+    });
+  };
+
   const {
     register,
     formState: { errors },
@@ -45,13 +65,21 @@ const UserForm = ({ onSubmit, setUserId }) => {
     control,
     watch,
     setError,
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: {
+      username: get(formData, "username", ""),
+      name: get(formData, "name", ""),
+      email: get(formData, "email", ""),
+      is_staff: get(formData, "is_staff", ""),
+    },
+  });
 
   const password = useRef({});
   password.current = watch("password", "");
 
   return (
-    <Box p={2} component="form" onSubmit={handleSubmit(mutate)}>
+    <Box p={2} component="form" onSubmit={handleSubmit(onHandleSubmit)}>
       <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
         <Stack
           spacing={2}
@@ -62,8 +90,9 @@ const UserForm = ({ onSubmit, setUserId }) => {
           <TextField
             required
             error={!!errors.username}
+            disabled
             label="User Name"
-            {...register("username", { required: true })}
+            {...register("username", { required: false, disabled: true })}
             helperText={errors.username?.message}
           />
           <TextField
@@ -87,35 +116,18 @@ const UserForm = ({ onSubmit, setUserId }) => {
             width: "100%",
           }}
         >
-          <TextField
-            required
-            error={!!errors.password}
-            label="Password"
-            type="password"
-            {...register("password", { required: true })}
-            helperText={errors.password?.message}
-          />
-          <TextField
-            required
-            error={!!errors.confirm_password}
-            label="Confirm Password"
-            type="password"
-            {...register("confirm_password", {
-              required: true,
-              validate: (value) =>
-                value === password.current || "The passwords do not match",
-            })}
-            helperText={errors.confirm_password?.message}
-          />
           <FormSelect
             label="Access Type"
             required
             isMulti
             name="access_ids"
             control={control}
-            options={map(data, (d) => ({ value: d.id, label: d.name }))}
+            options={data}
+            getOptionLabel={(opt) => opt.name}
+            getOptionValue={(opt) => opt.id}
             error={!!errors.access_ids}
             helperText={errors.access_ids?.message}
+            isLoading={applicationsLoading}
           />
           <FormCheckbox
             label="Admin"
@@ -130,7 +142,7 @@ const UserForm = ({ onSubmit, setUserId }) => {
         <LoadingButton
           type="submit"
           endIcon={<ArrowForwardIosIcon />}
-          loading={isUserAdding}
+          loading={isUserEditing}
         >
           Next
         </LoadingButton>
@@ -139,4 +151,4 @@ const UserForm = ({ onSubmit, setUserId }) => {
   );
 };
 
-export default UserForm;
+export default UserEditForm;

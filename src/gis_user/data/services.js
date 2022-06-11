@@ -2,7 +2,9 @@ import { map } from "lodash";
 import Api from "utils/api.utils";
 import {
   apiAddUser,
+  apiEditUserDetails,
   apiGetApplicationsList,
+  apiGetUserDetails,
   apiGetUserList,
   apiUpdateUserRegion,
 } from "utils/url.constants";
@@ -30,7 +32,18 @@ export const addNewUser = async (data) => {
 // data : {
 //   "regionIdList": [6,3]
 // }
-export const updateUserRegion = ({ data, userId }) => {
-  const res = Api.put(apiUpdateUserRegion(userId), data);
+export const updateUserRegion = async ({ data, userId }) => {
+  const res = await Api.put(apiUpdateUserRegion(userId), data);
+  return res.data;
+};
+
+export const fetchUserDetails = async ({ queryKey }) => {
+  const [_key, userId] = queryKey;
+  const res = await Api.get(apiGetUserDetails(userId));
+  return res.data;
+};
+
+export const editUserDetails = async ({ data, userId }) => {
+  const res = await Api.post(apiEditUserDetails(userId), data);
   return res.data;
 };

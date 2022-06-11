@@ -1,10 +1,22 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { get, size } from "lodash";
 
-import { Box, Stack, Typography, Divider } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Divider,
+  CircularProgress,
+} from "@mui/material";
 import UserFormSteps from "gis_user/components/UserFormSteps";
-import UserForm from "gis_user/components/UserForm";
+import UserAddForm from "gis_user/components/UserForm";
+import UserEditForm from "gis_user/components/UserEditForm";
 import UserPermissions from "gis_user/components/UserPermissions";
 import UserRegionSelect from "gis_user/components/UserRegionSelect";
+
+import { fetchUserDetails } from "../data/services";
 
 /**
  * Wrapper around 3 step user form
@@ -17,8 +29,15 @@ import UserRegionSelect from "gis_user/components/UserRegionSelect";
  *
  */
 const UserAdminForm = () => {
+  const params = useParams();
   const [step, setStep] = useState(0);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(params.userId);
+
+  const { isLoading, data } = useQuery(
+    ["userDetails", params.userId],
+    fetchUserDetails,
+    { enabled: !!params.userId }
+  );
 
   const goToNextStep = useCallback(() => {
     setStep((step) => step + 1);
@@ -31,7 +50,15 @@ const UserAdminForm = () => {
   const FormComponent = useMemo(() => {
     switch (step) {
       case 0:
-        return <UserForm onSubmit={goToNextStep} setUserId={setUserId} />;
+        return !!size(data) ? (
+          <UserEditForm
+            onSubmit={goToNextStep}
+            setUserId={setUserId}
+            formData={data}
+          />
+        ) : (
+          <UserAddForm onSubmit={goToNextStep} setUserId={setUserId} />
+        );
 
       case 1:
         return (
@@ -43,9 +70,25 @@ const UserAdminForm = () => {
         );
 
       case 2:
-        return <UserRegionSelect userId={userId} goBack={goToPrevStep} />;
+        return (
+          <UserRegionSelect
+            userId={userId}
+            goBack={goToPrevStep}
+            regions={get(data, "regions", [])}
+          />
+        );
     }
-  }, [step]);
+  }, [step, data]);
+
+  if (isLoading) {
+    return (
+      <Box p={2}>
+        <Stack justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Stack>

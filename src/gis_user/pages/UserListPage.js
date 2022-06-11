@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import {
@@ -11,29 +11,28 @@ import {
   IconButton,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import EditIcon from "@mui/icons-material/Edit";
+
 import { AgGridReact } from "ag-grid-react";
 
 import { fetchUserList } from "../data/services";
-import { getAddUserPage } from "utils/url.constants";
-
-const columnDefs = [
-  { field: "username" },
-  { field: "name" },
-  { field: "is_active", headerName: "Active" },
-  { field: "is_staff", headerName: "Admin" },
-  { field: "access_ids", headerName: "Access" },
-];
+import { getAddUserPage, getEditUserPage } from "utils/url.constants";
 
 /**
  * Parent:
  *    App
  */
 const UserListPage = () => {
+  const navigate = useNavigate();
   const { isLoading, data } = useQuery("userList", fetchUserList);
   const gridRef = useRef();
 
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
+  };
+
+  const onEditClick = (userId) => {
+    navigate(getEditUserPage(userId));
   };
 
   return (
@@ -76,7 +75,22 @@ const UserListPage = () => {
             },
             { field: "is_staff", headerName: "Admin", cellRenderer: TickCell },
             { field: "access_ids", headerName: "Access" },
+            {
+              headerName: "Action",
+              field: "id",
+              width: 100,
+              cellRenderer: ActionCell,
+              cellRendererParams: {
+                onEditClick,
+              },
+              resizable: false,
+            },
           ]}
+          defaultColDef={{
+            filter: "agTextColumnFilter",
+            resizable: true,
+            sortable: true,
+          }}
           onGridReady={onGridReady}
         />
       </Box>
@@ -94,6 +108,23 @@ const TickCell = (props) => {
     >
       <CheckCircleIcon fontSize="small" />
     </IconButton>
+  );
+};
+
+/**
+ * Render edit icon
+ */
+const ActionCell = (props) => {
+  return (
+    <Stack direction="row" spacing={1}>
+      <IconButton
+        aria-label="edit"
+        color="secondary"
+        onClick={() => props.onEditClick(props.data.id)}
+      >
+        <EditIcon />
+      </IconButton>
+    </Stack>
   );
 };
 
