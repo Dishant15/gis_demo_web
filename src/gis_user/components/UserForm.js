@@ -20,11 +20,12 @@ import { parseBadRequest } from "utils/api.utils";
  * Parent
  *  UserAdminForm
  */
-const UserForm = ({ onSubmit }) => {
+const UserForm = ({ onSubmit, setUserId }) => {
   const { isLoading, data } = useQuery("applicationList", fetchApplicationList);
   const { mutate, isLoading: isUserAdding } = useMutation(addNewUser, {
     onSuccess: (res) => {
       onSubmit();
+      setUserId(res.id);
     },
     onError: (err) => {
       const parsedError = parseBadRequest(err);

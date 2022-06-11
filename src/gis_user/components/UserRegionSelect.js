@@ -9,28 +9,46 @@ import { Done } from "@mui/icons-material";
 
 import { FormSelect } from "components/common/FormFields";
 import { fetchRegionList } from "region/data/services";
-import { filter } from "lodash";
+import { map } from "lodash";
+import { updateUserRegion } from "gis_user/data/services";
+import { useNavigate } from "react-router-dom";
+import { getUserListPage } from "utils/url.constants";
+import { parseBadRequest } from "utils/api.utils";
 
-const UserRegionSelect = ({ goBack }) => {
+const UserRegionSelect = ({ goBack, userId }) => {
+  const navigate = useNavigate();
   const { isLoading: regionListLoading, data: regionList } = useQuery(
     "regionList",
     fetchRegionList,
     {
       initialData: [],
-      onSuccess: (res) => {
-        const region = filter(res, ["id", 1]);
-        if (region) {
-          setValue("region", region);
-        }
-      },
+      // onSuccess: (res) => {
+      //   const region = filter(res, ["id", 1]);
+      //   if (region) {
+      //     setValue("region", region);
+      //   }
+      // },
     }
   );
 
+  const { mutate, isLoading } = useMutation(updateUserRegion, {
+    onSuccess: (res) => {
+      navigate(getUserListPage());
+    },
+    onError: (err) => {
+      const parsedError = parseBadRequest(err);
+      if (parsedError) {
+        for (const key in parsedError) {
+          if (Object.hasOwnProperty.call(parsedError, key)) {
+            setError(key, { message: parsedError[key][0] });
+          }
+        }
+      }
+    },
+  });
+
   const onSubmit = (data) => {
-    console.log(
-      "🚀 ~ file: UserRegionSelect.js ~ line 29 ~ onSubmit ~ data",
-      data
-    );
+    mutate({ userId, data: { regionIdList: map(data.region, "id") } });
   };
 
   const {
@@ -45,21 +63,27 @@ const UserRegionSelect = ({ goBack }) => {
 
   return (
     <Box>
-      <Typography variant="h4">User Region Assignment form</Typography>
       <Box p={2} component="form" onSubmit={handleSubmit(onSubmit)}>
-        <FormSelect
-          isMulti
-          label="Region"
-          required
-          name="region"
-          control={control}
-          options={regionList}
-          getOptionLabel={(opt) => opt.name}
-          getOptionValue={(opt) => opt.id}
-          error={!!errors.region}
-          helperText={errors.region?.message}
-          isLoading={regionListLoading}
-        />
+        <Stack
+          flex={1}
+          p={4}
+          justifyContent="center"
+          sx={{ width: "50%", margin: "0 auto" }}
+        >
+          <FormSelect
+            isMulti
+            label="Region"
+            required
+            name="region"
+            control={control}
+            options={regionList}
+            getOptionLabel={(opt) => opt.name}
+            getOptionValue={(opt) => opt.id}
+            error={!!errors.region}
+            helperText={errors.region?.message}
+            isLoading={regionListLoading}
+          />
+        </Stack>
         <Stack flex={1} p={4} direction="row" justifyContent="space-between">
           <Button
             variant="contained"
@@ -74,6 +98,7 @@ const UserRegionSelect = ({ goBack }) => {
             color="success"
             type="submit"
             startIcon={<Done />}
+            loading={isLoading}
           >
             Submit
           </LoadingButton>

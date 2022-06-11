@@ -4,6 +4,7 @@ import {
   apiAddUser,
   apiGetApplicationsList,
   apiGetUserList,
+  apiUpdateUserRegion,
 } from "utils/url.constants";
 
 export const fetchUserList = async () => {
@@ -23,5 +24,13 @@ export const addNewUser = async (data) => {
     access_ids: map(data.access_ids, "value").join(","),
   };
   const res = await Api.post(apiAddUser(), postData);
+  return res.data;
+};
+
+// data : {
+//   "regionIdList": [6,3]
+// }
+export const updateUserRegion = ({ data, userId }) => {
+  const res = Api.put(apiUpdateUserRegion(userId), data);
   return res.data;
 };

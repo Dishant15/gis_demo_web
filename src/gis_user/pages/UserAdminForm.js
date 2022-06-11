@@ -18,6 +18,7 @@ import UserRegionSelect from "gis_user/components/UserRegionSelect";
  */
 const UserAdminForm = () => {
   const [step, setStep] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   const goToNextStep = useCallback(() => {
     setStep((step) => step + 1);
@@ -30,15 +31,19 @@ const UserAdminForm = () => {
   const FormComponent = useMemo(() => {
     switch (step) {
       case 0:
-        return <UserForm onSubmit={goToNextStep} />;
+        return <UserForm onSubmit={goToNextStep} setUserId={setUserId} />;
 
       case 1:
         return (
-          <UserPermissions onSubmit={goToNextStep} goBack={goToPrevStep} />
+          <UserPermissions
+            userId={userId}
+            onSubmit={goToNextStep}
+            goBack={goToPrevStep}
+          />
         );
 
       case 2:
-        return <UserRegionSelect goBack={goToPrevStep} />;
+        return <UserRegionSelect userId={userId} goBack={goToPrevStep} />;
     }
   }, [step]);
 

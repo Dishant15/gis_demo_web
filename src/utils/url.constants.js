@@ -32,6 +32,8 @@ export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 
 export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/add/";
+export const apiUpdateUserRegion = (userId) =>
+  `/api/user/${userId}/update/regions/`;
 
 export const apiGetApplicationsList = () => "/api/applications/";
 
