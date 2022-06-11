@@ -108,8 +108,11 @@ const WorkOrderPage = () => {
         direction="row"
         height="100%"
         width="100%"
+        sx={{
+          overflow: "hidden",
+        }}
       >
-        <Box sx={{ flex: 2 }} py={2}>
+        <Box sx={{ flex: 2, overflow: "auto" }} my={2}>
           <Stack spacing={2}>
             {!size(work_orders) ? (
               <Typography variant="h6" textAlign="center">
