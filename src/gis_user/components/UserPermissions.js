@@ -32,7 +32,7 @@ const UserPermissions = ({ onSubmit, goBack }) => {
       </Box>
       <Stack flex={1} p={4} direction="row" justifyContent="space-between">
         <Button
-          variant="contained"
+          variant="outlined"
           color="error"
           startIcon={<ArrowBackIosIcon />}
           onClick={goBack}
@@ -40,7 +40,7 @@ const UserPermissions = ({ onSubmit, goBack }) => {
           Back
         </Button>
         <LoadingButton
-          variant="contained"
+          variant="outlined"
           color="success"
           type="submit"
           endIcon={<ArrowForwardIosIcon />}

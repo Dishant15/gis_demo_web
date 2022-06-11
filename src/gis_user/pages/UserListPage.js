@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
+import { Add } from "@mui/icons-material";
 
 import { AgGridReact } from "ag-grid-react";
 
@@ -46,14 +47,15 @@ const UserListPage = () => {
         alignItems="center"
       >
         <Typography flex={1} className="dtl-title" variant="h5">
-          Users
+          User Management
         </Typography>
         <Button
           sx={{ minWidth: "150px" }}
           component={Link}
           to={getAddUserPage()}
+          startIcon={<Add />}
         >
-          Add
+          Add New User
         </Button>
       </Stack>
 

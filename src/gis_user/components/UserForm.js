@@ -1,15 +1,18 @@
 import React, { useRef } from "react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { map } from "lodash";
 
-import { Box, TextField, Stack } from "@mui/material";
+import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { addNewUser, fetchApplicationList } from "../data/services";
 import { FormSelect, FormCheckbox } from "components/common/FormFields";
 import { parseBadRequest } from "utils/api.utils";
+import { getUserListPage } from "utils/url.constants";
 
 /**
  * Render user Add / Edit form
@@ -126,7 +129,15 @@ const UserForm = ({ onSubmit, setUserId }) => {
           />
         </Stack>
       </Stack>
-      <Stack p={4} sx={{ alignItems: "flex-end" }}>
+      <Stack flex={1} direction="row" p={4} justifyContent="space-between">
+        <Button
+          component={Link}
+          to={getUserListPage()}
+          startIcon={<CloseIcon />}
+          color="error"
+        >
+          Cancel
+        </Button>
         <LoadingButton
           type="submit"
           endIcon={<ArrowForwardIosIcon />}

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { get, size } from "lodash";
+import { get, noop, size } from "lodash";
 
 import {
   Box,
@@ -46,6 +46,15 @@ const UserAdminForm = () => {
   const goToPrevStep = useCallback(() => {
     setStep((step) => step - 1);
   }, [setStep]);
+
+  const goToStep = useCallback(
+    (step) => {
+      setStep(step);
+    },
+    [setStep]
+  );
+
+  const isEdit = !!size(data);
 
   const FormComponent = useMemo(() => {
     switch (step) {
@@ -99,7 +108,7 @@ const UserAdminForm = () => {
           className="dtl-title"
           variant="h5"
         >
-          Add User
+          {isEdit ? "Edit User details" : "Add New User"}
         </Typography>
       </Stack>
 
@@ -108,6 +117,7 @@ const UserAdminForm = () => {
       <Box my={2} px={2}>
         <UserFormSteps
           activeStep={step}
+          onStepClick={isEdit ? goToStep : noop}
           stepList={[
             {
               isStepOptional: false,

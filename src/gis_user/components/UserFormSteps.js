@@ -1,7 +1,17 @@
-import { Box, Step, StepLabel, Typography, Stepper } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 
-const UserFormSteps = ({ stepList, activeStep }) => {
+import { Box, Step, StepLabel, Typography, Stepper } from "@mui/material";
+
+const UserFormSteps = ({ stepList, activeStep, onStepClick }) => {
+  const handleStepClick = useCallback(
+    (step) => () => {
+      if (!!onStepClick) onStepClick(step);
+    },
+    [onStepClick]
+  );
+
+  const hasClickHandler = !!onStepClick;
+
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
@@ -13,7 +23,12 @@ const UserFormSteps = ({ stepList, activeStep }) => {
             optional = <Typography variant="caption">Optional</Typography>;
           }
           return (
-            <Step key={text} completed={completed}>
+            <Step
+              key={text}
+              completed={completed}
+              onClick={handleStepClick(index)}
+              sx={{ cursor: hasClickHandler ? "pointer" : "inherit" }}
+            >
               <StepLabel optional={optional}>{text}</StepLabel>
             </Step>
           );

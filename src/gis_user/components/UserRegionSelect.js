@@ -1,33 +1,36 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
+import { map, filter, indexOf } from "lodash";
 
 import { Box, Typography, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Done } from "@mui/icons-material";
-
 import { FormSelect } from "components/common/FormFields";
+
 import { fetchRegionList } from "region/data/services";
-import { map } from "lodash";
 import { updateUserRegion } from "gis_user/data/services";
-import { useNavigate } from "react-router-dom";
 import { getUserListPage } from "utils/url.constants";
 import { parseBadRequest } from "utils/api.utils";
 
-const UserRegionSelect = ({ goBack, userId }) => {
+const UserRegionSelect = ({ goBack, userId, regions }) => {
   const navigate = useNavigate();
   const { isLoading: regionListLoading, data: regionList } = useQuery(
     "regionList",
     fetchRegionList,
     {
       initialData: [],
-      // onSuccess: (res) => {
-      //   const region = filter(res, ["id", 1]);
-      //   if (region) {
-      //     setValue("region", region);
-      //   }
-      // },
+      onSuccess: (regionListData) => {
+        const region = filter(
+          regionListData,
+          (regionData) => indexOf(regions, regionData.id) !== -1
+        );
+        if (region) {
+          setValue("region", region);
+        }
+      },
     }
   );
 
@@ -52,11 +55,9 @@ const UserRegionSelect = ({ goBack, userId }) => {
   };
 
   const {
-    register,
     formState: { errors },
     handleSubmit,
     control,
-    watch,
     setError,
     setValue,
   } = useForm();
@@ -86,7 +87,7 @@ const UserRegionSelect = ({ goBack, userId }) => {
         </Stack>
         <Stack flex={1} p={4} direction="row" justifyContent="space-between">
           <Button
-            variant="contained"
+            variant="outlined"
             color="error"
             startIcon={<ArrowBackIosIcon />}
             onClick={goBack}
