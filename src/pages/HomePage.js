@@ -13,7 +13,7 @@ export default function HomePage() {
         justifyContent: "center",
       }}
     >
-      <Typography variant="h1">There was A dashboard here !!</Typography>
+      <Typography variant="h1">Administration Dashboard</Typography>
     </Box>
   );
 }

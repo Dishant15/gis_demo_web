@@ -1,12 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { find, isNull, orderBy, pick } from "lodash";
+import { find, groupBy, isNull, get, pick } from "lodash";
 
-import { Box, Button, Divider, IconButton, Stack } from "@mui/material";
+import { Box, Button, Divider, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import Loader from "components/common/Loader";
 import RegionMap from "./components/RegionMap";
@@ -21,9 +19,9 @@ import {
 import Api from "utils/api.utils";
 import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { getFillColor } from "../utils/map.utils";
 
 import "./styles/region-page.scss";
+import RegionListItem from "./components/RegionListItem";
 
 /**
  * Fetch region list
@@ -55,9 +53,12 @@ const RegionPage = () => {
       d.coordinates = coordsToLatLongMap(d.coordinates);
       return d;
     });
-    resultData = orderBy(resultData, ["created_on"], ["desc"]);
     return resultData;
   }, [data]);
+
+  const regionGroupData = useMemo(() => {
+    return groupBy(regionListData, "parent");
+  }, [regionListData]);
 
   const { mutate, isLoading: editRegionLoading } = useMutation(
     (formData) => {
@@ -80,6 +81,7 @@ const RegionPage = () => {
   const [mapCenter, setMapCenter] = useState(DEFAULT_MAP_CENTER);
   // set of all selected area to show on map
   const [selectedRegion, setSelectedRegion] = useState(new Set([]));
+  const [expandedRegions, setExpandedRegions] = useState(new Set([]));
   // show details on area list OR map polygon click
   const [showRegionDetails, setShowRegionDetails] = useState(null);
   // null : not creating, "M" : map, "E": edit, "D" : details
@@ -119,11 +121,29 @@ const RegionPage = () => {
     [showRegionDetails]
   );
 
-  const handleRegionCreate = useCallback((step, parent = null) => {
-    setCreateRegion(step);
-    setNewRegionParentId(parent);
-    setShowRegionDetails(null);
-  }, []);
+  const handleRegionExpandClick = (regionId) => () => {
+    setExpandedRegions((regionSet) => {
+      let newSet = new Set(regionSet);
+      if (newSet.has(regionId)) {
+        newSet.delete(regionId);
+      } else {
+        newSet.add(regionId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleRegionCreate = useCallback(
+    (parent = null) =>
+      () => {
+        if (isNull(createRegion)) {
+          setCreateRegion("M");
+          setNewRegionParentId(parent);
+          setShowRegionDetails(null);
+        }
+      },
+    [createRegion]
+  );
 
   const handleMapSubmit = useCallback((coords) => {
     // move page state to Detail form
@@ -191,65 +211,28 @@ const RegionPage = () => {
               <Button
                 color="success"
                 startIcon={<AddIcon />}
-                onClick={() => {
-                  if (isNull(createRegion)) {
-                    handleRegionCreate("M", null);
-                  }
-                }}
+                onClick={handleRegionCreate(null)}
               >
-                Create Region
+                New Region
               </Button>
             </Stack>
 
             <Divider flexItem orientation="horizontal" />
 
-            {data.map((region) => {
-              const { id, name, layer } = region;
-              const color = getFillColor(layer);
-              const isActive = selectedRegion.has(id);
-              const isEdit = editRegionData?.id === id;
-
+            {get(regionGroupData, null, []).map((region) => {
               return (
-                <Box className={`reg-list-pill`} key={id}>
-                  <Stack direction="row" width="100%" spacing={2}>
-                    <Stack direction="row" width="100%" spacing={2}>
-                      <Box
-                        sx={{ minWidth: "15px", backgroundColor: color }}
-                      ></Box>
-                      <Box
-                        flex={1}
-                        sx={{
-                          color: isActive ? "secondary.main" : "inherit",
-                        }}
-                      >
-                        {name}
-                      </Box>
-                      <Box onClick={() => handleRegionClick(id)}>
-                        <IconButton aria-label="add-area-pocket" size="small">
-                          <VisibilityIcon
-                            color={isActive ? "secondary" : "inherit"}
-                          />
-                        </IconButton>
-                      </Box>
-                      <Box onClick={startEditRegion(region)}>
-                        <IconButton aria-label="add-area-pocket" size="small">
-                          <EditIcon color={isEdit ? "secondary" : "inherit"} />
-                        </IconButton>
-                      </Box>
-                    </Stack>
-                    <Box
-                      onClick={() => {
-                        if (isNull(createRegion)) {
-                          handleRegionCreate("M", id);
-                        }
-                      }}
-                    >
-                      <IconButton aria-label="add-area-pocket" size="small">
-                        <AddIcon color="success" />
-                      </IconButton>
-                    </Box>
-                  </Stack>
-                </Box>
+                <RegionListItem
+                  key={region.id}
+                  region={region}
+                  regionGroupData={regionGroupData}
+                  selectedRegion={selectedRegion}
+                  editRegionData={editRegionData}
+                  expandedRegions={expandedRegions}
+                  handleRegionClick={handleRegionClick}
+                  startEditRegion={startEditRegion}
+                  handleRegionCreate={handleRegionCreate}
+                  handleRegionExpandClick={handleRegionExpandClick}
+                />
               );
             })}
           </div>
