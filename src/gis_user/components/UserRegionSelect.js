@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
 import { map, filter, indexOf } from "lodash";
+import { useDispatch } from "react-redux";
 
 import { Box, Typography, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -14,8 +15,11 @@ import { fetchRegionList } from "region/data/services";
 import { updateUserRegion } from "gis_user/data/services";
 import { getUserListPage } from "utils/url.constants";
 import { parseBadRequest } from "utils/api.utils";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const UserRegionSelect = ({ goBack, userId, regions }) => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { isLoading: regionListLoading, data: regionList } = useQuery(
     "regionList",
@@ -37,6 +41,13 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
   const { mutate, isLoading } = useMutation(updateUserRegion, {
     onSuccess: (res) => {
       navigate(getUserListPage());
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "User region update",
+          text: "User region updated successfully",
+        })
+      );
     },
     onError: (err) => {
       const parsedError = parseBadRequest(err);
@@ -95,7 +106,7 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
             Back
           </Button>
           <LoadingButton
-            variant="contained"
+            variant="outlined"
             color="success"
             type="submit"
             startIcon={<Done />}

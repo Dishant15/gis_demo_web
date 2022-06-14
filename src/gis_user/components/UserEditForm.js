@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { map, get, split, filter } from "lodash";
+import { useDispatch } from "react-redux";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -13,6 +14,7 @@ import { FormSelect, FormCheckbox } from "components/common/FormFields";
 import { editUserDetails, fetchApplicationList } from "../data/services";
 import { parseBadRequest } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
  * Render user Edit form
@@ -21,6 +23,8 @@ import { getUserListPage } from "utils/url.constants";
  *  UserAdminForm
  */
 const UserEditForm = ({ onSubmit, setUserId, formData }) => {
+  const dispatch = useDispatch();
+
   const { isLoading: applicationsLoading, data } = useQuery(
     "applicationList",
     fetchApplicationList,
@@ -36,6 +40,13 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
   const { mutate, isLoading: isUserEditing } = useMutation(editUserDetails, {
     onSuccess: (res) => {
       onSubmit();
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "User update",
+          text: "User updated successfully",
+        })
+      );
     },
     onError: (err) => {
       const parsedError = parseBadRequest(err);
@@ -138,6 +149,7 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
       </Stack>
       <Stack flex={1} direction="row" p={4} justifyContent="space-between">
         <Button
+          variant="outlined"
           component={Link}
           to={getUserListPage()}
           startIcon={<CloseIcon />}
@@ -146,6 +158,7 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
           Cancel
         </Button>
         <LoadingButton
+          variant="outlined"
           type="submit"
           endIcon={<ArrowForwardIosIcon />}
           loading={isUserEditing}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { map } from "lodash";
+import { useDispatch } from "react-redux";
 
 import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -13,6 +14,7 @@ import { addNewUser, fetchApplicationList } from "../data/services";
 import { FormSelect, FormCheckbox } from "components/common/FormFields";
 import { parseBadRequest } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
  * Render user Add / Edit form
@@ -24,10 +26,18 @@ import { getUserListPage } from "utils/url.constants";
  */
 const UserForm = ({ onSubmit, setUserId }) => {
   const { isLoading, data } = useQuery("applicationList", fetchApplicationList);
+  const dispatch = useDispatch();
+
   const { mutate, isLoading: isUserAdding } = useMutation(addNewUser, {
     onSuccess: (res) => {
       onSubmit();
       setUserId(res.id);
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "New user created",
+        })
+      );
     },
     onError: (err) => {
       const parsedError = parseBadRequest(err);
@@ -131,6 +141,7 @@ const UserForm = ({ onSubmit, setUserId }) => {
       </Stack>
       <Stack flex={1} direction="row" p={4} justifyContent="space-between">
         <Button
+          variant="outlined"
           component={Link}
           to={getUserListPage()}
           startIcon={<CloseIcon />}
@@ -139,6 +150,7 @@ const UserForm = ({ onSubmit, setUserId }) => {
           Cancel
         </Button>
         <LoadingButton
+          variant="outlined"
           type="submit"
           endIcon={<ArrowForwardIosIcon />}
           loading={isUserAdding}
