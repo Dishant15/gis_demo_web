@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { Box, Button, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -16,6 +17,7 @@ import {
   coordsToLatLongMap,
 } from "utils/map.utils";
 import { editTicketArea } from "ticket/data/services";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const containerStyle = {
   width: "100%",
@@ -34,6 +36,7 @@ const containerStyle = {
  *  TicketAddForm
  */
 const TicketEditMap = ({ ticketData }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const polyRef = useRef();
 
@@ -44,8 +47,22 @@ const TicketEditMap = ({ ticketData }) => {
     {
       onSuccess: (res) => {
         navigate(getTicketListPage());
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Ticket update",
+            text: "Coordinates updated successfully",
+          })
+        );
       },
       onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
         console.log(
           "🚀 ~ file: TicketEditMap.js ~ line 10 ~ TicketEditMap ~ err",
           err

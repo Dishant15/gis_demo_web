@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Add } from "@mui/icons-material";
 
 import { AgGridReact } from "ag-grid-react";
 
@@ -58,11 +59,13 @@ const TicketListPage = () => {
           Tickets
         </Typography>
         <Button
+          variant="outlined"
           sx={{ minWidth: "150px" }}
           component={Link}
           to={getAddTicketPage()}
+          startIcon={<Add />}
         >
-          Add
+          Add New Ticket
         </Button>
       </Stack>
 

@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { pick, get, find, size } from "lodash";
+import { useDispatch } from "react-redux";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Cancel } from "@mui/icons-material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
 import {
@@ -20,6 +21,7 @@ import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { getTicketListPage } from "utils/url.constants";
 import { coordsToLatLongMap } from "utils/map.utils";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const AddTicketForm = ({ formData, onSubmit }) => {
   /**
@@ -27,6 +29,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
    *    TicketEditPage
    *    TicketAddForm
    */
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const isEdit = !!size(formData);
 
@@ -61,6 +64,22 @@ const AddTicketForm = ({ formData, onSubmit }) => {
   const { mutate, isLoading: isTicketEditing } = useMutation(editTicket, {
     onSuccess: (res) => {
       navigate(getTicketListPage());
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "Ticket update",
+          text: "Ticket updated successfully",
+        })
+      );
+    },
+    onError: (err) => {
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Error",
+          text: err.message,
+        })
+      );
     },
   });
 
@@ -86,6 +105,12 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       } else {
         // navigate to next step
         onSubmit(ticketSubmitData);
+        dispatch(
+          addNotification({
+            type: "warning",
+            title: "Please Add Coordinates.",
+          })
+        );
       }
     },
     [onSubmit]
@@ -122,6 +147,9 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       p={2}
       component="form"
       onSubmit={handleSubmit(handleTicketDetailsSubmit)}
+      sx={{
+        overflow: "auto",
+      }}
     >
       <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
         <Stack
@@ -296,16 +324,16 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       </Stack>
       <Stack flex={1} p={4} direction="row" justifyContent="space-between">
         <Button
-          variant="contained"
+          variant="outlined"
           color="error"
           component={Link}
           to={getTicketListPage()}
-          startIcon={<Cancel />}
+          startIcon={<CloseIcon />}
         >
           Cancel
         </Button>
         <LoadingButton
-          variant="contained"
+          variant="outlined"
           color="success"
           type="submit"
           endIcon={<ArrowForwardIosIcon />}

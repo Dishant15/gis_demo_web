@@ -32,7 +32,7 @@ const TicketAddForm = () => {
   }, [step]);
 
   return (
-    <Stack>
+    <Stack height="100%">
       <Stack p={2} direction="row" spacing={2} width="100%">
         <Typography
           color="primary.dark"

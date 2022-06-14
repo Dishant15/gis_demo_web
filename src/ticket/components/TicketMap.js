@@ -1,8 +1,9 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import {
   GoogleMap,
@@ -10,6 +11,7 @@ import {
   Polygon,
   DrawingManager,
 } from "@react-google-maps/api";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import { getTicketListPage } from "utils/url.constants";
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
@@ -19,10 +21,11 @@ import {
   latLongMapToCoords,
 } from "utils/map.utils";
 import { addNewTicket } from "ticket/data/services";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const containerStyle = {
   width: "100%",
-  minHeight: "100vh",
+  height: "100%",
 };
 
 /**
@@ -37,6 +40,8 @@ const containerStyle = {
  */
 const TicketMap = ({ formData }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const polyRef = useRef();
   const [isDrawing, setIsDrawing] = useState(true);
 
@@ -45,9 +50,21 @@ const TicketMap = ({ formData }) => {
   const { mutate, isLoading: isTicketAdding } = useMutation(addNewTicket, {
     onSuccess: (res) => {
       navigate(getTicketListPage());
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "New Ticket created.",
+        })
+      );
     },
     onError: (err) => {
-      console.log("🚀 ~ file: TicketMap.js ~ line 10 ~ TicketMap ~ err", err);
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Error",
+          text: err.message,
+        })
+      );
     },
   });
 
@@ -67,7 +84,7 @@ const TicketMap = ({ formData }) => {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ flex: 1, position: "relative" }}>
       <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
         <GoogleMap
           clickableIcons={false}
@@ -119,15 +136,21 @@ const TicketMap = ({ formData }) => {
           />
         </GoogleMap>
       </LoadScript>
-
-      <Stack>
-        {isTicketAdding ? (
-          <Button>Loading...</Button>
-        ) : (
-          <Button onClick={handleSubmit} startIcon={<Done />}>
-            Complete
-          </Button>
-        )}
+      <Stack
+        sx={{
+          position: "absolute",
+          bottom: "1em",
+          right: "3.4em",
+        }}
+      >
+        <LoadingButton
+          variant="contained"
+          loading={isTicketAdding}
+          onClick={handleSubmit}
+          startIcon={<Done />}
+        >
+          Complete
+        </LoadingButton>
       </Stack>
     </Box>
   );
