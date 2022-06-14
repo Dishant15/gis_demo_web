@@ -116,7 +116,7 @@ const WorkOrderPage = () => {
           <Stack spacing={2}>
             {!size(work_orders) ? (
               <Typography variant="h6" textAlign="center">
-                No available Tickets
+                No workorders submitted yet
               </Typography>
             ) : null}
             {work_orders.map((surveyWorkorder) => {

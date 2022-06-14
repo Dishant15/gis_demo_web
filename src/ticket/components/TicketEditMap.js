@@ -128,7 +128,7 @@ const TicketEditMap = ({ ticketData }) => {
               strokeColor: "blue",
               strokeOpacity: 1,
               strokeWeight: 2,
-              clickable: false,
+              clickable: true,
               draggable: true,
               editable: true,
               geodesic: false,
