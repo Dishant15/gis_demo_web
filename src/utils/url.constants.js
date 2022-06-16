@@ -31,6 +31,7 @@ export const apiPostRegionAdd = () => "/api/region/add/";
 export const apiPutRegionEdit = (regionId) => `/api/region/${regionId}/edit/`;
 export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 
+// user & Auth apis
 export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/add/";
 export const apiUpdateUserRegion = (userId) =>
@@ -40,6 +41,7 @@ export const apiEditUserDetails = (userId) => `/api/user/${userId}/edit/`;
 
 export const apiGetApplicationsList = () => "/api/applications/";
 
+// Ticket apis
 export const apiGetTicketList = () => "/api/ticket/list/";
 export const apiPostTicketAdd = () => "/api/ticket/add/";
 export const apiPostTicketEdit = (ticketId) => `/api/ticket/${ticketId}/edit/`;
@@ -49,3 +51,7 @@ export const apiGetTicketDetails = (ticketId) =>
   `/api/ticket/${ticketId}/details/`;
 export const apiGetTicketWorkorders = (ticketId) =>
   `/api/ticket/${ticketId}/workorders/`;
+
+// workorder apis
+export const apiPutWorkOrderEdit = (workOrderId) =>
+  `/api/geo/survey/boundary/${workOrderId}/edit/`;

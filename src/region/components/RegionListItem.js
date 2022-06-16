@@ -1,13 +1,13 @@
 import React from "react";
 import { get, size } from "lodash";
 
-import { styled } from "@mui/material/styles";
 import { Box, Divider, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FilterListOffOutlinedIcon from "@mui/icons-material/FilterListOffOutlined";
+import ExpandMore from "components/common/ExpandMore";
 
 import { getFillColor } from "utils/map.utils";
 
@@ -101,16 +101,5 @@ const RegionListItem = ({
     </Box>
   );
 };
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 export default RegionListItem;
