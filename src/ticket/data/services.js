@@ -41,7 +41,8 @@ export const editTicketArea = async ({ ticketId, data }) => {
   return res.data;
 };
 
-export const changeWorkOrderStatus = async ({ workOrderId, status }) => {
-  const res = await Api.put(apiPutWorkOrderEdit(workOrderId), { status });
+// data: { status, remark }
+export const updateWorkOrder = async ({ workOrderId, data }) => {
+  const res = await Api.put(apiPutWorkOrderEdit(workOrderId), data);
   return res.data;
 };

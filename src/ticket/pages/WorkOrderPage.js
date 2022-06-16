@@ -2,25 +2,9 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { cloneDeep, size } from "lodash";
-import { format } from "date-fns";
 
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { red } from "@mui/material/colors";
 
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-
-import ExpandMore from "components/common/ExpandMore";
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 
@@ -28,6 +12,7 @@ import { fetchTicketWorkorders } from "ticket/data/services";
 import { coordsToLatLongMap } from "utils/map.utils";
 
 import "../styles/ticket_survey_list.scss";
+import WorkOrderItem from "ticket/components/WorkOrderItem";
 
 const WorkOrderPage = () => {
   /**
@@ -72,7 +57,7 @@ const WorkOrderPage = () => {
   const { area_pocket, work_orders = [] } = ticketData;
 
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(new Set([]));
 
   const handleSurveySelect = useCallback(
     (surveyId) => () => {
@@ -85,9 +70,20 @@ const WorkOrderPage = () => {
     [selectedSurveyId]
   );
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const handleExpandClick = useCallback(
+    (surveyId) => () => {
+      setExpanded((surveyIdSet) => {
+        let newSet = new Set(surveyIdSet);
+        if (newSet.has(surveyId)) {
+          newSet.delete(surveyId);
+        } else {
+          newSet.add(surveyId);
+        }
+        return newSet;
+      });
+    },
+    []
+  );
 
   if (isLoading) {
     return <WorkOrderLoading />;
@@ -119,77 +115,15 @@ const WorkOrderPage = () => {
               </Typography>
             ) : null}
             {work_orders.map((surveyWorkorder) => {
-              const { id, name, status, address, tags, updated_on, units } =
-                surveyWorkorder;
-              const formatedUpdatedOn = format(
-                new Date(updated_on),
-                "do MMM, hh:mm aaa"
-              );
-
               return (
-                <Card
-                  key={id}
-                  elevation={0}
-                  sx={{ maxWidth: 345, backgroundColor: "#efefef" }}
-                >
-                  <CardHeader
-                    avatar={
-                      <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        {status}
-                      </Avatar>
-                    }
-                    action={
-                      <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                      </IconButton>
-                    }
-                    title={name}
-                    subheader={formatedUpdatedOn}
-                  />
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      {address}
-                    </Typography>
-                  </CardContent>
-                  <CardActions disableSpacing>
-                    <IconButton
-                      aria-label="add to favorites"
-                      onClick={handleSurveySelect(id)}
-                    >
-                      {id === selectedSurveyId ? (
-                        <MyLocationIcon />
-                      ) : (
-                        <LocationSearchingIcon />
-                      )}
-                    </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                    <ExpandMore
-                      expand={expanded}
-                      onClick={handleExpandClick}
-                      aria-expanded={expanded}
-                      aria-label="show more"
-                    >
-                      <ExpandMoreIcon />
-                    </ExpandMore>
-                  </CardActions>
-                  <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    {units.map((unit) => {
-                      return (
-                        <CardContent key={unit.id}>
-                          <Typography sx={{ fontWeight: "bold" }} paragraph>
-                            {unit.name}:
-                          </Typography>
-                          <Typography paragraph>
-                            Total Home pass: {unit.total_home_pass} <br />
-                            tags: {unit.tags}
-                          </Typography>
-                        </CardContent>
-                      );
-                    })}
-                  </Collapse>
-                </Card>
+                <WorkOrderItem
+                  key={surveyWorkorder.id}
+                  surveyWorkorder={surveyWorkorder}
+                  expanded={expanded}
+                  handleExpandClick={handleExpandClick}
+                  selectedSurveyId={selectedSurveyId}
+                  handleSurveySelect={handleSurveySelect}
+                />
               );
             })}
           </Stack>
