@@ -11,5 +11,17 @@ export const theme = createTheme({
     background: {
       default: "#efefef",
     },
+    error: {
+      main: "#e24c4b",
+      contrastText: "#fff",
+    },
+    warning: {
+      main: "#ffc005",
+      contrastText: "#fff",
+    },
+    success: {
+      main: "#4bae4f",
+      contrastText: "#fff",
+    },
   },
 });

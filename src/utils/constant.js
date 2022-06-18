@@ -15,3 +15,21 @@ export const TicketStatusList = [
   { label: "Completed", value: "C" },
   { label: "In Active", value: "I" },
 ];
+
+export const workOrderStatusTypes = {
+  S: {
+    value: "S",
+    label: "Submited",
+    color: "success",
+  },
+  V: {
+    value: "V",
+    label: "Verified",
+    color: "warning",
+  },
+  R: {
+    value: "R",
+    label: "Rejected",
+    color: "error",
+  },
+};

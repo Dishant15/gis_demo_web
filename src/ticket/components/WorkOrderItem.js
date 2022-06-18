@@ -19,6 +19,10 @@ import MyLocationIcon from "@mui/icons-material/MyLocation";
 
 import ExpandMore from "components/common/ExpandMore";
 
+import AcceptImg from "assets/accept.png";
+import CancelImg from "assets/cancel.png";
+import InprogressImg from "assets/inprogress.png";
+
 const WorkOrderItem = ({
   surveyWorkorder,
   expanded,
@@ -38,11 +42,7 @@ const WorkOrderItem = ({
   return (
     <Card elevation={0} sx={{ maxWidth: 345, backgroundColor: "#efefef" }}>
       <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {status}
-          </Avatar>
-        }
+        avatar={<StatusAvatar status={status} />}
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
@@ -96,6 +96,17 @@ const WorkOrderItem = ({
       </Collapse>
     </Card>
   );
+};
+
+const StatusAvatar = ({ status }) => {
+  if (status === "S") {
+    return <Avatar alt={status} src={AcceptImg} />;
+  } else if (status === "R") {
+    return <Avatar alt={status} src={CancelImg} />;
+  } else if (status === "V") {
+    return <Avatar alt={status} src={InprogressImg} />;
+  }
+  return null;
 };
 
 export default WorkOrderItem;

@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { cloneDeep, size } from "lodash";
+import { cloneDeep, filter, isNull, map, size } from "lodash";
 
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography, Chip } from "@mui/material";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
@@ -13,6 +13,7 @@ import { coordsToLatLongMap } from "utils/map.utils";
 
 import "../styles/ticket_survey_list.scss";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
+import { workOrderStatusTypes } from "utils/constant";
 
 const WorkOrderPage = () => {
   /**
@@ -58,6 +59,11 @@ const WorkOrderPage = () => {
 
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [expanded, setExpanded] = useState(new Set([]));
+  const [workorderStatus, setWorkorderStatus] = useState(null);
+  // filter work orders according to workorderStatus
+  const filteredWorkOrders = isNull(workorderStatus)
+    ? [...work_orders]
+    : filter(work_orders, ["status", workorderStatus]);
 
   const handleSurveySelect = useCallback(
     (surveyId) => () => {
@@ -81,6 +87,15 @@ const WorkOrderPage = () => {
         }
         return newSet;
       });
+    },
+    []
+  );
+
+  const handleFilterClick = useCallback(
+    (newStatus) => () => {
+      setWorkorderStatus((currStatus) =>
+        currStatus === newStatus ? null : newStatus
+      );
     },
     []
   );
@@ -114,7 +129,21 @@ const WorkOrderPage = () => {
                 No workorders submitted yet
               </Typography>
             ) : null}
-            {work_orders.map((surveyWorkorder) => {
+            <Stack spacing={1} direction="row" alignItems="center">
+              <Typography variant="body1">Filter By</Typography>
+              {map(workOrderStatusTypes, (wStatus) => {
+                const selected = workorderStatus === wStatus.value;
+                return (
+                  <Chip
+                    color={selected ? wStatus.color : undefined}
+                    key={wStatus.value}
+                    label={wStatus.label}
+                    onClick={handleFilterClick(wStatus.value)}
+                  />
+                );
+              })}
+            </Stack>
+            {filteredWorkOrders.map((surveyWorkorder) => {
               return (
                 <WorkOrderItem
                   key={surveyWorkorder.id}
