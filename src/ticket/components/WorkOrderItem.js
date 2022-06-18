@@ -1,5 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
+import { useForm, Controller } from "react-hook-form";
 
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -12,7 +13,6 @@ import IconButton from "@mui/material/IconButton";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { red } from "@mui/material/colors";
 
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -22,6 +22,9 @@ import ExpandMore from "components/common/ExpandMore";
 import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
+import { Box, TextField, Stack, InputLabel } from "@mui/material";
+import { workOrderStatusTypes } from "utils/constant";
+import { map } from "lodash";
 
 const WorkOrderItem = ({
   surveyWorkorder,
@@ -108,6 +111,57 @@ const StatusAvatar = ({ status }) => {
     return <Avatar alt={status} src={InprogressImg} />;
   }
   return null;
+};
+
+const StatusChangeForm = ({ remarks, status }) => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    setValue,
+  } = useForm({
+    defaultValues: {
+      remarks: remarks || "",
+      status: status || null,
+    },
+  });
+
+  return (
+    <Stack>
+      <TextField
+        label="Remarks"
+        multiline
+        rows={2}
+        {...register("remarks")}
+        error={!!errors.remarks}
+        helperText={errors.remarks?.message}
+      />
+      {/* <Controller
+        render={({ field }) => {
+          return (
+            <>
+              <InputLabel>Status</InputLabel>
+              {map(workOrderStatusTypes, (wStatus) => {
+                const selected = field.value === wStatus.value;
+                return (
+                  <Chip
+                    color={selected ? wStatus.color : undefined}
+                    key={wStatus.value}
+                    label={wStatus.label}
+                    onClick={handleFilterClick(wStatus.value)}
+                  />
+                );
+              })}
+            </>
+          );
+        }}
+        name={name}
+        control={control}
+        rules={rules}
+      /> */}
+    </Stack>
+  );
 };
 
 export default WorkOrderItem;
