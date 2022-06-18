@@ -17,7 +17,7 @@ import { getUserListPage } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
- * Render user Add / Edit form
+ * Render user Add form
  * display empty / filled user form data
  * Handle submit
  *
@@ -58,7 +58,12 @@ const UserForm = ({ onSubmit, setUserId }) => {
     control,
     watch,
     setError,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      is_active: true,
+      is_staff: false,
+    },
+  });
 
   const password = useRef({});
   password.current = watch("password", "");
@@ -129,6 +134,13 @@ const UserForm = ({ onSubmit, setUserId }) => {
             options={map(data, (d) => ({ value: d.id, label: d.name }))}
             error={!!errors.access_ids}
             helperText={errors.access_ids?.message}
+          />
+          <FormCheckbox
+            label="Active"
+            name="is_active"
+            control={control}
+            error={!!errors.is_staff}
+            helperText={errors.is_staff?.message}
           />
           <FormCheckbox
             label="Admin"

@@ -80,7 +80,8 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
       username: get(formData, "username", ""),
       name: get(formData, "name", ""),
       email: get(formData, "email", ""),
-      is_staff: get(formData, "is_staff", ""),
+      is_staff: !!get(formData, "is_staff"),
+      is_active: !!get(formData, "is_active"),
     },
   });
 
@@ -141,6 +142,13 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
           <FormCheckbox
             label="Admin"
             name="is_staff"
+            control={control}
+            error={!!errors.is_staff}
+            helperText={errors.is_staff?.message}
+          />
+          <FormCheckbox
+            label="Active"
+            name="is_active"
             control={control}
             error={!!errors.is_staff}
             helperText={errors.is_staff?.message}
