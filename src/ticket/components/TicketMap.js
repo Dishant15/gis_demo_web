@@ -12,21 +12,12 @@ import {
   DrawingManager,
 } from "@react-google-maps/api";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Map from "components/common/Map";
 
 import { getTicketListPage } from "utils/url.constants";
-import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
-import {
-  getCoordinatesFromFeature,
-  DEFAULT_MAP_CENTER,
-  latLongMapToCoords,
-} from "utils/map.utils";
+import { getCoordinatesFromFeature, latLongMapToCoords } from "utils/map.utils";
 import { addNewTicket } from "ticket/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
-
-const containerStyle = {
-  width: "100%",
-  height: "100%",
-};
 
 /**
  * Show map to draw AreaPocket for ticket
@@ -85,57 +76,42 @@ const TicketMap = ({ formData }) => {
 
   return (
     <Box sx={{ flex: 1, position: "relative" }}>
-      <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
-        <GoogleMap
-          clickableIcons={false}
-          mapContainerStyle={containerStyle}
-          center={DEFAULT_MAP_CENTER}
-          zoom={12}
+      <Map>
+        <DrawingManager
           options={{
-            zoomControl: true,
-            mapTypeControl: false,
-            scaleControl: true,
-            streetViewControl: false,
-            rotateControl: true,
-            fullscreenControl: false,
-          }}
-        >
-          <DrawingManager
-            options={{
-              drawingControl: false,
-              polygonOptions: {
-                fillColor: "lightblue",
-                fillOpacity: 0.5,
-                strokeColor: "blue",
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                clickable: false,
-                draggable: false,
-                editable: true,
-                geodesic: false,
-                zIndex: 2,
-              },
-            }}
-            drawingMode={isDrawing ? "polygon" : null}
-            onPolygonComplete={onPolygonComplete}
-          />
-          <Polygon
-            options={{
-              fillColor: "black",
-              fillOpacity: 0.1,
-              strokeColor: "black",
+            drawingControl: false,
+            polygonOptions: {
+              fillColor: "lightblue",
+              fillOpacity: 0.5,
+              strokeColor: "blue",
               strokeOpacity: 1,
               strokeWeight: 2,
               clickable: false,
               draggable: false,
-              editable: false,
+              editable: true,
               geodesic: false,
-              zIndex: 1,
-            }}
-            paths={regionCoords}
-          />
-        </GoogleMap>
-      </LoadScript>
+              zIndex: 2,
+            },
+          }}
+          drawingMode={isDrawing ? "polygon" : null}
+          onPolygonComplete={onPolygonComplete}
+        />
+        <Polygon
+          options={{
+            fillColor: "black",
+            fillOpacity: 0.1,
+            strokeColor: "black",
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            clickable: false,
+            draggable: false,
+            editable: false,
+            geodesic: false,
+            zIndex: 1,
+          }}
+          paths={regionCoords}
+        />
+      </Map>
       <Stack
         sx={{
           position: "absolute",

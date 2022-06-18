@@ -1,16 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import {
-  find,
-  groupBy,
-  isNull,
-  get,
-  pick,
-  map,
-  difference,
-  orderBy,
-} from "lodash";
+import { find, groupBy, isNull, pick, map, difference, orderBy } from "lodash";
 
 import { Box, Button, Divider, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,11 +11,7 @@ import RegionMap from "./components/RegionMap";
 import AddRegionForm from "./components/AddRegionForm";
 
 import { fetchRegionList } from "./data/services";
-import {
-  coordsToLatLongMap,
-  latLongMapToCoords,
-  DEFAULT_MAP_CENTER,
-} from "utils/map.utils";
+import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -108,7 +95,7 @@ const RegionPage = () => {
     }
   );
   // set map center
-  const [mapCenter, setMapCenter] = useState(DEFAULT_MAP_CENTER);
+  const [mapCenter, setMapCenter] = useState();
   // set of all selected area to show on map
   const [selectedRegion, setSelectedRegion] = useState(new Set([]));
   const [expandedRegions, setExpandedRegions] = useState(new Set([]));

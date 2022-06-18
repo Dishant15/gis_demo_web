@@ -1,23 +1,13 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import {
-  GoogleMap,
-  LoadScript,
-  Polygon,
-  DrawingManager,
-} from "@react-google-maps/api";
+import { Polygon, DrawingManager } from "@react-google-maps/api";
 
-import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "utils/constant";
 import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
-
-const containerStyle = {
-  width: "100%",
-  height: "100%",
-};
+import Map from "components/common/Map";
 
 /**
  * Show all polygons of regionList
@@ -172,69 +162,54 @@ const RegionMap = ({
           </Card>
         </div>
       ) : null}
-      <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
-        <GoogleMap
-          clickableIcons={false}
-          mapContainerStyle={containerStyle}
-          center={mapCenter}
-          zoom={12}
+      <Map center={mapCenter}>
+        <DrawingManager
           options={{
-            zoomControl: true,
-            mapTypeControl: false,
-            scaleControl: true,
-            streetViewControl: false,
-            rotateControl: true,
-            fullscreenControl: false,
+            drawingControl: false,
+            polygonOptions: {
+              fillColor: "lightblue",
+              fillOpacity: 0.5,
+              strokeColor: "blue",
+              strokeOpacity: 1,
+              strokeWeight: 2,
+              clickable: false,
+              draggable: false,
+              editable: true,
+              geodesic: false,
+              zIndex: 1,
+            },
           }}
-        >
-          <DrawingManager
-            options={{
-              drawingControl: false,
-              polygonOptions: {
-                fillColor: "lightblue",
-                fillOpacity: 0.5,
-                strokeColor: "blue",
+          drawingMode={editMode}
+          onPolygonComplete={onPolygonComplete}
+        />
+
+        {mayBeEditPolygon}
+        {regionList.map((area) => {
+          const { id, coordinates, layer } = area;
+          const color = getFillColor(layer);
+          return (
+            <Polygon
+              key={id}
+              options={{
+                fillColor: color,
+                fillOpacity: 0.3,
+                strokeColor: color,
                 strokeOpacity: 1,
                 strokeWeight: 2,
-                clickable: false,
+                clickable: true,
                 draggable: false,
-                editable: true,
+                editable: false,
                 geodesic: false,
                 zIndex: 1,
-              },
-            }}
-            drawingMode={editMode}
-            onPolygonComplete={onPolygonComplete}
-          />
-
-          {mayBeEditPolygon}
-          {regionList.map((area) => {
-            const { id, coordinates, layer } = area;
-            const color = getFillColor(layer);
-            return (
-              <Polygon
-                key={id}
-                options={{
-                  fillColor: color,
-                  fillOpacity: 0.3,
-                  strokeColor: color,
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                  clickable: true,
-                  draggable: false,
-                  editable: false,
-                  geodesic: false,
-                  zIndex: 1,
-                }}
-                paths={coordinates}
-                onClick={() => {
-                  onRegionSelect(id);
-                }}
-              />
-            );
-          })}
-        </GoogleMap>
-      </LoadScript>
+              }}
+              paths={coordinates}
+              onClick={() => {
+                onRegionSelect(id);
+              }}
+            />
+          );
+        })}
+      </Map>
     </Box>
   );
 };
