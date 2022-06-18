@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { Polygon } from "@react-google-maps/api";
+import { Polygon, Marker } from "@react-google-maps/api";
 
 import Map from "components/common/Map";
 
@@ -31,26 +31,31 @@ const WorkOrderMap = ({
           />
         ) : null}
         {surveyList.map((survey) => {
-          const { id, coordinates } = survey;
+          const { id, coordinates, units } = survey;
           const color = id === highlightSurvey ? "red" : "orange";
           return (
-            <Polygon
-              key={id}
-              options={{
-                fillColor: color,
-                fillOpacity: 0.3,
-                strokeColor: color,
-                strokeOpacity: 1,
-                strokeWeight: 1,
-                clickable: true,
-                draggable: false,
-                editable: false,
-                geodesic: false,
-                zIndex: 2,
-              }}
-              paths={coordinates}
-              onClick={onSurveySelect(id)}
-            />
+            <>
+              <Polygon
+                key={id}
+                options={{
+                  fillColor: color,
+                  fillOpacity: 0.3,
+                  strokeColor: color,
+                  strokeOpacity: 1,
+                  strokeWeight: 1,
+                  clickable: true,
+                  draggable: false,
+                  editable: false,
+                  geodesic: false,
+                  zIndex: 2,
+                }}
+                paths={coordinates}
+                onClick={onSurveySelect(id)}
+              />
+              {units.map((unit) => {
+                return <Marker key={unit.id} position={unit.coordinates} />;
+              })}
+            </>
           );
         })}
       </Map>
