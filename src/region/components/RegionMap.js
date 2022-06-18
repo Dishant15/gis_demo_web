@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 
+import { Polygon, DrawingManager } from "@react-google-maps/api";
 import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { Polygon, DrawingManager } from "@react-google-maps/api";
+import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
 
 import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
 import Map from "components/common/Map";
@@ -36,7 +37,7 @@ const RegionMap = ({
 }) => {
   const polyRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
+  const showEdit = !!editRegionPocket || editRegionLoading;
 
   const onPolygonComplete = useCallback(
     (polygon) => {
@@ -53,49 +54,26 @@ const RegionMap = ({
     polyRef.current.setMap(null);
   }, [onSubmit]);
 
-  const handleEditPocketLoad = useCallback((polygon) => {
-    polyRef.current = polygon;
-    // show popup to save edited polygon coordinates
-    setShowEdit(true);
-  }, []);
-
   const handleEdit = useCallback(() => {
     const newCoords = getCoordinatesFromFeature(polyRef.current);
     onEditComplete({ ...editRegionPocket, coordinates: newCoords });
-    setShowEdit(false);
   }, [onEditComplete, editRegionPocket]);
 
   const handleEditCancel = useCallback(() => {
-    setShowEdit(false);
     onCancel();
   }, [onCancel]);
 
   const mayBeEditPolygon = useMemo(() => {
     if (!!editRegionPocket) {
       return (
-        <Polygon
-          options={{
-            fillColor: "orange",
-            fillOpacity: 0.3,
-            strokeColor: "orange",
-            strokeOpacity: 1,
-            strokeWeight: 2,
-            clickable: false,
-            draggable: true,
-            editable: true,
-            geodesic: false,
-            zIndex: 5,
-          }}
-          onLoad={handleEditPocketLoad}
-          paths={editRegionPocket.coordinates}
-          onClick={() => {
-            onRegionSelect(editRegionPocket.id);
-          }}
+        <EditPolygonLayer
+          ref={polyRef}
+          coordinates={editRegionPocket.coordinates}
         />
       );
     }
     return null;
-  }, [editRegionPocket, handleEditPocketLoad, onRegionSelect]);
+  }, [editRegionPocket]);
 
   return (
     <Box width="100%" height="100%">
@@ -139,7 +117,7 @@ const RegionMap = ({
           </Card>
         </div>
       ) : null}
-      {showEdit || editRegionLoading ? (
+      {showEdit ? (
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>
             <CardContent>
