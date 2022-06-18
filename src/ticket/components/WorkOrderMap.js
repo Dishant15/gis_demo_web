@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Box } from "@mui/material";
 import { Polygon, Marker } from "@react-google-maps/api";
 
@@ -9,10 +9,11 @@ const WorkOrderMap = ({
   surveyList,
   highlightSurvey,
   onSurveySelect,
+  center,
 }) => {
   return (
     <Box width="100%" height="100%">
-      <Map>
+      <Map center={center}>
         {!!areaPocket ? (
           <Polygon
             options={{
@@ -34,7 +35,7 @@ const WorkOrderMap = ({
           const { id, coordinates, units } = survey;
           const color = id === highlightSurvey ? "red" : "orange";
           return (
-            <>
+            <Fragment key={id}>
               <Polygon
                 key={id}
                 options={{
@@ -55,7 +56,7 @@ const WorkOrderMap = ({
               {units.map((unit) => {
                 return <Marker key={unit.id} position={unit.coordinates} />;
               })}
-            </>
+            </Fragment>
           );
         })}
       </Map>

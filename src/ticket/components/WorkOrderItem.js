@@ -34,8 +34,9 @@ const WorkOrderItem = ({
    * Parent:
    *    WorkOrderPage
    */
-  const { id, name, status, address, tags, updated_on, units } =
+  const { id, name, status, address, tags, updated_on, units, center } =
     surveyWorkorder;
+
   const formatedUpdatedOn = format(new Date(updated_on), "do MMM, hh:mm aaa");
   const isExpanded = expanded.has(id);
 
@@ -59,7 +60,7 @@ const WorkOrderItem = ({
       <CardActions disableSpacing>
         <IconButton
           aria-label="add to favorites"
-          onClick={handleSurveySelect(id)}
+          onClick={handleSurveySelect(id, center)}
         >
           {id === selectedSurveyId ? (
             <MyLocationIcon />

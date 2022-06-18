@@ -59,6 +59,7 @@ const WorkOrderPage = () => {
 
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [expanded, setExpanded] = useState(new Set([]));
+  const [mapCenter, setMapCenter] = useState(undefined);
   const [workorderStatus, setWorkorderStatus] = useState(null);
   // filter work orders according to workorderStatus
   const filteredWorkOrders = isNull(workorderStatus)
@@ -66,11 +67,13 @@ const WorkOrderPage = () => {
     : filter(work_orders, ["status", workorderStatus]);
 
   const handleSurveySelect = useCallback(
-    (surveyId) => () => {
+    (surveyId, center) => () => {
       if (surveyId === selectedSurveyId) {
         setSelectedSurveyId(null);
+        setMapCenter(undefined);
       } else {
         setSelectedSurveyId(surveyId);
+        setMapCenter(center);
       }
     },
     [selectedSurveyId]
@@ -163,6 +166,7 @@ const WorkOrderPage = () => {
             surveyList={work_orders}
             highlightSurvey={selectedSurveyId}
             onSurveySelect={handleSurveySelect}
+            center={mapCenter}
           />
         </Box>
       </Stack>
