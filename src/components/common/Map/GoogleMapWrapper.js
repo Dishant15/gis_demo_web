@@ -27,13 +27,26 @@ const GoogleMapWrapper = ({
         mapContainerStyle={containerStyle}
         center={center}
         zoom={zoom}
-        options={{
-          zoomControl: true,
-          mapTypeControl: false,
-          scaleControl: true,
-          streetViewControl: false,
-          rotateControl: true,
-          fullscreenControl: false,
+        options={(maps) => {
+          return {
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: true,
+            streetViewControl: false,
+            rotateControl: true,
+            fullscreenControl: false,
+            mapTypeControl: true,
+            mapTypeId: maps.MapTypeId.SATELLITE,
+            mapTypeControlOptions: {
+              style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+              position: maps.ControlPosition.BOTTOM_CENTER,
+              mapTypeIds: [
+                maps.MapTypeId.ROADMAP,
+                maps.MapTypeId.SATELLITE,
+                maps.MapTypeId.HYBRID,
+              ],
+            },
+          };
         }}
       >
         {children}
