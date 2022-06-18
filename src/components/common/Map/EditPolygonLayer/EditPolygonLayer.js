@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from "react";
+import React, { forwardRef, useCallback, useEffect } from "react";
 
 import { Polygon } from "@react-google-maps/api";
 
@@ -17,10 +17,16 @@ const DEFAULT_OPTIONS = {
 
 /**
  * Render polygon in Edit mode
- * Show a popup with helptext and submit btn
- * call onEditComplete with updated coordinates on submit btn click
+ * attach polygon ref and pass to parent
  */
 const EditPolygonLayer = forwardRef(({ coordinates, options = {} }, ref) => {
+  useEffect(() => {
+    return () => {
+      if (!!ref.current) ref.current.setMap(null);
+      ref.current = null;
+    };
+  }, []);
+
   const handleEditPolygonLoad = useCallback((polygon) => {
     ref.current = polygon;
   }, []);
