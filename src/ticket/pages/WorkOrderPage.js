@@ -7,13 +7,13 @@ import { Box, Divider, Stack, Typography, Chip } from "@mui/material";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
+import WorkOrderItem from "ticket/components/WorkOrderItem";
 
 import { fetchTicketWorkorders } from "ticket/data/services";
 import { coordsToLatLongMap } from "utils/map.utils";
+import { workOrderStatusTypes } from "utils/constant";
 
 import "../styles/ticket_survey_list.scss";
-import WorkOrderItem from "ticket/components/WorkOrderItem";
-import { workOrderStatusTypes } from "utils/constant";
 
 const WorkOrderPage = () => {
   /**
@@ -60,11 +60,11 @@ const WorkOrderPage = () => {
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
-  const [workorderStatus, setWorkorderStatus] = useState(null);
-  // filter work orders according to workorderStatus
-  const filteredWorkOrders = isNull(workorderStatus)
+  const [statusFilter, setStatusFilter] = useState(null);
+  // filter work orders according to statusFilter
+  const filteredWorkOrders = isNull(statusFilter)
     ? [...work_orders]
-    : filter(work_orders, ["status", workorderStatus]);
+    : filter(work_orders, ["status", statusFilter]);
 
   const handleSurveySelect = useCallback(
     (surveyId, center) => () => {
@@ -97,7 +97,7 @@ const WorkOrderPage = () => {
 
   const handleFilterClick = useCallback(
     (newStatus) => () => {
-      setWorkorderStatus((currStatus) =>
+      setStatusFilter((currStatus) =>
         currStatus === newStatus ? null : newStatus
       );
     },
@@ -136,7 +136,7 @@ const WorkOrderPage = () => {
             <Stack spacing={1} direction="row" alignItems="center">
               <Typography variant="body1">Filter By :</Typography>
               {map(workOrderStatusTypes, (wStatus) => {
-                const selected = workorderStatus === wStatus.value;
+                const selected = statusFilter === wStatus.value;
                 return (
                   <Chip
                     color={selected ? wStatus.color : undefined}
