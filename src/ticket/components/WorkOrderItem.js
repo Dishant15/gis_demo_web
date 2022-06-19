@@ -1,6 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -22,9 +22,7 @@ import ExpandMore from "components/common/ExpandMore";
 import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
-import { Box, TextField, Stack, InputLabel } from "@mui/material";
-import { workOrderStatusTypes } from "utils/constant";
-import { map } from "lodash";
+import { TextField, Stack } from "@mui/material";
 
 const WorkOrderItem = ({
   surveyWorkorder,
@@ -41,6 +39,9 @@ const WorkOrderItem = ({
     surveyWorkorder;
 
   const formatedUpdatedOn = format(new Date(updated_on), "do MMM, hh:mm aaa");
+  const totalHomePass = units.reduce(function (sum, u) {
+    return sum + u.total_home_pass;
+  }, 0);
   const isExpanded = expanded.has(id);
 
   return (
@@ -56,8 +57,14 @@ const WorkOrderItem = ({
         subheader={formatedUpdatedOn}
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography mb={1} variant="body2" color="text.secondary">
           {address}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Home Pass : <b>{totalHomePass}</b>
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {tags.join(" , ")}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -103,11 +110,11 @@ const WorkOrderItem = ({
 };
 
 const StatusAvatar = ({ status }) => {
-  if (status === "S") {
+  if (status === "V") {
     return <Avatar alt={status} src={AcceptImg} />;
   } else if (status === "R") {
     return <Avatar alt={status} src={CancelImg} />;
-  } else if (status === "V") {
+  } else if (status === "S") {
     return <Avatar alt={status} src={InprogressImg} />;
   }
   return null;

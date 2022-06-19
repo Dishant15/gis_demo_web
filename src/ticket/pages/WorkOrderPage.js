@@ -70,10 +70,11 @@ const WorkOrderPage = () => {
     (surveyId, center) => () => {
       if (surveyId === selectedSurveyId) {
         setSelectedSurveyId(null);
-        setMapCenter(undefined);
       } else {
         setSelectedSurveyId(surveyId);
-        setMapCenter(center);
+        if (!!center) {
+          setMapCenter(center);
+        }
       }
     },
     [selectedSurveyId]
@@ -133,7 +134,7 @@ const WorkOrderPage = () => {
               </Typography>
             ) : null}
             <Stack spacing={1} direction="row" alignItems="center">
-              <Typography variant="body1">Filter By</Typography>
+              <Typography variant="body1">Filter By :</Typography>
               {map(workOrderStatusTypes, (wStatus) => {
                 const selected = workorderStatus === wStatus.value;
                 return (

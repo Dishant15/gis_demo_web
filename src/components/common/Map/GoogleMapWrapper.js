@@ -33,7 +33,7 @@ const GoogleMapWrapper = ({
             mapTypeControl: false,
             scaleControl: true,
             streetViewControl: false,
-            rotateControl: true,
+            rotateControl: false,
             fullscreenControl: false,
             mapTypeControl: true,
             mapTypeId: maps.MapTypeId.SATELLITE,

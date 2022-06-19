@@ -20,12 +20,12 @@ export const workOrderStatusTypes = {
   S: {
     value: "S",
     label: "Submited",
-    color: "success",
+    color: "warning",
   },
   V: {
     value: "V",
     label: "Verified",
-    color: "warning",
+    color: "success",
   },
   R: {
     value: "R",
