@@ -10,10 +10,9 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
+import EditIcon from "@mui/icons-material/Edit";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 
@@ -30,6 +29,7 @@ const WorkOrderItem = ({
   handleExpandClick,
   selectedSurveyId,
   handleSurveySelect,
+  handleSurveyMapEdit,
 }) => {
   /**
    * Parent:
@@ -78,8 +78,11 @@ const WorkOrderItem = ({
             <LocationSearchingIcon />
           )}
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+        <IconButton
+          aria-label="share"
+          onClick={handleSurveyMapEdit(surveyWorkorder)}
+        >
+          <EditIcon />
         </IconButton>
         <ExpandMore
           expand={isExpanded}

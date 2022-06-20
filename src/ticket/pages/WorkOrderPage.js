@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { cloneDeep, filter, isNull, map, size } from "lodash";
 
 import { Box, Divider, Stack, Typography, Chip } from "@mui/material";
@@ -9,9 +10,10 @@ import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
 
-import { fetchTicketWorkorders } from "ticket/data/services";
-import { coordsToLatLongMap } from "utils/map.utils";
+import { fetchTicketWorkorders, updateWorkOrder } from "ticket/data/services";
+import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 import "../styles/ticket_survey_list.scss";
 
@@ -20,13 +22,37 @@ const WorkOrderPage = () => {
    * Parent:
    *    App
    */
+
+  // query and mutations
   const { ticketId } = useParams();
-  const { isLoading, data } = useQuery(
+  const dispatch = useDispatch();
+  const { isLoading, data, refetch } = useQuery(
     ["ticketWorkOrderList", ticketId],
     fetchTicketWorkorders,
     { initialData: {} }
   );
 
+  const { mutate: editSurveyMutation, isLoading: editSurveyLoading } =
+    useMutation(
+      (mutationData) => {
+        // mutationData : { workOrderId, {...data to edit} }
+        updateWorkOrder(mutationData);
+      },
+      {
+        onSuccess: () => {
+          dispatch(
+            addNotification({
+              type: "success",
+              title: "Survey update",
+              text: "Survey coordinates updated successfully",
+            })
+          );
+          refetch();
+        },
+      }
+    );
+
+  // data Transformation stage
   const ticketData = useMemo(() => {
     let ticket = cloneDeep(data);
     if (!size(ticket)) return {};
@@ -57,7 +83,9 @@ const WorkOrderPage = () => {
   }, [data]);
   const { area_pocket, work_orders = [] } = ticketData;
 
+  // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+  const [surveyMapEdit, setSurveyMapEdit] = useState(null);
   const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
   const [statusFilter, setStatusFilter] = useState(null);
@@ -65,6 +93,16 @@ const WorkOrderPage = () => {
   const filteredWorkOrders = isNull(statusFilter)
     ? [...work_orders]
     : filter(work_orders, ["status", statusFilter]);
+
+  // Survey filter logic
+  const handleFilterClick = useCallback(
+    (newStatus) => () => {
+      setStatusFilter((currStatus) =>
+        currStatus === newStatus ? null : newStatus
+      );
+    },
+    []
+  );
 
   const handleSurveySelect = useCallback(
     (surveyId, center) => () => {
@@ -80,6 +118,30 @@ const WorkOrderPage = () => {
     [selectedSurveyId]
   );
 
+  // survey polygon edit logic
+
+  const handleSurveyMapEdit = useCallback(
+    (survey) => () => {
+      setSurveyMapEdit(survey);
+    },
+    [setSurveyMapEdit]
+  );
+
+  const handleEditCancel = useCallback(() => {
+    setSurveyMapEdit(null);
+  }, [setSurveyMapEdit]);
+
+  const handleEditSubmit = useCallback(
+    (data) => {
+      editSurveyMutation({
+        workOrderId: data.id,
+        data: { coordinates: latLongMapToCoords(data.coordinates) },
+      });
+      setSurveyMapEdit(null);
+    },
+    [setSurveyMapEdit]
+  );
+
   const handleExpandClick = useCallback(
     (surveyId) => () => {
       setExpanded((surveyIdSet) => {
@@ -91,15 +153,6 @@ const WorkOrderPage = () => {
         }
         return newSet;
       });
-    },
-    []
-  );
-
-  const handleFilterClick = useCallback(
-    (newStatus) => () => {
-      setStatusFilter((currStatus) =>
-        currStatus === newStatus ? null : newStatus
-      );
     },
     []
   );
@@ -156,6 +209,7 @@ const WorkOrderPage = () => {
                   handleExpandClick={handleExpandClick}
                   selectedSurveyId={selectedSurveyId}
                   handleSurveySelect={handleSurveySelect}
+                  handleSurveyMapEdit={handleSurveyMapEdit}
                 />
               );
             })}
@@ -165,6 +219,10 @@ const WorkOrderPage = () => {
           <WorkOrderMap
             areaPocket={area_pocket}
             surveyList={work_orders}
+            surveyMapEdit={surveyMapEdit}
+            editSurveyLoading={editSurveyLoading}
+            onEditCancel={handleEditCancel}
+            onEditComplete={handleEditSubmit}
             highlightSurvey={selectedSurveyId}
             onSurveySelect={handleSurveySelect}
             center={mapCenter}

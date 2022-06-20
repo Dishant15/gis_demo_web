@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Loader from "components/common/Loader";
 import RegionMap from "./components/RegionMap";
 import AddRegionForm from "./components/AddRegionForm";
+import RegionListItem from "./components/RegionListItem";
 
 import { fetchRegionList } from "./data/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
@@ -17,7 +18,6 @@ import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
 
 import "./styles/region-page.scss";
-import RegionListItem from "./components/RegionListItem";
 
 /**
  * Fetch region list
