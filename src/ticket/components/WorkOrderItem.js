@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
+import Tooltip from "@mui/material/Tooltip";
 
 import ExpandMore from "components/common/ExpandMore";
 
@@ -52,14 +53,16 @@ const WorkOrderItem = ({
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
-          <IconButton
-            aria-label="settings"
-            onClick={(e) => {
-              handleSurveyStatusEdit(e, surveyWorkorder);
-            }}
-          >
-            <MoreVertIcon />
-          </IconButton>
+          <Tooltip title="Change Status" placement="top">
+            <IconButton
+              aria-label="settings"
+              onClick={(e) => {
+                handleSurveyStatusEdit(e, surveyWorkorder);
+              }}
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </Tooltip>
         }
         title={name}
         subheader={formatedUpdatedOn}
@@ -76,36 +79,47 @@ const WorkOrderItem = ({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton
-          aria-label="add to favorites"
-          onClick={handleSurveySelect(id, center)}
+        <Tooltip title="View on map" placement="top">
+          <IconButton
+            aria-label="add to favorites"
+            onClick={handleSurveySelect(id, center)}
+          >
+            {id === selectedSurveyId ? (
+              <MyLocationIcon />
+            ) : (
+              <LocationSearchingIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Edit Survey Details" placement="top">
+          <IconButton
+            aria-label="edit"
+            onClick={handleSurveyDetailsEdit(surveyWorkorder)}
+          >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Edit Survey Coordinates" placement="top">
+          <IconButton
+            aria-label="edit-location"
+            onClick={handleSurveyMapEdit(surveyWorkorder)}
+          >
+            <EditLocationAltIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip
+          title={isExpanded ? "Hide Units" : "Show Units"}
+          placement="top"
         >
-          {id === selectedSurveyId ? (
-            <MyLocationIcon />
-          ) : (
-            <LocationSearchingIcon />
-          )}
-        </IconButton>
-        <IconButton
-          aria-label="edit"
-          onClick={handleSurveyDetailsEdit(surveyWorkorder)}
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          aria-label="edit-location"
-          onClick={handleSurveyMapEdit(surveyWorkorder)}
-        >
-          <EditLocationAltIcon />
-        </IconButton>
-        <ExpandMore
-          expand={isExpanded}
-          onClick={handleExpandClick(id)}
-          aria-expanded={isExpanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
+          <ExpandMore
+            expand={isExpanded}
+            onClick={handleExpandClick(id)}
+            aria-expanded={isExpanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </Tooltip>
       </CardActions>
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
         {units.map((unit) => {
@@ -119,12 +133,14 @@ const WorkOrderItem = ({
                 tags: {unit.tags}
               </Typography>
               <CardActions disableSpacing>
-                <IconButton
-                  aria-label="edit"
-                  onClick={handleUnitDetailsEdit(unit, id, tags)}
-                >
-                  <EditIcon />
-                </IconButton>
+                <Tooltip title="Edit unit details" placement="top">
+                  <IconButton
+                    aria-label="edit"
+                    onClick={handleUnitDetailsEdit(unit, id, tags)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
               </CardActions>
             </CardContent>
           );
