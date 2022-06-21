@@ -71,7 +71,7 @@ const WorkOrderItem = ({
           Home Pass : <b>{totalHomePass}</b>
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {tags.join(" , ")}
+          {tags}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

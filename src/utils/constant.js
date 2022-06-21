@@ -33,3 +33,41 @@ export const workOrderStatusTypes = {
     color: "error",
   },
 };
+
+export const BroadbandProviders = [
+  {
+    label: "GTPL",
+    value: "GTPL",
+  },
+  {
+    label: "JIO",
+    value: "JIO",
+  },
+  {
+    label: "Airtel",
+    value: "Airtel",
+  },
+];
+
+export const TVProviders = [
+  {
+    label: "GTPL",
+    value: "GTPL",
+  },
+  {
+    label: "DEN",
+    value: "DEN",
+  },
+  {
+    label: "IN CABLE",
+    value: "IN CABLE",
+  },
+];
+
+export const SURVEY_TAG_LIST = [
+  { label: "Residential", value: "residential" },
+  { label: "Commercial", value: "commercial" },
+  { label: "Government", value: "government" },
+  { label: "Hospital", value: "hospital" },
+  { label: "Educational", value: "educational" },
+];

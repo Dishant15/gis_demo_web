@@ -80,12 +80,12 @@ const WorkOrderPage = () => {
       // convert work_orders.units coordinate, tags data
       survey.coordinates = coordsToLatLongMap(survey.coordinates);
       survey.center = coordsToLatLongMap([survey.center])[0];
-      survey.tags = survey.tags.toString().split(",");
+      // survey.tags = survey.tags.toString().split(",");
       for (let u_ind = 0; u_ind < units.length; u_ind++) {
         const unit = units[u_ind];
         // convert work_orders.units coordinate, tags data
         unit.coordinates = coordsToLatLongMap([unit.coordinates])[0];
-        unit.tags = unit.tags.toString().split(",");
+        // unit.tags = unit.tags.toString().split(",");
       }
     }
 
@@ -160,6 +160,36 @@ const WorkOrderPage = () => {
     setSurveyDetailsEdit(false);
     setSurveyData({});
   }, [setSurveyDetailsEdit, setSurveyData]);
+
+  const handleDetailsEditSubmit = useCallback(
+    (data, isDirty) => {
+      if (isDirty) {
+        editSurveyMutation(
+          {
+            workOrderId: data.id,
+            data: {
+              ...data,
+              tags: map(data.tags, "value").join(","),
+              cable_tv_availability: map(
+                data.cable_tv_availability,
+                "value"
+              ).join(","),
+              broadband_availability: map(
+                data.broadband_availability,
+                "value"
+              ).join(","),
+            },
+          },
+          {
+            onSuccess: handleSurveyDetailsCancel,
+          }
+        );
+      } else {
+        handleSurveyDetailsCancel();
+      }
+    },
+    [handleSurveyDetailsCancel]
+  );
 
   // survey status edit logic
 
@@ -330,9 +360,9 @@ const WorkOrderPage = () => {
         <Dialog onClose={handleSurveyDetailsCancel} open={surveyDetailsEdit}>
           {surveyDetailsEdit ? (
             <SurveyEditForm
-              data={surveyData}
+              formData={surveyData}
               editSurveyLoading={editSurveyLoading}
-              onEditComplete={handleStatusEditSubmit}
+              onEditComplete={handleDetailsEditSubmit}
               handleSurveyDetailsCancel={handleSurveyDetailsCancel}
             />
           ) : null}
