@@ -15,6 +15,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 
 import ExpandMore from "components/common/ExpandMore";
 
@@ -30,7 +31,7 @@ const WorkOrderItem = ({
   handleSurveySelect,
   handleSurveyMapEdit,
   handleSurveyStatusEdit,
-  setSurveyData,
+  handleSurveyDetailsEdit,
 }) => {
   /**
    * Parent:
@@ -53,12 +54,7 @@ const WorkOrderItem = ({
           <IconButton
             aria-label="settings"
             onClick={(e) => {
-              handleSurveyStatusEdit(e);
-              setSurveyData({
-                id,
-                status,
-                remark,
-              });
+              handleSurveyStatusEdit(e, surveyWorkorder);
             }}
           >
             <MoreVertIcon />
@@ -90,10 +86,16 @@ const WorkOrderItem = ({
           )}
         </IconButton>
         <IconButton
-          aria-label="share"
-          onClick={handleSurveyMapEdit(surveyWorkorder)}
+          aria-label="edit"
+          onClick={handleSurveyDetailsEdit(surveyWorkorder)}
         >
           <EditIcon />
+        </IconButton>
+        <IconButton
+          aria-label="edit-location"
+          onClick={handleSurveyMapEdit(surveyWorkorder)}
+        >
+          <EditLocationAltIcon />
         </IconButton>
         <ExpandMore
           expand={isExpanded}

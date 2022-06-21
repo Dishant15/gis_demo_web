@@ -2,9 +2,17 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { cloneDeep, filter, isEqual, isNull, map, size } from "lodash";
+import { cloneDeep, filter, isEqual, isNull, map, pick, size } from "lodash";
 
-import { Box, Divider, Stack, Typography, Chip, Popover } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Stack,
+  Typography,
+  Chip,
+  Popover,
+  Dialog,
+} from "@mui/material";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
@@ -17,6 +25,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 
 import "../styles/ticket_survey_list.scss";
 import StatusChangeForm from "ticket/components/StatusChangeForm";
+import SurveyEditForm from "ticket/components/SurveyEditForm";
 
 const WorkOrderPage = () => {
   /**
@@ -87,6 +96,8 @@ const WorkOrderPage = () => {
   // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [surveyMapEdit, setSurveyMapEdit] = useState(null);
+
+  const [surveyDetailsEdit, setSurveyDetailsEdit] = useState(false);
   const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
   const [surveyData, setSurveyData] = useState({});
 
@@ -122,12 +133,42 @@ const WorkOrderPage = () => {
     [selectedSurveyId]
   );
 
-  // survey status edit logic
-  const handleSurveyStatusEdit = useCallback(
-    (event) => {
-      setSurveyStatusEdit(event.target);
+  // survey details edit logic
+
+  const handleSurveyDetailsEdit = useCallback(
+    (data) => () => {
+      setSurveyDetailsEdit(true);
+      setSurveyData(
+        pick(data, [
+          "id",
+          "name",
+          "address",
+          "area",
+          "city",
+          "state",
+          "pincode",
+          "tags",
+          "broadband_availability",
+          "cable_tv_availability",
+        ])
+      );
     },
-    [setSurveyStatusEdit]
+    [setSurveyDetailsEdit, setSurveyData]
+  );
+
+  const handleSurveyDetailsCancel = useCallback(() => {
+    setSurveyDetailsEdit(false);
+    setSurveyData({});
+  }, [setSurveyDetailsEdit, setSurveyData]);
+
+  // survey status edit logic
+
+  const handleSurveyStatusEdit = useCallback(
+    (event, data) => {
+      setSurveyStatusEdit(event.target);
+      setSurveyData(pick(data, ["id", "status", "remark"]));
+    },
+    [setSurveyStatusEdit, setSurveyData]
   );
 
   const handleSurveyStatusCancel = useCallback(() => {
@@ -249,7 +290,7 @@ const WorkOrderPage = () => {
                   handleSurveySelect={handleSurveySelect}
                   handleSurveyMapEdit={handleSurveyMapEdit}
                   handleSurveyStatusEdit={handleSurveyStatusEdit}
-                  setSurveyData={setSurveyData}
+                  handleSurveyDetailsEdit={handleSurveyDetailsEdit}
                 />
               );
             })}
@@ -286,6 +327,16 @@ const WorkOrderPage = () => {
             />
           ) : null}
         </Popover>
+        <Dialog onClose={handleSurveyDetailsCancel} open={surveyDetailsEdit}>
+          {surveyDetailsEdit ? (
+            <SurveyEditForm
+              data={surveyData}
+              editSurveyLoading={editSurveyLoading}
+              onEditComplete={handleStatusEditSubmit}
+              handleSurveyDetailsCancel={handleSurveyDetailsCancel}
+            />
+          ) : null}
+        </Dialog>
       </Stack>
     </Box>
   );
