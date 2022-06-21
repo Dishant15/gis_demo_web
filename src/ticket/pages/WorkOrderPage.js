@@ -18,7 +18,11 @@ import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
 
-import { fetchTicketWorkorders, updateWorkOrder } from "ticket/data/services";
+import {
+  fetchTicketWorkorders,
+  updateUnitWorkOrder,
+  updateWorkOrder,
+} from "ticket/data/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -26,6 +30,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 import "../styles/ticket_survey_list.scss";
 import StatusChangeForm from "ticket/components/StatusChangeForm";
 import SurveyEditForm from "ticket/components/SurveyEditForm";
+import UnitEditForm from "ticket/components/UnitEditForm";
 
 const WorkOrderPage = () => {
   /**
@@ -62,6 +67,22 @@ const WorkOrderPage = () => {
       }
     );
 
+  const { mutate: editUnitMutation, isLoading: editUnitLoading } = useMutation(
+    updateUnitWorkOrder,
+    {
+      onSuccess: () => {
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Unit update",
+            text: "Unit updated successfully",
+          })
+        );
+        refetch();
+      },
+    }
+  );
+
   // data Transformation stage
   const ticketData = useMemo(() => {
     let ticket = cloneDeep(data);
@@ -97,6 +118,7 @@ const WorkOrderPage = () => {
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [surveyMapEdit, setSurveyMapEdit] = useState(null);
 
+  const [unitFormEdit, setUnitFormEdit] = useState(false);
   const [surveyDetailsEdit, setSurveyDetailsEdit] = useState(false);
   const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
   const [surveyData, setSurveyData] = useState({});
@@ -132,6 +154,42 @@ const WorkOrderPage = () => {
     },
     [selectedSurveyId]
   );
+
+  // unit edit logic
+  const handleUnitDetailsEdit = useCallback(
+    (data, parentId, selectedSurveyTags) => () => {
+      let formData = pick(data, [
+        "id",
+        "name",
+        "category",
+        "tags",
+        "floors",
+        "house_per_floor",
+        "total_home_pass",
+      ]);
+      formData.parentId = parentId;
+      formData.selectedSurveyTags = selectedSurveyTags;
+      setSurveyData(formData);
+      setUnitFormEdit(true);
+    },
+    [setSurveyData, setUnitFormEdit]
+  );
+
+  const handleUnitDetailsCancel = useCallback(() => {
+    setUnitFormEdit(false);
+    setSurveyData({});
+  }, [setUnitFormEdit, setSurveyData]);
+
+  const handleUnitDetailSubmit = useCallback((data, isDirty) => {
+    if (isDirty) {
+      editUnitMutation(
+        { ...data, tags: map(data.tags, "value").join(",") },
+        { onSuccess: handleUnitDetailsCancel }
+      );
+    } else {
+      handleUnitDetailsCancel();
+    }
+  }, []);
 
   // survey details edit logic
 
@@ -321,6 +379,7 @@ const WorkOrderPage = () => {
                   handleSurveyMapEdit={handleSurveyMapEdit}
                   handleSurveyStatusEdit={handleSurveyStatusEdit}
                   handleSurveyDetailsEdit={handleSurveyDetailsEdit}
+                  handleUnitDetailsEdit={handleUnitDetailsEdit}
                 />
               );
             })}
@@ -364,6 +423,16 @@ const WorkOrderPage = () => {
               editSurveyLoading={editSurveyLoading}
               onEditComplete={handleDetailsEditSubmit}
               handleSurveyDetailsCancel={handleSurveyDetailsCancel}
+            />
+          ) : null}
+        </Dialog>
+        <Dialog onClose={handleUnitDetailsCancel} open={unitFormEdit}>
+          {unitFormEdit ? (
+            <UnitEditForm
+              formData={surveyData}
+              editUnitLoading={editUnitLoading}
+              onEditComplete={handleUnitDetailSubmit}
+              handleUnitDetailsCancel={handleUnitDetailsCancel}
             />
           ) : null}
         </Dialog>

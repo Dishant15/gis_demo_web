@@ -55,3 +55,6 @@ export const apiGetTicketWorkorders = (ticketId) =>
 // workorder apis
 export const apiPutWorkOrderEdit = (workOrderId) =>
   `/api/geo/survey/boundary/${workOrderId}/edit/`;
+
+export const apiPutUnitEdit = (unitId = ":unit_id") =>
+  `/api/geo/survey/unit/${unitId}/edit/`;

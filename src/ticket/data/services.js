@@ -7,6 +7,7 @@ import {
   apiPostTicketEditArea,
   apiGetTicketWorkorders,
   apiPutWorkOrderEdit,
+  apiPutUnitEdit,
 } from "utils/url.constants";
 
 export const fetchTicketList = async () => {
@@ -44,5 +45,10 @@ export const editTicketArea = async ({ ticketId, data }) => {
 // data: { status, remark }
 export const updateWorkOrder = async ({ workOrderId, data }) => {
   const res = await Api.put(apiPutWorkOrderEdit(workOrderId), data);
+  return res.data;
+};
+
+export const updateUnitWorkOrder = async (data) => {
+  const res = await Api.put(apiPutUnitEdit(data.id), data);
   return res.data;
 };

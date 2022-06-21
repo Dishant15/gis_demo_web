@@ -32,6 +32,7 @@ const WorkOrderItem = ({
   handleSurveyMapEdit,
   handleSurveyStatusEdit,
   handleSurveyDetailsEdit,
+  handleUnitDetailsEdit,
 }) => {
   /**
    * Parent:
@@ -117,6 +118,14 @@ const WorkOrderItem = ({
                 Total Home pass: {unit.total_home_pass} <br />
                 tags: {unit.tags}
               </Typography>
+              <CardActions disableSpacing>
+                <IconButton
+                  aria-label="edit"
+                  onClick={handleUnitDetailsEdit(unit, id, tags)}
+                >
+                  <EditIcon />
+                </IconButton>
+              </CardActions>
             </CardContent>
           );
         })}

@@ -83,9 +83,7 @@ const StatusChangeForm = ({
                         color={selected ? wStatus.color : undefined}
                         key={wStatus.value}
                         label={wStatus.label}
-                        onClick={() =>
-                          field.onChange(selected ? null : wStatus.value)
-                        }
+                        onClick={() => field.onChange(wStatus.value)}
                       />
                     );
                   })}

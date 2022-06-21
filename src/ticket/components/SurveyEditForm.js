@@ -1,7 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { Stack, Typography, TextField, Box, Button } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  TextField,
+  Box,
+  Divider,
+  IconButton,
+} from "@mui/material";
 import { FormSelect, FormCreatableSelect } from "components/common/FormFields";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -75,7 +82,11 @@ const SurveyEditForm = (props) => {
         >
           Edit Survey
         </Typography>
+        <IconButton aria-label="close" onClick={handleSurveyDetailsCancel}>
+          <CloseIcon />
+        </IconButton>
       </Stack>
+      <Divider flexItem />
       <Box
         p={2}
         pt={0}
@@ -247,15 +258,7 @@ const SurveyEditForm = (props) => {
             }}
           ></Stack>
         </Stack>
-        <Stack flex={1} p={4} direction="row" justifyContent="space-between">
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<CloseIcon />}
-            onClick={handleSurveyDetailsCancel}
-          >
-            Cancel
-          </Button>
+        <Stack flex={1} pt={2} direction="row" justifyContent="flex-end">
           <LoadingButton
             variant="outlined"
             color="success"
