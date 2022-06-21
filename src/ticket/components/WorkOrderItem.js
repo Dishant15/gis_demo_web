@@ -1,6 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -21,7 +21,6 @@ import ExpandMore from "components/common/ExpandMore";
 import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
-import { TextField, Stack } from "@mui/material";
 
 const WorkOrderItem = ({
   surveyWorkorder,
@@ -30,12 +29,14 @@ const WorkOrderItem = ({
   selectedSurveyId,
   handleSurveySelect,
   handleSurveyMapEdit,
+  handleSurveyStatusEdit,
+  setSurveyData,
 }) => {
   /**
    * Parent:
    *    WorkOrderPage
    */
-  const { id, name, status, address, tags, updated_on, units, center } =
+  const { id, name, status, address, tags, updated_on, units, center, remark } =
     surveyWorkorder;
 
   const formatedUpdatedOn = format(new Date(updated_on), "do MMM, hh:mm aaa");
@@ -49,7 +50,17 @@ const WorkOrderItem = ({
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
-          <IconButton aria-label="settings">
+          <IconButton
+            aria-label="settings"
+            onClick={(e) => {
+              handleSurveyStatusEdit(e);
+              setSurveyData({
+                id,
+                status,
+                remark,
+              });
+            }}
+          >
             <MoreVertIcon />
           </IconButton>
         }
@@ -121,57 +132,6 @@ const StatusAvatar = ({ status }) => {
     return <Avatar alt={status} src={InprogressImg} />;
   }
   return null;
-};
-
-const StatusChangeForm = ({ remarks, status }) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    control,
-    setValue,
-  } = useForm({
-    defaultValues: {
-      remarks: remarks || "",
-      status: status || null,
-    },
-  });
-
-  return (
-    <Stack>
-      <TextField
-        label="Remarks"
-        multiline
-        rows={2}
-        {...register("remarks")}
-        error={!!errors.remarks}
-        helperText={errors.remarks?.message}
-      />
-      {/* <Controller
-        render={({ field }) => {
-          return (
-            <>
-              <InputLabel>Status</InputLabel>
-              {map(workOrderStatusTypes, (wStatus) => {
-                const selected = field.value === wStatus.value;
-                return (
-                  <Chip
-                    color={selected ? wStatus.color : undefined}
-                    key={wStatus.value}
-                    label={wStatus.label}
-                    onClick={handleFilterClick(wStatus.value)}
-                  />
-                );
-              })}
-            </>
-          );
-        }}
-        name={name}
-        control={control}
-        rules={rules}
-      /> */}
-    </Stack>
-  );
 };
 
 export default WorkOrderItem;

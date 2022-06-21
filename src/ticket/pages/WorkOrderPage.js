@@ -2,9 +2,9 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { cloneDeep, filter, isNull, map, size } from "lodash";
+import { cloneDeep, filter, isEqual, isNull, map, size } from "lodash";
 
-import { Box, Divider, Stack, Typography, Chip } from "@mui/material";
+import { Box, Divider, Stack, Typography, Chip, Popover } from "@mui/material";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
@@ -16,6 +16,7 @@ import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 
 import "../styles/ticket_survey_list.scss";
+import StatusChangeForm from "ticket/components/StatusChangeForm";
 
 const WorkOrderPage = () => {
   /**
@@ -86,6 +87,9 @@ const WorkOrderPage = () => {
   // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [surveyMapEdit, setSurveyMapEdit] = useState(null);
+  const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
+  const [surveyData, setSurveyData] = useState({});
+
   const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
   const [statusFilter, setStatusFilter] = useState(null);
@@ -116,6 +120,38 @@ const WorkOrderPage = () => {
       }
     },
     [selectedSurveyId]
+  );
+
+  // survey status edit logic
+  const handleSurveyStatusEdit = useCallback(
+    (event) => {
+      setSurveyStatusEdit(event.target);
+    },
+    [setSurveyStatusEdit]
+  );
+
+  const handleSurveyStatusCancel = useCallback(() => {
+    setSurveyStatusEdit(null);
+    setSurveyData({});
+  }, [setSurveyStatusEdit, setSurveyData]);
+
+  const handleStatusEditSubmit = useCallback(
+    (data) => {
+      if (isEqual(data, surveyData)) {
+        handleSurveyStatusCancel();
+      } else {
+        editSurveyMutation(
+          {
+            workOrderId: data.id,
+            data: { status: data.status, remark: data.remark },
+          },
+          {
+            onSuccess: handleSurveyStatusCancel,
+          }
+        );
+      }
+    },
+    [surveyData, handleSurveyStatusCancel]
   );
 
   // survey polygon edit logic
@@ -156,6 +192,8 @@ const WorkOrderPage = () => {
     },
     []
   );
+
+  const showStatusPopover = !isNull(surveyStatusEdit);
 
   if (isLoading) {
     return <WorkOrderLoading />;
@@ -210,6 +248,8 @@ const WorkOrderPage = () => {
                   selectedSurveyId={selectedSurveyId}
                   handleSurveySelect={handleSurveySelect}
                   handleSurveyMapEdit={handleSurveyMapEdit}
+                  handleSurveyStatusEdit={handleSurveyStatusEdit}
+                  setSurveyData={setSurveyData}
                 />
               );
             })}
@@ -228,6 +268,24 @@ const WorkOrderPage = () => {
             center={mapCenter}
           />
         </Box>
+        <Popover
+          open={showStatusPopover}
+          anchorEl={surveyStatusEdit}
+          onClose={handleSurveyStatusCancel}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          {showStatusPopover ? (
+            <StatusChangeForm
+              data={surveyData}
+              editSurveyLoading={editSurveyLoading}
+              onEditComplete={handleStatusEditSubmit}
+              handleSurveyStatusCancel={handleSurveyStatusCancel}
+            />
+          ) : null}
+        </Popover>
       </Stack>
     </Box>
   );
