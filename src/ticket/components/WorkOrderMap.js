@@ -20,19 +20,43 @@ const WorkOrderMap = ({
   editSurveyLoading,
   onEditCancel,
   onEditComplete,
+  unitMapEdit,
+  editUnitLoading,
+  onUnitEditCancel,
+  onUnitEditComplete,
   center,
 }) => {
   const polyRef = useRef(null);
   const showEdit = !!surveyMapEdit || editSurveyLoading;
+  const showUnitEdit = !!unitMapEdit || editUnitLoading;
 
   const handleEdit = useCallback(() => {
     const newCoords = getCoordinatesFromFeature(polyRef.current);
     onEditComplete({ id: surveyMapEdit.id, coordinates: newCoords });
   }, [onEditComplete, surveyMapEdit]);
 
-  const handleEditCancel = useCallback(() => {
-    onEditCancel();
-  }, [onEditCancel]);
+  const handleUnitEdit = useCallback(() => {
+    const newCoords = {
+      latitude: polyRef.current.position.lat(),
+      longitude: polyRef.current.position.lng(),
+    };
+    onUnitEditComplete({ ...unitMapEdit, coordinates: newCoords });
+  }, [unitMapEdit]);
+
+  const mayBeEditMarker = useMemo(() => {
+    if (!!unitMapEdit) {
+      return (
+        <Marker
+          draggable
+          clickable
+          onLoad={(marker) => (polyRef.current = marker)}
+          position={unitMapEdit.coordinates}
+          label="edit"
+          zIndex={10}
+        />
+      );
+    }
+  }, [unitMapEdit]);
 
   const mayBeEditPolygon = useMemo(() => {
     if (!!surveyMapEdit) {
@@ -57,7 +81,7 @@ const WorkOrderMap = ({
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={handleEditCancel} size="small">
+              <Button color="error" onClick={onEditCancel} size="small">
                 Cancel
               </Button>
               {editSurveyLoading ? (
@@ -71,8 +95,32 @@ const WorkOrderMap = ({
           </Card>
         </div>
       ) : null}
+      {showUnitEdit ? (
+        <div className="reg-map-details">
+          <Card sx={{ maxWidth: 345 }} elevation={3}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Drag building marker to edit location
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button color="error" onClick={onUnitEditCancel} size="small">
+                Cancel
+              </Button>
+              {editUnitLoading ? (
+                <Button size="small">Loading ...</Button>
+              ) : (
+                <Button size="small" onClick={handleUnitEdit}>
+                  Update
+                </Button>
+              )}
+            </CardActions>
+          </Card>
+        </div>
+      ) : null}
       <Map center={center}>
         {mayBeEditPolygon}
+        {mayBeEditMarker}
         {!!areaPocket ? (
           <Polygon
             options={{
@@ -113,7 +161,9 @@ const WorkOrderMap = ({
                 onClick={onSurveySelect(id)}
               />
               {units.map((unit) => {
-                return <Marker key={unit.id} position={unit.coordinates} />;
+                const { id, coordinates } = unit;
+
+                return <Marker key={id} position={coordinates} />;
               })}
             </Fragment>
           );

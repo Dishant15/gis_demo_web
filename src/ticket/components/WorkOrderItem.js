@@ -10,13 +10,15 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
-import Tooltip from "@mui/material/Tooltip";
+import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
+import PolylineOutlinedIcon from "@mui/icons-material/PolylineOutlined";
 
 import ExpandMore from "components/common/ExpandMore";
 
@@ -31,6 +33,7 @@ const WorkOrderItem = ({
   selectedSurveyId,
   handleSurveySelect,
   handleSurveyMapEdit,
+  handleUnitMapEdit,
   handleSurveyStatusEdit,
   handleSurveyDetailsEdit,
   handleUnitDetailsEdit,
@@ -104,7 +107,7 @@ const WorkOrderItem = ({
             aria-label="edit-location"
             onClick={handleSurveyMapEdit(surveyWorkorder)}
           >
-            <EditLocationAltIcon />
+            <PolylineOutlinedIcon />
           </IconButton>
         </Tooltip>
         <Tooltip
@@ -139,6 +142,18 @@ const WorkOrderItem = ({
                     onClick={handleUnitDetailsEdit(unit, id, tags)}
                   >
                     <EditIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Edit unit map" placement="top">
+                  <IconButton
+                    aria-label="edit"
+                    onClick={handleUnitMapEdit({
+                      id: unit.id,
+                      coordinates: unit.coordinates,
+                    })}
+                  >
+                    <AddLocationAltOutlinedIcon />
                   </IconButton>
                 </Tooltip>
               </CardActions>

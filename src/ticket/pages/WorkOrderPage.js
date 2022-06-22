@@ -117,7 +117,7 @@ const WorkOrderPage = () => {
   // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [surveyMapEdit, setSurveyMapEdit] = useState(null);
-
+  const [unitMapEdit, setUnitMapEdit] = useState(null);
   const [unitFormEdit, setUnitFormEdit] = useState(false);
   const [surveyDetailsEdit, setSurveyDetailsEdit] = useState(false);
   const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
@@ -288,6 +288,7 @@ const WorkOrderPage = () => {
   const handleSurveyMapEdit = useCallback(
     (survey) => () => {
       setSurveyMapEdit(survey);
+      setMapCenter(survey.center);
     },
     [setSurveyMapEdit]
   );
@@ -305,6 +306,25 @@ const WorkOrderPage = () => {
       setSurveyMapEdit(null);
     },
     [setSurveyMapEdit]
+  );
+
+  // unit marker edit logic
+  const handleUnitMapEdit = useCallback(
+    (unit) => () => {
+      setUnitMapEdit(unit);
+    },
+    [setUnitMapEdit]
+  );
+
+  const handleUnitMapEditCancel = useCallback(() => {
+    setUnitMapEdit(null);
+  }, [setUnitMapEdit]);
+
+  const handleUnitMapEditSubmit = useCallback(
+    (data) => {
+      editUnitMutation(data, { onSuccess: handleUnitMapEditCancel });
+    },
+    [setUnitMapEdit]
   );
 
   const handleExpandClick = useCallback(
@@ -377,6 +397,7 @@ const WorkOrderPage = () => {
                   selectedSurveyId={selectedSurveyId}
                   handleSurveySelect={handleSurveySelect}
                   handleSurveyMapEdit={handleSurveyMapEdit}
+                  handleUnitMapEdit={handleUnitMapEdit}
                   handleSurveyStatusEdit={handleSurveyStatusEdit}
                   handleSurveyDetailsEdit={handleSurveyDetailsEdit}
                   handleUnitDetailsEdit={handleUnitDetailsEdit}
@@ -395,6 +416,10 @@ const WorkOrderPage = () => {
             onEditComplete={handleEditSubmit}
             highlightSurvey={selectedSurveyId}
             onSurveySelect={handleSurveySelect}
+            unitMapEdit={unitMapEdit}
+            editUnitLoading={editUnitLoading}
+            onUnitEditCancel={handleUnitMapEditCancel}
+            onUnitEditComplete={handleUnitMapEditSubmit}
             center={mapCenter}
           />
         </Box>
