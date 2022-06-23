@@ -75,7 +75,13 @@ const WorkOrderMap = ({
   }, [surveyMapEdit]);
 
   return (
-    <Box width="100%" height="100%">
+    <Box
+      width="100%"
+      height="100%"
+      sx={{
+        position: "relative",
+      }}
+    >
       {showEdit ? (
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>

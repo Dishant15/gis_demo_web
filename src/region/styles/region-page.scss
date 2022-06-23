@@ -39,14 +39,14 @@
       .reg-map-container {
         position: relative;
         flex: 1;
-
-        .reg-map-details {
-          position: absolute;
-          right: 2em;
-          top: 1em;
-          z-index: 2;
-        }
       }
     }
   }
+}
+
+.reg-map-details {
+  position: absolute;
+  right: 2em;
+  top: 1em;
+  z-index: 2;
 }
