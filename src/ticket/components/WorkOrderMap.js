@@ -1,4 +1,5 @@
 import React, { Fragment, useRef, useMemo, useCallback } from "react";
+import get from "lodash/get";
 
 import { Polygon, Marker } from "@react-google-maps/api";
 import { Box, Button, Typography } from "@mui/material";
@@ -10,6 +11,8 @@ import Map from "components/common/Map";
 import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
 
 import { getCoordinatesFromFeature } from "utils/map.utils";
+import { workOrderStatusTypes } from "utils/constant";
+import { COLORS } from "App/theme";
 
 const WorkOrderMap = ({
   areaPocket = null,
@@ -118,7 +121,7 @@ const WorkOrderMap = ({
           </Card>
         </div>
       ) : null}
-      <Map center={center}>
+      <Map center={center} zoom={14}>
         {mayBeEditPolygon}
         {mayBeEditMarker}
         {!!areaPocket ? (
@@ -139,8 +142,17 @@ const WorkOrderMap = ({
           />
         ) : null}
         {surveyList.map((survey) => {
-          const { id, coordinates, units } = survey;
-          const color = id === highlightSurvey ? "red" : "orange";
+          const { id, coordinates, status, units } = survey;
+          // polygon = Blue if selected
+          // else Change color according to status
+          const color =
+            id === highlightSurvey
+              ? "blue"
+              : get(
+                  COLORS,
+                  `${workOrderStatusTypes[status].color}.main`,
+                  "orange"
+                );
           return (
             <Fragment key={id}>
               <Polygon

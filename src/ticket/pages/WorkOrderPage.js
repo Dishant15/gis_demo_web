@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
@@ -112,6 +112,7 @@ const WorkOrderPage = () => {
 
     return ticket;
   }, [data]);
+
   const { area_pocket, work_orders = [] } = ticketData;
 
   // set states
@@ -126,6 +127,15 @@ const WorkOrderPage = () => {
   const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
   const [statusFilter, setStatusFilter] = useState(null);
+
+  useEffect(() => {
+    if (!mapCenter) {
+      if (!!area_pocket?.center) {
+        setMapCenter(area_pocket.center);
+      }
+    }
+  }, [area_pocket, mapCenter]);
+
   // filter work orders according to statusFilter
   const filteredWorkOrders = isNull(statusFilter)
     ? [...work_orders]

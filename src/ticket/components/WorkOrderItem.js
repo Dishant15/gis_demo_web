@@ -1,6 +1,5 @@
 import React from "react";
 import { format } from "date-fns";
-import { useForm, Controller } from "react-hook-form";
 
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -18,13 +17,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import AddLocationAltOutlinedIcon from "@mui/icons-material/AddLocationAltOutlined";
-import PolylineOutlinedIcon from "@mui/icons-material/PolylineOutlined";
+import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 
 import ExpandMore from "components/common/ExpandMore";
 
 import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
+import { Button, Divider } from "@mui/material";
 
 const WorkOrderItem = ({
   surveyWorkorder,
@@ -107,7 +107,7 @@ const WorkOrderItem = ({
             aria-label="edit-location"
             onClick={handleSurveyMapEdit(surveyWorkorder)}
           >
-            <PolylineOutlinedIcon />
+            <HighlightAltIcon />
           </IconButton>
         </Tooltip>
         <Tooltip
@@ -125,38 +125,37 @@ const WorkOrderItem = ({
         </Tooltip>
       </CardActions>
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-        {units.map((unit) => {
+        {units.map((unit, uInd, { length }) => {
           return (
             <CardContent key={unit.id}>
               <Typography sx={{ fontWeight: "bold" }} paragraph>
-                {unit.name}:
+                {unit.name}
               </Typography>
               <Typography paragraph>
-                Total Home pass: {unit.total_home_pass} <br />
-                tags: {unit.tags}
+                Home pass: {unit.total_home_pass} <br />
+                {unit.tags}
               </Typography>
               <CardActions disableSpacing>
-                <Tooltip title="Edit unit details" placement="top">
-                  <IconButton
-                    aria-label="edit"
-                    onClick={handleUnitDetailsEdit(unit, id, tags)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
+                <Button
+                  color="secondary"
+                  startIcon={<EditIcon />}
+                  onClick={handleUnitDetailsEdit(unit, id, tags)}
+                >
+                  Edit Details
+                </Button>
 
-                <Tooltip title="Edit unit map" placement="top">
-                  <IconButton
-                    aria-label="edit"
-                    onClick={handleUnitMapEdit({
-                      id: unit.id,
-                      coordinates: unit.coordinates,
-                    })}
-                  >
-                    <AddLocationAltOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
+                <Button
+                  color="secondary"
+                  startIcon={<AddLocationAltOutlinedIcon />}
+                  onClick={handleUnitMapEdit({
+                    id: unit.id,
+                    coordinates: unit.coordinates,
+                  })}
+                >
+                  Edit Location
+                </Button>
               </CardActions>
+              {length - 1 === uInd ? null : <Divider flexItem />}
             </CardContent>
           );
         })}
