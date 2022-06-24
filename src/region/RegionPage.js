@@ -1,7 +1,16 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { find, groupBy, isNull, pick, map, difference, orderBy } from "lodash";
+import {
+  get,
+  find,
+  groupBy,
+  isNull,
+  pick,
+  map,
+  difference,
+  orderBy,
+} from "lodash";
 
 import { Box, Button, Divider, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -47,6 +56,7 @@ const RegionPage = () => {
     resultData = resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates);
+      d.center = coordsToLatLongMap([d.center])[0];
       return d;
     });
     return resultData;
@@ -57,7 +67,7 @@ const RegionPage = () => {
     let resultGroupData = groupBy(regionListData, "parent");
     // get list of parent keys
     const keyList = Object.keys(resultGroupData).map((k) => {
-      if (k == "null") return null;
+      if (k === "null") return null;
       return Number(k);
     });
     // get all the parent key list that is not in regionListData ; e.x. null, or other
@@ -109,6 +119,10 @@ const RegionPage = () => {
   // save edit state for area
   const [editRegionData, setEditRegionData] = useState(null);
 
+  const handleUpdateMapCenter = useCallback((newCenter) => {
+    setMapCenter(newCenter);
+  }, []);
+
   const handleRegionDetails = useCallback(
     (regionId) => {
       if (isNull(createRegion)) {
@@ -119,32 +133,48 @@ const RegionPage = () => {
   );
 
   const handleRegionClick = useCallback(
-    (regionId) => {
+    (regionId, center) => {
       setSelectedRegion((regionSet) => {
         let newSet = new Set(regionSet);
         if (newSet.has(regionId)) {
+          handleUpdateMapCenter(null);
           newSet.delete(regionId);
-          // remove survey details
-          if (regionId === showRegionDetails) {
-            handleRegionDetails(null);
-          }
         } else {
+          handleUpdateMapCenter(center);
           newSet.add(regionId);
-          handleRegionDetails(regionId);
         }
         return newSet;
       });
     },
-    [showRegionDetails]
+    [setSelectedRegion, handleUpdateMapCenter]
   );
 
-  const handleRegionExpandClick = (regionId) => () => {
+  const handleRegionExpandClick = (regionId, center) => () => {
+    // get all children of region
+    let regChildIdList = map(get(regionGroupData, regionId, []), "id");
+    regChildIdList.push(regionId);
     setExpandedRegions((regionSet) => {
       let newSet = new Set(regionSet);
       if (newSet.has(regionId)) {
         newSet.delete(regionId);
+        // remove children from selectedRegion
+        setSelectedRegion((regSet) => {
+          let newRegSet = new Set(regSet);
+          regChildIdList.forEach(newRegSet.delete, newRegSet);
+          return newRegSet;
+        });
+        // remove center so it can update
+        handleUpdateMapCenter(null);
       } else {
         newSet.add(regionId);
+        // add children to selectedRegion
+        setSelectedRegion((regSet) => {
+          let newRegSet = new Set(regSet);
+          regChildIdList.forEach(newRegSet.add, newRegSet);
+          return newRegSet;
+        });
+        // go to center
+        handleUpdateMapCenter(center);
       }
       return newSet;
     });
@@ -171,26 +201,30 @@ const RegionPage = () => {
 
   const startEditRegion = useCallback(
     (regionData) => () => {
+      handleUpdateMapCenter(regionData.center);
       setEditRegionData(regionData);
       // setMapCenter(regionData.path[0]);
       setCreateRegion("E");
       // clear selected region popups if any
       setShowRegionDetails(null);
     },
-    []
+    [handleUpdateMapCenter]
   );
 
-  const handleRegionEdit = useCallback((regionData) => {
-    // update data to be in form of server submit
-    let submitData = pick(regionData, ["id", "name", "unique_id"]);
-    submitData.coordinates = latLongMapToCoords(regionData.coordinates);
-    submitData.parentId = regionData.parent;
-    // update area data to server
-    mutate(submitData);
-    // reset edit area state
-    setEditRegionData(null);
-    setCreateRegion(null);
-  }, []);
+  const handleRegionEdit = useCallback(
+    (regionData) => {
+      // update data to be in form of server submit
+      let submitData = pick(regionData, ["id", "name", "unique_id"]);
+      submitData.coordinates = latLongMapToCoords(regionData.coordinates);
+      submitData.parentId = regionData.parent;
+      // update area data to server
+      mutate(submitData);
+      // reset edit area state
+      setEditRegionData(null);
+      setCreateRegion(null);
+    },
+    [mutate]
+  );
 
   const resetAllSelection = useCallback(() => {
     setCreateRegion(null);
@@ -201,7 +235,7 @@ const RegionPage = () => {
   }, []);
 
   const selectedRegionData = useMemo(() => {
-    if (data) {
+    if (regionListData) {
       return regionListData.filter((d) => selectedRegion.has(d.id));
     } else {
       return [];
@@ -243,11 +277,9 @@ const RegionPage = () => {
                   region={region}
                   regionGroupData={regionGroupData}
                   selectedRegion={selectedRegion}
-                  editRegionData={editRegionData}
                   expandedRegions={expandedRegions}
                   handleRegionClick={handleRegionClick}
-                  startEditRegion={startEditRegion}
-                  handleRegionCreate={handleRegionCreate}
+                  handleRegionDetails={handleRegionDetails}
                   handleRegionExpandClick={handleRegionExpandClick}
                 />
               );
@@ -285,8 +317,10 @@ const RegionPage = () => {
               <div className="reg-map-details">
                 <AddRegionForm
                   key={showRegionDetails}
-                  data={find(data, ["id", showRegionDetails])}
+                  data={find(regionListData, ["id", showRegionDetails])}
                   onAreaCreate={resetAllSelection}
+                  startEditRegion={startEditRegion}
+                  handleRegionCreate={handleRegionCreate}
                 />
               </div>
             )}

@@ -14,9 +14,10 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Close } from "@mui/icons-material";
+import { Close, HighlightAltOutlined } from "@mui/icons-material";
 
 import {
   apiPostRegionAdd,
@@ -34,7 +35,12 @@ const DEFAULT_DATA = {
   coordinates: [],
 };
 
-const AddRegionForm = ({ data = {}, onAreaCreate }) => {
+const AddRegionForm = ({
+  data = {},
+  onAreaCreate,
+  startEditRegion = null,
+  handleRegionCreate = null,
+}) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
@@ -116,6 +122,25 @@ const AddRegionForm = ({ data = {}, onAreaCreate }) => {
           </Button>
         </Stack>
         <Divider flexItem orientation="horizontal" />
+        {!!startEditRegion ? ( // show edit polygon & add child btn if we have the handlers
+          <>
+            <Stack p={2} direction="row">
+              <Button
+                startIcon={<HighlightAltOutlined />}
+                onClick={startEditRegion(data)}
+              >
+                Edit On Map
+              </Button>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={handleRegionCreate(data.id)}
+              >
+                Add Region
+              </Button>
+            </Stack>
+            <Divider flexItem orientation="horizontal" />
+          </>
+        ) : null}
         <Box p={2} component="form" onSubmit={handleSubmit(mutate)}>
           <Stack spacing={2}>
             <TextField

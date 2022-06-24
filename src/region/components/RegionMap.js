@@ -154,7 +154,7 @@ const RegionMap = ({
               draggable: false,
               editable: true,
               geodesic: false,
-              zIndex: 1,
+              zIndex: 10,
             },
           }}
           drawingMode={editMode}
@@ -178,7 +178,7 @@ const RegionMap = ({
                 draggable: false,
                 editable: false,
                 geodesic: false,
-                zIndex: 1,
+                zIndex: layer,
               }}
               paths={coordinates}
               onClick={() => {
