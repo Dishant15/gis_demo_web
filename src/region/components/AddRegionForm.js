@@ -124,7 +124,7 @@ const AddRegionForm = ({
         <Divider flexItem orientation="horizontal" />
         {!!startEditRegion ? ( // show edit polygon & add child btn if we have the handlers
           <>
-            <Stack p={2} direction="row">
+            <Stack p={1} px={2} direction="row">
               <Button
                 startIcon={<HighlightAltOutlined />}
                 onClick={startEditRegion(data)}
