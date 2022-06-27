@@ -239,6 +239,10 @@ const WorkOrderPage = () => {
           "tags",
           "broadband_availability",
           "cable_tv_availability",
+          "over_head_cable",
+          "cabling_required",
+          "poll_cabling_possible",
+          "locality_status",
         ])
       );
     },

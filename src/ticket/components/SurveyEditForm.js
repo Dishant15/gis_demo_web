@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import {
   Stack,
@@ -8,8 +8,14 @@ import {
   Box,
   Divider,
   IconButton,
+  InputLabel,
+  Chip,
 } from "@mui/material";
-import { FormSelect, FormCreatableSelect } from "components/common/FormFields";
+import {
+  FormSelect,
+  FormCreatableSelect,
+  FormCheckbox,
+} from "components/common/FormFields";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
@@ -18,6 +24,7 @@ import {
   BroadbandProviders,
   SURVEY_TAG_LIST,
   TVProviders,
+  LOCALITY_OPTS,
 } from "utils/constant";
 import { filter, includes, map } from "lodash";
 
@@ -47,6 +54,10 @@ const SurveyEditForm = (props) => {
       city: formData.city,
       state: formData.state,
       pincode: formData.pincode,
+      over_head_cable: formData.over_head_cable,
+      cabling_required: formData.cabling_required,
+      poll_cabling_possible: formData.poll_cabling_possible,
+      locality_status: formData.locality_status,
       tags: filter(SURVEY_TAG_LIST, (d) =>
         includes(formData.tags.split(","), d.value)
       ),
@@ -256,7 +267,84 @@ const SurveyEditForm = (props) => {
             sx={{
               width: "100%",
             }}
-          ></Stack>
+          >
+            <Controller
+              render={({ field }) => {
+                return (
+                  <Stack>
+                    <InputLabel>Locality</InputLabel>
+                    <Stack direction="row" spacing={1}>
+                      {LOCALITY_OPTS.map((opt) => {
+                        const selected = opt.value === field.value;
+                        return (
+                          <Chip
+                            color={selected ? "primary" : undefined}
+                            key={opt.value}
+                            label={opt.label}
+                            onClick={() => field.onChange(opt.value)}
+                          />
+                        );
+                      })}
+                    </Stack>
+                  </Stack>
+                );
+              }}
+              name="locality_status"
+              control={control}
+            />
+          </Stack>
+        </Stack>
+        <Stack spacing={2} my={3} direction={{ md: "row", xs: "column" }}>
+          <Stack
+            spacing={2}
+            sx={{
+              width: "100%",
+            }}
+          >
+            <FormCheckbox
+              label="Over head cable allowed"
+              name="over_head_cable"
+              control={control}
+              error={!!errors.over_head_cable}
+              helperText={errors.over_head_cable?.message}
+            />
+          </Stack>
+          <Stack
+            spacing={2}
+            sx={{
+              width: "100%",
+            }}
+          >
+            <FormCheckbox
+              label="In Building cabeling required"
+              name="cabling_required"
+              control={control}
+              error={!!errors.cabling_required}
+              helperText={errors.cabling_required?.message}
+            />
+          </Stack>
+        </Stack>
+        <Stack spacing={2} my={3} direction={{ md: "row", xs: "column" }}>
+          <Stack
+            spacing={2}
+            sx={{
+              width: "100%",
+            }}
+          >
+            <FormCheckbox
+              label="Pole to pole cabling possible"
+              name="poll_cabling_possible"
+              control={control}
+              error={!!errors.poll_cabling_possible}
+              helperText={errors.poll_cabling_possible?.message}
+            />
+          </Stack>
+          <Stack
+            spacing={2}
+            sx={{
+              width: "100%",
+            }}
+          />
         </Stack>
         <Stack flex={1} pt={2} direction="row" justifyContent="flex-end">
           <LoadingButton

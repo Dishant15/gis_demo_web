@@ -71,3 +71,10 @@ export const SURVEY_TAG_LIST = [
   { label: "Hospital", value: "hospital" },
   { label: "Educational", value: "educational" },
 ];
+
+export const LOCALITY_OPTS = [
+  { label: "High", value: "1" },
+  { label: "Medium", value: "2" },
+  { label: "Average", value: "3" },
+  { label: "Poor", value: "4" },
+];
