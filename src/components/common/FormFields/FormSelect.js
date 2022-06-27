@@ -19,7 +19,7 @@ export const FormSelect = ({
       render={({ field }) => {
         return (
           <>
-            <InputLabel required>{label}</InputLabel>
+            <InputLabel required={required}>{label}</InputLabel>
             <Select
               ref={field.ref}
               value={field.value}
@@ -50,7 +50,7 @@ export const FormCreatableSelect = ({
       render={({ field }) => {
         return (
           <>
-            <InputLabel required>{label}</InputLabel>
+            <InputLabel required={required}>{label}</InputLabel>
             <CreatableSelect
               ref={field.ref}
               value={field.value}

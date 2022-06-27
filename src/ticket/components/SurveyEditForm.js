@@ -63,14 +63,18 @@ const SurveyEditForm = (props) => {
         includes(formData.tags.split(","), d.value)
       ),
       broadband_availability: map(
-        formData.broadband_availability.split(","),
+        !!formData.broadband_availability
+          ? formData.broadband_availability.split(",")
+          : [],
         (d) => ({
           label: d,
           value: d,
         })
       ),
       cable_tv_availability: map(
-        formData.cable_tv_availability.split(","),
+        !!formData.cable_tv_availability
+          ? formData.cable_tv_availability.split(",")
+          : [],
         (d) => ({
           label: d,
           value: d,
@@ -229,16 +233,15 @@ const SurveyEditForm = (props) => {
           >
             <FormCreatableSelect
               label="Broadband Service Availability"
-              required
               name="broadband_availability"
               isMulti
               control={control}
               options={BroadbandProviders}
               error={!!errors.broadband_availability}
               helperText={errors.broadband_availability?.message}
-              rules={{
-                required: "This fields is required.",
-              }}
+              // rules={{
+              //   required: "This fields is required.",
+              // }}
             />
           </Stack>
         </Stack>
@@ -251,16 +254,15 @@ const SurveyEditForm = (props) => {
           >
             <FormCreatableSelect
               label="Cable TV Service Availability"
-              required
               name="cable_tv_availability"
               isMulti
               control={control}
               options={TVProviders}
               error={!!errors.cable_tv_availability}
               helperText={errors.cable_tv_availability?.message}
-              rules={{
-                required: "This fields is required.",
-              }}
+              // rules={{
+              //   required: "This fields is required.",
+              // }}
             />
           </Stack>
           <Stack
@@ -272,13 +274,18 @@ const SurveyEditForm = (props) => {
             <Controller
               render={({ field }) => {
                 return (
-                  <Stack>
+                  <>
                     <InputLabel>Locality</InputLabel>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
                       {LOCALITY_OPTS.map((opt) => {
                         const selected = opt.value === field.value;
                         return (
                           <Chip
+                            sx={{
+                              margin: "8px !important",
+                              marginLeft: "0px !important",
+                              marginTop: "0px !important",
+                            }}
                             color={selected ? "primary" : undefined}
                             key={opt.value}
                             label={opt.label}
@@ -287,7 +294,7 @@ const SurveyEditForm = (props) => {
                         );
                       })}
                     </Stack>
-                  </Stack>
+                  </>
                 );
               }}
               name="locality_status"
