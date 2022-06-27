@@ -2,7 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { cloneDeep, filter, isEqual, isNull, map, pick, size } from "lodash";
+import {
+  cloneDeep,
+  filter,
+  isEqual,
+  isNull,
+  map,
+  pick,
+  size,
+  get,
+} from "lodash";
 
 import {
   Box,
@@ -158,9 +167,7 @@ const WorkOrderPage = () => {
   }, [area_pocket, mapCenter]);
 
   // filter work orders according to statusFilter
-  const filteredWorkOrders = isNull(statusFilter)
-    ? [...work_orders]
-    : filter(work_orders, ["status", statusFilter]);
+  const filteredWorkOrders = isNull(statusFilter) ? [...work_orders] : [];
 
   // Survey filter logic
   const handleFilterClick = useCallback(
@@ -378,6 +385,8 @@ const WorkOrderPage = () => {
   );
 
   const showStatusPopover = !isNull(surveyStatusEdit);
+  const hasWorkorders = size(work_orders);
+  const hasFilteredWorkOrders = size(filteredWorkOrders);
 
   if (isLoading) {
     return <WorkOrderLoading />;
@@ -423,42 +432,55 @@ const WorkOrderPage = () => {
       >
         <Box sx={{ flex: 2, overflow: "auto" }} my={2}>
           <Stack spacing={2}>
-            {!size(work_orders) ? (
-              <Typography variant="h6" textAlign="center">
+            {!hasWorkorders ? (
+              <Typography
+                color="text.secondary"
+                variant="h6"
+                textAlign="center"
+              >
                 No workorders submitted yet
               </Typography>
             ) : null}
-            <Stack spacing={1} direction="row" alignItems="center">
-              <Typography variant="body1">Filter By :</Typography>
-              {map(workOrderStatusTypes, (wStatus) => {
-                const selected = statusFilter === wStatus.value;
+            {hasWorkorders ? (
+              <Stack spacing={1} direction="row" alignItems="center">
+                <Typography variant="body1">Filter By :</Typography>
+                {map(workOrderStatusTypes, (wStatus) => {
+                  const selected = statusFilter === wStatus.value;
+                  return (
+                    <Chip
+                      color={selected ? wStatus.color : undefined}
+                      key={wStatus.value}
+                      label={wStatus.label}
+                      onClick={handleFilterClick(wStatus.value)}
+                    />
+                  );
+                })}
+              </Stack>
+            ) : null}
+            {hasFilteredWorkOrders ? (
+              filteredWorkOrders.map((surveyWorkorder) => {
                 return (
-                  <Chip
-                    color={selected ? wStatus.color : undefined}
-                    key={wStatus.value}
-                    label={wStatus.label}
-                    onClick={handleFilterClick(wStatus.value)}
+                  <WorkOrderItem
+                    key={surveyWorkorder.id}
+                    surveyWorkorder={surveyWorkorder}
+                    expanded={expanded}
+                    handleExpandClick={handleExpandClick}
+                    selectedSurveyId={selectedSurveyId}
+                    handleSurveySelect={handleSurveySelect}
+                    handleSurveyMapEdit={handleSurveyMapEdit}
+                    handleUnitMapEdit={handleUnitMapEdit}
+                    handleSurveyStatusEdit={handleSurveyStatusEdit}
+                    handleSurveyDetailsEdit={handleSurveyDetailsEdit}
+                    handleUnitDetailsEdit={handleUnitDetailsEdit}
                   />
                 );
-              })}
-            </Stack>
-            {filteredWorkOrders.map((surveyWorkorder) => {
-              return (
-                <WorkOrderItem
-                  key={surveyWorkorder.id}
-                  surveyWorkorder={surveyWorkorder}
-                  expanded={expanded}
-                  handleExpandClick={handleExpandClick}
-                  selectedSurveyId={selectedSurveyId}
-                  handleSurveySelect={handleSurveySelect}
-                  handleSurveyMapEdit={handleSurveyMapEdit}
-                  handleUnitMapEdit={handleUnitMapEdit}
-                  handleSurveyStatusEdit={handleSurveyStatusEdit}
-                  handleSurveyDetailsEdit={handleSurveyDetailsEdit}
-                  handleUnitDetailsEdit={handleUnitDetailsEdit}
-                />
-              );
-            })}
+              })
+            ) : hasWorkorders ? (
+              <Typography color="text.secondary" textAlign="center" py={8}>
+                {get(workOrderStatusTypes, [statusFilter, "label"], "Filtered")}{" "}
+                workorders not found
+              </Typography>
+            ) : null}
           </Stack>
         </Box>
         <Box sx={{ flex: 4 }} py={2}>

@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Divider,
-  Button,
+  IconButton,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -51,9 +51,14 @@ const StatusChangeForm = ({
         paddingTop: "10px",
       }}
     >
-      <Typography variant="h6" color="primary.dark">
-        Change Status
-      </Typography>
+      <Stack direction="row" spacing={2} width="100%">
+        <Typography variant="h6" color="primary.dark" flex={1}>
+          Change Status
+        </Typography>
+        <IconButton aria-label="close" onClick={handleSurveyStatusCancel}>
+          <CloseIcon />
+        </IconButton>
+      </Stack>
       <Divider
         flexItem
         sx={{
@@ -94,19 +99,7 @@ const StatusChangeForm = ({
           name={"status"}
           control={control}
         />
-        <Stack flex={1} direction="row">
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<CloseIcon />}
-            sx={{
-              flex: 1,
-              marginRight: "2px",
-            }}
-            onClick={handleSurveyStatusCancel}
-          >
-            Cancel
-          </Button>
+        <Stack direction="row" justifyContent="flex-end">
           <LoadingButton
             variant="outlined"
             color="success"

@@ -56,16 +56,18 @@ const WorkOrderItem = ({
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
-          <Tooltip title="Change Status" placement="top">
-            <IconButton
-              aria-label="settings"
-              onClick={(e) => {
-                handleSurveyStatusEdit(e, surveyWorkorder);
-              }}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </Tooltip>
+          status === "V" ? null : (
+            <Tooltip title="Change Status" placement="top">
+              <IconButton
+                aria-label="settings"
+                onClick={(e) => {
+                  handleSurveyStatusEdit(e, surveyWorkorder);
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Tooltip>
+          )
         }
         title={name}
         subheader={formatedUpdatedOn}
