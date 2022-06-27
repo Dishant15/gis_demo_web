@@ -50,13 +50,14 @@ const WorkOrderItem = ({
     return sum + u.total_home_pass;
   }, 0);
   const isExpanded = expanded.has(id);
+  const isVerified = status === "V";
 
   return (
     <Card elevation={0} sx={{ maxWidth: 345, backgroundColor: "#efefef" }}>
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
-          status === "V" ? null : (
+          isVerified ? null : (
             <Tooltip title="Change Status" placement="top">
               <IconButton
                 aria-label="settings"
@@ -96,22 +97,26 @@ const WorkOrderItem = ({
             )}
           </IconButton>
         </Tooltip>
-        <Tooltip title="Edit Survey Details" placement="top">
-          <IconButton
-            aria-label="edit"
-            onClick={handleSurveyDetailsEdit(surveyWorkorder)}
-          >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Edit Survey Coordinates" placement="top">
-          <IconButton
-            aria-label="edit-location"
-            onClick={handleSurveyMapEdit(surveyWorkorder)}
-          >
-            <HighlightAltIcon />
-          </IconButton>
-        </Tooltip>
+        {isVerified ? null : (
+          <>
+            <Tooltip title="Edit Survey Details" placement="top">
+              <IconButton
+                aria-label="edit"
+                onClick={handleSurveyDetailsEdit(surveyWorkorder)}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit Survey Coordinates" placement="top">
+              <IconButton
+                aria-label="edit-location"
+                onClick={handleSurveyMapEdit(surveyWorkorder)}
+              >
+                <HighlightAltIcon />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
         <Tooltip
           title={isExpanded ? "Hide Units" : "Show Units"}
           placement="top"
@@ -137,26 +142,29 @@ const WorkOrderItem = ({
                 Home pass: {unit.total_home_pass} <br />
                 {unit.tags}
               </Typography>
-              <CardActions disableSpacing>
-                <Button
-                  color="secondary"
-                  startIcon={<EditIcon />}
-                  onClick={handleUnitDetailsEdit(unit, id, tags)}
-                >
-                  Edit Details
-                </Button>
 
-                <Button
-                  color="secondary"
-                  startIcon={<AddLocationAltOutlinedIcon />}
-                  onClick={handleUnitMapEdit({
-                    id: unit.id,
-                    coordinates: unit.coordinates,
-                  })}
-                >
-                  Edit Location
-                </Button>
-              </CardActions>
+              {isVerified ? null : (
+                <CardActions disableSpacing>
+                  <Button
+                    color="secondary"
+                    startIcon={<EditIcon />}
+                    onClick={handleUnitDetailsEdit(unit, id, tags)}
+                  >
+                    Edit Details
+                  </Button>
+
+                  <Button
+                    color="secondary"
+                    startIcon={<AddLocationAltOutlinedIcon />}
+                    onClick={handleUnitMapEdit({
+                      id: unit.id,
+                      coordinates: unit.coordinates,
+                    })}
+                  >
+                    Edit Location
+                  </Button>
+                </CardActions>
+              )}
               {length - 1 === uInd ? null : <Divider flexItem />}
             </CardContent>
           );

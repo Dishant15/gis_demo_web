@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import {
   cloneDeep,
@@ -21,8 +21,11 @@ import {
   Chip,
   Popover,
   Dialog,
+  Button,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
@@ -43,6 +46,7 @@ import SurveyEditForm from "ticket/components/SurveyEditForm";
 import UnitEditForm from "ticket/components/UnitEditForm";
 
 import "../styles/ticket_survey_list.scss";
+import { getTicketListPage } from "utils/url.constants";
 
 const WorkOrderPage = () => {
   /**
@@ -394,27 +398,26 @@ const WorkOrderPage = () => {
 
   return (
     <Box id="dash-task-list">
-      <Stack
-        direction="row"
-        justifyContent="center"
-        sx={{
-          position: "relative",
-        }}
-      >
+      <Stack direction="row" justifyContent="space-between">
+        <Button
+          color="secondary"
+          component={Link}
+          to={getTicketListPage()}
+          startIcon={<ArrowBackIcon />}
+          loading={loadingExportTicket}
+        >
+          Go Back
+        </Button>
         <Typography className="dtl-title" variant="h5" color="primary.dark">
           Workorders : {ticketData.name}
         </Typography>
         <LoadingButton
+          color="secondary"
+          startIcon={<GetAppIcon />}
           loading={loadingExportTicket}
           onClick={() => exportTicketMutation(ticketData.id)}
-          sx={{
-            alignSelf: "flex-end",
-            position: "absolute",
-            right: 0,
-            top: 0,
-          }}
         >
-          Export
+          Export .shp
         </LoadingButton>
       </Stack>
 
