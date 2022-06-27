@@ -13,12 +13,14 @@ import {
   Popover,
   Dialog,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
 
 import {
+  exportTicket,
   fetchTicketWorkorders,
   updateUnitWorkOrder,
   updateWorkOrder,
@@ -27,10 +29,11 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 
-import "../styles/ticket_survey_list.scss";
 import StatusChangeForm from "ticket/components/StatusChangeForm";
 import SurveyEditForm from "ticket/components/SurveyEditForm";
 import UnitEditForm from "ticket/components/UnitEditForm";
+
+import "../styles/ticket_survey_list.scss";
 
 const WorkOrderPage = () => {
   /**
@@ -82,6 +85,24 @@ const WorkOrderPage = () => {
       },
     }
   );
+
+  const { mutate: exportTicketMutation, isLoading: loadingExportTicket } =
+    useMutation(exportTicket, {
+      onSuccess: (res) => {
+        const fileBlob = new Blob([res], {
+          type: "application/zip",
+        });
+        const url = window.URL.createObjectURL(fileBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${data.name}.zip`);
+        // have to add element to doc for firefox
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+    });
 
   // data Transformation stage
   const ticketData = useMemo(() => {
@@ -360,9 +381,29 @@ const WorkOrderPage = () => {
 
   return (
     <Box id="dash-task-list">
-      <Typography className="dtl-title" variant="h5" color="primary.dark">
-        Workorders : {ticketData.name}
-      </Typography>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        sx={{
+          position: "relative",
+        }}
+      >
+        <Typography className="dtl-title" variant="h5" color="primary.dark">
+          Workorders : {ticketData.name}
+        </Typography>
+        <LoadingButton
+          loading={loadingExportTicket}
+          onClick={() => exportTicketMutation(ticketData.id)}
+          sx={{
+            alignSelf: "flex-end",
+            position: "absolute",
+            right: 0,
+            top: 0,
+          }}
+        >
+          Export
+        </LoadingButton>
+      </Stack>
 
       <Divider flexItem />
 

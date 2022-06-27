@@ -8,6 +8,7 @@ import {
   apiGetTicketWorkorders,
   apiPutWorkOrderEdit,
   apiPutUnitEdit,
+  apiExportTicket,
 } from "utils/url.constants";
 
 export const fetchTicketList = async () => {
@@ -50,5 +51,13 @@ export const updateWorkOrder = async ({ workOrderId, data }) => {
 
 export const updateUnitWorkOrder = async (data) => {
   const res = await Api.put(apiPutUnitEdit(data.id), data);
+  return res.data;
+};
+
+// for zip file responseType arraybuffer is working here, if not pass, file format invalid
+export const exportTicket = async (ticketId) => {
+  const res = await Api.get(apiExportTicket(ticketId), null, {
+    responseType: "arraybuffer",
+  });
   return res.data;
 };

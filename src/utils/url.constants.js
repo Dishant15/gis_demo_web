@@ -51,7 +51,7 @@ export const apiGetTicketDetails = (ticketId) =>
   `/api/ticket/${ticketId}/details/`;
 export const apiGetTicketWorkorders = (ticketId) =>
   `/api/ticket/${ticketId}/workorders/`;
-
+export const apiExportTicket = (ticketId) => `/api/ticket/${ticketId}/export/`;
 // workorder apis
 export const apiPutWorkOrderEdit = (workOrderId) =>
   `/api/geo/survey/boundary/${workOrderId}/edit/`;
