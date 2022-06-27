@@ -30,6 +30,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
+import StatusChangeForm from "ticket/components/StatusChangeForm";
+import SurveyEditForm from "ticket/components/SurveyEditForm";
+import UnitEditForm from "ticket/components/UnitEditForm";
 
 import {
   exportTicket,
@@ -40,13 +43,9 @@ import {
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
-
-import StatusChangeForm from "ticket/components/StatusChangeForm";
-import SurveyEditForm from "ticket/components/SurveyEditForm";
-import UnitEditForm from "ticket/components/UnitEditForm";
+import { getTicketListPage } from "utils/url.constants";
 
 import "../styles/ticket_survey_list.scss";
-import { getTicketListPage } from "utils/url.constants";
 
 const WorkOrderPage = () => {
   /**
