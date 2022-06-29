@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { pick, get, find, size } from "lodash";
 import { useDispatch } from "react-redux";
 
-import { Box, TextField, Stack, Button } from "@mui/material";
+import { Box, TextField, Stack, Button, Divider, Chip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,6 +22,7 @@ import { fetchUserList } from "gis_user/data/services";
 import { getTicketListPage } from "utils/url.constants";
 import { coordsToLatLongMap } from "utils/map.utils";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { generateTicketUid } from "ticket/data/utils";
 
 const AddTicketForm = ({ formData, onSubmit }) => {
   /**
@@ -121,12 +122,13 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     formState: { errors },
     handleSubmit,
     control,
+    getValues,
     setValue,
   } = useForm({
     defaultValues: {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
-      unique_id: get(formData, "unique_id", ""),
+      unique_id: get(formData, "unique_id", "REG_S_"),
       status: find(TicketStatusList, ["value", get(formData, "status") || "A"]),
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: find(TicketTypeList, [
@@ -151,7 +153,93 @@ const AddTicketForm = ({ formData, onSubmit }) => {
         overflow: "auto",
       }}
     >
+      <Divider textAlign="right">
+        <Chip label="Network" />
+      </Divider>
       <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
+        <Stack
+          py={2}
+          spacing={2}
+          sx={{
+            width: "100%",
+          }}
+        >
+          <FormSelect
+            label="Select Region"
+            required
+            disabled={isEdit}
+            name="region"
+            control={control}
+            options={regionList}
+            getOptionLabel={(opt) => opt.name}
+            getOptionValue={(opt) => opt.id}
+            error={!!errors.region}
+            helperText={errors.region?.message}
+            isLoading={regionListLoading}
+            rules={{
+              required: "This fields is required.",
+            }}
+          />
+        </Stack>
+      </Stack>
+      <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
+        <Stack
+          py={2}
+          spacing={2}
+          sx={{
+            width: "100%",
+          }}
+        >
+          <FormSelect
+            label="Ticket Type"
+            required
+            disabled={isEdit}
+            name="ticket_type"
+            control={control}
+            options={TicketTypeList}
+            error={!!errors.ticket_type}
+            helperText={errors.ticket_type?.message}
+            onBlur={() => {
+              const [region, ticket_type] = getValues([
+                "region",
+                "ticket_type",
+              ]);
+              setValue(
+                "unique_id",
+                generateTicketUid(region.unique_id, ticket_type.value)
+              );
+            }}
+            rules={{
+              required: "This fields is required.",
+            }}
+          />
+        </Stack>
+        <Stack
+          py={2}
+          spacing={2}
+          sx={{
+            width: "100%",
+          }}
+        >
+          <FormSelect
+            label="Network Type"
+            required
+            name="network_type"
+            control={control}
+            options={NetworkTypeList}
+            error={!!errors.network_type}
+            helperText={errors.network_type?.message}
+            rules={{
+              required: "This fields is required.",
+            }}
+          />
+        </Stack>
+      </Stack>
+
+      <Divider textAlign="right">
+        <Chip label="Details" />
+      </Divider>
+      <Stack my={2} spacing={2} direction={{ md: "row", xs: "column" }}>
         <Stack
           spacing={2}
           sx={{
@@ -182,74 +270,11 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           />
         </Stack>
       </Stack>
+
+      <Divider textAlign="right">
+        <Chip label="User Info" />
+      </Divider>
       <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
-        <Stack
-          py={2}
-          spacing={2}
-          sx={{
-            width: "100%",
-          }}
-        >
-          <FormSelect
-            label="Ticket Type"
-            required
-            disabled={isEdit}
-            name="ticket_type"
-            control={control}
-            options={TicketTypeList}
-            error={!!errors.ticket_type}
-            helperText={errors.ticket_type?.message}
-            rules={{
-              required: "This fields is required.",
-            }}
-          />
-        </Stack>
-        <Stack
-          py={2}
-          spacing={2}
-          sx={{
-            width: "100%",
-          }}
-        >
-          <FormSelect
-            label="Network Type"
-            required
-            name="network_type"
-            control={control}
-            options={NetworkTypeList}
-            error={!!errors.network_type}
-            helperText={errors.network_type?.message}
-            rules={{
-              required: "This fields is required.",
-            }}
-          />
-        </Stack>
-      </Stack>
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }}>
-        <Stack
-          py={2}
-          spacing={2}
-          sx={{
-            width: "100%",
-          }}
-        >
-          <FormSelect
-            label="Region"
-            required
-            disabled={isEdit}
-            name="region"
-            control={control}
-            options={regionList}
-            getOptionLabel={(opt) => opt.name}
-            getOptionValue={(opt) => opt.id}
-            error={!!errors.region}
-            helperText={errors.region?.message}
-            isLoading={regionListLoading}
-            rules={{
-              required: "This fields is required.",
-            }}
-          />
-        </Stack>
         <Stack
           py={2}
           spacing={2}
@@ -296,7 +321,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           />
           <FormDatePicker
             errors={errors}
-            label="Due Date"
+            label="Select due date"
             required
             name="due_date"
             control={control}
