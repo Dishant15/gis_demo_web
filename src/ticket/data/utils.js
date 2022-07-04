@@ -4,7 +4,7 @@ export const generateTicketUid = (region, t_type) => {
   const reg = !!region ? region : "REG";
   resStr += reg;
   // add type
-  resStr += "_";
+  resStr += "_TKT";
   const tt = !!t_type ? t_type : "TT";
   resStr += tt;
   resStr += "_";

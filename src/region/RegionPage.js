@@ -1,5 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { polygon } from "@turf/turf";
+import { booleanContains } from "@turf/turf";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
   get,
@@ -47,6 +49,7 @@ import "./styles/region-page.scss";
 const RegionPage = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const polyRef = useRef(null);
   const { isLoading, data } = useQuery("regionList", fetchRegionList, {
     initialData: [],
   });
@@ -181,9 +184,11 @@ const RegionPage = () => {
   };
 
   const handleRegionCreate = useCallback(
-    (parent = null) =>
+    (parent = null, coordinates = []) =>
       () => {
         if (isNull(createRegion)) {
+          // save parent coordinates for child coords validations
+          polyRef.current = coordinates;
           setCreateRegion("M");
           setNewRegionParentId(parent);
           setShowRegionDetails(null);
@@ -193,10 +198,30 @@ const RegionPage = () => {
   );
 
   const handleMapSubmit = useCallback((coords) => {
-    // move page state to Detail form
-    setCreateRegion("D");
-    // add coordinates to state
-    setNewRegionCoords(coords);
+    const parentCoords = latLongMapToCoords(polyRef.current);
+    const childCoords = latLongMapToCoords(coords);
+
+    const parentPoly = polygon([parentCoords]);
+    const childPoly = polygon([childCoords]);
+    const isContained = booleanContains(parentPoly, childPoly);
+
+    if (isContained) {
+      // move page state to Detail form
+      setCreateRegion("D");
+      // add coordinates to state
+      setNewRegionCoords(coords);
+    } else {
+      setCreateRegion(null);
+      setNewRegionCoords([]);
+      setNewRegionParentId(null);
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Input error",
+          text: "Child Region polygon must be contained inside parent region",
+        })
+      );
+    }
   }, []);
 
   const startEditRegion = useCallback(

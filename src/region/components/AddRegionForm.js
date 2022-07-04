@@ -133,7 +133,7 @@ const AddRegionForm = ({
               </Button>
               <Button
                 startIcon={<AddIcon />}
-                onClick={handleRegionCreate(data.id)}
+                onClick={handleRegionCreate(data.id, data.coordinates)}
               >
                 Add Region
               </Button>

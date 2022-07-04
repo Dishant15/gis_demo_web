@@ -128,7 +128,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     defaultValues: {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
-      unique_id: get(formData, "unique_id", "REG_S_"),
+      unique_id: get(formData, "unique_id", "REG_TKTS_"),
       status: find(TicketStatusList, ["value", get(formData, "status") || "A"]),
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: find(TicketTypeList, [
