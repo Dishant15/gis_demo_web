@@ -170,7 +170,9 @@ const WorkOrderPage = () => {
   }, [area_pocket, mapCenter]);
 
   // filter work orders according to statusFilter
-  const filteredWorkOrders = isNull(statusFilter) ? [...work_orders] : [];
+  const filteredWorkOrders = isNull(statusFilter)
+    ? [...work_orders]
+    : filter(work_orders, ["status", statusFilter]);
 
   // Survey filter logic
   const handleFilterClick = useCallback(
