@@ -48,6 +48,12 @@ const RegionMap = ({
     [onDrawComplete]
   );
 
+  const handleCreateCancel = useCallback(() => {
+    setShowSubmit(false);
+    polyRef.current.setMap(null);
+    onCancel();
+  }, [onCancel]);
+
   const handleSave = useCallback(() => {
     onSubmit(getCoordinatesFromFeature(polyRef.current));
     setShowSubmit(false);
@@ -92,7 +98,6 @@ const RegionMap = ({
               <Button color="error" onClick={onCancel} size="small">
                 Cancel
               </Button>
-              <Button size="small">Learn More</Button>
             </CardActions>
           </Card>
         </div>
@@ -110,6 +115,9 @@ const RegionMap = ({
               </Typography>
             </CardContent>
             <CardActions>
+              <Button color="error" onClick={handleCreateCancel} size="small">
+                Cancel
+              </Button>
               <Button onClick={handleSave} size="small">
                 Complete
               </Button>
@@ -150,8 +158,8 @@ const RegionMap = ({
               strokeColor: "blue",
               strokeOpacity: 1,
               strokeWeight: 2,
-              clickable: false,
-              draggable: false,
+              clickable: true,
+              draggable: true,
               editable: true,
               geodesic: false,
               zIndex: 10,
