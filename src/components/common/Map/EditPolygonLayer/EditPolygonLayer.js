@@ -12,7 +12,7 @@ const DEFAULT_OPTIONS = {
   draggable: true,
   editable: true,
   geodesic: false,
-  zIndex: 5,
+  zIndex: 50,
 };
 
 /**

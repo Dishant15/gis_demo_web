@@ -11,6 +11,7 @@ import {
   pick,
   size,
   get,
+  orderBy,
 } from "lodash";
 
 import {
@@ -122,6 +123,10 @@ const WorkOrderPage = () => {
     if (!size(ticket)) return {};
     // work order here is Survey workorder
     let { area_pocket, work_orders } = ticket;
+    console.log(
+      "🚀 ~ file: WorkOrderPage.js ~ line 126 ~ ticketData ~ work_orders",
+      work_orders
+    );
 
     ticket.survey_count = size(work_orders);
     // convert area coordinate data
@@ -462,23 +467,25 @@ const WorkOrderPage = () => {
               </Stack>
             ) : null}
             {hasFilteredWorkOrders ? (
-              filteredWorkOrders.map((surveyWorkorder) => {
-                return (
-                  <WorkOrderItem
-                    key={surveyWorkorder.id}
-                    surveyWorkorder={surveyWorkorder}
-                    expanded={expanded}
-                    handleExpandClick={handleExpandClick}
-                    selectedSurveyId={selectedSurveyId}
-                    handleSurveySelect={handleSurveySelect}
-                    handleSurveyMapEdit={handleSurveyMapEdit}
-                    handleUnitMapEdit={handleUnitMapEdit}
-                    handleSurveyStatusEdit={handleSurveyStatusEdit}
-                    handleSurveyDetailsEdit={handleSurveyDetailsEdit}
-                    handleUnitDetailsEdit={handleUnitDetailsEdit}
-                  />
-                );
-              })
+              orderBy(filteredWorkOrders, ["id"], ["desc"]).map(
+                (surveyWorkorder) => {
+                  return (
+                    <WorkOrderItem
+                      key={surveyWorkorder.id}
+                      surveyWorkorder={surveyWorkorder}
+                      expanded={expanded}
+                      handleExpandClick={handleExpandClick}
+                      selectedSurveyId={selectedSurveyId}
+                      handleSurveySelect={handleSurveySelect}
+                      handleSurveyMapEdit={handleSurveyMapEdit}
+                      handleUnitMapEdit={handleUnitMapEdit}
+                      handleSurveyStatusEdit={handleSurveyStatusEdit}
+                      handleSurveyDetailsEdit={handleSurveyDetailsEdit}
+                      handleUnitDetailsEdit={handleUnitDetailsEdit}
+                    />
+                  );
+                }
+              )
             ) : hasWorkorders ? (
               <Typography color="text.secondary" textAlign="center" py={8}>
                 {get(workOrderStatusTypes, [statusFilter, "label"], "Filtered")}{" "}
