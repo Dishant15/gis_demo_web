@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { polygon } from "@turf/turf";
-import { booleanContains } from "@turf/turf";
+import { polygon, booleanContains } from "@turf/turf";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
   get,
@@ -12,6 +11,7 @@ import {
   map,
   difference,
   orderBy,
+  size,
 } from "lodash";
 
 import { Box, Button, Divider, Stack } from "@mui/material";
@@ -198,13 +198,17 @@ const RegionPage = () => {
   );
 
   const handleMapSubmit = useCallback((coords) => {
-    const parentCoords = latLongMapToCoords(polyRef.current);
-    const childCoords = latLongMapToCoords(coords);
+    let isContained = true;
+    // if adding child check if valid child
+    if (size(polyRef.current)) {
+      const parentCoords = latLongMapToCoords(polyRef.current);
+      const childCoords = latLongMapToCoords(coords);
 
-    const parentPoly = polygon([parentCoords]);
-    const childPoly = polygon([childCoords]);
-    const isContained = booleanContains(parentPoly, childPoly);
-
+      const parentPoly = polygon([parentCoords]);
+      const childPoly = polygon([childCoords]);
+      isContained = booleanContains(parentPoly, childPoly);
+    }
+    polyRef.current = null;
     if (isContained) {
       // move page state to Detail form
       setCreateRegion("D");

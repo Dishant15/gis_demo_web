@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { polygon, booleanContains } from "@turf/turf";
 
 import { Box, Stack } from "@mui/material";
 import { Done } from "@mui/icons-material";
@@ -60,12 +61,29 @@ const TicketMap = ({ formData }) => {
   });
 
   const handleSubmit = useCallback(() => {
-    const coordinates = getCoordinatesFromFeature(polyRef.current);
+    const regCoords = formData.regionCoords;
+    let coordinates = getCoordinatesFromFeature(polyRef.current);
+    coordinates = latLongMapToCoords(coordinates);
+    // check if coordinates are valid
+    const regionPoly = polygon([latLongMapToCoords(regCoords)]);
+    const areaPoly = polygon([coordinates]);
+
+    if (!booleanContains(regionPoly, areaPoly)) {
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Input Error",
+          text: "Ticket work area must be inside ticket region",
+        })
+      );
+      return;
+    }
+
     mutate({
       ...formData,
       // remove region coordinates
       regionCoords: undefined,
-      coordinates: latLongMapToCoords(coordinates),
+      coordinates,
     });
   }, [mutate, formData]);
 
@@ -86,8 +104,8 @@ const TicketMap = ({ formData }) => {
               strokeColor: "blue",
               strokeOpacity: 1,
               strokeWeight: 2,
-              clickable: false,
-              draggable: false,
+              clickable: true,
+              draggable: true,
               editable: true,
               geodesic: false,
               zIndex: 2,

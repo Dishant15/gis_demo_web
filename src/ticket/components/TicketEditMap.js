@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { polygon, booleanContains } from "@turf/turf";
 
 import { Box, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -65,12 +66,29 @@ const TicketEditMap = ({ ticketData }) => {
   );
 
   const handleSubmit = useCallback(() => {
-    const coordinates = getCoordinatesFromFeature(polyRef.current);
+    let coordinates = getCoordinatesFromFeature(polyRef.current);
+    coordinates = latLongMapToCoords(coordinates);
+
+    // check if coordinates are valid
+    const regionPoly = polygon([region.coordinates]);
+    const areaPoly = polygon([coordinates]);
+
+    if (!booleanContains(regionPoly, areaPoly)) {
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Input Error",
+          text: "Ticket work area must be inside ticket region",
+        })
+      );
+      return;
+    }
+
     editTicket({
       ticketId: ticketData.id,
-      data: { coordinates: latLongMapToCoords(coordinates) },
+      data: { coordinates },
     });
-  }, [editTicket, ticketData.id]);
+  }, [editTicket, ticketData.id, region.coordinates]);
 
   const onPolygonLoad = useCallback((polygon) => {
     polyRef.current = polygon;
