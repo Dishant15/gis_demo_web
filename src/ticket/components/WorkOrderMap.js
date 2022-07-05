@@ -86,18 +86,31 @@ const WorkOrderMap = ({
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h6" component="div">
                 Click and drag marker points to Edit region polygon
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={onEditCancel} size="small">
+              <Button
+                disableElevation
+                variant="contained"
+                color="error"
+                onClick={onEditCancel}
+                size="small"
+              >
                 Cancel
               </Button>
               {editSurveyLoading ? (
-                <Button size="small">Loading ...</Button>
+                <Button variant="contained" disableElevation size="small">
+                  Loading ...
+                </Button>
               ) : (
-                <Button size="small" onClick={handleEdit}>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  size="small"
+                  onClick={handleEdit}
+                >
                   Update
                 </Button>
               )}
@@ -109,18 +122,31 @@ const WorkOrderMap = ({
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h6" component="div">
                 Drag building marker to edit location
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={onUnitEditCancel} size="small">
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={onUnitEditCancel}
+                size="small"
+              >
                 Cancel
               </Button>
               {editUnitLoading ? (
-                <Button size="small">Loading ...</Button>
+                <Button variant="contained" disableElevation size="small">
+                  Loading ...
+                </Button>
               ) : (
-                <Button size="small" onClick={handleUnitEdit}>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  size="small"
+                  onClick={handleUnitEdit}
+                >
                   Update
                 </Button>
               )}

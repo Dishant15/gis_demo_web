@@ -1,10 +1,13 @@
 import React, { useCallback, useRef } from "react";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
 
-import { Box, Stack } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Done } from "@mui/icons-material";
 import { Polygon } from "@react-google-maps/api";
@@ -102,6 +105,41 @@ const TicketEditMap = ({ ticketData }) => {
         position: "relative",
       }}
     >
+      <div className="reg-map-details">
+        <Card sx={{ maxWidth: 345 }} elevation={3}>
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              Finalise region polygon
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Click and drag points on polygon edges to fine tune polygon shape
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button
+              sx={{ marginRight: "8px" }}
+              component={Link}
+              to={getTicketListPage()}
+              variant="contained"
+              disableElevation
+              color="error"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <LoadingButton
+              disableElevation
+              size="small"
+              variant="contained"
+              loading={isTicketAdding}
+              onClick={handleSubmit}
+              startIcon={<Done />}
+            >
+              Complete
+            </LoadingButton>
+          </CardActions>
+        </Card>
+      </div>
       <Map>
         <Polygon
           options={{
@@ -135,23 +173,6 @@ const TicketEditMap = ({ ticketData }) => {
           paths={coordsToLatLongMap(area_pocket.coordinates)}
         />
       </Map>
-
-      <Stack
-        sx={{
-          position: "absolute",
-          bottom: "1em",
-          right: "3.4em",
-        }}
-      >
-        <LoadingButton
-          variant="contained"
-          loading={isTicketAdding}
-          onClick={handleSubmit}
-          startIcon={<Done />}
-        >
-          Complete
-        </LoadingButton>
-      </Stack>
     </Box>
   );
 };

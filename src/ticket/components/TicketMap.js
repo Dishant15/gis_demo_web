@@ -1,17 +1,15 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
 
-import { Box, Stack } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import { Done } from "@mui/icons-material";
-import {
-  GoogleMap,
-  LoadScript,
-  Polygon,
-  DrawingManager,
-} from "@react-google-maps/api";
+import { Polygon, DrawingManager } from "@react-google-maps/api";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Map from "components/common/Map";
 
@@ -94,6 +92,40 @@ const TicketMap = ({ formData }) => {
 
   return (
     <Box sx={{ flex: 1, position: "relative" }}>
+      <div className="reg-map-details">
+        <Card sx={{ maxWidth: 345 }}>
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              Draw a Polygon
+            </Typography>
+            <Typography variant="body2">
+              Click on the map to place points of the polygon
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button
+              sx={{ marginRight: "8px" }}
+              component={Link}
+              to={getTicketListPage()}
+              variant="contained"
+              disableElevation
+              color="error"
+              size="small"
+            >
+              Cancel
+            </Button>
+            <LoadingButton
+              disableElevation
+              variant="contained"
+              loading={isTicketAdding}
+              onClick={handleSubmit}
+              startIcon={<Done />}
+            >
+              Complete
+            </LoadingButton>
+          </CardActions>
+        </Card>
+      </div>
       <Map>
         <DrawingManager
           options={{
@@ -130,22 +162,6 @@ const TicketMap = ({ formData }) => {
           paths={regionCoords}
         />
       </Map>
-      <Stack
-        sx={{
-          position: "absolute",
-          bottom: "1em",
-          right: "3.4em",
-        }}
-      >
-        <LoadingButton
-          variant="contained"
-          loading={isTicketAdding}
-          onClick={handleSubmit}
-          startIcon={<Done />}
-        >
-          Complete
-        </LoadingButton>
-      </Stack>
     </Box>
   );
 };

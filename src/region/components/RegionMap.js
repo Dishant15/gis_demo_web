@@ -85,17 +85,23 @@ const RegionMap = ({
     <Box width="100%" height="100%">
       {editMode === "polygon" ? (
         <div className="reg-map-details">
-          <Card sx={{ maxWidth: 345 }} elevation={3}>
+          <Card sx={{ maxWidth: 345 }}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h6" component="div">
                 Draw a Polygon
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2">
                 Click on the map to place points of the polygon
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={onCancel} size="small">
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={onCancel}
+                size="small"
+              >
                 Cancel
               </Button>
             </CardActions>
@@ -106,7 +112,7 @@ const RegionMap = ({
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h6" component="div">
                 Finalise region polygon
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -115,10 +121,21 @@ const RegionMap = ({
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={handleCreateCancel} size="small">
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={handleCreateCancel}
+                size="small"
+              >
                 Cancel
               </Button>
-              <Button onClick={handleSave} size="small">
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={handleSave}
+                size="small"
+              >
                 Complete
               </Button>
             </CardActions>
@@ -129,18 +146,31 @@ const RegionMap = ({
         <div className="reg-map-details">
           <Card sx={{ maxWidth: 345 }} elevation={3}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography gutterBottom variant="h6" component="div">
                 Click and drag marker points to Edit region polygon
               </Typography>
             </CardContent>
             <CardActions>
-              <Button color="error" onClick={handleEditCancel} size="small">
+              <Button
+                variant="contained"
+                disableElevation
+                color="error"
+                onClick={handleEditCancel}
+                size="small"
+              >
                 Cancel
               </Button>
               {editRegionLoading ? (
-                <Button size="small">Loading ...</Button>
+                <Button variant="contained" disableElevation size="small">
+                  Loading ...
+                </Button>
               ) : (
-                <Button size="small" onClick={handleEdit}>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  size="small"
+                  onClick={handleEdit}
+                >
                   Update
                 </Button>
               )}

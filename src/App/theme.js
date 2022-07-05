@@ -26,4 +26,16 @@ export const COLORS = {
 
 export const theme = createTheme({
   palette: { ...COLORS },
+  // components: {
+  //   // Name of the component
+  //   MuiButton: {
+  //     styleOverrides: {
+  //       // Name of the slot
+  //       root: {
+  //         // Some CSS
+  //         minWidth: "9em",
+  //       },
+  //     },
+  //   },
+  // },
 });
