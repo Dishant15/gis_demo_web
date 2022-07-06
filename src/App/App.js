@@ -9,9 +9,8 @@ import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import Layout from "App/Layout";
-import HomePage from "pages/HomePage";
+import Dashboard from "pages/Dashboard";
 import LoginPage from "pages/Authentication/LoginPage";
-// import AreaPocketPage from "pages/AreaPocketPage";
 import RegionPage from "../region/RegionPage";
 import UserAdminPage from "gis_user/UserAdminPage";
 import UserListPage from "gis_user/pages/UserListPage";
@@ -64,7 +63,7 @@ const App = () => {
                     path={getHomePath()}
                     element={
                       <RequireAuth>
-                        <HomePage />
+                        <Dashboard />
                       </RequireAuth>
                     }
                   />
