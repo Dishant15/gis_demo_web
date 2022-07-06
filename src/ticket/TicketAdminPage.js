@@ -1,7 +1,9 @@
 import React from "react";
-import { Container, Paper } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+import { Container, Paper } from "@mui/material";
+
 import { getContentHeight } from "redux/selectors/appState.selectors";
 
 /**

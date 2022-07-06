@@ -21,17 +21,20 @@ import TicketListPage from "ticket/pages/TicketListPage";
 import TicketAddForm from "ticket/pages/TicketAddForm";
 import TicketEditPage from "ticket/pages/TicketEditPage";
 import WorkOrderPage from "ticket/pages/WorkOrderPage";
-import PlanningPage from "planning/PlanningPage";
 
+import PlanningPage from "planning/PlanningPage";
+import GeoSurveyPage from "geo_survey/GeoSurveyPage";
+
+import { RequireAuth } from "App/RequireAuth";
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
 
-import { RequireAuth } from "App/RequireAuth";
 import {
   getAddTicketPage,
   getAddUserPage,
   getEditTicketPage,
   getEditUserPage,
+  getGeoSurveyPath,
   getHomePath,
   getLoginPath,
   getPlanningPage,
@@ -82,6 +85,14 @@ const App = () => {
                     element={
                       <RequireAuth>
                         <RegionPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path={getGeoSurveyPath()}
+                    element={
+                      <RequireAuth>
+                        <GeoSurveyPage />
                       </RequireAuth>
                     }
                   />

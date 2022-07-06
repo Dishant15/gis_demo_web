@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 
 import {
+  getGeoSurveyPath,
   getHomePath,
   getLoginPath,
   getPlanningPage,
@@ -64,7 +65,7 @@ const NavigationBar = () => {
           <Button to={getHomePath()} component={Link} color="inherit">
             Home
           </Button>
-          <Button component={Link} to={"#"} color="inherit">
+          <Button component={Link} to={getGeoSurveyPath()} color="inherit">
             Survey
           </Button>
           <Button component={Link} to={getPlanningPage()} color="inherit">
