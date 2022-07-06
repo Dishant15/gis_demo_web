@@ -17,10 +17,10 @@ import {
 import { Box, Button, Divider, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-import Loader from "components/common/Loader";
 import RegionMap from "./components/RegionMap";
 import AddRegionForm from "./components/AddRegionForm";
 import RegionListItem from "./components/RegionListItem";
+import RegionDummyLoader from "./components/RegionDummyLoader";
 
 import { fetchRegionList } from "./data/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
@@ -272,7 +272,7 @@ const RegionPage = () => {
   }, [selectedRegion, regionListData]);
 
   if (isLoading) {
-    return <Loader />;
+    return <RegionDummyLoader />;
   }
 
   return (

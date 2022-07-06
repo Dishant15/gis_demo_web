@@ -45,19 +45,19 @@ export default function HomePage() {
             <Stack spacing={1} divider={<Divider flexItem />}>
               <Typography variant="body2" textAlign="center">
                 Survey{" "}
-                <Box component="b" sx={{ color: "secondary.main" }}>
+                <Box component="b" sx={{ color: "primary.main" }}>
                   {data.survey_ticket_count}
                 </Box>
               </Typography>
               <Typography variant="body2" textAlign="center">
                 Planing{" "}
-                <Box component="b" sx={{ color: "secondary.main" }}>
+                <Box component="b" sx={{ color: "primary.main" }}>
                   {data.network_ticket_count}
                 </Box>
               </Typography>
               <Typography variant="body2" textAlign="center">
                 Client:{" "}
-                <Box component="b" sx={{ color: "secondary.main" }}>
+                <Box component="b" sx={{ color: "primary.main" }}>
                   {data.client_ticket_count}
                 </Box>
               </Typography>
@@ -67,7 +67,7 @@ export default function HomePage() {
             <Button
               component={Link}
               to={getTicketListPage()}
-              color="primary"
+              color="secondary"
               size="small"
               startIcon={<ViewListIcon />}
             >
@@ -88,7 +88,7 @@ export default function HomePage() {
                 lineHeight: "94px",
                 minHeight: "94px",
                 fontSize: "3em",
-                color: "secondary.main",
+                color: "primary.main",
               }}
               component="div"
             >
@@ -99,7 +99,7 @@ export default function HomePage() {
             <Button
               component={Link}
               to={getUserListPage()}
-              color="primary"
+              color="secondary"
               size="small"
               startIcon={<GroupIcon />}
             >
