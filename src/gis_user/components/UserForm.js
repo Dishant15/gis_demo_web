@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
-import { map } from "lodash";
 import { useDispatch } from "react-redux";
 
 import { Box, Button, TextField, Stack } from "@mui/material";
@@ -11,10 +10,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { addNewUser, fetchApplicationList } from "../data/services";
-import { FormSelect, FormCheckbox } from "components/common/FormFields";
+import { FormCheckbox, FormMUISelect } from "components/common/FormFields";
 import { parseBadRequest } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { getRequiredFieldMessage } from "utils/constant";
 
 /**
  * Render user Add form
@@ -62,6 +62,7 @@ const UserForm = ({ onSubmit, setUserId }) => {
     defaultValues: {
       is_active: true,
       is_staff: false,
+      access_ids: [],
     },
   });
 
@@ -78,24 +79,27 @@ const UserForm = ({ onSubmit, setUserId }) => {
           }}
         >
           <TextField
-            required
             error={!!errors.username}
-            label="User Name"
-            {...register("username", { required: true })}
+            label="User Name *"
+            {...register("username", {
+              required: getRequiredFieldMessage("User Name"),
+            })}
             helperText={errors.username?.message}
           />
           <TextField
-            required
             error={!!errors.name}
-            label="Full Name"
-            {...register("name", { required: true })}
+            label="Full Name *"
+            {...register("name", {
+              required: getRequiredFieldMessage("Full Name"),
+            })}
             helperText={errors.name?.message}
           />
           <TextField
-            required
             error={!!errors.email}
-            label="Email"
-            {...register("email", { required: true })}
+            label="Email *"
+            {...register("email", {
+              required: getRequiredFieldMessage("Email"),
+            })}
             helperText={errors.email?.message}
           />
         </Stack>
@@ -106,34 +110,38 @@ const UserForm = ({ onSubmit, setUserId }) => {
           }}
         >
           <TextField
-            required
             error={!!errors.password}
-            label="Password"
+            label="Password *"
             type="password"
-            {...register("password", { required: true })}
+            {...register("password", {
+              required: getRequiredFieldMessage("Password"),
+            })}
             helperText={errors.password?.message}
           />
           <TextField
-            required
             error={!!errors.confirm_password}
-            label="Confirm Password"
+            label="Confirm Password *"
             type="password"
             {...register("confirm_password", {
-              required: true,
+              required: getRequiredFieldMessage("Confirm Password"),
               validate: (value) =>
                 value === password.current || "The passwords do not match",
             })}
             helperText={errors.confirm_password?.message}
           />
-          <FormSelect
-            label="Access Type"
-            required
+          <FormMUISelect
+            label="Access Type *"
             isMulti
             name="access_ids"
             control={control}
-            options={map(data, (d) => ({ value: d.id, label: d.name }))}
+            options={data || []}
+            labelKey="name"
+            valueKey="id"
             error={!!errors.access_ids}
             helperText={errors.access_ids?.message}
+            rules={{
+              required: getRequiredFieldMessage("Access Type"),
+            }}
           />
           <FormCheckbox
             label="Active"

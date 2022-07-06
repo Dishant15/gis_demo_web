@@ -1,4 +1,4 @@
-import { map } from "lodash";
+import { join } from "lodash";
 import Api from "utils/api.utils";
 import {
   apiAddUser,
@@ -23,7 +23,7 @@ export const addNewUser = async (data) => {
   const postData = {
     ...data,
     confirm_password: undefined,
-    access_ids: map(data.access_ids, "value").join(","),
+    access_ids: join(data.access_ids, ","),
   };
   const res = await Api.post(apiAddUser(), postData);
   return res.data;
