@@ -25,6 +25,8 @@ export const FormSelect = ({
               value={field.value}
               onChange={field.onChange}
               isDisabled={get(rest, "disabled", false)}
+              className="form-select"
+              classNamePrefix="form-select"
               {...rest}
             />
           </>
