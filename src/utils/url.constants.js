@@ -17,6 +17,7 @@ export const getTicketWorkorderPage = (ticketId = ":ticketId") =>
   `/ticket/${ticketId}/workorders`;
 
 /* External server apis **/
+export const apiGetDashboard = () => "/api/dashboard/";
 
 export const apiPostLogin = () => "/api/token/";
 // area pocket apis

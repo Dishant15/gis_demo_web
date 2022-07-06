@@ -31,6 +31,7 @@ import {
 const TicketListPage = () => {
   const navigate = useNavigate();
   const { isLoading, data } = useQuery("ticketList", fetchTicketList);
+
   const gridRef = useRef();
 
   const onGridReady = () => {
@@ -76,6 +77,7 @@ const TicketListPage = () => {
           columnDefs={[
             { field: "unique_id", headerName: "Unique Id" },
             { field: "name" },
+            { field: "ticket_type_display", headerName: "Type" },
             { field: "status", cellRenderer: StatusCell },
             {
               field: "network_type",
