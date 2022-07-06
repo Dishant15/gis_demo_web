@@ -2,19 +2,20 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
-import { map, get, split, filter } from "lodash";
+import { map, get, split, join } from "lodash";
 import { useDispatch } from "react-redux";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
-import { FormSelect, FormCheckbox } from "components/common/FormFields";
+import { FormCheckbox, FormMUISelect } from "components/common/FormFields";
 
 import { editUserDetails, fetchApplicationList } from "../data/services";
 import { parseBadRequest } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { getRequiredFieldMessage } from "utils/constant";
 
 /**
  * Render user Edit form
@@ -30,9 +31,9 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
     fetchApplicationList,
     {
       onSuccess: (res) => {
-        const appIds = split(formData.access_ids, ",");
-        const applications = filter(res, (d) => appIds.includes(String(d.id)));
-        setValue("access_ids", applications);
+        let appIds = formData.access_ids ? split(formData.access_ids, ",") : [];
+        appIds = map(appIds, (id) => Number(id));
+        setValue("access_ids", appIds);
       },
     }
   );
@@ -63,7 +64,7 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
   const onHandleSubmit = (resData) => {
     mutate({
       userId: formData.id,
-      data: { ...resData, access_ids: map(resData.access_ids, "id").join(",") },
+      data: { ...resData, access_ids: join(resData.access_ids, ",") },
     });
   };
 
@@ -82,6 +83,7 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
       email: get(formData, "email", ""),
       is_staff: !!get(formData, "is_staff"),
       is_active: !!get(formData, "is_active"),
+      access_ids: [],
     },
   });
 
@@ -109,14 +111,18 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
             required
             error={!!errors.name}
             label="Full Name"
-            {...register("name", { required: true })}
+            {...register("name", {
+              required: getRequiredFieldMessage("Full Name"),
+            })}
             helperText={errors.name?.message}
           />
           <TextField
             required
             error={!!errors.email}
             label="Email"
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: getRequiredFieldMessage("Email"),
+            })}
             helperText={errors.email?.message}
           />
         </Stack>
@@ -126,18 +132,20 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
             width: "100%",
           }}
         >
-          <FormSelect
+          <FormMUISelect
             label="Access Type"
-            required
             isMulti
             name="access_ids"
             control={control}
-            options={data}
-            getOptionLabel={(opt) => opt.name}
-            getOptionValue={(opt) => opt.id}
+            options={data || []}
+            labelKey="name"
+            valueKey="id"
             error={!!errors.access_ids}
             helperText={errors.access_ids?.message}
             isLoading={applicationsLoading}
+            rules={{
+              required: getRequiredFieldMessage("Access Type"),
+            }}
           />
           <FormCheckbox
             label="Admin"
