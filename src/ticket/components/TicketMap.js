@@ -120,6 +120,7 @@ const TicketMap = ({ formData }) => {
               loading={isTicketAdding}
               onClick={handleSubmit}
               startIcon={<Done />}
+              size="small"
             >
               Complete
             </LoadingButton>
