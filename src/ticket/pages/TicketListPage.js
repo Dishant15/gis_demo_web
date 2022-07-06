@@ -23,6 +23,7 @@ import {
   getEditTicketPage,
   getTicketWorkorderPage,
 } from "utils/url.constants";
+import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
 
 /**
  * Parent:
@@ -70,48 +71,52 @@ const TicketListPage = () => {
         </Button>
       </Stack>
 
-      <Box p={2} className="ag-theme-alpine" height="100%" width="100%">
-        <AgGridReact
-          ref={gridRef}
-          rowData={data}
-          columnDefs={[
-            { field: "unique_id", headerName: "Unique Id" },
-            { field: "name" },
-            { field: "ticket_type_display", headerName: "Type" },
-            { field: "status", cellRenderer: StatusCell },
-            {
-              field: "network_type",
-              headerName: "Network Type",
-              valueFormatter: (params) => {
-                if (params.value === "B") {
-                  return "As Build";
-                } else if (params.value === "P") {
-                  return "As Planned";
-                } else {
-                  return "";
-                }
+      {isLoading ? (
+        <TicketListDummyLoader />
+      ) : (
+        <Box p={2} className="ag-theme-alpine" height="100%" width="100%">
+          <AgGridReact
+            ref={gridRef}
+            rowData={data}
+            columnDefs={[
+              { field: "unique_id", headerName: "Unique Id" },
+              { field: "name" },
+              { field: "ticket_type_display", headerName: "Type" },
+              { field: "status", cellRenderer: StatusCell },
+              {
+                field: "network_type",
+                headerName: "Network Type",
+                valueFormatter: (params) => {
+                  if (params.value === "B") {
+                    return "As Build";
+                  } else if (params.value === "P") {
+                    return "As Planned";
+                  } else {
+                    return "";
+                  }
+                },
               },
-            },
-            { field: "region.name", headerName: "Region" },
-            {
-              headerName: "Action",
-              field: "unique_id",
-              width: 130,
-              cellRenderer: ActionCell,
-              cellRendererParams: {
-                onEditClick,
-                onViewClick,
+              { field: "region.name", headerName: "Region" },
+              {
+                headerName: "Action",
+                field: "unique_id",
+                width: 130,
+                cellRenderer: ActionCell,
+                cellRendererParams: {
+                  onEditClick,
+                  onViewClick,
+                },
               },
-            },
-          ]}
-          defaultColDef={{
-            filter: "agTextColumnFilter",
-            resizable: true,
-            sortable: true,
-          }}
-          onGridReady={onGridReady}
-        />
-      </Box>
+            ]}
+            defaultColDef={{
+              filter: "agTextColumnFilter",
+              resizable: true,
+              sortable: true,
+            }}
+            onGridReady={onGridReady}
+          />
+        </Box>
+      )}
     </Stack>
   );
 };

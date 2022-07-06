@@ -1,6 +1,6 @@
+import React from "react";
 import { Box, Skeleton } from "@mui/material";
 import { range } from "lodash";
-import React from "react";
 
 const RegionDummyLoader = () => {
   const regionPills = range(6);

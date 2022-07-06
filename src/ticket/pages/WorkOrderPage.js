@@ -12,6 +12,7 @@ import {
   size,
   get,
   orderBy,
+  countBy,
 } from "lodash";
 
 import {
@@ -123,15 +124,14 @@ const WorkOrderPage = () => {
     if (!size(ticket)) return {};
     // work order here is Survey workorder
     let { area_pocket, work_orders } = ticket;
-    console.log(
-      "🚀 ~ file: WorkOrderPage.js ~ line 126 ~ ticketData ~ work_orders",
-      work_orders
-    );
 
     ticket.survey_count = size(work_orders);
     // convert area coordinate data
     area_pocket.coordinates = coordsToLatLongMap(area_pocket.coordinates);
     area_pocket.center = coordsToLatLongMap([area_pocket.center])[0];
+    // get counts
+    ticket.countByStatus = countBy(work_orders, "status");
+
     // convert work_orders coordinate, tags data
     for (let s_ind = 0; s_ind < work_orders.length; s_ind++) {
       const survey = work_orders[s_ind];
@@ -151,7 +151,7 @@ const WorkOrderPage = () => {
     return ticket;
   }, [data]);
 
-  const { area_pocket, work_orders = [] } = ticketData;
+  const { area_pocket, work_orders = [], countByStatus = {} } = ticketData;
 
   // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
@@ -452,14 +452,19 @@ const WorkOrderPage = () => {
             ) : null}
             {hasWorkorders ? (
               <Stack spacing={1} direction="row" alignItems="center">
-                <Typography variant="body1">Filter By :</Typography>
+                <Typography variant="body1">Filter :</Typography>
                 {map(workOrderStatusTypes, (wStatus) => {
                   const selected = statusFilter === wStatus.value;
+                  const chipLabel = `${wStatus.label} (${get(
+                    countByStatus,
+                    wStatus.value,
+                    0
+                  )})`;
                   return (
                     <Chip
                       color={selected ? wStatus.color : undefined}
                       key={wStatus.value}
-                      label={wStatus.label}
+                      label={chipLabel}
                       onClick={handleFilterClick(wStatus.value)}
                     />
                   );
