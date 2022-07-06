@@ -2,8 +2,8 @@ export const getHomePath = () => "/";
 export const getLoginPath = () => "/login";
 
 export const getGeoSurveyPath = () => "/geo/survey";
-
 export const getRegionPage = () => "/regions";
+export const getPlanningPage = () => "/planning";
 
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";

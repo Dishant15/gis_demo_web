@@ -21,6 +21,7 @@ import TicketListPage from "ticket/pages/TicketListPage";
 import TicketAddForm from "ticket/pages/TicketAddForm";
 import TicketEditPage from "ticket/pages/TicketEditPage";
 import WorkOrderPage from "ticket/pages/WorkOrderPage";
+import PlanningPage from "planning/PlanningPage";
 
 import { theme } from "App/theme";
 import store, { persistor } from "redux/store";
@@ -33,6 +34,7 @@ import {
   getEditUserPage,
   getHomePath,
   getLoginPath,
+  getPlanningPage,
   getRegionPage,
   getTicketListPage,
   getTicketWorkorderPage,
@@ -67,14 +69,14 @@ const App = () => {
                       </RequireAuth>
                     }
                   />
-                  {/* <Route
-                    path={getAreaPocketPath()}
+                  <Route
+                    path={getPlanningPage()}
                     element={
                       <RequireAuth>
-                        <AreaPocketPage />
+                        <PlanningPage />
                       </RequireAuth>
                     }
-                  /> */}
+                  />
                   <Route
                     path={getRegionPage()}
                     element={

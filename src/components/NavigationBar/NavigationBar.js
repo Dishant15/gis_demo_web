@@ -15,6 +15,7 @@ import {
 import {
   getHomePath,
   getLoginPath,
+  getPlanningPage,
   getRegionPage,
   getTicketListPage,
   getUserListPage,
@@ -66,7 +67,7 @@ const NavigationBar = () => {
           <Button component={Link} to={"#"} color="inherit">
             Survey
           </Button>
-          <Button component={Link} to={"#"} color="inherit">
+          <Button component={Link} to={getPlanningPage()} color="inherit">
             Planning
           </Button>
           <Button component={Link} to={"#"} color="inherit">
