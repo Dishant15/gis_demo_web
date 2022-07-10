@@ -14,6 +14,7 @@ import {
   orderBy,
   countBy,
 } from "lodash";
+import JSZip from "jszip";
 
 import {
   Box,
@@ -27,6 +28,7 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import PublishIcon from "@mui/icons-material/Publish";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
@@ -39,6 +41,7 @@ import UnitEditForm from "ticket/components/UnitEditForm";
 import {
   exportTicket,
   fetchTicketWorkorders,
+  importTicket,
   updateUnitWorkOrder,
   updateWorkOrder,
 } from "ticket/data/services";
@@ -48,6 +51,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 import { getTicketListPage } from "utils/url.constants";
 
 import "../styles/ticket_survey_list.scss";
+import FilePickerDialog from "components/common/FilePickerDialog";
 
 const WorkOrderPage = () => {
   /**
@@ -118,6 +122,15 @@ const WorkOrderPage = () => {
       },
     });
 
+  const { mutate: importTicketMutation, isLoading: loadingImportTicket } =
+    useMutation(importTicket, {
+      onError: (err) => {
+        console.log("🚀 ~ file: WorkOrderPage ~ err", err);
+      },
+      onSuccess: (res) => {
+        console.log("🚀 ~ file: WorkOrderPage ~ res", res);
+      },
+    });
   // data Transformation stage
   const ticketData = useMemo(() => {
     let ticket = cloneDeep(data);
@@ -161,6 +174,8 @@ const WorkOrderPage = () => {
   const [surveyDetailsEdit, setSurveyDetailsEdit] = useState(false);
   const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
   const [surveyData, setSurveyData] = useState({});
+  // importData = ticket id
+  const [importData, setImportData] = useState(null);
 
   const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
@@ -173,6 +188,58 @@ const WorkOrderPage = () => {
       }
     }
   }, [area_pocket, mapCenter]);
+
+  // file import logic
+  const handleFilePickerCancel = useCallback(() => {
+    setImportData(null);
+  }, [setImportData]);
+
+  const handleFileUpload = useCallback(
+    (files) => {
+      console.log(
+        "🚀 ~ file: WorkOrderPage.js ~ line 187 ~ handleFileUpload ~ files",
+        files
+      );
+      const zip = new JSZip();
+      const zipFolder = zip.folder(ticketData.name);
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        zipFolder.file(file.name, file);
+      }
+
+      zip.generateAsync({ type: "blob" }).then(function (blob) {
+        console.log(
+          "🚀 ~ file: WorkOrderPage.js ~ line 202 ~ .then ~ blob",
+          blob
+        );
+        // saveAs(blob, "hello.zip");
+        const fileObj = new File([blob], ticketData.name + ".zip", {
+          type: blob.type,
+        });
+        const data = new FormData();
+        console.log(
+          "🚀 ~ file: WorkOrderPage.js ~ line 218 ~ fileObj",
+          fileObj
+        );
+        data.append("file", blob, ticketData.name + ".zip");
+        importTicketMutation({ ticketId: ticketData.id, data });
+      });
+    },
+    [ticketData]
+  );
+
+  const handleZipFileUpload = useCallback(
+    (files) => {
+      console.log(
+        "🚀 ~ file: WorkOrderPage.js ~ line 187 ~ handleFileUpload ~ files",
+        files
+      );
+      const data = new FormData();
+      data.append("file", files[0], ticketData.name + ".zip");
+      importTicketMutation({ ticketId: ticketData.id, data });
+    },
+    [ticketData]
+  );
 
   // filter work orders according to statusFilter
   const filteredWorkOrders = isNull(statusFilter)
@@ -397,6 +464,7 @@ const WorkOrderPage = () => {
   const showStatusPopover = !isNull(surveyStatusEdit);
   const hasWorkorders = size(work_orders);
   const hasFilteredWorkOrders = size(filteredWorkOrders);
+  const showFilePicker = !isNull(importData);
 
   if (isLoading) {
     return <WorkOrderLoading />;
@@ -417,6 +485,14 @@ const WorkOrderPage = () => {
         <Typography className="dtl-title" variant="h5" color="primary.dark">
           Workorders : {ticketData.name}
         </Typography>
+        <LoadingButton
+          color="secondary"
+          startIcon={<PublishIcon />}
+          // loading={loadingExportTicket}
+          onClick={() => setImportData(ticketData.id)}
+        >
+          Import
+        </LoadingButton>
         <LoadingButton
           color="secondary"
           startIcon={<GetAppIcon />}
@@ -551,6 +627,22 @@ const WorkOrderPage = () => {
               editUnitLoading={editUnitLoading}
               onEditComplete={handleUnitDetailSubmit}
               handleUnitDetailsCancel={handleUnitDetailsCancel}
+            />
+          ) : null}
+        </Dialog>
+        <Dialog
+          onClose={handleFilePickerCancel}
+          open={showFilePicker}
+          scroll="paper" // used to scroll content into dialog
+          aria-labelledby="scroll-dialog-title"
+          aria-describedby="scroll-dialog-description"
+          fullWidth
+          maxWidth="sm"
+        >
+          {showFilePicker ? (
+            <FilePickerDialog
+              onSubmit={handleZipFileUpload}
+              onClose={handleFilePickerCancel}
             />
           ) : null}
         </Dialog>

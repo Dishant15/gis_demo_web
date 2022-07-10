@@ -9,6 +9,7 @@ import {
   apiPutWorkOrderEdit,
   apiPutUnitEdit,
   apiExportTicket,
+  apiImportTicket,
 } from "utils/url.constants";
 
 export const fetchTicketList = async () => {
@@ -58,6 +59,15 @@ export const updateUnitWorkOrder = async (data) => {
 export const exportTicket = async (ticketId) => {
   const res = await Api.get(apiExportTicket(ticketId), null, {
     responseType: "arraybuffer",
+  });
+  return res.data;
+};
+
+export const importTicket = async ({ ticketId, data }) => {
+  const res = await Api.post(apiImportTicket(ticketId), data, null, {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
   });
   return res.data;
 };
