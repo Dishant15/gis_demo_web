@@ -328,6 +328,9 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             rules={{
               required: "This fields is required.",
             }}
+            popupStyle={{
+              bottom: "calc(100% + 1em)",
+            }}
           />
         </Stack>
         <Stack
