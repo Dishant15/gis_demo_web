@@ -38,6 +38,10 @@ code {
 }
 
 .form-select {
+  .form-select__control {
+    border-color: transparent !important;
+    box-shadow: none;
+  }
   .form-select__menu {
     z-index: 2;
   }
