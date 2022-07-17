@@ -11,6 +11,7 @@ export const FormDatePicker = ({
   rules,
   errors,
   required,
+  helperText,
   ...rest
 }) => {
   return (
@@ -22,10 +23,12 @@ export const FormDatePicker = ({
             onDateUpdate={({ date }) => field.onChange(date)}
             inputComponent={
               <TextField
-                required={required}
-                error={!!errors.username}
+                InputLabelProps={{
+                  required: required,
+                }}
+                error={errors}
                 label={label}
-                helperText={errors.username?.message}
+                helperText={helperText}
               />
             }
             {...rest}

@@ -247,7 +247,9 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           }}
         >
           <TextField
-            required
+            InputLabelProps={{
+              required: true,
+            }}
             error={!!errors.unique_id}
             label="Unique Id"
             disabled={isEdit}
@@ -262,7 +264,9 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           }}
         >
           <TextField
-            required
+            InputLabelProps={{
+              required: true,
+            }}
             error={!!errors.name}
             label="Name"
             {...register("name", { required: "This fields is required." })}
@@ -320,7 +324,8 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             }}
           />
           <FormDatePicker
-            errors={errors}
+            errors={!!errors.due_date}
+            helperText={errors.due_date?.message}
             label="Select due date"
             required
             name="due_date"

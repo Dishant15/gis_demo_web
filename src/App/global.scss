@@ -41,8 +41,32 @@ code {
   .form-select__control {
     border-color: transparent !important;
     box-shadow: none;
+    padding: 9px;
   }
   .form-select__menu {
     z-index: 2;
+  }
+}
+
+.form-select-controller {
+  .form-select-input-wrapper {
+    padding: 0;
+  }
+}
+
+.form-creatable-select {
+  .form-creatable-select__control {
+    border-color: transparent !important;
+    box-shadow: none;
+    padding: 9px;
+  }
+  .form-creatable-select__menu {
+    z-index: 2;
+  }
+}
+
+.form-creatable-select-controller {
+  .form-creatable-select-input-wrapper {
+    padding: 0;
   }
 }

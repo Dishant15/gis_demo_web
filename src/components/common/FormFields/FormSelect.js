@@ -12,6 +12,8 @@ export const FormSelect = ({
   rules,
   label,
   required,
+  helperText,
+  error,
   ...rest
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,11 +30,11 @@ export const FormSelect = ({
             multiline
             focused={menuOpen}
             required={required}
+            error={error}
             InputLabelProps={{ shrink }}
+            className="form-select-controller"
             InputProps={{
-              style: {
-                padding: 0,
-              },
+              className: "form-select-input-wrapper",
               notched: shrink,
               inputComponent: (inputProps) => {
                 const { className } = inputProps;
@@ -48,20 +50,12 @@ export const FormSelect = ({
                     menuIsOpen={menuOpen}
                     onMenuOpen={() => setMenuOpen(true)}
                     onMenuClose={() => setMenuOpen(false)}
-                    styles={{
-                      control: (style) => {
-                        return Object.assign(style, {
-                          padding: "9px",
-                          borderColor: "transparent",
-                        });
-                      },
-                    }}
                     {...rest}
                   />
                 );
               },
             }}
-            helperText="Please enter your name"
+            helperText={helperText}
           />
         );
       }}
@@ -78,22 +72,51 @@ export const FormCreatableSelect = ({
   rules,
   label,
   required,
+  helperText,
+  error,
   ...rest
 }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <Controller
       render={({ field }) => {
+        const shrink = menuOpen || !!size(field.value);
         return (
-          <>
-            <InputLabel required={required}>{label}</InputLabel>
-            <CreatableSelect
-              ref={field.ref}
-              value={field.value}
-              onChange={field.onChange}
-              isDisabled={get(rest, "disabled", false)}
-              {...rest}
-            />
-          </>
+          <TextField
+            ref={field.ref}
+            id={name}
+            label={label}
+            variant="outlined"
+            multiline
+            focused={menuOpen}
+            required={required}
+            error={error}
+            InputLabelProps={{ shrink }}
+            className="form-creatable-select-controller"
+            InputProps={{
+              className: "form-creatable-select-input-wrapper",
+              notched: shrink,
+              inputComponent: (inputProps) => {
+                const { className } = inputProps;
+                return (
+                  <CreatableSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    isDisabled={get(rest, "disabled", false)}
+                    className={`${className} form-creatable-select`}
+                    classNamePrefix="form-creatable-select"
+                    placeholder=" "
+                    openMenuOnClick
+                    menuIsOpen={menuOpen}
+                    onMenuOpen={() => setMenuOpen(true)}
+                    onMenuClose={() => setMenuOpen(false)}
+                    {...rest}
+                  />
+                );
+              },
+            }}
+            helperText={helperText}
+          />
         );
       }}
       name={name}
