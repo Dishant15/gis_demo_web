@@ -10,11 +10,13 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
 import Map from "components/common/Map";
+import ComingSoon from "components/common/ComingSoon";
 
 import { fetchGeoSurveyBoundaryList } from "./geo_survey.service";
-import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
+import { coordsToLatLongMap } from "utils/map.utils";
 import { COLORS } from "App/theme";
 import { getContentHeight } from "redux/selectors/appState.selectors";
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 import { featureCollection, point, concave } from "@turf/turf";
 
 const GeoSurveyPage = () => {
@@ -207,4 +209,15 @@ const GeoSurveyPage = () => {
   );
 };
 
-export default GeoSurveyPage;
+const GeoSurveyPageWrapper = () => {
+  const isSuperAdmin = useSelector(getIsSuperAdminUser);
+  const contentHeight = useSelector(getContentHeight);
+
+  if (isSuperAdmin) {
+    return <GeoSurveyPage />;
+  } else {
+    return <ComingSoon contentHeight={contentHeight} />;
+  }
+};
+
+export default GeoSurveyPageWrapper;

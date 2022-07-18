@@ -70,3 +70,20 @@ code {
     padding: 0;
   }
 }
+
+.coming-soon {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+
+  .coming-soon-content {
+    width: 100%;
+    text-align: center;
+
+    img {
+      width: 500px;
+      max-width: 40%;
+    }
+  }
+}

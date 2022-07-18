@@ -8,7 +8,13 @@ import {
   Typography,
   Collapse,
 } from "@mui/material";
+import { useSelector } from "react-redux";
+
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import ComingSoon from "components/common/ComingSoon";
+
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
+import { getContentHeight } from "redux/selectors/appState.selectors";
 
 import "./styles/planning-page.scss";
 
@@ -85,4 +91,15 @@ const PlanningPage = () => {
   );
 };
 
-export default PlanningPage;
+const PlanningPageWrapper = () => {
+  const isSuperAdmin = useSelector(getIsSuperAdminUser);
+  const contentHeight = useSelector(getContentHeight);
+
+  if (isSuperAdmin) {
+    return <PlanningPage />;
+  } else {
+    return <ComingSoon contentHeight={contentHeight} />;
+  }
+};
+
+export default PlanningPageWrapper;
