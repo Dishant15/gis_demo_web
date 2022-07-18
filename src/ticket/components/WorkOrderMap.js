@@ -13,6 +13,7 @@ import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
 import { getCoordinatesFromFeature } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { COLORS } from "App/theme";
+import { GreenMarker, RedMarker } from "components/common/Map/GoogleMapWrapper";
 
 const WorkOrderMap = ({
   areaPocket = null,
@@ -49,13 +50,11 @@ const WorkOrderMap = ({
   const mayBeEditMarker = useMemo(() => {
     if (!!unitMapEdit) {
       return (
-        <Marker
-          icon="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+        <GreenMarker
           draggable
           clickable
           onLoad={(marker) => (polyRef.current = marker)}
           position={unitMapEdit.coordinates}
-          // label="edit"
           zIndex={10}
         />
       );
@@ -208,7 +207,7 @@ const WorkOrderMap = ({
               {units.map((unit) => {
                 const { id, coordinates } = unit;
                 if (get(unitMapEdit, "id") == id) return null;
-                return <Marker key={id} position={coordinates} />;
+                return <RedMarker key={id} position={coordinates} />;
               })}
             </Fragment>
           );
