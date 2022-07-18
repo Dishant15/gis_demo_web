@@ -126,9 +126,24 @@ const WorkOrderPage = () => {
     useMutation(importTicket, {
       onError: (err) => {
         console.log("🚀 ~ file: WorkOrderPage ~ err", err);
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Import shapefile",
+            text: "Failed to import shapefile.",
+          })
+        );
       },
       onSuccess: (res) => {
         console.log("🚀 ~ file: WorkOrderPage ~ res", res);
+        handleFilePickerCancel();
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Import shapefile",
+            text: "Shapefile imported successfully",
+          })
+        );
       },
     });
   // data Transformation stage
