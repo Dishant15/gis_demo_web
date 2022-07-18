@@ -58,7 +58,7 @@ const UserAdminForm = () => {
 
   const FormComponent = useMemo(() => {
     switch (step) {
-      case 1:
+      case 0:
         return !!size(data) ? (
           <UserEditForm
             onSubmit={goToNextStep}
@@ -69,7 +69,7 @@ const UserAdminForm = () => {
           <UserAddForm onSubmit={goToNextStep} setUserId={setUserId} />
         );
 
-      case 0:
+      case 1:
         return (
           <UserPermissions
             userId={userId}
