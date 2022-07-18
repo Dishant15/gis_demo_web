@@ -485,22 +485,26 @@ const WorkOrderPage = () => {
         <Typography className="dtl-title" variant="h5" color="primary.dark">
           Workorders : {ticketData.name}
         </Typography>
-        <LoadingButton
-          color="secondary"
-          startIcon={<PublishIcon />}
-          // loading={loadingExportTicket}
-          onClick={() => setImportData(ticketData.id)}
-        >
-          Import
-        </LoadingButton>
-        <LoadingButton
-          color="secondary"
-          startIcon={<GetAppIcon />}
-          loading={loadingExportTicket}
-          onClick={() => exportTicketMutation(ticketData.id)}
-        >
-          Export .shp
-        </LoadingButton>
+        <Stack direction="row" alignItems="center">
+          <LoadingButton
+            color="secondary"
+            startIcon={<PublishIcon />}
+            // loading={loadingExportTicket}
+            onClick={() => setImportData(ticketData.id)}
+            sx={{ ml: 1 }}
+          >
+            Import
+          </LoadingButton>
+          <LoadingButton
+            color="secondary"
+            startIcon={<GetAppIcon />}
+            loading={loadingExportTicket}
+            onClick={() => exportTicketMutation(ticketData.id)}
+            sx={{ ml: 1 }}
+          >
+            Export .shp
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Divider flexItem />
