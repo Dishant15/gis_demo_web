@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
@@ -27,6 +27,7 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 
 import "./styles/region-page.scss";
 
@@ -47,6 +48,7 @@ import "./styles/region-page.scss";
  *  AddRegionForm
  */
 const RegionPage = () => {
+  const isSuperAdmin = useSelector(getIsSuperAdminUser);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const polyRef = useRef(null);
@@ -288,13 +290,15 @@ const RegionPage = () => {
               >
                 Regions
               </Box>
-              <Button
-                color="success"
-                startIcon={<AddIcon />}
-                onClick={handleRegionCreate(null)}
-              >
-                New Region
-              </Button>
+              {isSuperAdmin ? (
+                <Button
+                  color="success"
+                  startIcon={<AddIcon />}
+                  onClick={handleRegionCreate(null)}
+                >
+                  New Region
+                </Button>
+              ) : null}
             </Stack>
 
             <Divider flexItem orientation="horizontal" />
