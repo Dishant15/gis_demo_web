@@ -14,6 +14,7 @@ export const FormSelect = ({
   required,
   helperText,
   error,
+  onBlur,
   ...rest
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,17 +41,21 @@ export const FormSelect = ({
                 const { className } = inputProps;
                 return (
                   <Select
+                    {...rest}
                     value={field.value}
                     onChange={field.onChange}
                     isDisabled={get(rest, "disabled", false)}
                     className={`${className} form-select`}
                     classNamePrefix="form-select"
                     placeholder=" "
-                    openMenuOnClick
+                    blurInputOnSelect
                     menuIsOpen={menuOpen}
                     onMenuOpen={() => setMenuOpen(true)}
                     onMenuClose={() => setMenuOpen(false)}
-                    {...rest}
+                    onBlur={(e) => {
+                      setMenuOpen(false);
+                      if (onBlur) onBlur(e);
+                    }}
                   />
                 );
               },

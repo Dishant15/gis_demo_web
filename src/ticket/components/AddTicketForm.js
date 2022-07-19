@@ -144,6 +144,14 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     },
   });
 
+  const handleUniqueIdOnClose = useCallback(() => {
+    const [region, ticket_type] = getValues(["region", "ticket_type"]);
+    setValue(
+      "unique_id",
+      generateTicketUid(get(region, "unique_id"), get(ticket_type, "value"))
+    );
+  }, []);
+
   return (
     <Box
       p={2}
@@ -176,6 +184,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             error={!!errors.region}
             helperText={errors.region?.message}
             isLoading={regionListLoading}
+            onBlur={handleUniqueIdOnClose}
             rules={{
               required: "This fields is required.",
             }}
@@ -199,16 +208,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
             options={TicketTypeList}
             error={!!errors.ticket_type}
             helperText={errors.ticket_type?.message}
-            onBlur={() => {
-              const [region, ticket_type] = getValues([
-                "region",
-                "ticket_type",
-              ]);
-              setValue(
-                "unique_id",
-                generateTicketUid(region.unique_id, ticket_type.value)
-              );
-            }}
+            onBlur={handleUniqueIdOnClose}
             rules={{
               required: "This fields is required.",
             }}
