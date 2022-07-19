@@ -1,5 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
+import size from "lodash/size";
 
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -51,6 +52,7 @@ const WorkOrderItem = ({
   }, 0);
   const isExpanded = expanded.has(id);
   const isVerified = status === "V";
+  const hasUnits = !!size(units);
 
   return (
     <Card elevation={0} sx={{ maxWidth: 345, backgroundColor: "#efefef" }}>
@@ -117,19 +119,21 @@ const WorkOrderItem = ({
             </Tooltip>
           </>
         )}
-        <Tooltip
-          title={isExpanded ? "Hide Units" : "Show Units"}
-          placement="top"
-        >
-          <ExpandMore
-            expand={isExpanded}
-            onClick={handleExpandClick(id)}
-            aria-expanded={isExpanded}
-            aria-label="show more"
+        {hasUnits ? (
+          <Tooltip
+            title={isExpanded ? "Hide Units" : "Show Units"}
+            placement="top"
           >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </Tooltip>
+            <ExpandMore
+              expand={isExpanded}
+              onClick={handleExpandClick(id)}
+              aria-expanded={isExpanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          </Tooltip>
+        ) : null}
       </CardActions>
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
         {units.map((unit, uInd, { length }) => {

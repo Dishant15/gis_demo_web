@@ -28,8 +28,8 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import GetAppIcon from "@mui/icons-material/GetApp";
-import PublishIcon from "@mui/icons-material/Publish";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import BackupIcon from "@mui/icons-material/Backup";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
@@ -503,12 +503,12 @@ const WorkOrderPage = () => {
         <Stack direction="row" alignItems="center">
           <LoadingButton
             color="secondary"
-            startIcon={<PublishIcon />}
+            startIcon={<BackupIcon />}
             // loading={loadingExportTicket}
             onClick={() => setImportData(ticketData.id)}
             sx={{ ml: 1 }}
           >
-            Import
+            Upload
           </LoadingButton>
           <LoadingButton
             color="secondary"

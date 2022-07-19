@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
@@ -16,8 +16,9 @@ import { Add } from "@mui/icons-material";
 
 import { AgGridReact } from "ag-grid-react";
 
-import { fetchUserList } from "../data/services";
+import { fetchApplicationList, fetchUserList } from "../data/services";
 import { getAddUserPage, getEditUserPage } from "utils/url.constants";
+import { find, split } from "lodash";
 
 /**
  * Parent:
@@ -26,6 +27,11 @@ import { getAddUserPage, getEditUserPage } from "utils/url.constants";
 const UserListPage = () => {
   const navigate = useNavigate();
   const { isLoading, data } = useQuery("userList", fetchUserList);
+  const { isLoading: applicationLoading, data: applicationList } = useQuery(
+    "applicationList",
+    fetchApplicationList
+  );
+
   const gridRef = useRef();
 
   const onGridReady = () => {
@@ -76,7 +82,14 @@ const UserListPage = () => {
               cellRenderer: TickCell,
             },
             { field: "is_staff", headerName: "Admin", cellRenderer: TickCell },
-            { field: "access_ids", headerName: "Access" },
+            {
+              field: "access_ids",
+              headerName: "Access",
+              cellRenderer: AccessIdCell,
+              cellRendererParams: {
+                applicationList,
+              },
+            },
             {
               headerName: "Action",
               field: "id",
@@ -128,6 +141,29 @@ const ActionCell = (props) => {
       </IconButton>
     </Stack>
   );
+};
+
+const AccessIdCell = (props) => {
+  const applicationName = useMemo(() => {
+    const appIds = props.value ? split(props.value, ",") : [];
+    let names = "";
+    for (let index = 0; index < appIds.length; index++) {
+      const currentData = find(props.applicationList, [
+        "id",
+        Number(appIds[index]),
+      ]);
+      if (currentData) {
+        if (names) {
+          names += ", " + currentData.name;
+        } else {
+          names = currentData.name;
+        }
+      }
+    }
+    return names;
+  }, [props.value, props.applicationList]);
+
+  return <div>{applicationName}</div>;
 };
 
 export default UserListPage;

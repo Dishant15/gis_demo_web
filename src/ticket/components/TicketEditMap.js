@@ -109,7 +109,7 @@ const TicketEditMap = ({ ticketData }) => {
         <Card sx={{ maxWidth: 345 }} elevation={3}>
           <CardContent>
             <Typography gutterBottom variant="h6" component="div">
-              Finalise region polygon
+              Finalise work area polygon
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Click and drag points on polygon edges to fine tune polygon shape
