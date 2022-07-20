@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "prebuild": "rm -rf ../network-gis-backend/static/build/ ../network-gis-backend/static/js/ ../network-gis-backend/static/css/ && cd .. && mkdir -p ../network-gis-backend/static/{build,js,css} && cd network-gis-web",
+    "prebuild": "rm -rf ../network-gis-backend/static/build/ ../network-gis-backend/static/js/ ../network-gis-backend/static/css/ ../network-gis-backend/static/media/ && cd .. && mkdir -p ../network-gis-backend/static/{build,js,css,media} && cd network-gis-web",
     "build": "react-scripts build",
     "postbuild": "cp -r build ../network-gis-backend/static/. && mv ../network-gis-backend/static/build/static/* ../network-gis-backend/static/.",
     "test": "react-scripts test",
