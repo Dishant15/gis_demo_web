@@ -144,6 +144,7 @@ const WorkOrderPage = () => {
             text: "Shapefile imported successfully",
           })
         );
+        refetch();
       },
     });
   // data Transformation stage
