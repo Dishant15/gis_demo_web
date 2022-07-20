@@ -129,8 +129,8 @@ const WorkOrderPage = () => {
         dispatch(
           addNotification({
             type: "error",
-            title: "Import shapefile",
-            text: "Failed to import shapefile.",
+            title: "Upload shapefile",
+            text: "Failed to upload shapefile.",
           })
         );
       },
@@ -140,8 +140,8 @@ const WorkOrderPage = () => {
         dispatch(
           addNotification({
             type: "success",
-            title: "Import shapefile",
-            text: "Shapefile imported successfully",
+            title: "Upload shapefile",
+            text: "Shapefile uploaded successfully",
           })
         );
         refetch();
