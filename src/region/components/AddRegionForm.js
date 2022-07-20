@@ -27,6 +27,7 @@ import {
 import { addNotification } from "redux/reducers/notification.reducer";
 import { latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
+import { getRequiredFieldMessage } from "utils/constant";
 
 const DEFAULT_DATA = {
   name: "",
@@ -55,11 +56,17 @@ const AddRegionForm = ({
       }
     },
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
+        let title = "";
+        if (has(variables, "id")) {
+          title = "Region updated successfully";
+        } else {
+          title = "New Region created";
+        }
         dispatch(
           addNotification({
             type: "success",
-            title: "New Region created",
+            title: title,
           })
         );
         // refetch list after add success
@@ -145,14 +152,19 @@ const AddRegionForm = ({
           <Stack spacing={2}>
             <TextField
               error={!!errors.name}
-              label="Name"
-              {...register("name", { required: true })}
+              label="Name *"
+              {...register("name", {
+                required: getRequiredFieldMessage("Name"),
+              })}
               helperText={errors.name?.message}
             />
             <TextField
-              error={!!errors.area}
-              label="Unique ID"
-              {...register("unique_id", { required: true })}
+              error={!!errors.unique_id}
+              label="Unique ID *"
+              {...register("unique_id", {
+                required: getRequiredFieldMessage("Unique ID"),
+              })}
+              helperText={errors.unique_id?.message}
             />
 
             <Stack direction="row">
