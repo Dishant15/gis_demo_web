@@ -63,26 +63,33 @@ const TicketMap = ({ formData }) => {
     let coordinates = getCoordinatesFromFeature(polyRef.current);
     coordinates = latLongMapToCoords(coordinates);
     // check if coordinates are valid
-    const regionPoly = polygon([latLongMapToCoords(regCoords)]);
     const areaPoly = polygon([coordinates]);
 
-    if (!booleanContains(regionPoly, areaPoly)) {
-      dispatch(
-        addNotification({
-          type: "error",
-          title: "Input Error",
-          text: "Ticket work area must be inside ticket region",
-        })
-      );
-      return;
+    for (let regInd = 0; regInd < regCoords.length; regInd++) {
+      const currRegion = regCoords[regInd];
+
+      const regionPoly = polygon([latLongMapToCoords(currRegion)]);
+
+      if (booleanContains(regionPoly, areaPoly)) {
+        // area inside one of the polygons
+        mutate({
+          ...formData,
+          // remove region coordinates
+          regionCoords: undefined,
+          coordinates,
+        });
+        return;
+      }
     }
 
-    mutate({
-      ...formData,
-      // remove region coordinates
-      regionCoords: undefined,
-      coordinates,
-    });
+    // none of the polygons contains this area
+    dispatch(
+      addNotification({
+        type: "error",
+        title: "Input Error",
+        text: "Ticket work area must be inside ticket region",
+      })
+    );
   }, [mutate, formData]);
 
   const onPolygonComplete = useCallback((polygon) => {
@@ -147,21 +154,26 @@ const TicketMap = ({ formData }) => {
           drawingMode={isDrawing ? "polygon" : null}
           onPolygonComplete={onPolygonComplete}
         />
-        <Polygon
-          options={{
-            fillColor: "black",
-            fillOpacity: 0.1,
-            strokeColor: "black",
-            strokeOpacity: 1,
-            strokeWeight: 2,
-            clickable: false,
-            draggable: false,
-            editable: false,
-            geodesic: false,
-            zIndex: 1,
-          }}
-          paths={regionCoords}
-        />
+        {regionCoords.map((regPolyCoords, regInd) => {
+          return (
+            <Polygon
+              key={regInd}
+              options={{
+                fillColor: "black",
+                fillOpacity: 0.1,
+                strokeColor: "black",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: false,
+                geodesic: false,
+                zIndex: 1,
+              }}
+              paths={regPolyCoords}
+            />
+          );
+        })}
       </Map>
     </Box>
   );

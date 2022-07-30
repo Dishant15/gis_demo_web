@@ -3,7 +3,6 @@ import { useMutation } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
-import get from "lodash/get";
 
 import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
@@ -39,11 +38,7 @@ const TicketEditMap = ({ ticketData }) => {
   const polyRef = useRef();
 
   const { region, area_pocket } = ticketData;
-  const regionCoordinates = get(
-    coordsToLatLongMap(region.coordinates, true),
-    "0",
-    []
-  );
+  const regionCoordinates = coordsToLatLongMap(region.coordinates, true);
 
   const { mutate: editTicket, isLoading: isTicketAdding } = useMutation(
     editTicketArea,
@@ -78,24 +73,30 @@ const TicketEditMap = ({ ticketData }) => {
     let coordinates = getCoordinatesFromFeature(polyRef.current);
     coordinates = latLongMapToCoords(coordinates);
     // check if coordinates are valid
-    const regionPoly = polygon(region.coordinates);
     const areaPoly = polygon([coordinates]);
 
-    if (!booleanContains(regionPoly, areaPoly)) {
-      dispatch(
-        addNotification({
-          type: "error",
-          title: "Input Error",
-          text: "Ticket work area must be inside ticket region",
-        })
-      );
-      return;
-    }
+    for (
+      let regPolyInd = 0;
+      regPolyInd < region.coordinates.length;
+      regPolyInd++
+    ) {
+      const regionPoly = polygon([region.coordinates[regPolyInd]]);
 
-    editTicket({
-      ticketId: ticketData.id,
-      data: { coordinates },
-    });
+      if (booleanContains(regionPoly, areaPoly)) {
+        editTicket({
+          ticketId: ticketData.id,
+          data: { coordinates },
+        });
+        return;
+      }
+    }
+    dispatch(
+      addNotification({
+        type: "error",
+        title: "Input Error",
+        text: "Ticket work area must be inside ticket region",
+      })
+    );
   }, [editTicket, ticketData.id, region.coordinates]);
 
   const onPolygonLoad = useCallback((polygon) => {
@@ -146,21 +147,26 @@ const TicketEditMap = ({ ticketData }) => {
         </Card>
       </div>
       <Map>
-        <Polygon
-          options={{
-            fillColor: "black",
-            fillOpacity: 0.1,
-            strokeColor: "black",
-            strokeOpacity: 1,
-            strokeWeight: 2,
-            clickable: false,
-            draggable: false,
-            editable: false,
-            geodesic: false,
-            zIndex: 1,
-          }}
-          paths={regionCoordinates}
-        />
+        {regionCoordinates.map((currRegion, regInd) => {
+          return (
+            <Polygon
+              key={regInd}
+              options={{
+                fillColor: "black",
+                fillOpacity: 0.1,
+                strokeColor: "black",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: false,
+                geodesic: false,
+                zIndex: 1,
+              }}
+              paths={currRegion}
+            />
+          );
+        })}
         <Polygon
           options={{
             fillColor: "blue",

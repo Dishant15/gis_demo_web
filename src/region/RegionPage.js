@@ -203,12 +203,15 @@ const RegionPage = () => {
     let isContained = true;
     // if adding child check if valid child
     if (size(polyRef.current)) {
-      const parentCoords = latLongMapToCoords(polyRef.current);
       const childCoords = latLongMapToCoords(coords);
-
-      const parentPoly = polygon([parentCoords]);
       const childPoly = polygon([childCoords]);
-      isContained = booleanContains(parentPoly, childPoly);
+      for (let parentInd = 0; parentInd < polyRef.current.length; parentInd++) {
+        const currPoly = polyRef.current[parentInd];
+
+        const parentCoords = latLongMapToCoords(currPoly);
+        const parentPoly = polygon([parentCoords]);
+        isContained = booleanContains(parentPoly, childPoly);
+      }
     }
     polyRef.current = null;
     if (isContained) {
