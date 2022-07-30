@@ -98,8 +98,10 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       ticketSubmitData.network_type = data.network_type.value;
       ticketSubmitData.assigneeId = data.assignee.id;
       ticketSubmitData.regionId = data.region.id;
-      ticketSubmitData.regionCoords = coordsToLatLongMap(
-        data.region.coordinates
+      ticketSubmitData.regionCoords = get(
+        coordsToLatLongMap(data.region.coordinates, true),
+        "0",
+        []
       );
       if (isEdit) {
         mutate({ ticketId: formData.id, data: ticketSubmitData });

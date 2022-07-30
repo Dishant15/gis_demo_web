@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
+import get from "lodash/get";
 
 import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
@@ -38,6 +39,11 @@ const TicketEditMap = ({ ticketData }) => {
   const polyRef = useRef();
 
   const { region, area_pocket } = ticketData;
+  const regionCoordinates = get(
+    coordsToLatLongMap(region.coordinates, true),
+    "0",
+    []
+  );
 
   const { mutate: editTicket, isLoading: isTicketAdding } = useMutation(
     editTicketArea,
@@ -71,9 +77,8 @@ const TicketEditMap = ({ ticketData }) => {
   const handleSubmit = useCallback(() => {
     let coordinates = getCoordinatesFromFeature(polyRef.current);
     coordinates = latLongMapToCoords(coordinates);
-
     // check if coordinates are valid
-    const regionPoly = polygon([region.coordinates]);
+    const regionPoly = polygon(region.coordinates);
     const areaPoly = polygon([coordinates]);
 
     if (!booleanContains(regionPoly, areaPoly)) {
@@ -154,7 +159,7 @@ const TicketEditMap = ({ ticketData }) => {
             geodesic: false,
             zIndex: 1,
           }}
-          paths={coordsToLatLongMap(region.coordinates)}
+          paths={regionCoordinates}
         />
         <Polygon
           options={{

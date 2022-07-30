@@ -60,7 +60,7 @@ const RegionPage = () => {
     let resultData = data;
     resultData = resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
-      d.coordinates = coordsToLatLongMap(d.coordinates);
+      d.coordinates = coordsToLatLongMap(d.coordinates, true);
       d.center = coordsToLatLongMap([d.center])[0];
       return d;
     });
