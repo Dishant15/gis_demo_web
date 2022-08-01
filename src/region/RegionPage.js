@@ -52,12 +52,14 @@ const RegionPage = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const polyRef = useRef(null);
-  const { isLoading, data } = useQuery("regionList", fetchRegionList, {
-    initialData: [],
-  });
+  const { isLoading, data } = useQuery(
+    "regionList",
+    fetchRegionList
+    // {staleTime: Infinity,}
+  );
 
   const regionListData = useMemo(() => {
-    let resultData = data;
+    let resultData = data || [];
     resultData = resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates, true);
