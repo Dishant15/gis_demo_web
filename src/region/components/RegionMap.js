@@ -200,30 +200,35 @@ const RegionMap = ({
         />
 
         {mayBeEditPolygon}
-        {regionList.map((area) => {
-          const { id, coordinates, layer } = area;
+        {regionList.map((reg) => {
+          const { id, coordinates, layer } = reg;
           const color = getFillColor(layer);
-          return (
-            <Polygon
-              key={id}
-              options={{
-                fillColor: color,
-                fillOpacity: 0.3,
-                strokeColor: color,
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                clickable: true,
-                draggable: false,
-                editable: false,
-                geodesic: false,
-                zIndex: layer,
-              }}
-              paths={coordinates}
-              onClick={() => {
-                onRegionSelect(id);
-              }}
-            />
-          );
+
+          const multiPolygons = coordinates.map((polyCoord, ind) => {
+            return (
+              <Polygon
+                key={ind}
+                options={{
+                  fillColor: color,
+                  fillOpacity: 0.3,
+                  strokeColor: color,
+                  strokeOpacity: 1,
+                  strokeWeight: 2,
+                  clickable: true,
+                  draggable: false,
+                  editable: false,
+                  geodesic: false,
+                  zIndex: layer,
+                }}
+                paths={polyCoord}
+                onClick={() => {
+                  onRegionSelect(id);
+                }}
+              />
+            );
+          });
+
+          return <React.Fragment key={id}>{multiPolygons}</React.Fragment>;
         })}
       </Map>
     </Box>

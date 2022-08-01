@@ -6,6 +6,10 @@ import TicketMap from "ticket/components/TicketMap";
 import UserFormSteps from "gis_user/components/UserFormSteps";
 
 const TicketAddForm = () => {
+  /**
+   * Parent:
+   *  TicketAdminPage -> Outlet -> App
+   */
   const [formData, setFormData] = useState({});
   const [step, setStep] = useState(0);
 
