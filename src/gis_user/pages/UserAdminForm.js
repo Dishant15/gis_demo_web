@@ -105,6 +105,7 @@ const UserAdminForm = () => {
             userPermissions={userPermissions}
             onSubmit={handleUserEditPerm}
             goBack={goToPrevStep}
+            isSuperUser={get(data, "is_superuser", false)}
           />
         );
 

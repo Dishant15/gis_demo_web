@@ -13,9 +13,14 @@ import { FormCheckbox } from "components/common/FormFields";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { updateUserPerm } from "gis_user/data/services";
 
-const UserPermissions = ({ userId, onSubmit, goBack, userPermissions }) => {
+const UserPermissions = ({
+  userId,
+  isSuperUser,
+  userPermissions,
+  onSubmit,
+  goBack,
+}) => {
   const dispatch = useDispatch();
-  const isSuperUser = false;
 
   const { mutate, isLoading } = useMutation(updateUserPerm, {
     onSuccess: (res) => {
