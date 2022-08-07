@@ -13,7 +13,11 @@ import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
 import { getCoordinatesFromFeature } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { COLORS } from "App/theme";
-import { GreenMarker, RedMarker } from "components/common/Map/GoogleMapWrapper";
+import {
+  GreenMarker,
+  RedMarker2,
+  RedMarker,
+} from "components/common/Map/GoogleMapWrapper";
 
 const WorkOrderMap = ({
   areaPocket = null,

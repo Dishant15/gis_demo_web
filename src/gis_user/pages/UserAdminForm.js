@@ -44,30 +44,18 @@ const UserAdminForm = () => {
   );
 
   const handleUserCreate = useCallback((res) => {
-    console.log(
-      "🚀 ~ file: UserAdminForm.js ~ line 46 ~ handleUserCreate ~ res",
-      res
-    );
     setUserId(res.user.id);
     setUserPermissions(res.permissions);
     goToNextStep();
   }, []);
 
   const handleUserEdit = useCallback((res) => {
-    console.log(
-      "🚀 ~ file: UserAdminForm.js ~ line 52 ~ handleUserEdit ~ res",
-      res
-    );
     // user id already set from param
     setUserPermissions(res.permissions);
     goToNextStep();
   }, []);
 
   const handleUserEditPerm = useCallback((res) => {
-    console.log(
-      "🚀 ~ file: UserAdminForm.js ~ line 67 ~ handleUserEditPerm ~ res",
-      res
-    );
     setUserPermissions(res);
     goToNextStep();
   }, []);

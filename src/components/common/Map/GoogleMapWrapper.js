@@ -3,6 +3,8 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "./map.constants";
 import { PIN_P, SQUARE_P } from "./MarkerPaths";
 
+import SPinIcon from "assets/s_pin.svg";
+
 const DEFAULT_CONTAINER_STYLE = {
   width: "100%",
   height: "100%",
@@ -95,22 +97,7 @@ export const RedMarker1 = (props) => {
 };
 
 export const RedMarker2 = (props) => {
-  return (
-    <Marker
-      {...props}
-      icon={{
-        path: SQUARE_P,
-        fillColor: "#d85b53",
-        fillOpacity: 1,
-        strokeColor: "white",
-        strokeOpacity: 1,
-        strokeWeight: 1,
-        scale: 0.8,
-        anchor: new window.google.maps.Point(26, 50),
-        labelOrigin: new window.google.maps.Point(26, 50),
-      }}
-    />
-  );
+  return <Marker {...props} icon={{ url: SPinIcon }} />;
 };
 
 export const GreenMarker = (props) => {
