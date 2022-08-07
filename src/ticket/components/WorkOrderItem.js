@@ -26,6 +26,7 @@ import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
 import { Button, Divider } from "@mui/material";
+import { SignalCellularNullTwoTone } from "@mui/icons-material";
 
 const WorkOrderItem = ({
   surveyWorkorder,
@@ -38,6 +39,7 @@ const WorkOrderItem = ({
   handleSurveyStatusEdit,
   handleSurveyDetailsEdit,
   handleUnitDetailsEdit,
+  canTicketWorkorderEdit,
 }) => {
   /**
    * Parent:
@@ -53,13 +55,14 @@ const WorkOrderItem = ({
   const isExpanded = expanded.has(id);
   const isVerified = status === "V";
   const hasUnits = !!size(units);
+  const showActions = canTicketWorkorderEdit && !isVerified;
 
   return (
     <Card elevation={0} sx={{ maxWidth: 345, backgroundColor: "#efefef" }}>
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
-          isVerified ? null : (
+          showActions ? (
             <Tooltip title="Change Status" placement="top">
               <IconButton
                 aria-label="settings"
@@ -70,7 +73,7 @@ const WorkOrderItem = ({
                 <MoreVertIcon />
               </IconButton>
             </Tooltip>
-          )
+          ) : null
         }
         title={name}
         subheader={formatedUpdatedOn}
@@ -99,7 +102,7 @@ const WorkOrderItem = ({
             )}
           </IconButton>
         </Tooltip>
-        {isVerified ? null : (
+        {showActions ? (
           <>
             <Tooltip title="Edit Survey Details" placement="top">
               <IconButton
@@ -118,7 +121,7 @@ const WorkOrderItem = ({
               </IconButton>
             </Tooltip>
           </>
-        )}
+        ) : null}
         {hasUnits ? (
           <Tooltip
             title={isExpanded ? "Hide Units" : "Show Units"}
@@ -147,7 +150,7 @@ const WorkOrderItem = ({
                 {unit.tags}
               </Typography>
 
-              {isVerified ? null : (
+              {showActions ? (
                 <CardActions disableSpacing>
                   <Button
                     color="secondary"
@@ -168,7 +171,7 @@ const WorkOrderItem = ({
                     Edit Location
                   </Button>
                 </CardActions>
-              )}
+              ) : null}
               {length - 1 === uInd ? null : <Divider flexItem />}
             </CardContent>
           );

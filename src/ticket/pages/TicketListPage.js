@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
 
 import {
   Box,
@@ -16,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Add } from "@mui/icons-material";
 
 import { AgGridReact } from "ag-grid-react";
+import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
 
 import { fetchTicketList } from "ticket/data/services";
 import {
@@ -23,7 +25,7 @@ import {
   getEditTicketPage,
   getTicketWorkorderPage,
 } from "utils/url.constants";
-import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 /**
  * Parent:
@@ -31,6 +33,12 @@ import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
  */
 const TicketListPage = () => {
   const navigate = useNavigate();
+  const canTicketAdd = useSelector(checkUserPermission("ticket_add"));
+  const canTicketEdit = useSelector(checkUserPermission("ticket_edit"));
+  const canTicketWorkorderView = useSelector(
+    checkUserPermission("ticket_workorder_view")
+  );
+
   const { isLoading, data } = useQuery("ticketList", fetchTicketList);
 
   const gridRef = useRef();
@@ -60,15 +68,17 @@ const TicketListPage = () => {
         <Typography flex={1} className="dtl-title" variant="h5">
           Tickets
         </Typography>
-        <Button
-          variant="outlined"
-          sx={{ minWidth: "150px" }}
-          component={Link}
-          to={getAddTicketPage()}
-          startIcon={<Add />}
-        >
-          Add New Ticket
-        </Button>
+        {canTicketAdd ? (
+          <Button
+            variant="outlined"
+            sx={{ minWidth: "150px" }}
+            component={Link}
+            to={getAddTicketPage()}
+            startIcon={<Add />}
+          >
+            Add New Ticket
+          </Button>
+        ) : null}
       </Stack>
 
       {isLoading ? (
@@ -105,6 +115,8 @@ const TicketListPage = () => {
                 cellRendererParams: {
                   onEditClick,
                   onViewClick,
+                  canTicketEdit,
+                  canTicketWorkorderView,
                 },
               },
             ]}
@@ -127,20 +139,24 @@ const TicketListPage = () => {
 const ActionCell = (props) => {
   return (
     <Stack direction="row" spacing={1}>
-      <IconButton
-        aria-label="view"
-        color="primary"
-        onClick={() => props.onViewClick(props.data.id)}
-      >
-        <VisibilityIcon />
-      </IconButton>
-      <IconButton
-        aria-label="edit"
-        color="secondary"
-        onClick={() => props.onEditClick(props.data.id)}
-      >
-        <EditIcon />
-      </IconButton>
+      {props.canTicketWorkorderView ? (
+        <IconButton
+          aria-label="view"
+          color="primary"
+          onClick={() => props.onViewClick(props.data.id)}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      ) : null}
+      {props.canTicketEdit ? (
+        <IconButton
+          aria-label="edit"
+          color="secondary"
+          onClick={() => props.onEditClick(props.data.id)}
+        >
+          <EditIcon />
+        </IconButton>
+      ) : null}
     </Stack>
   );
 };

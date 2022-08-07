@@ -19,6 +19,8 @@ import { AgGridReact } from "ag-grid-react";
 import { fetchApplicationList, fetchUserList } from "../data/services";
 import { getAddUserPage, getEditUserPage } from "utils/url.constants";
 import { find, split } from "lodash";
+import { useSelector } from "react-redux";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 /**
  * Parent:
@@ -26,6 +28,10 @@ import { find, split } from "lodash";
  */
 const UserListPage = () => {
   const navigate = useNavigate();
+
+  const canUserAdd = useSelector(checkUserPermission("user_add"));
+  const canUserEdit = useSelector(checkUserPermission("user_edit"));
+
   const { isLoading, data } = useQuery("userList", fetchUserList);
   const { isLoading: applicationLoading, data: applicationList } = useQuery(
     "applicationList",
@@ -55,14 +61,16 @@ const UserListPage = () => {
         <Typography flex={1} className="dtl-title" variant="h5">
           User Management
         </Typography>
-        <Button
-          sx={{ minWidth: "150px" }}
-          component={Link}
-          to={getAddUserPage()}
-          startIcon={<Add />}
-        >
-          Add New User
-        </Button>
+        {canUserAdd ? (
+          <Button
+            sx={{ minWidth: "150px" }}
+            component={Link}
+            to={getAddUserPage()}
+            startIcon={<Add />}
+          >
+            Add New User
+          </Button>
+        ) : null}
       </Stack>
 
       <Box
@@ -97,6 +105,7 @@ const UserListPage = () => {
               cellRenderer: ActionCell,
               cellRendererParams: {
                 onEditClick,
+                canUserEdit,
               },
               resizable: false,
             },
@@ -132,13 +141,15 @@ const TickCell = (props) => {
 const ActionCell = (props) => {
   return (
     <Stack direction="row" spacing={1}>
-      <IconButton
-        aria-label="edit"
-        color="secondary"
-        onClick={() => props.onEditClick(props.data.id)}
-      >
-        <EditIcon />
-      </IconButton>
+      {props.canUserEdit ? (
+        <IconButton
+          aria-label="edit"
+          color="secondary"
+          onClick={() => props.onEditClick(props.data.id)}
+        >
+          <EditIcon />
+        </IconButton>
+      ) : null}
     </Stack>
   );
 };

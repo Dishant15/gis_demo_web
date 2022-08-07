@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import {
@@ -37,6 +37,7 @@ import WorkOrderItem from "ticket/components/WorkOrderItem";
 import StatusChangeForm from "ticket/components/StatusChangeForm";
 import SurveyEditForm from "ticket/components/SurveyEditForm";
 import UnitEditForm from "ticket/components/UnitEditForm";
+import FilePickerDialog from "components/common/FilePickerDialog";
 
 import {
   exportTicket,
@@ -49,9 +50,9 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getTicketListPage } from "utils/url.constants";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 import "../styles/ticket_survey_list.scss";
-import FilePickerDialog from "components/common/FilePickerDialog";
 
 const WorkOrderPage = () => {
   /**
@@ -62,6 +63,13 @@ const WorkOrderPage = () => {
   // query and mutations
   const { ticketId } = useParams();
   const dispatch = useDispatch();
+  const canTicketWorkorderAdd = useSelector(
+    checkUserPermission("ticket_workorder_add")
+  );
+  const canTicketWorkorderEdit = useSelector(
+    checkUserPermission("ticket_workorder_edit")
+  );
+
   const { isLoading, data, refetch } = useQuery(
     ["ticketWorkOrderList", ticketId],
     fetchTicketWorkorders,
@@ -209,40 +217,6 @@ const WorkOrderPage = () => {
   const handleFilePickerCancel = useCallback(() => {
     setImportData(null);
   }, [setImportData]);
-
-  const handleFileUpload = useCallback(
-    (files) => {
-      console.log(
-        "🚀 ~ file: WorkOrderPage.js ~ line 187 ~ handleFileUpload ~ files",
-        files
-      );
-      const zip = new JSZip();
-      const zipFolder = zip.folder(ticketData.name);
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        zipFolder.file(file.name, file);
-      }
-
-      zip.generateAsync({ type: "blob" }).then(function (blob) {
-        console.log(
-          "🚀 ~ file: WorkOrderPage.js ~ line 202 ~ .then ~ blob",
-          blob
-        );
-        // saveAs(blob, "hello.zip");
-        const fileObj = new File([blob], ticketData.name + ".zip", {
-          type: blob.type,
-        });
-        const data = new FormData();
-        console.log(
-          "🚀 ~ file: WorkOrderPage.js ~ line 218 ~ fileObj",
-          fileObj
-        );
-        data.append("file", blob, ticketData.name + ".zip");
-        importTicketMutation({ ticketId: ticketData.id, data });
-      });
-    },
-    [ticketData]
-  );
 
   const handleZipFileUpload = useCallback(
     (files) => {
@@ -502,15 +476,17 @@ const WorkOrderPage = () => {
           Workorders : {ticketData.name}
         </Typography>
         <Stack direction="row" alignItems="center">
-          <LoadingButton
-            color="secondary"
-            startIcon={<BackupIcon />}
-            // loading={loadingExportTicket}
-            onClick={() => setImportData(ticketData.id)}
-            sx={{ ml: 1 }}
-          >
-            Upload
-          </LoadingButton>
+          {canTicketWorkorderAdd ? (
+            <LoadingButton
+              color="secondary"
+              startIcon={<BackupIcon />}
+              // loading={loadingExportTicket}
+              onClick={() => setImportData(ticketData.id)}
+              sx={{ ml: 1 }}
+            >
+              Upload
+            </LoadingButton>
+          ) : null}
           <LoadingButton
             color="secondary"
             startIcon={<GetAppIcon />}
@@ -583,6 +559,7 @@ const WorkOrderPage = () => {
                       handleSurveyStatusEdit={handleSurveyStatusEdit}
                       handleSurveyDetailsEdit={handleSurveyDetailsEdit}
                       handleUnitDetailsEdit={handleUnitDetailsEdit}
+                      canTicketWorkorderEdit={canTicketWorkorderEdit}
                     />
                   );
                 }

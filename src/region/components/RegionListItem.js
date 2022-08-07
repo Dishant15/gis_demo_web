@@ -17,6 +17,7 @@ const RegionListItem = ({
   handleRegionClick,
   handleRegionDetails,
   handleRegionExpandClick,
+  canUserRegionEdit,
 }) => {
   const { id, center, name, layer } = region;
   const color = getFillColor(layer);
@@ -56,11 +57,13 @@ const RegionListItem = ({
           <span>{name}</span>
           {isActive ? <VisibilityIcon /> : null}
         </Stack>
-        <Box onClick={() => handleRegionDetails(id)}>
-          <IconButton aria-label="add-area-pocket" size="small">
-            <FormatListBulletedIcon color="inherit" />
-          </IconButton>
-        </Box>
+        {canUserRegionEdit ? (
+          <Box onClick={() => handleRegionDetails(id)}>
+            <IconButton aria-label="add-area-pocket" size="small">
+              <FormatListBulletedIcon color="inherit" />
+            </IconButton>
+          </Box>
+        ) : null}
       </Stack>
 
       <Divider flexItem />

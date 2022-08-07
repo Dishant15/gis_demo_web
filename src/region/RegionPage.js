@@ -27,7 +27,10 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
+import {
+  checkUserPermission,
+  getIsSuperAdminUser,
+} from "redux/selectors/auth.selectors";
 
 import "./styles/region-page.scss";
 
@@ -48,8 +51,11 @@ import "./styles/region-page.scss";
  *  AddRegionForm
  */
 const RegionPage = () => {
-  const isSuperAdmin = useSelector(getIsSuperAdminUser);
   const dispatch = useDispatch();
+  const isSuperAdmin = useSelector(getIsSuperAdminUser);
+  const canUserRegionAdd = useSelector(checkUserPermission("region_add"));
+  const canUserRegionEdit = useSelector(checkUserPermission("region_edit"));
+
   const queryClient = useQueryClient();
   const polyRef = useRef(null);
   const { isLoading, data } = useQuery(
@@ -295,7 +301,7 @@ const RegionPage = () => {
               >
                 Regions
               </Box>
-              {isSuperAdmin ? (
+              {canUserRegionAdd ? (
                 <Button
                   color="success"
                   startIcon={<AddIcon />}
@@ -319,6 +325,7 @@ const RegionPage = () => {
                   handleRegionClick={handleRegionClick}
                   handleRegionDetails={handleRegionDetails}
                   handleRegionExpandClick={handleRegionExpandClick}
+                  canUserRegionEdit={canUserRegionEdit}
                 />
               );
             })}

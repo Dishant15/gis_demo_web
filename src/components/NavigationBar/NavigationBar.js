@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import get from "lodash/get";
 
 import { KeyboardArrowDown } from "@mui/icons-material";
 import {
@@ -21,16 +24,32 @@ import {
   getTicketListPage,
   getUserListPage,
 } from "utils/url.constants";
-import { useDispatch, useSelector } from "react-redux";
 
-import { getIsAdminUser } from "redux/selectors/auth.selectors";
+import {
+  getIsAdminUser,
+  getIsSuperAdminUser,
+  getUserPermissions,
+} from "redux/selectors/auth.selectors";
 import { logout } from "redux/reducers/auth.reducer";
 import "./navigation-bar.scss";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+
   const isAdminUser = useSelector(getIsAdminUser);
+  const isSuperAdminUser = useSelector(getIsSuperAdminUser);
+  const permissions = useSelector(getUserPermissions);
+
+  const canUserView = get(permissions, "user_view", false) || isSuperAdminUser;
+  const canRegionView =
+    get(permissions, "region_view", false) || isSuperAdminUser;
+  const canTicketView =
+    get(permissions, "ticket_view", false) || isSuperAdminUser;
+  const canPlanningView =
+    get(permissions, "planning_view", false) || isSuperAdminUser;
+  const canSurveyView =
+    get(permissions, "survey_view", false) || isSuperAdminUser;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -48,7 +67,9 @@ const NavigationBar = () => {
   }, []);
 
   const open = !!anchorEl;
-
+  const showAdministration =
+    (isAdminUser && (canUserView || canRegionView || canTicketView)) ||
+    isSuperAdminUser;
   return (
     <AppBar position="static">
       <Toolbar>
@@ -65,16 +86,20 @@ const NavigationBar = () => {
           <Button to={getHomePath()} component={Link} color="inherit">
             Home
           </Button>
-          <Button component={Link} to={getGeoSurveyPath()} color="inherit">
-            Survey
-          </Button>
-          <Button component={Link} to={getPlanningPage()} color="inherit">
-            Planning
-          </Button>
+          {canSurveyView ? (
+            <Button component={Link} to={getGeoSurveyPath()} color="inherit">
+              Survey
+            </Button>
+          ) : null}
+          {canPlanningView ? (
+            <Button component={Link} to={getPlanningPage()} color="inherit">
+              Planning
+            </Button>
+          ) : null}
           <Button component={Link} to={"#"} color="inherit">
             Analysis
           </Button>
-          {isAdminUser ? (
+          {showAdministration ? (
             <Button
               color="inherit"
               id="administration-button"
@@ -100,23 +125,33 @@ const NavigationBar = () => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose} component={Link} to={getRegionPage()}>
-            Region Management
-          </MenuItem>
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getUserListPage()}
-          >
-            Users & Permissions
-          </MenuItem>
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getTicketListPage()}
-          >
-            Ticket Management
-          </MenuItem>
+          {canRegionView ? (
+            <MenuItem
+              onClick={handleClose}
+              component={Link}
+              to={getRegionPage()}
+            >
+              Region Management
+            </MenuItem>
+          ) : null}
+          {canUserView ? (
+            <MenuItem
+              onClick={handleClose}
+              component={Link}
+              to={getUserListPage()}
+            >
+              Users & Permissions
+            </MenuItem>
+          ) : null}
+          {canTicketView ? (
+            <MenuItem
+              onClick={handleClose}
+              component={Link}
+              to={getTicketListPage()}
+            >
+              Ticket Management
+            </MenuItem>
+          ) : null}
         </Menu>
       </Toolbar>
     </AppBar>
