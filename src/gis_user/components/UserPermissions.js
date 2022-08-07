@@ -100,9 +100,14 @@ const UserPermissions = ({
     >
       <PermissionHeader>General</PermissionHeader>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>User</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="user_view"
@@ -130,9 +135,14 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Region</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="region_view"
@@ -161,9 +171,14 @@ const UserPermissions = ({
       </Stack>
       <PermissionHeader>Ticket</PermissionHeader>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Ticket</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="ticket_view"
@@ -191,9 +206,14 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Workorders</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="ticket_workorder_view"
@@ -222,9 +242,14 @@ const UserPermissions = ({
       </Stack>
       <PermissionHeader>Survey</PermissionHeader>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Survey</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="survey_view"
@@ -237,9 +262,14 @@ const UserPermissions = ({
       </Stack>
       <PermissionHeader>Planning</PermissionHeader>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Planning</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="planning_view"
@@ -251,9 +281,14 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Survey area</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="p_survey_area_view"
@@ -281,9 +316,14 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Survey building</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="p_survey_building_view"
@@ -311,9 +351,14 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack spacing={2} direction={{ md: "row", xs: "column" }} minHeight={54}>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
         <PermissionLabel>Dp Planning</PermissionLabel>
-        <Stack flexDirection="row" flex={2}>
+        <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
             name="p_dp_view"
@@ -365,7 +410,13 @@ const UserPermissions = ({
 
 const PermissionLabel = (props) => {
   return (
-    <Typography variant="h6" component="div" flex={1} color="primary" mt="10px">
+    <Typography
+      variant="h6"
+      component="div"
+      color="primary"
+      mt="10px"
+      minWidth={200}
+    >
       {props.children}
     </Typography>
   );
