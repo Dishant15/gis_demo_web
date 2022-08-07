@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import UserFormSteps from "gis_user/components/UserFormSteps";
-import UserAddForm from "gis_user/components/UserForm";
+import UserAddForm from "gis_user/components/UserAddForm";
 import UserEditForm from "gis_user/components/UserEditForm";
 import UserPermissions from "gis_user/components/UserPermissions";
 import UserRegionSelect from "gis_user/components/UserRegionSelect";
@@ -25,19 +25,52 @@ import { fetchUserDetails } from "../data/services";
  * Parent:
  *  App
  * Renders
- *  UserForm
- *
+ *  UserAddForm
+ *  UserEditForm
+ *  UserPermissions
+ *  UserRegionSelect
  */
 const UserAdminForm = () => {
   const params = useParams();
   const [step, setStep] = useState(0);
+  // in case if edit, userId filled from url
   const [userId, setUserId] = useState(params.userId);
+  const [userPermissions, setUserPermissions] = useState(null);
 
   const { isLoading, data } = useQuery(
     ["userDetails", params.userId],
     fetchUserDetails,
     { enabled: !!params.userId }
   );
+
+  const handleUserCreate = useCallback((res) => {
+    console.log(
+      "🚀 ~ file: UserAdminForm.js ~ line 46 ~ handleUserCreate ~ res",
+      res
+    );
+    setUserId(res.user.id);
+    setUserPermissions(res.permissions);
+    goToNextStep();
+  }, []);
+
+  const handleUserEdit = useCallback((res) => {
+    console.log(
+      "🚀 ~ file: UserAdminForm.js ~ line 52 ~ handleUserEdit ~ res",
+      res
+    );
+    // user id already set from param
+    setUserPermissions(res.permissions);
+    goToNextStep();
+  }, []);
+
+  const handleUserEditPerm = useCallback((res) => {
+    console.log(
+      "🚀 ~ file: UserAdminForm.js ~ line 67 ~ handleUserEditPerm ~ res",
+      res
+    );
+    setUserPermissions(res);
+    goToNextStep();
+  }, []);
 
   const goToNextStep = useCallback(() => {
     setStep((step) => step + 1);
@@ -60,20 +93,17 @@ const UserAdminForm = () => {
     switch (step) {
       case 0:
         return !!size(data) ? (
-          <UserEditForm
-            onSubmit={goToNextStep}
-            setUserId={setUserId}
-            formData={data}
-          />
+          <UserEditForm onSubmit={handleUserEdit} formData={data} />
         ) : (
-          <UserAddForm onSubmit={goToNextStep} setUserId={setUserId} />
+          <UserAddForm onSubmit={handleUserCreate} />
         );
 
       case 1:
         return (
           <UserPermissions
             userId={userId}
-            onSubmit={goToNextStep}
+            userPermissions={userPermissions}
+            onSubmit={handleUserEditPerm}
             goBack={goToPrevStep}
           />
         );

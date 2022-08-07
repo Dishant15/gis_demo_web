@@ -3,6 +3,7 @@ import Api from "utils/api.utils";
 import {
   apiAddUser,
   apiEditUserDetails,
+  apiEditUserPermission,
   apiGetApplicationsList,
   apiGetUserDetails,
   apiGetUserList,
@@ -45,5 +46,10 @@ export const fetchUserDetails = async ({ queryKey }) => {
 
 export const editUserDetails = async ({ data, userId }) => {
   const res = await Api.post(apiEditUserDetails(userId), data);
+  return res.data;
+};
+
+export const updateUserPerm = async ({ data, userId }) => {
+  const res = await Api.put(apiEditUserPermission(userId), data);
   return res.data;
 };

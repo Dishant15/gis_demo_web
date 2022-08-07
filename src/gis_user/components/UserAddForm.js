@@ -24,14 +24,13 @@ import { getRequiredFieldMessage } from "utils/constant";
  * Parent
  *  UserAdminForm
  */
-const UserForm = ({ onSubmit, setUserId }) => {
+const UserAddForm = ({ onSubmit }) => {
   const { isLoading, data } = useQuery("applicationList", fetchApplicationList);
   const dispatch = useDispatch();
 
   const { mutate, isLoading: isUserAdding } = useMutation(addNewUser, {
     onSuccess: (res) => {
-      onSubmit();
-      setUserId(res.id);
+      onSubmit(res);
       dispatch(
         addNotification({
           type: "success",
@@ -182,4 +181,4 @@ const UserForm = ({ onSubmit, setUserId }) => {
   );
 };
 
-export default UserForm;
+export default UserAddForm;

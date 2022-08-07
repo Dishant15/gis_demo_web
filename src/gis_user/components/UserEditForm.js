@@ -23,7 +23,7 @@ import { getRequiredFieldMessage } from "utils/constant";
  * Parent
  *  UserAdminForm
  */
-const UserEditForm = ({ onSubmit, setUserId, formData }) => {
+const UserEditForm = ({ onSubmit, formData }) => {
   const dispatch = useDispatch();
 
   const { isLoading: applicationsLoading, data } = useQuery(
@@ -40,7 +40,7 @@ const UserEditForm = ({ onSubmit, setUserId, formData }) => {
 
   const { mutate, isLoading: isUserEditing } = useMutation(editUserDetails, {
     onSuccess: (res) => {
-      onSubmit();
+      onSubmit(res);
       dispatch(
         addNotification({
           type: "success",

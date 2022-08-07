@@ -39,6 +39,8 @@ export const apiUpdateUserRegion = (userId) =>
   `/api/user/${userId}/update/regions/`;
 export const apiGetUserDetails = (userId) => `/api/user/${userId}/details/`;
 export const apiEditUserDetails = (userId) => `/api/user/${userId}/edit/`;
+export const apiEditUserPermission = (userId) =>
+  `/api/user/${userId}/update/permissions/`;
 
 export const apiGetApplicationsList = () => "/api/applications/";
 
