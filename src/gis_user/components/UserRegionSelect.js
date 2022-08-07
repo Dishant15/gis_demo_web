@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "react-query";
 import { map, filter, indexOf } from "lodash";
 import { useDispatch } from "react-redux";
 
-import { Box, Typography, Stack, Button } from "@mui/material";
+import { Box, Skeleton, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Done } from "@mui/icons-material";
@@ -82,19 +82,22 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
           justifyContent="center"
           sx={{ width: "50%", margin: "0 auto" }}
         >
-          <FormSelect
-            isMulti
-            label="Region"
-            required
-            name="region"
-            control={control}
-            options={regionList}
-            getOptionLabel={(opt) => opt.name}
-            getOptionValue={(opt) => opt.id}
-            error={!!errors.region}
-            helperText={errors.region?.message}
-            isLoading={regionListLoading}
-          />
+          {regionListLoading ? (
+            <Skeleton animation="wave" height={90} />
+          ) : (
+            <FormSelect
+              isMulti
+              label="Region"
+              required
+              name="region"
+              control={control}
+              options={regionList}
+              getOptionLabel={(opt) => opt.name}
+              getOptionValue={(opt) => opt.id}
+              error={!!errors.region}
+              helperText={errors.region?.message}
+            />
+          )}
         </Stack>
         <Stack flex={1} p={4} direction="row" justifyContent="space-between">
           <Button
