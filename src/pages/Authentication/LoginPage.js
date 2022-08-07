@@ -59,7 +59,7 @@ const LoginForm = () => {
 
   const { mutate, isLoading } = useMutation(postLogin, {
     onSuccess: (res) => {
-      // {token, user}
+      // {token, user, permissions}
       dispatch(login(res));
     },
     onError: (err) => {
