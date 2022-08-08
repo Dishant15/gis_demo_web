@@ -27,7 +27,10 @@ export const apiPutAreaPocketEdit = (areaPocketId) =>
   `/api/geo/survey/area-pocket/${areaPocketId}/edit/`;
 
 // region apis
-export const apiGetRegionList = () => "/api/region/list/";
+
+// query_type = detail | data
+export const apiGetRegionList = (query_type = "detail") =>
+  `/api/region/${query_type}/list/`;
 export const apiPostRegionAdd = () => "/api/region/add/";
 export const apiPutRegionEdit = (regionId) => `/api/region/${regionId}/edit/`;
 export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;

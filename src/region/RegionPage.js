@@ -27,10 +27,7 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { apiPutRegionEdit } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
-import {
-  checkUserPermission,
-  getIsSuperAdminUser,
-} from "redux/selectors/auth.selectors";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 import "./styles/region-page.scss";
 
@@ -52,9 +49,8 @@ import "./styles/region-page.scss";
  */
 const RegionPage = () => {
   const dispatch = useDispatch();
-  const isSuperAdmin = useSelector(getIsSuperAdminUser);
-  const canUserRegionAdd = useSelector(checkUserPermission("region_add"));
-  const canUserRegionEdit = useSelector(checkUserPermission("region_edit"));
+  const canUserAddRegion = useSelector(checkUserPermission("region_add"));
+  const canUserEditRegion = useSelector(checkUserPermission("region_edit"));
 
   const queryClient = useQueryClient();
   const polyRef = useRef(null);
@@ -301,7 +297,7 @@ const RegionPage = () => {
               >
                 Regions
               </Box>
-              {canUserRegionAdd ? (
+              {canUserAddRegion ? (
                 <Button
                   color="success"
                   startIcon={<AddIcon />}
@@ -325,7 +321,7 @@ const RegionPage = () => {
                   handleRegionClick={handleRegionClick}
                   handleRegionDetails={handleRegionDetails}
                   handleRegionExpandClick={handleRegionExpandClick}
-                  canUserRegionEdit={canUserRegionEdit}
+                  canUserEditRegion={canUserEditRegion}
                 />
               );
             })}
