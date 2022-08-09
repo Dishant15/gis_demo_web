@@ -22,7 +22,7 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
 
   const navigate = useNavigate();
   const { isLoading: regionListLoading, data: regionList } = useQuery(
-    "regionList",
+    ["regionList", "data"],
     fetchRegionList,
     {
       initialData: [],
