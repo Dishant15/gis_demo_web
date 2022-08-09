@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { debounce } from "lodash";
+import storage from "redux-persist/lib/storage";
 import {
   persistStore,
   persistReducer,
@@ -10,15 +10,19 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { debounce } from "lodash";
+
 import authReducer from "redux/reducers/auth.reducer";
 import appStateReducer, { setWindowSize } from "./reducers/appState.reducer";
 import notificationReducer from "./reducers/notification.reducer";
+import planningStateReducer from "planning/data/planningState.reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   notifications: notificationReducer,
   appState: appStateReducer,
+
+  planningState: planningStateReducer,
 });
 
 const persistConfig = {
