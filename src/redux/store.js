@@ -16,6 +16,7 @@ import authReducer from "redux/reducers/auth.reducer";
 import appStateReducer, { setWindowSize } from "./reducers/appState.reducer";
 import notificationReducer from "./reducers/notification.reducer";
 import planningStateReducer from "planning/data/planningState.reducer";
+import planningGisReducer from "planning/data/planningGis.reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   appState: appStateReducer,
 
   planningState: planningStateReducer,
+  planningGis: planningGisReducer,
 });
 
 const persistConfig = {

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,7 +17,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import DummyListLoader from "./DummyListLoader";
 
-import { fetchRegionList } from "planning/data/actionBar.services";
+import {
+  fetchLayerDataThunk,
+  fetchRegionList,
+} from "planning/data/actionBar.services";
 import { getFillColor } from "utils/map.utils";
 import {
   handleRegionExpand,
@@ -30,6 +33,10 @@ import {
 } from "planning/data/planningState.selectors";
 
 const RegionTabContent = () => {
+  /**
+   * Parent
+   *  ActionBar
+   */
   const { isLoading, data: regionList = [] } = useQuery(
     "planningRegionList",
     fetchRegionList
@@ -38,6 +45,9 @@ const RegionTabContent = () => {
   const dispatch = useDispatch();
   const selectedRegionIds = useSelector(getSelectedRegionIds);
   const expandedRegionIds = useSelector(getExpandedRegionIds);
+  const [selectedRegionSet, setSelectedRegion] = useState(
+    new Set(selectedRegionIds)
+  );
 
   const [regionGroupData, baseRegionList] = useMemo(() => {
     // group data by parent
@@ -65,7 +75,15 @@ const RegionTabContent = () => {
   }, [regionList]);
 
   const handleRegionClick = useCallback((regionId) => {
-    dispatch(handleRegionSelect(regionId));
+    setSelectedRegion((regionSet) => {
+      let newSet = new Set(regionSet);
+      if (newSet.has(regionId)) {
+        newSet.delete(regionId);
+      } else {
+        newSet.add(regionId);
+      }
+      return newSet;
+    });
   }, []);
 
   const handleRegionExpandClick = useCallback((regionId) => {
@@ -73,15 +91,18 @@ const RegionTabContent = () => {
   }, []);
 
   const handleRegionSelectionComplete = useCallback(() => {
+    const regionIdList = Array.from(selectedRegionSet);
+    // set selected regions
+    dispatch(handleRegionSelect(regionIdList));
     // fetch data gis data for all region polygons
+    dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "region" }));
+    // dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "p_dp" }));
     // show on map on success
     // change tab to layers
     dispatch(setActiveTab(1));
-  }, []);
+  }, [selectedRegionSet]);
 
-  if (isLoading) {
-    return <DummyListLoader />;
-  }
+  if (isLoading) return <DummyListLoader />;
 
   return (
     <Stack>
@@ -94,7 +115,7 @@ const RegionTabContent = () => {
           color="success"
           size="small"
           startIcon={<CheckIcon />}
-          disabled={!size(selectedRegionIds)}
+          disabled={!size(selectedRegionSet)}
           onClick={handleRegionSelectionComplete}
         >
           Done
@@ -108,7 +129,7 @@ const RegionTabContent = () => {
               key={region.id}
               region={region}
               regionGroupData={regionGroupData}
-              selectedRegion={selectedRegionIds}
+              selectedRegion={selectedRegionSet}
               expandedRegions={expandedRegionIds}
               handleRegionClick={handleRegionClick}
               handleRegionExpandClick={handleRegionExpandClick}
@@ -130,7 +151,7 @@ const RegionListItem = ({
 }) => {
   const { id, name, layer } = region;
   const color = getFillColor(layer);
-  const isActive = selectedRegion.indexOf(id) > -1;
+  const isActive = selectedRegion.has(id);
   // check if childs are open
   const regionChilds = get(regionGroupData, id, []);
   const hasChildren = !!size(regionChilds);

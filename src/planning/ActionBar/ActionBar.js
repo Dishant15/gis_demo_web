@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Divider } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
@@ -6,10 +7,12 @@ import Tab from "@mui/material/Tab";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import LayersIcon from "@mui/icons-material/Layers";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
-import { useDispatch, useSelector } from "react-redux";
+
+import RegionTabContent from "./components/RegionTabContent";
+import LayersTabContent from "./components/LayersTabContent";
+
 import { setActiveTab } from "planning/data/planningState.reducer";
 import { getActiveTab } from "planning/data/planningState.selectors";
-import RegionTabContent from "./components/RegionTabContent";
 
 const ActionBarWrapper = () => {
   /**
@@ -29,7 +32,7 @@ const ActionBarWrapper = () => {
         return <RegionTabContent />;
 
       case 1:
-        return <div>Layers</div>;
+        return <LayersTabContent />;
 
       case 2:
         return <div>Add Element Blocks</div>;

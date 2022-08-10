@@ -7,6 +7,9 @@ const initialState = {
   // list of region ids
   selectedRegionIds: [],
   expandedRegionIds: [],
+  // list of layer keys
+  selectedLayerKeys: [],
+  loadingLayerKeys: [],
 };
 
 const planningStateSlice = createSlice({
@@ -17,15 +20,9 @@ const planningStateSlice = createSlice({
     setActiveTab: (state, { payload }) => {
       state.activeTab = payload;
     },
-    // payload : regionId
+    // payload : regionIdList
     handleRegionSelect: (state, { payload }) => {
-      // if regionId in state remove
-      const regSearchInd = state.selectedRegionIds.indexOf(payload);
-      if (regSearchInd > -1) {
-        state.selectedRegionIds.splice(regSearchInd, 1);
-      } else {
-        state.selectedRegionIds.push(payload);
-      }
+      state.selectedRegionIds = payload;
     },
     // payload : regionId
     handleRegionExpand: (state, { payload }) => {
@@ -37,9 +34,23 @@ const planningStateSlice = createSlice({
         state.expandedRegionIds.push(payload);
       }
     },
+    // payload : layer key
+    handleLayerSelect: (state, { payload }) => {
+      // if regionId in state remove
+      const layerSerchInd = state.selectedLayerKeys.indexOf(payload);
+      if (layerSerchInd > -1) {
+        state.selectedLayerKeys.splice(layerSerchInd, 1);
+      } else {
+        state.selectedLayerKeys.push(payload);
+      }
+    },
   },
 });
 
-export const { setActiveTab, handleRegionSelect, handleRegionExpand } =
-  planningStateSlice.actions;
+export const {
+  setActiveTab,
+  handleRegionSelect,
+  handleRegionExpand,
+  handleLayerSelect,
+} = planningStateSlice.actions;
 export default planningStateSlice.reducer;

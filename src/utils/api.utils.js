@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
     const paramArray = map(keys(object), (key) => {
-      return encodeURIComponent(key) + "=" + encodeURIComponent(object[key]);
+      return key + "=" + object[key];
     });
     return "?" + join(paramArray, "&");
   } else {

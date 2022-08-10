@@ -66,3 +66,7 @@ export const apiPutWorkOrderEdit = (workOrderId) =>
 
 export const apiPutUnitEdit = (unitId = ":unit_id") =>
   `/api/geo/survey/unit/${unitId}/edit/`;
+
+// planning apis
+export const apiGetPlanningConfigs = () => "/api/planning/configs/";
+export const apiGetPlanningLayerData = () => "/api/planning/layer/";
