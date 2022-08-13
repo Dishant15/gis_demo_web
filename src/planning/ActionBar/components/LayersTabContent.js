@@ -22,6 +22,13 @@ import {
 } from "planning/data/planningState.reducer";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 
+const regionLayerConfig = {
+  layer_key: "region",
+  name: "Regions",
+  can_edit: false,
+  can_add: false,
+};
+
 const LayersTabContent = () => {
   /**
    * Render list of elements user can view on map
@@ -35,7 +42,12 @@ const LayersTabContent = () => {
   const { isLoading, data: layerCofigs = [] } = useQuery(
     "planningLayerConfigs",
     fetchLayerList,
-    { staleTime: Infinity }
+    {
+      staleTime: Infinity,
+      select: (data) => {
+        return [regionLayerConfig, ...data];
+      },
+    }
   );
   const regionIdList = useSelector(getSelectedRegionIds);
 
@@ -66,6 +78,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
   const isFetched = get(layerNetState, "isFetched", false);
+  const count = get(layerNetState, "count", 0);
 
   const onLayerClick = () => {
     if (isLoading) return;
@@ -103,8 +116,14 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
           }}
           onClick={onLayerClick}
         >
-          <span>{name}</span>
-          {isLoading ? <LoadingButton loading /> : <CheckBoxIcon />}
+          <span>
+            {name} {isFetched ? `(${count})` : ""}
+          </span>
+          {isLoading ? (
+            <LoadingButton loading />
+          ) : isSelected ? (
+            <CheckBoxIcon color="secondary" />
+          ) : null}
         </Stack>
       </Stack>
 

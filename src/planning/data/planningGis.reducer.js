@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import get from "lodash/get";
 import has from "lodash/has";
+import size from "lodash/size";
 
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
@@ -11,6 +12,7 @@ const defaultLayerNetworkState = {
   isFetched: false,
   isError: false,
   isSelected: false,
+  count: 0,
 };
 
 const initialState = {
@@ -64,6 +66,7 @@ const planningGisSlice = createSlice({
       const layerKey = get(action, "meta.arg.layerKey", "");
       state.layerNetworkState[layerKey].isLoading = false;
       state.layerNetworkState[layerKey].isFetched = true;
+      state.layerNetworkState[layerKey].count = size(action.payload);
       // convert payload coordinates into google coordinates data
       state.layerData[layerKey].viewData = covertLayerServerData(
         layerKey,

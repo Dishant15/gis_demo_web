@@ -1,9 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { Polygon } from "@react-google-maps/api";
 
 import { getFillColor } from "utils/map.utils";
-import { useSelector } from "react-redux";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 
 const LAYER_KEY = "region";
@@ -14,7 +14,7 @@ export const ViewLayer = () => {
    *  GisMap > utils > getLayerCompFromKey
    */
   // get data of region layer
-  const regionData = useSelector(getLayerViewData("region"));
+  const regionData = useSelector(getLayerViewData(LAYER_KEY));
   const regionList = regionData.viewData;
 
   return (
@@ -28,8 +28,7 @@ export const ViewLayer = () => {
             <Polygon
               key={ind}
               options={{
-                // fillColor: color,
-                // fillOpacity: 0.3,
+                fillOpacity: 0,
                 strokeColor: color,
                 strokeOpacity: 1,
                 strokeWeight: 2,

@@ -1,18 +1,25 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { RedMarker2 } from "components/common/Map/GoogleMapWrapper";
+
+import { getLayerViewData } from "planning/data/planningGis.selectors";
 
 const LAYER_KEY = "p_dp";
 
 export const ViewLayer = () => {
-  // get data of p_dp layer
-  // if show is true render markers on map
+  /**
+   * Parent:
+   *  GisMap > utils > getLayerCompFromKey
+   */
+  const layerData = useSelector(getLayerViewData(LAYER_KEY));
+  const data = layerData.viewData;
 
   return (
     <>
       {data.map((dp) => {
         const { id, coordinates } = dp;
-        return <RedMarker2 key={dp.id} position={coordinates} />;
+        return <RedMarker2 key={id} position={coordinates} />;
       })}
     </>
   );

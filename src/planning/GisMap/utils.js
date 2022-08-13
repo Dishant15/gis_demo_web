@@ -1,6 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 
 import { ViewLayer as RegionViewLayer } from "./layers/region";
+import { ViewLayer as DPViewLayer } from "./layers/p_dp";
 
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 
@@ -10,7 +11,7 @@ export const getLayerCompFromKey = (layerKey) => {
       return <RegionViewLayer key={layerKey} />;
 
     case "p_dp":
-      return <></>;
+      return <DPViewLayer key={layerKey} />;
 
     default:
       return null;
@@ -32,7 +33,7 @@ export const covertLayerServerData = (layerKey, serverData) => {
   // dynamic gis layers
   else if (layerKey === "p_dp") {
     resultData.map((d) => {
-      d.geometry = coordsToLatLongMap([d.geometry])[0];
+      d.coordinates = coordsToLatLongMap([d.coordinates])[0];
     });
     return resultData;
   }
