@@ -1,11 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
-
-import { RedMarker2 } from "components/common/Map/GoogleMapWrapper";
+import { Marker } from "@react-google-maps/api";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 
+import PDPViewIcon from "assets/markers/p_dp_view.svg";
+
 const LAYER_KEY = "p_dp";
+
+const PDPMarker = (props) => <Marker {...props} icon={{ url: PDPViewIcon }} />;
 
 export const ViewLayer = () => {
   /**
@@ -19,7 +22,7 @@ export const ViewLayer = () => {
     <>
       {data.map((dp) => {
         const { id, coordinates } = dp;
-        return <RedMarker2 key={id} position={coordinates} />;
+        return <PDPMarker key={id} position={coordinates} />;
       })}
     </>
   );
