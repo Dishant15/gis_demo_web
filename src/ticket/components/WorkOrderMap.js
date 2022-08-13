@@ -1,7 +1,7 @@
 import React, { Fragment, useRef, useMemo, useCallback } from "react";
 import get from "lodash/get";
 
-import { Polygon, Marker } from "@react-google-maps/api";
+import { Polygon } from "@react-google-maps/api";
 import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -9,15 +9,11 @@ import CardContent from "@mui/material/CardContent";
 
 import Map from "components/common/Map";
 import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
+import { GreenMarker, RedMarker } from "components/common/Map/GoogleMapWrapper";
 
 import { getCoordinatesFromFeature } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
 import { COLORS } from "App/theme";
-import {
-  GreenMarker,
-  RedMarker2,
-  RedMarker,
-} from "components/common/Map/GoogleMapWrapper";
 
 const WorkOrderMap = ({
   areaPocket = null,

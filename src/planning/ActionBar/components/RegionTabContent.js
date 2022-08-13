@@ -2,7 +2,16 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 
-import { get, noop, groupBy, map, difference, orderBy, size } from "lodash";
+import {
+  get,
+  difference,
+  noop,
+  groupBy,
+  map,
+  xor,
+  orderBy,
+  size,
+} from "lodash";
 import {
   Box,
   Button,
@@ -23,12 +32,14 @@ import {
 } from "planning/data/actionBar.services";
 import { getFillColor } from "utils/map.utils";
 import {
+  handleLayerSelect,
   handleRegionExpand,
   handleRegionSelect,
   setActiveTab,
 } from "planning/data/planningState.reducer";
 import {
   getExpandedRegionIds,
+  getSelectedLayerKeys,
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
 
@@ -45,6 +56,7 @@ const RegionTabContent = () => {
   const dispatch = useDispatch();
   const selectedRegionIds = useSelector(getSelectedRegionIds);
   const expandedRegionIds = useSelector(getExpandedRegionIds);
+  const selectedLayerKeys = useSelector(getSelectedLayerKeys);
   const [selectedRegionSet, setSelectedRegion] = useState(
     new Set(selectedRegionIds)
   );
@@ -92,15 +104,27 @@ const RegionTabContent = () => {
 
   const handleRegionSelectionComplete = useCallback(() => {
     const regionIdList = Array.from(selectedRegionSet);
-    // set selected regions
-    dispatch(handleRegionSelect(regionIdList));
-    // fetch data gis data for all region polygons
-    dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "region" }));
-    // dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "p_dp" }));
-    // show on map on success
+    // can not go forward if region list empty
+    if (!size(regionIdList)) return;
+    // check if regions changed
+    if (size(xor(regionIdList, selectedRegionIds))) {
+      // set selected regions
+      dispatch(handleRegionSelect(regionIdList));
+      // add region in selectedLayerKeys if not
+      if (selectedLayerKeys.indexOf("region") === -1) {
+        dispatch(handleLayerSelect("region"));
+      }
+      // fetch data gis data for all region polygons
+      dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "region" }));
+      // re fetch data for each selected layers
+      for (let l_ind = 0; l_ind < selectedLayerKeys.length; l_ind++) {
+        const currLayerKey = selectedLayerKeys[l_ind];
+        dispatch(fetchLayerDataThunk({ regionIdList, layerKey: currLayerKey }));
+      }
+    }
     // change tab to layers
     dispatch(setActiveTab(1));
-  }, [selectedRegionSet]);
+  }, [selectedRegionSet, selectedRegionIds, selectedLayerKeys]);
 
   if (isLoading) return <DummyListLoader />;
 

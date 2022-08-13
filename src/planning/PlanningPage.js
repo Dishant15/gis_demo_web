@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 
 import ComingSoon from "components/common/ComingSoon";
 import ActionBar from "./ActionBar";
+import GisMap from "./GisMap";
 
 import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 import { getContentHeight } from "redux/selectors/appState.selectors";
@@ -21,9 +22,7 @@ const PlanningPage = () => {
 
         <div className="pl-content">
           <div className="pl-map-container">
-            <Typography variant="h2" textAlign="center">
-              Google Map
-            </Typography>
+            <GisMap />
           </div>
         </div>
       </div>

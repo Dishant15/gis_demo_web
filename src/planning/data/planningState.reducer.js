@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import get from "lodash/get";
 
 const initialState = {
   // 0: region, 1: Layers, 2: Add Element
@@ -36,12 +36,12 @@ const planningStateSlice = createSlice({
     },
     // payload : layer key
     handleLayerSelect: (state, { payload }) => {
-      // if regionId in state remove
+      state.selectedLayerKeys.push(payload);
+    },
+    removeLayerSelect: (state, { payload }) => {
       const layerSerchInd = state.selectedLayerKeys.indexOf(payload);
       if (layerSerchInd > -1) {
         state.selectedLayerKeys.splice(layerSerchInd, 1);
-      } else {
-        state.selectedLayerKeys.push(payload);
       }
     },
   },
@@ -52,5 +52,6 @@ export const {
   handleRegionSelect,
   handleRegionExpand,
   handleLayerSelect,
+  removeLayerSelect,
 } = planningStateSlice.actions;
 export default planningStateSlice.reducer;

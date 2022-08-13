@@ -33,6 +33,6 @@ export const fetchLayerData = async ({ regionIdList, layerKey }) => {
 };
 
 export const fetchLayerDataThunk = createAsyncThunk(
-  "planningGis/fetchRegionLayerData",
+  "planningGis/fetchLayerData",
   fetchLayerData
 );
