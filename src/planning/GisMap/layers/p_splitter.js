@@ -5,7 +5,7 @@ import { Marker } from "@react-google-maps/api";
 import PDPViewIcon from "assets/markers/p_dp_view.svg";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 
-export const LAYER_KEY = "p_dp";
+export const LAYER_KEY = "p_splitter";
 
 export const ViewLayer = () => {
   /**

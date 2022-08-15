@@ -6,7 +6,7 @@ import { Polygon } from "@react-google-maps/api";
 import { getFillColor } from "utils/map.utils";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 
-const LAYER_KEY = "region";
+export const LAYER_KEY = "region";
 
 export const ViewLayer = () => {
   /**
