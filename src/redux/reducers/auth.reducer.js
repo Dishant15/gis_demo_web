@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import get from "lodash/get";
 
 const initialState = {
   token: "",
-  user: null,
+  user: {},
   isAdmin: false,
   permissions: {},
 };

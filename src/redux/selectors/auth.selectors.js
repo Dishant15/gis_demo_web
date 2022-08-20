@@ -7,7 +7,8 @@ export const getLoggedUserDetails = (store) => store.auth.user;
 
 export const getIsAdminUser = (store) => store.auth.isAdmin;
 
-export const getIsSuperAdminUser = (store) => !!store.auth.user.is_superuser;
+export const getIsSuperAdminUser = (store) =>
+  !!get(store, "auth.user.is_superuser");
 
 export const getUserPermissions = (store) => store.auth.permissions;
 
