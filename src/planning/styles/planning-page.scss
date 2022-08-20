@@ -28,6 +28,17 @@
         .pl-list-pill {
           font-size: 1em;
         }
+
+        .pl-add-element-item {
+          // height: 4.5em;
+          justify-content: center;
+          text-align: center;
+          cursor: pointer;
+          padding: 0.4em;
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+          }
+        }
       }
     }
 

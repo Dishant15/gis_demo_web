@@ -13,6 +13,7 @@ import LayersTabContent from "./components/LayersTabContent";
 
 import { setActiveTab } from "planning/data/planningState.reducer";
 import { getActiveTab } from "planning/data/planningState.selectors";
+import AddElementContent from "./components/AddElementContent";
 
 const ActionBarWrapper = () => {
   /**
@@ -35,7 +36,7 @@ const ActionBarWrapper = () => {
         return <LayersTabContent />;
 
       case 2:
-        return <div>Add Element Blocks</div>;
+        return <AddElementContent />;
 
       default:
         return <div>Invalid Tab Selection</div>;
