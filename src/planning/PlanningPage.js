@@ -1,14 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
-import { Typography } from "@mui/material";
-
-import ComingSoon from "components/common/ComingSoon";
 import ActionBar from "./ActionBar";
 import GisMap from "./GisMap";
-
-import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
-import { getContentHeight } from "redux/selectors/appState.selectors";
 
 import "./styles/planning-page.scss";
 
@@ -30,15 +23,4 @@ const PlanningPage = () => {
   );
 };
 
-const PlanningPageWrapper = () => {
-  const isSuperAdmin = useSelector(getIsSuperAdminUser);
-  const contentHeight = useSelector(getContentHeight);
-
-  if (isSuperAdmin) {
-    return <PlanningPage />;
-  } else {
-    return <ComingSoon contentHeight={contentHeight} />;
-  }
-};
-
-export default PlanningPageWrapper;
+export default PlanningPage;

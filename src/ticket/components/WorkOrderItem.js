@@ -26,7 +26,6 @@ import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
 import { Button, Divider } from "@mui/material";
-import { SignalCellularNullTwoTone } from "@mui/icons-material";
 
 const WorkOrderItem = ({
   surveyWorkorder,

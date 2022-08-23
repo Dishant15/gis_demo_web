@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 
 import { get, noop } from "lodash";
@@ -6,6 +6,7 @@ import { Box, Divider, Stack } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 
 import DummyListLoader from "./DummyListLoader";
 
@@ -15,7 +16,10 @@ import {
 } from "planning/data/actionBar.services";
 import { LoadingButton } from "@mui/lab";
 import { useDispatch, useSelector } from "react-redux";
-import { getLayerNetworkState } from "planning/data/planningGis.selectors";
+import {
+  getLayerNetworkState,
+  getLayerViewData,
+} from "planning/data/planningGis.selectors";
 import {
   handleLayerSelect,
   removeLayerSelect,
@@ -72,13 +76,17 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const { layer_key, name } = layerConfig;
 
   const dispatch = useDispatch();
+  const [isExpanded, setExpanded] = useState(false);
   const layerNetState = useSelector(getLayerNetworkState(layer_key));
 
-  const isExpanded = false;
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
   const isFetched = get(layerNetState, "isFetched", false);
   const count = get(layerNetState, "count", 0);
+
+  const handleExpandToggle = useCallback(() => {
+    setExpanded((expanded) => !expanded);
+  }, [setExpanded]);
 
   const onLayerClick = () => {
     if (isLoading) return;
@@ -97,7 +105,10 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   return (
     <Box className="reg-list-pill">
       <Stack direction="row" width="100%" spacing={2}>
-        <Box onClick={noop}>
+        <Box
+          sx={{ opacity: isFetched ? 1 : 0.3 }}
+          onClick={isFetched ? handleExpandToggle : noop}
+        >
           <ExpandMore
             expand={isExpanded}
             aria-expanded={isExpanded}
@@ -128,7 +139,43 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
       </Stack>
 
       <Divider flexItem />
+
+      {isExpanded ? <ElementList layerKey={layer_key} /> : null}
     </Box>
+  );
+};
+
+const ElementList = ({ layerKey }) => {
+  // get list of elements for current key
+  const { viewData = [] } = useSelector(getLayerViewData(layerKey));
+
+  return (
+    <>
+      {viewData.map((element) => {
+        const { id, name } = element;
+        return (
+          <Box key={id} className="reg-list-pill-child">
+            <Stack direction="row" width="100%" spacing={2}>
+              <Stack
+                direction="row"
+                flex={1}
+                sx={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+                onClick={noop}
+              >
+                <span>{name}</span>
+                <MyLocationIcon />
+              </Stack>
+            </Stack>
+
+            <Divider flexItem />
+          </Box>
+        );
+      })}
+    </>
   );
 };
 
