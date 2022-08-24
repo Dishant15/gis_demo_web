@@ -49,13 +49,14 @@ const ActionBarWrapper = () => {
         value={activeTab}
         onChange={handleTabChange}
         aria-label="icon label tabs example"
+        className="pl-list-tabs"
       >
         <Tab icon={<AttractionsIcon />} label="Region" />
         <Tab icon={<LayersIcon />} label="GIS Layers" />
         <Tab icon={<AddLocationIcon />} label="Add Element" />
       </Tabs>
       <Divider flexItem orientation="horizontal" />
-      <Box>{tabContent}</Box>
+      <Box className="pl-list-tab-content">{tabContent}</Box>
     </div>
   );
 };
