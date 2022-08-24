@@ -19,10 +19,7 @@ const GisMap = ({ mapCenter = undefined }) => {
 
   return (
     <Box width="100%" height="100%">
-      <Map center={mapCenter}>
-        {/** Polygons for each selected layers */}
-        {Layers}
-      </Map>
+      <Map center={mapCenter}>{Layers}</Map>
     </Box>
   );
 };
