@@ -4,6 +4,7 @@ export const getLoginPath = () => "/login";
 export const getGeoSurveyPath = () => "/geo/survey";
 export const getRegionPage = () => "/regions";
 export const getPlanningPage = () => "/planning";
+export const getPlanningConfigPage = () => "/planning-config";
 
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
