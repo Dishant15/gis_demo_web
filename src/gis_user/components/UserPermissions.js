@@ -13,6 +13,10 @@ import { FormCheckbox } from "components/common/FormFields";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { updateUserPerm } from "gis_user/data/services";
 
+/**
+ * Parent:
+ *    UserAdminForm
+ */
 const UserPermissions = ({
   userId,
   isSuperUser,
@@ -381,6 +385,41 @@ const UserPermissions = ({
             control={control}
             error={!!errors.p_dp_edit}
             helperText={errors.p_dp_edit?.message}
+            color="secondary"
+          />
+        </Stack>
+      </Stack>
+      <Divider />
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
+        <PermissionLabel>Spliter Planning</PermissionLabel>
+        <Stack flexDirection="row" minWidth={240}>
+          <FormCheckbox
+            label="View"
+            name="p_splitter_view"
+            control={control}
+            error={!!errors.p_splitter_view}
+            helperText={errors.p_splitter_view?.message}
+            color="secondary"
+          />
+          <FormCheckbox
+            label="Add"
+            name="p_splitter_add"
+            control={control}
+            error={!!errors.p_splitter_add}
+            helperText={errors.p_splitter_add?.message}
+            color="secondary"
+          />
+          <FormCheckbox
+            label="Edit"
+            name="p_splitter_edit"
+            control={control}
+            error={!!errors.p_splitter_edit}
+            helperText={errors.p_splitter_edit?.message}
             color="secondary"
           />
         </Stack>
