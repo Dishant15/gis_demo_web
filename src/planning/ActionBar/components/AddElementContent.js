@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useQuery } from "react-query";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { filter } from "lodash";
 
-import PDPViewIcon from "assets/markers/p_dp_view.svg";
-import SpliterIcon from "assets/markers/spliter_view.svg";
+import { fetchLayerList } from "planning/data/actionBar.services";
+import { ICONS } from "utils/icons";
 
 /**
  * Parent:
@@ -13,34 +15,27 @@ import SpliterIcon from "assets/markers/spliter_view.svg";
  * Render list of elements user can add on map
  */
 const AddElementContent = () => {
-  const hasElements = true;
-  if (hasElements) {
+  const { isLoading, data } = useQuery("planningLayerConfigs", fetchLayerList, {
+    staleTime: Infinity,
+  });
+
+  const layerCofigs = useMemo(() => {
+    return filter(data, ["can_add", true]);
+  }, [data]);
+
+  if (layerCofigs.length) {
     return (
       <Grid container spacing={2} mt={1}>
-        <Grid item xs={4}>
-          <div className="pl-add-element-item">
-            <img src={PDPViewIcon} alt="" />
-            <Typography variant="body2">DP</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div className="pl-add-element-item">
-            <img src={SpliterIcon} alt="" />
-            <Typography variant="body2">Spliter</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div className="pl-add-element-item">
-            <img src={PDPViewIcon} alt="" />
-            <Typography variant="body2">DP</Typography>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div className="pl-add-element-item">
-            <img src={SpliterIcon} alt="" />
-            <Typography variant="body2">Spliter</Typography>
-          </div>
-        </Grid>
+        {layerCofigs.map((config) => {
+          return (
+            <Grid item xs={4} key={config.layer_key} alignSelf="stretch">
+              <div className="pl-add-element-item">
+                <img src={ICONS(config.layer_key)} alt="" />
+                <Typography variant="body2">{config.name}</Typography>
+              </div>
+            </Grid>
+          );
+        })}
       </Grid>
     );
   } else {
