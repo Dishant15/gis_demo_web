@@ -21,6 +21,12 @@ import GroupIcon from "@mui/icons-material/Group";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { fetchDashboardData } from "./dashboard.service";
 import { getTicketListPage, getUserListPage } from "utils/url.constants";
+import DynamicForm from "components/common/DynamicForm";
+import {
+  FORM_CONFIGS,
+  INITIAL_DATA,
+  onSubmit,
+} from "planning/GisMap/layers/p_dp";
 
 export default function HomePage() {
   const contentHeight = useSelector(getContentHeight);
@@ -114,6 +120,17 @@ export default function HomePage() {
           <Typography textAlign="center" variant="h5">
             User Activity Logs
           </Typography>
+        </Paper>
+      </Stack>
+
+      <Stack my={2}>
+        <Paper p={3}>
+          <DynamicForm
+            formConfigs={FORM_CONFIGS}
+            data={INITIAL_DATA}
+            onSubmit={onSubmit}
+            isLoading={false}
+          />
         </Paper>
       </Stack>
     </Container>
