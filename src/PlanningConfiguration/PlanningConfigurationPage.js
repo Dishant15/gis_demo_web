@@ -1,17 +1,57 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useQuery } from "react-query";
+import { useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Container, Paper } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { filter } from "lodash";
+
+import ConfigurationList from "./components/ConfigurationList";
+import PermissionNotFound from "components/common/PermissionNotFound";
+
+import { fetchLayerList } from "planning/data/actionBar.services";
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 
 import "../region/styles/region-page.scss";
+import "./styles/planning-config.scss";
 
-const configTypeList = ["p_splitter"];
-const configTypeMap = {
-  p_splitter: "Spliter",
+const PlanningConfigurationPageWrapper = () => {
+  const isSuperUser = useSelector(getIsSuperAdminUser);
+  if (isSuperUser) {
+    return <PlanningConfigurationPage />;
+  } else {
+    return (
+      <Container>
+        <Paper
+          sx={{
+            mt: 3,
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <PermissionNotFound />
+        </Paper>
+      </Container>
+    );
+  }
 };
+
 const PlanningConfigurationPage = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const { isLoading, data } = useQuery("planningLayerConfigs", fetchLayerList, {
+    staleTime: Infinity,
+  });
+
+  const layerCofigs = useMemo(() => {
+    return filter(data, ["is_configurable", true]);
+  }, [data]);
+
   return (
-    <div id="region-page" className="page-wrapper">
+    <div id="region-page" className="page-wrapper planning-config-page">
       <div className="reg-content-wrapper">
         <div className="reg-pocket-list">
           <div className="reg-list-wrapper">
@@ -26,34 +66,41 @@ const PlanningConfigurationPage = () => {
             </Stack>
             <Divider flexItem orientation="horizontal" />
 
-            {configTypeList.map((config) => {
-              const isActive = true;
+            {layerCofigs.map((config) => {
+              const isActive =
+                searchParams.get("layerkey") === config.layer_key;
               return (
-                <Box className="reg-list-pill">
-                  <Stack direction="row" width="100%" spacing={2}>
-                    <Stack
-                      direction="row"
-                      flex={1}
-                      sx={{
-                        cursor: "pointer",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                      p={1}
-                    >
-                      <span>{configTypeMap[config]}</span>
-                      {isActive ? <VisibilityIcon /> : null}
-                    </Stack>
+                <Box
+                  className="reg-list-pill planning-pill"
+                  key={config.layer_key}
+                >
+                  <Stack
+                    direction="row"
+                    width="100%"
+                    spacing={2}
+                    px={1}
+                    py={1.5}
+                    justifyContent="space-between"
+                    className="clickable"
+                    onClick={() => {
+                      setSearchParams({ layerkey: config.layer_key });
+                    }}
+                  >
+                    <span>{config.name}</span>
+                    {isActive ? <VisibilityIcon /> : null}
                   </Stack>
+                  <Divider flexItem />
                 </Box>
               );
             })}
           </div>
         </div>
-        <div className="reg-content"></div>
+        <div className="reg-content">
+          <ConfigurationList layerkey={searchParams.get("layerkey")} />
+        </div>
       </div>
     </div>
   );
 };
 
-export default PlanningConfigurationPage;
+export default PlanningConfigurationPageWrapper;

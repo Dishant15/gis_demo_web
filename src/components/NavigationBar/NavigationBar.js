@@ -153,15 +153,15 @@ const NavigationBar = () => {
               Ticket Management
             </MenuItem>
           ) : null}
-          {/* {canTicketView ? ( */}
-          <MenuItem
-            onClick={handleClose}
-            component={Link}
-            to={getPlanningConfigPage()}
-          >
-            Planning Management
-          </MenuItem>
-          {/* ) : null} */}
+          {isSuperAdminUser ? (
+            <MenuItem
+              onClick={handleClose}
+              component={Link}
+              to={getPlanningConfigPage()}
+            >
+              Planning Management
+            </MenuItem>
+          ) : null}
         </Menu>
       </Toolbar>
     </AppBar>
