@@ -7,7 +7,7 @@ import { Box, Divider, Stack, Container, Paper } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { filter } from "lodash";
 
-import ConfigurationList from "./components/ConfigurationList";
+import ConfigurationContent from "./components/ConfigurationContent";
 import PermissionNotFound from "components/common/PermissionNotFound";
 
 import { fetchLayerList } from "planning/data/actionBar.services";
@@ -109,7 +109,7 @@ const ElementConfigPage = () => {
           </div>
         </div>
         <div className="reg-content">
-          <ConfigurationList layerKey={searchParams.get("layerKey")} />
+          <ConfigurationContent layerKey={searchParams.get("layerKey")} />
         </div>
       </div>
     </div>
