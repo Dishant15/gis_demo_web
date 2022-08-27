@@ -76,3 +76,11 @@ export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 // element api
 export const apiGetElementList = (layerKey = ":layer_key") =>
   `/api/element/config/${layerKey}/list/`;
+
+export const apiPostElementAdd = (layerKey = ":layer_key") =>
+  `/api/element/config/${layerKey}/add/`;
+
+export const apiPutElementEdit = (
+  layerKey = ":layer_key",
+  configId = ":config_id"
+) => `/api/element/config/${layerKey}/${configId}/edit/`;

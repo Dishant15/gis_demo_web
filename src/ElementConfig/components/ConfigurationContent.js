@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { useQuery } from "react-query";
+import React, { useCallback, useState, useRef } from "react";
+import { useQuery, useMutation } from "react-query";
 
 import {
   Container,
@@ -10,6 +10,7 @@ import {
   Divider,
   Button,
   IconButton,
+  Dialog,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,8 +18,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
+import DynamicForm from "components/common/DynamicForm";
+import {
+  FORM_CONFIGS,
+  INITIAL_DATA,
+  onSubmit,
+} from "planning/GisMap/layers/p_splitter";
 
-import { fetchElementList } from "ElementConfig/data/services";
+import {
+  fetchElementList,
+  upsertElementConfig,
+} from "ElementConfig/data/services";
 
 /**
  *
@@ -74,15 +84,38 @@ const ConfigurationContentWrapper = ({ layerKey }) => {
  *    delete dialog
  */
 const ConfigurationContent = ({ layerKey }) => {
-  const { isLoading, data } = useQuery(
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState(null); // null for add, data for edit
+  const gridRef = useRef();
+
+  const { isLoading, data, refetch } = useQuery(
     ["configList", layerKey],
     fetchElementList
   );
 
-  const gridRef = useRef();
+  const {
+    mutate: upsertElementConfigMutation,
+    isLoading: upsertElementConfigLoading,
+  } = useMutation(
+    (mutationData) => upsertElementConfig(mutationData, layerKey),
+    {
+      onSuccess: () => {
+        handleFormClose();
+        refetch();
+      },
+      onError: () => {
+        console.log("error");
+      },
+    }
+  );
 
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
+  };
+
+  const onAddClick = () => {
+    setShowForm(true);
+    setFormData(null);
   };
 
   const onEditClick = (data) => {
@@ -90,6 +123,8 @@ const ConfigurationContent = ({ layerKey }) => {
       "🚀 ~ file: ConfigurationContent.js ~ line 89 ~ onEditClick ~ data",
       data
     );
+    setFormData(data);
+    setShowForm(true);
   };
 
   const onDeleteClick = (elementId) => {
@@ -97,6 +132,15 @@ const ConfigurationContent = ({ layerKey }) => {
       "🚀 ~ file: ConfigurationContent.js ~ line 96 ~ onDeleteClick ~ elementId",
       elementId
     );
+  };
+
+  const handleFormClose = useCallback(() => {
+    setShowForm(false);
+    setFormData(null);
+  }, []);
+
+  const handleFormSubmit = (data) => {
+    upsertElementConfigMutation(data, layerKey);
   };
 
   return (
@@ -112,7 +156,11 @@ const ConfigurationContent = ({ layerKey }) => {
         <Typography flex={1} className="dtl-title" variant="h5">
           Configuration
         </Typography>
-        <Button sx={{ minWidth: "150px" }} startIcon={<AddIcon />}>
+        <Button
+          sx={{ minWidth: "150px" }}
+          startIcon={<AddIcon />}
+          onClick={onAddClick}
+        >
           Add Configuration
         </Button>
       </Stack>
@@ -153,6 +201,17 @@ const ConfigurationContent = ({ layerKey }) => {
           />
         </Box>
       )}
+      <Dialog onClose={handleFormClose} open={showForm}>
+        {showForm ? (
+          <DynamicForm
+            formConfigs={FORM_CONFIGS}
+            data={formData || INITIAL_DATA}
+            onSubmit={upsertElementConfigMutation}
+            onClose={handleFormClose}
+            isLoading={upsertElementConfigLoading}
+          />
+        ) : null}
+      </Dialog>
     </Stack>
   );
 };
