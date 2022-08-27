@@ -11,10 +11,17 @@ import {
   Button,
   IconButton,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { LoadingButton } from "@mui/lab";
+
+import { get } from "lodash";
 
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
@@ -26,6 +33,7 @@ import {
 } from "planning/GisMap/layers/p_splitter";
 
 import {
+  deleteElementConfig,
   fetchElementList,
   upsertElementConfig,
 } from "ElementConfig/data/services";
@@ -85,6 +93,7 @@ const ConfigurationContentWrapper = ({ layerKey }) => {
  */
 const ConfigurationContent = ({ layerKey }) => {
   const [showForm, setShowForm] = useState(false);
+  const [showDialog, setshowDialog] = useState(false);
   const [formData, setFormData] = useState(null); // null for add, data for edit
   const gridRef = useRef();
 
@@ -109,6 +118,17 @@ const ConfigurationContent = ({ layerKey }) => {
     }
   );
 
+  const { mutate: deleteElementMutation, isLoading: deleteElementLoading } =
+    useMutation((mutationData) => deleteElementConfig(mutationData, layerKey), {
+      onSuccess: () => {
+        handleDeleteClose();
+        refetch();
+      },
+      onError: () => {
+        console.log("error");
+      },
+    });
+
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
   };
@@ -127,21 +147,24 @@ const ConfigurationContent = ({ layerKey }) => {
     setShowForm(true);
   };
 
-  const onDeleteClick = (elementId) => {
-    console.log(
-      "🚀 ~ file: ConfigurationContent.js ~ line 96 ~ onDeleteClick ~ elementId",
-      elementId
-    );
+  const onDeleteClick = (data) => {
+    setshowDialog(true);
+    setFormData(data);
+  };
+
+  const onDeleteConfirm = (data) => {
+    deleteElementMutation(formData.id);
+  };
+
+  const handleDeleteClose = () => {
+    setshowDialog(false);
+    setFormData(null);
   };
 
   const handleFormClose = useCallback(() => {
     setShowForm(false);
     setFormData(null);
   }, []);
-
-  const handleFormSubmit = (data) => {
-    upsertElementConfigMutation(data, layerKey);
-  };
 
   return (
     <Stack divider={<Divider flexItem />} height="100%">
@@ -182,7 +205,7 @@ const ConfigurationContent = ({ layerKey }) => {
               {
                 headerName: "Action",
                 field: "id",
-                width: 100,
+                width: 130,
                 cellRenderer: ActionCell,
                 cellRendererParams: {
                   onEditClick,
@@ -197,7 +220,6 @@ const ConfigurationContent = ({ layerKey }) => {
               sortable: true,
             }}
             onGridReady={onGridReady}
-            loading
           />
         </Box>
       )}
@@ -212,6 +234,29 @@ const ConfigurationContent = ({ layerKey }) => {
           />
         ) : null}
       </Dialog>
+      <Dialog open={showDialog} onClose={handleDeleteClose}>
+        {showDialog ? (
+          <>
+            <DialogTitle>Delete Configuration</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure to delete configuration{" "}
+                <b>{get(formData, "config_name")}</b>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDeleteClose}>Close</Button>
+              <LoadingButton
+                onClick={onDeleteConfirm}
+                autoFocus
+                loading={deleteElementLoading}
+              >
+                Submit
+              </LoadingButton>
+            </DialogActions>
+          </>
+        ) : null}
+      </Dialog>
     </Stack>
   );
 };
@@ -224,7 +269,7 @@ const ActionCell = (props) => {
     props.onEditClick(props.data);
   };
   const handleDelete = () => {
-    props.onDeleteClick(props.data.id);
+    props.onDeleteClick(props.data);
   };
   return (
     <Stack direction="row" spacing={1}>

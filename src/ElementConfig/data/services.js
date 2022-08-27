@@ -1,5 +1,6 @@
 import Api from "utils/api.utils";
 import {
+  apiDeleteElement,
   apiGetElementList,
   apiPostElementAdd,
   apiPutElementEdit,
@@ -22,4 +23,9 @@ export const upsertElementConfig = async (data, layerKey) => {
     const res = await Api.post(apiPostElementAdd(layerKey), postData);
     return res.data;
   }
+};
+
+export const deleteElementConfig = async (configId, layerKey) => {
+  const res = await Api.delete(apiDeleteElement(layerKey, configId));
+  return res.data;
 };

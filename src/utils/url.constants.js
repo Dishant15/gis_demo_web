@@ -84,3 +84,8 @@ export const apiPutElementEdit = (
   layerKey = ":layer_key",
   configId = ":config_id"
 ) => `/api/element/config/${layerKey}/${configId}/edit/`;
+
+export const apiDeleteElement = (
+  layerKey = ":layer_key",
+  configId = ":config_id"
+) => `/api/element/config/${layerKey}/${configId}/delete/`;
