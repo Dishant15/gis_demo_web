@@ -6,8 +6,12 @@ import { Container, Paper, Typography, Box } from "@mui/material";
  * Parent:
  *    PlanningConfigurationPage
  */
-const ConfigurationListWrapper = (props) => {
-  const { layerkey } = props;
+const ConfigurationListWrapper = ({ layerKey }) => {
+  // fetch list of config data
+  // handle loading
+  // handle add popup show / hide logic
+  // handle edit popup show / hide logic
+
   return (
     <Container
       sx={{
@@ -21,8 +25,8 @@ const ConfigurationListWrapper = (props) => {
           height: "100%",
         }}
       >
-        {layerkey ? (
-          <ConfigurationList layerkey={layerkey} />
+        {layerKey ? (
+          <ConfigurationList configList={[]} />
         ) : (
           <Box
             display="flex"
@@ -38,7 +42,9 @@ const ConfigurationListWrapper = (props) => {
   );
 };
 
-const ConfigurationList = ({ layerkey }) => {
+const ConfigurationList = ({ configList }) => {
+  // render list of configurations
+
   return "list";
 };
 

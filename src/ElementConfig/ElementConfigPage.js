@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { Box, Divider, Stack, Container, Paper } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { filter } from "lodash";
 
 import ConfigurationList from "./components/ConfigurationList";
@@ -56,6 +56,13 @@ const ElementConfigPage = () => {
     return filter(data, ["is_configurable", true]);
   }, [data]);
 
+  const handleLayerSelect = useCallback(
+    (layerKey) => () => {
+      setSearchParams({ layerKey });
+    },
+    [setSearchParams]
+  );
+
   if (isLoading) {
     return <div>Dummy Loader</div>;
   }
@@ -77,13 +84,11 @@ const ElementConfigPage = () => {
             <Divider flexItem orientation="horizontal" />
 
             {layerCofigs.map((config) => {
-              const isActive =
-                searchParams.get("layerkey") === config.layer_key;
+              const { layer_key, name } = config;
+              const isActive = searchParams.get("layerKey") === layer_key;
+
               return (
-                <Box
-                  className="reg-list-pill planning-pill"
-                  key={config.layer_key}
-                >
+                <Box className="reg-list-pill planning-pill" key={layer_key}>
                   <Stack
                     direction="row"
                     width="100%"
@@ -92,12 +97,10 @@ const ElementConfigPage = () => {
                     py={1.5}
                     justifyContent="space-between"
                     className="clickable"
-                    onClick={() => {
-                      setSearchParams({ layerkey: config.layer_key });
-                    }}
+                    onClick={handleLayerSelect(layer_key)}
                   >
-                    <span>{config.name}</span>
-                    {isActive ? <VisibilityIcon /> : null}
+                    <span>{name}</span>
+                    {isActive ? <ArrowForwardIosIcon /> : null}
                   </Stack>
                   <Divider flexItem />
                 </Box>
@@ -106,7 +109,7 @@ const ElementConfigPage = () => {
           </div>
         </div>
         <div className="reg-content">
-          <ConfigurationList layerkey={searchParams.get("layerkey")} />
+          <ConfigurationList layerKey={searchParams.get("layerKey")} />
         </div>
       </div>
     </div>
