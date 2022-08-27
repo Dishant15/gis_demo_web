@@ -10,6 +10,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { FormSelect } from "./FormFields";
@@ -43,51 +44,61 @@ const DynamicForm = ({ formConfigs, data, onSubmit, onClose, isLoading }) => {
                 </IconButton>
               ) : null}
             </Stack>
-            <Box>
+            <Grid container spacing={2} width="100%">
               {fieldConfigs.map((config) => {
                 const { field_key, label, field_type } = config;
 
                 switch (field_type) {
                   case "input":
                     return (
-                      <TextField
-                        key={field_key}
-                        label={label}
-                        {...register(field_key)}
-                      />
+                      <Grid item xs={12} sm={6} key={field_key}>
+                        <TextField
+                          className="full-width"
+                          label={label}
+                          {...register(field_key)}
+                        />
+                      </Grid>
                     );
 
                   case "textArea":
                     return (
-                      <TextField
-                        key={field_key}
-                        multiline
-                        rows={3}
-                        label={label}
-                        {...register(field_key)}
-                      />
+                      <Grid item xs={12} sm={6} key={field_key}>
+                        <TextField
+                          className="full-width"
+                          multiline
+                          rows={3}
+                          label={label}
+                          {...register(field_key)}
+                        />
+                      </Grid>
                     );
 
                   case "select":
                     return (
-                      <FormSelect
-                        key={field_key}
-                        label={label}
-                        name={field_key}
-                        control={control}
-                        options={config.options || []}
-                      />
+                      <Grid item xs={12} sm={6} key={field_key}>
+                        <FormSelect
+                          label={label}
+                          name={field_key}
+                          control={control}
+                          options={config.options || []}
+                          textFieldSx={{
+                            width: "100%",
+                          }}
+                        />
+                      </Grid>
                     );
 
                   default:
                     return (
-                      <div key={field_key}>
-                        <div>{label}</div>
-                      </div>
+                      <Grid item xs={12} sm={6} key={field_key}>
+                        <div className="full-width">
+                          <div>{label}</div>
+                        </div>
+                      </Grid>
                     );
                 }
               })}
-            </Box>
+            </Grid>
           </Stack>
         );
       })}

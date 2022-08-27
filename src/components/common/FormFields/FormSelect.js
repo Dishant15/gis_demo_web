@@ -15,6 +15,7 @@ export const FormSelect = ({
   helperText,
   error,
   onBlur,
+  textFieldSx = {},
   ...rest
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,6 +35,7 @@ export const FormSelect = ({
             error={error}
             InputLabelProps={{ shrink }}
             className="form-select-controller"
+            sx={textFieldSx}
             InputProps={{
               className: "form-select-input-wrapper",
               notched: shrink,

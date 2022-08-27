@@ -205,7 +205,7 @@ const ConfigurationContent = ({ layerKey }) => {
               {
                 headerName: "Action",
                 field: "id",
-                width: 130,
+                maxWidth: 140,
                 cellRenderer: ActionCell,
                 cellRendererParams: {
                   onEditClick,
