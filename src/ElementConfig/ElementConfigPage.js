@@ -16,10 +16,11 @@ import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 import "../region/styles/region-page.scss";
 import "./styles/planning-config.scss";
 
-const PlanningConfigurationPageWrapper = () => {
+const ElementConfigPageWrapper = () => {
   const isSuperUser = useSelector(getIsSuperAdminUser);
+
   if (isSuperUser) {
-    return <PlanningConfigurationPage />;
+    return <ElementConfigPage />;
   } else {
     return (
       <Container>
@@ -39,16 +40,25 @@ const PlanningConfigurationPageWrapper = () => {
   }
 };
 
-const PlanningConfigurationPage = () => {
+const ElementConfigPage = () => {
   let [searchParams, setSearchParams] = useSearchParams();
 
-  const { isLoading, data } = useQuery("planningLayerConfigs", fetchLayerList, {
-    staleTime: Infinity,
-  });
+  const { isLoading, data = [] } = useQuery(
+    "planningLayerConfigs",
+    fetchLayerList,
+    {
+      staleTime: Infinity,
+    }
+  );
 
   const layerCofigs = useMemo(() => {
+    // get only configurable layer data
     return filter(data, ["is_configurable", true]);
   }, [data]);
+
+  if (isLoading) {
+    return <div>Dummy Loader</div>;
+  }
 
   return (
     <div id="region-page" className="page-wrapper planning-config-page">
@@ -103,4 +113,4 @@ const PlanningConfigurationPage = () => {
   );
 };
 
-export default PlanningConfigurationPageWrapper;
+export default ElementConfigPageWrapper;

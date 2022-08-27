@@ -19,7 +19,7 @@ import {
   getGeoSurveyPath,
   getHomePath,
   getLoginPath,
-  getPlanningConfigPage,
+  getElementConfigPage,
   getPlanningPage,
   getRegionPage,
   getTicketListPage,
@@ -69,8 +69,9 @@ const NavigationBar = () => {
 
   const open = !!anchorEl;
   const showAdministration =
-    (isAdminUser && (canUserView || canRegionView || canTicketView)) ||
-    isSuperAdminUser;
+    isSuperAdminUser ||
+    (isAdminUser && (canUserView || canRegionView || canTicketView));
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -157,9 +158,9 @@ const NavigationBar = () => {
             <MenuItem
               onClick={handleClose}
               component={Link}
-              to={getPlanningConfigPage()}
+              to={getElementConfigPage()}
             >
-              Planning Management
+              Element Configuration
             </MenuItem>
           ) : null}
         </Menu>

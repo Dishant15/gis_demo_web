@@ -24,7 +24,7 @@ import WorkOrderPage from "ticket/pages/WorkOrderPage";
 
 import PlanningPage from "planning/PlanningPage";
 import GeoSurveyPage from "geo_survey/GeoSurveyPage";
-import PlanningConfigurationPage from "PlanningConfiguration/PlanningConfigurationPage";
+import ElementConfig from "ElementConfig";
 
 import { RequireAuth } from "App/RequireAuth";
 import { theme } from "App/theme";
@@ -38,7 +38,7 @@ import {
   getGeoSurveyPath,
   getHomePath,
   getLoginPath,
-  getPlanningConfigPage,
+  getElementConfigPage,
   getPlanningPage,
   getRegionPage,
   getTicketListPage,
@@ -83,10 +83,10 @@ const App = () => {
                     }
                   />
                   <Route
-                    path={getPlanningConfigPage()}
+                    path={getElementConfigPage()}
                     element={
                       <RequireAuth>
-                        <PlanningConfigurationPage />
+                        <ElementConfig />
                       </RequireAuth>
                     }
                   />

@@ -4,7 +4,6 @@ export const getLoginPath = () => "/login";
 export const getGeoSurveyPath = () => "/geo/survey";
 export const getRegionPage = () => "/regions";
 export const getPlanningPage = () => "/planning";
-export const getPlanningConfigPage = () => "/planning-config";
 
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
@@ -16,6 +15,8 @@ export const getEditTicketPage = (ticketId = ":ticketId") =>
   `/ticket/${ticketId}/edit`;
 export const getTicketWorkorderPage = (ticketId = ":ticketId") =>
   `/ticket/${ticketId}/workorders`;
+
+export const getElementConfigPage = () => "/element/config";
 
 /* External server apis **/
 export const apiGetDashboard = () => "/api/dashboard/";
