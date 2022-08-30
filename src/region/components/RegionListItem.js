@@ -81,6 +81,7 @@ const RegionListItem = ({
                 handleRegionClick={handleRegionClick}
                 handleRegionDetails={handleRegionDetails}
                 handleRegionExpandClick={handleRegionExpandClick}
+                canUserEditRegion={canUserEditRegion}
               />
             );
           })}

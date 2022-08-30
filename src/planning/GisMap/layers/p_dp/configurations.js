@@ -1,7 +1,7 @@
 export const LAYER_KEY = "p_dp";
 
 export const INITIAL_DATA = {
-  name: "First DP",
+  name: "",
   address: "",
   unique_id: "REG_DP_",
   status: { value: "P", label: "Planned" },

@@ -115,7 +115,7 @@ export default function HomePage() {
         </Card>
       </Stack>
 
-      <Stack my={2}>
+      {/* <Stack my={2}>
         <Paper p={3}>
           <Typography textAlign="center" variant="h5">
             User Activity Logs
@@ -132,7 +132,7 @@ export default function HomePage() {
             isLoading={false}
           />
         </Paper>
-      </Stack>
+      </Stack> */}
     </Container>
   );
 }
