@@ -361,7 +361,7 @@ const UserPermissions = ({
         minHeight={54}
         justifyContent="center"
       >
-        <PermissionLabel>Distribution Point Planning</PermissionLabel>
+        <PermissionLabel>Distribution Point</PermissionLabel>
         <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
@@ -396,7 +396,7 @@ const UserPermissions = ({
         minHeight={54}
         justifyContent="center"
       >
-        <PermissionLabel>Spliter Planning</PermissionLabel>
+        <PermissionLabel>Spliter</PermissionLabel>
         <Stack flexDirection="row" minWidth={240}>
           <FormCheckbox
             label="View"
