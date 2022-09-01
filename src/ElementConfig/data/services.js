@@ -1,13 +1,13 @@
 import Api from "utils/api.utils";
 import {
-  apiDeleteElement,
-  apiGetElementList,
-  apiPostElementAdd,
-  apiPutElementEdit,
+  apiDeleteLayerConfig,
+  apiGetLayerConfigList,
+  apiPostLayerConfigAdd,
+  apiPutLayerConfigEdit,
 } from "utils/url.constants";
 
 export const fetchElementList = async ({ queryKey }) => {
-  const res = await Api.get(apiGetElementList(queryKey[1]));
+  const res = await Api.get(apiGetLayerConfigList(queryKey[1]));
   return res.data;
 };
 
@@ -16,16 +16,16 @@ export const upsertElementConfig = async (data, layerKey) => {
 
   if (configId) {
     delete data.id;
-    const res = await Api.put(apiPutElementEdit(layerKey, configId), data);
+    const res = await Api.put(apiPutLayerConfigEdit(layerKey, configId), data);
     return res.data;
   } else {
     const postData = { ...data, splitter_type: data.splitter_type.value };
-    const res = await Api.post(apiPostElementAdd(layerKey), postData);
+    const res = await Api.post(apiPostLayerConfigAdd(layerKey), postData);
     return res.data;
   }
 };
 
 export const deleteElementConfig = async (configId, layerKey) => {
-  const res = await Api.delete(apiDeleteElement(layerKey, configId));
+  const res = await Api.delete(apiDeleteLayerConfig(layerKey, configId));
   return res.data;
 };

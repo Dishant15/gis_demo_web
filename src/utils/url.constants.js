@@ -73,19 +73,19 @@ export const apiPutUnitEdit = (unitId = ":unit_id") =>
 export const apiGetPlanningConfigs = () => "/api/planning/configs/";
 export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 
-// element api
-export const apiGetElementList = (layerKey = ":layer_key") =>
-  `/api/element/config/${layerKey}/list/`;
+// layer config api
+export const apiGetLayerConfigList = (layerKey = ":layer_key") =>
+  `/api/layer/config/${layerKey}/list/`;
 
-export const apiPostElementAdd = (layerKey = ":layer_key") =>
-  `/api/element/config/${layerKey}/add/`;
+export const apiPostLayerConfigAdd = (layerKey = ":layer_key") =>
+  `/api/layer/config/${layerKey}/add/`;
 
-export const apiPutElementEdit = (
+export const apiPutLayerConfigEdit = (
   layerKey = ":layer_key",
   configId = ":config_id"
-) => `/api/element/config/${layerKey}/${configId}/edit/`;
+) => `/api/layer/config/${layerKey}/${configId}/edit/`;
 
-export const apiDeleteElement = (
+export const apiDeleteLayerConfig = (
   layerKey = ":layer_key",
   configId = ":config_id"
-) => `/api/element/config/${layerKey}/${configId}/delete/`;
+) => `/api/layer/config/${layerKey}/${configId}/delete/`;
