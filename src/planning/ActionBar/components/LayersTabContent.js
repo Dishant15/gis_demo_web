@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 
-import { get, noop } from "lodash";
+import { get, noop, size } from "lodash";
 import { Box, Divider, Stack } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -23,8 +23,10 @@ import {
 import {
   handleLayerSelect,
   removeLayerSelect,
+  setActiveTab,
 } from "planning/data/planningState.reducer";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const regionLayerConfig = {
   layer_key: "region",
@@ -78,6 +80,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const dispatch = useDispatch();
   const [isExpanded, setExpanded] = useState(false);
   const layerNetState = useSelector(getLayerNetworkState(layer_key));
+  const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
@@ -90,6 +93,19 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
 
   const onLayerClick = () => {
     if (isLoading) return;
+    if (!size(selectedRegionIds)) {
+      // show error notification to select regions first
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Select Region first",
+          text: "Please select region to narrow down your search of elements.",
+        })
+      );
+      // change tab to regions
+      dispatch(setActiveTab(0));
+      return;
+    }
     // add / remove current layer to selectedLayers
     if (isSelected) {
       dispatch(removeLayerSelect(layer_key));
