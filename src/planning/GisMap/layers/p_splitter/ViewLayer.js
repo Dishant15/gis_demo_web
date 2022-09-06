@@ -9,9 +9,16 @@ import { getLayerViewData } from "planning/data/planningGis.selectors";
 
 export const LAYER_KEY = "p_splitter";
 
-export const Geometry = (coordinates) => (
-  <Marker icon={{ url: SPLITER_ICON }} position={coordinates} />
-);
+export const Geometry = ({ coordinates, splitter_type }) => {
+  return (
+    <Marker
+      icon={{
+        url: splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon,
+      }}
+      position={coordinates}
+    />
+  );
+};
 
 export const ViewLayer = () => {
   /**
@@ -23,8 +30,8 @@ export const ViewLayer = () => {
 
   return (
     <>
-      {data.map((dp) => {
-        const { id, coordinates, splitter_type } = dp;
+      {data.map((splitter) => {
+        const { id, coordinates, splitter_type } = splitter;
         return (
           <Marker
             icon={{

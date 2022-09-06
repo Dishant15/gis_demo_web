@@ -12,7 +12,7 @@ const TicketMapLayers = React.memo(() => {
       {work_orders.map((workOrder) => {
         const { id, layer_key, element } = workOrder;
         if (element.id) {
-          return getGeometryFromKey(id, layer_key, element.coordinates);
+          return getGeometryFromKey({ ...element, key: id, layer_key });
         }
       })}
     </>

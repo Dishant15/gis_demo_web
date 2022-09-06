@@ -7,7 +7,7 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { covertLayerServerData } from "../GisMap/utils";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
-import { clone, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,

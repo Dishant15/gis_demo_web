@@ -33,16 +33,16 @@ export const getLayerCompFromKey = (layerKey) => {
   }
 };
 
-export const getGeometryFromKey = (id, layerKey, coordinates) => {
-  switch (layerKey) {
+export const getGeometryFromKey = (props) => {
+  switch (props.layer_key) {
     // case RegionKey:
     //   return <RegionViewLayer key={layerKey} />;
 
     case DpKey:
-      return <DPGeometry key={id} coordinates={coordinates} />;
+      return <DPGeometry {...props} />;
 
     case SplitterKey:
-      return <SplitterGeometry key={id} coordinates={coordinates} />;
+      return <SplitterGeometry {...props} />;
 
     default:
       return null;
