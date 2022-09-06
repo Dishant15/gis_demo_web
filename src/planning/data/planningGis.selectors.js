@@ -12,3 +12,7 @@ export const getLayerNetworkState = (layerKey) =>
 
 export const getLayerViewData = (layerKey) =>
   createSelector(getAllLayersData, (layerData) => get(layerData, layerKey, {}));
+
+// ticket selectors
+
+export const getPlanningTicketId = (store) => store.planningGis.ticketId;

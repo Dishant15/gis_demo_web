@@ -5,6 +5,9 @@ export const getGeoSurveyPath = () => "/geo/survey";
 export const getRegionPage = () => "/regions";
 export const getPlanningPage = () => "/planning";
 
+export const getPlanningTicketPage = (ticketId) =>
+  `/planning?ticketId=${ticketId}`;
+
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
 export const getEditUserPage = (userId = ":userId") => `/users/edit/${userId}`;

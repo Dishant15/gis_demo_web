@@ -20,12 +20,21 @@ const initialState = {
   layerNetworkState: {},
   // shape : { layer-key: { viewData: [], editData: {} } }
   layerData: {},
+  // ticket related fields
+  ticketId: null,
+  // shape : {}
+  ticketData: {},
 };
 
 const planningGisSlice = createSlice({
   name: "planningGis",
   initialState,
-  reducers: {},
+  reducers: {
+    // payload: ticketId ( Number ) | null
+    setTicketId: (state, { payload }) => {
+      state.ticketId = payload;
+    },
+  },
   extraReducers: {
     // payload : layerKey
     [handleLayerSelect]: (state, { payload }) => {
@@ -81,4 +90,5 @@ const planningGisSlice = createSlice({
   },
 });
 
+export const { setTicketId } = planningGisSlice.actions;
 export default planningGisSlice.reducer;

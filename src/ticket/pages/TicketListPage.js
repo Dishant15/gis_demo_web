@@ -23,6 +23,7 @@ import { fetchTicketList } from "ticket/data/services";
 import {
   getAddTicketPage,
   getEditTicketPage,
+  getPlanningTicketPage,
   getTicketWorkorderPage,
 } from "utils/url.constants";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
@@ -51,8 +52,12 @@ const TicketListPage = () => {
     navigate(getEditTicketPage(ticketId));
   };
 
-  const onViewClick = (ticketId) => {
-    navigate(getTicketWorkorderPage(ticketId));
+  const onViewClick = (ticketId, ticketType) => {
+    if (ticketType === "P") {
+      navigate(getPlanningTicketPage(ticketId));
+    } else {
+      navigate(getTicketWorkorderPage(ticketId));
+    }
   };
 
   return (
@@ -136,23 +141,29 @@ const TicketListPage = () => {
 /**
  * Render view and delete icons
  */
-const ActionCell = (props) => {
+const ActionCell = ({
+  canTicketWorkorderView,
+  canTicketEdit,
+  data,
+  onViewClick,
+  onEditClick,
+}) => {
   return (
     <Stack direction="row" spacing={1}>
-      {props.canTicketWorkorderView ? (
+      {canTicketWorkorderView ? (
         <IconButton
           aria-label="view"
           color="primary"
-          onClick={() => props.onViewClick(props.data.id)}
+          onClick={() => onViewClick(data.id, data.ticket_type)}
         >
           <VisibilityIcon />
         </IconButton>
       ) : null}
-      {props.canTicketEdit ? (
+      {canTicketEdit ? (
         <IconButton
           aria-label="edit"
           color="secondary"
-          onClick={() => props.onEditClick(props.data.id)}
+          onClick={() => onEditClick(data.id)}
         >
           <EditIcon />
         </IconButton>
