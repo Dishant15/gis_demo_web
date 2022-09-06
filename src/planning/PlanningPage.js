@@ -39,7 +39,7 @@ const PlanningPage = () => {
         <div className="pl-content">
           <div className="pl-map-container">
             {!isNull(ticketId) ? <TicketSideBar ticketId={ticketId} /> : null}
-            <GisMap />
+            <GisMap ticketId={ticketId} />
           </div>
         </div>
       </div>

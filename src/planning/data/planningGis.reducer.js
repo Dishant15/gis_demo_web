@@ -7,7 +7,7 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { covertLayerServerData } from "../GisMap/utils";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
-import { cloneDeep } from "lodash";
+import { clone, cloneDeep } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -31,6 +31,8 @@ const initialState = {
     isFetched: false,
     isError: false,
   },
+  // list of elements that can be shown on map with converted data
+  ticketGisData: [],
 };
 
 const planningGisSlice = createSlice({
@@ -104,7 +106,22 @@ const planningGisSlice = createSlice({
       state.ticketData.isError = true;
     },
     [fetchTicketWorkorderDataThunk.fulfilled]: (state, action) => {
-      state.ticketData = cloneDeep(action.payload);
+      let ticketGisData = cloneDeep(action.payload);
+      // convert ticket gis data into google coordinate data
+      for (
+        let tg_ind = 0;
+        tg_ind < ticketGisData.work_orders.length;
+        tg_ind++
+      ) {
+        const currWO = ticketGisData.work_orders[tg_ind];
+        if (currWO.element?.id) {
+          // delete type WO may not have element
+          currWO.element = covertLayerServerData(currWO.layer_key, [
+            currWO.element,
+          ])[0];
+        }
+      }
+      state.ticketData = ticketGisData;
       state.ticketData.isLoading = false;
       state.ticketData.isFetched = true;
       state.ticketData.isError = false;

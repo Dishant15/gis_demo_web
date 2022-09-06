@@ -1,4 +1,4 @@
-export { ViewLayer } from "./ViewLayer";
+export { ViewLayer, Geometry } from "./ViewLayer";
 
 export {
   LAYER_KEY,

@@ -17,7 +17,7 @@ import { getPlanningTicketData } from "planning/data/planningGis.selectors";
 const TicketSideBar = React.memo(({ ticketId }) => {
   const dispatch = useDispatch();
   const ticketData = useSelector(getPlanningTicketData);
-  const { isLoading, name, work_orders } = ticketData;
+  const { isLoading, isError, name, work_orders } = ticketData;
   // fetch ticket details
   useEffect(() => {
     dispatch(fetchTicketWorkorderDataThunk(ticketId));
@@ -25,6 +25,13 @@ const TicketSideBar = React.memo(({ ticketId }) => {
 
   if (isLoading) {
     return <TicketSideBarDummyLoading />;
+  }
+  if (isError) {
+    return (
+      <Box>
+        <Typography variant="h5">Error occured while fetching data</Typography>
+      </Box>
+    );
   }
 
   return (

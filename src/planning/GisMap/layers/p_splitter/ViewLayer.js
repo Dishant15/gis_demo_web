@@ -7,6 +7,10 @@ import { getLayerViewData } from "planning/data/planningGis.selectors";
 
 export const LAYER_KEY = "p_splitter";
 
+export const Geometry = (coordinates) => (
+  <Marker icon={{ url: SPLITER_ICON }} position={coordinates} />
+);
+
 export const ViewLayer = () => {
   /**
    * Parent:

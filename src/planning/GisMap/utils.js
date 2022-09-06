@@ -4,9 +4,14 @@ import {
   ViewLayer as RegionViewLayer,
   LAYER_KEY as RegionKey,
 } from "./layers/region";
-import { ViewLayer as DPViewLayer, LAYER_KEY as DpKey } from "./layers/p_dp";
+import {
+  ViewLayer as DPViewLayer,
+  Geometry as DPGeometry,
+  LAYER_KEY as DpKey,
+} from "./layers/p_dp";
 import {
   ViewLayer as SplitterLayer,
+  Geometry as SplitterGeometry,
   LAYER_KEY as SplitterKey,
 } from "./layers/p_splitter";
 
@@ -22,6 +27,22 @@ export const getLayerCompFromKey = (layerKey) => {
 
     case SplitterKey:
       return <SplitterLayer key={layerKey} />;
+
+    default:
+      return null;
+  }
+};
+
+export const getGeometryFromKey = (id, layerKey, coordinates) => {
+  switch (layerKey) {
+    // case RegionKey:
+    //   return <RegionViewLayer key={layerKey} />;
+
+    case DpKey:
+      return <DPGeometry key={id} coordinates={coordinates} />;
+
+    case SplitterKey:
+      return <SplitterGeometry key={id} coordinates={coordinates} />;
 
     default:
       return null;

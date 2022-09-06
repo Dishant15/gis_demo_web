@@ -9,6 +9,10 @@ import PDPViewIcon from "assets/markers/p_dp_view.svg";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { LAYER_KEY, FORM_CONFIGS } from "./configurations";
 
+export const Geometry = ({ coordinates }) => (
+  <Marker icon={{ url: PDPViewIcon }} position={coordinates} />
+);
+
 export const ViewLayer = () => {
   /**
    * Parent:
