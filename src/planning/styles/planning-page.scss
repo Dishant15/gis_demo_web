@@ -63,6 +63,24 @@
       .pl-map-container {
         position: relative;
         flex: 1;
+
+        .ticket-sidebar-wrapper {
+          position: absolute;
+          right: 2em;
+          top: 8%;
+          height: 80%;
+          z-index: 5;
+          width: 25%;
+          min-width: 300px;
+
+          .ticket-sidebar-heading {
+            padding: 0.5em;
+          }
+
+          .ticket-sidebar-content {
+            height: 100%;
+          }
+        }
       }
     }
   }

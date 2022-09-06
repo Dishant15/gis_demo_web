@@ -16,3 +16,10 @@ export const getLayerViewData = (layerKey) =>
 // ticket selectors
 
 export const getPlanningTicketId = (store) => store.planningGis.ticketId;
+export const getPlanningTicketNetworkStatus = (store) => ({
+  isLoading: store.planningGis.ticketData.isLoading,
+  isFetched: store.planningGis.ticketData.isFetched,
+  isError: store.planningGis.ticketData.isError,
+});
+
+export const getPlanningTicketData = (store) => store.planningGis.ticketData;

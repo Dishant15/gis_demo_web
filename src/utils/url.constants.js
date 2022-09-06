@@ -76,6 +76,9 @@ export const apiPutUnitEdit = (unitId = ":unit_id") =>
 export const apiGetPlanningConfigs = () => "/api/planning/configs/";
 export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 
+export const apiGetTicketWorkorderElements = (ticketId = ":ticketId") =>
+  `/api/ticket/${ticketId}/workorders/elements/`;
+
 // layer config api
 export const apiGetLayerConfigList = (layerKey = ":layer_key") =>
   `/api/layer/config/${layerKey}/list/`;

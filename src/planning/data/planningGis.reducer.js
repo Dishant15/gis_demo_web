@@ -6,6 +6,8 @@ import size from "lodash/size";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { covertLayerServerData } from "../GisMap/utils";
+import { fetchTicketWorkorderDataThunk } from "./ticket.services";
+import { cloneDeep } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -22,8 +24,13 @@ const initialState = {
   layerData: {},
   // ticket related fields
   ticketId: null,
-  // shape : {}
-  ticketData: {},
+  // shape : { **Network state, **ticket fields, area_pocket: {},
+  //          work_orders: [ {**WorkOrder fields, element }, ... ] }
+  ticketData: {
+    isLoading: false,
+    isFetched: false,
+    isError: false,
+  },
 };
 
 const planningGisSlice = createSlice({
@@ -86,6 +93,21 @@ const planningGisSlice = createSlice({
     [fetchLayerDataThunk.rejected]: (state, action) => {
       const layerKey = get(action, "meta.arg.layerKey", "");
       state.layerNetworkState[layerKey].isError = true;
+    },
+    [fetchTicketWorkorderDataThunk.pending]: (state, action) => {
+      state.ticketData.isLoading = true;
+      state.ticketData.isError = false;
+    },
+    [fetchTicketWorkorderDataThunk.rejected]: (state, action) => {
+      state.ticketData.isLoading = false;
+      state.ticketData.isFetched = true;
+      state.ticketData.isError = true;
+    },
+    [fetchTicketWorkorderDataThunk.fulfilled]: (state, action) => {
+      state.ticketData = cloneDeep(action.payload);
+      state.ticketData.isLoading = false;
+      state.ticketData.isFetched = true;
+      state.ticketData.isError = false;
     },
   },
 });
