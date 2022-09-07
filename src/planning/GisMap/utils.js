@@ -6,6 +6,7 @@ import {
 } from "./layers/region";
 import {
   ViewLayer as DPViewLayer,
+  AddLayer as DPAddLayer,
   Geometry as DPGeometry,
   LAYER_KEY as DpKey,
 } from "./layers/p_dp";
@@ -16,6 +17,20 @@ import {
 } from "./layers/p_splitter";
 
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
+
+export const MAP_STATE = {
+  addElement: "A",
+  editElement: "E",
+};
+
+export const LayerKeyMappings = {
+  [DpKey]: {
+    [MAP_STATE.addElement]: <DPAddLayer />,
+  },
+  [SplitterKey]: {
+    // [MAP_STATE.addElement]: AddMarkerLayer,
+  },
+};
 
 export const getLayerCompFromKey = (layerKey) => {
   switch (layerKey) {

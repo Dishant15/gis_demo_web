@@ -22,6 +22,8 @@ const initialState = {
   layerNetworkState: {},
   // shape : { layer-key: { viewData: [], editData: {} } }
   layerData: {},
+  // shape: { event: "addElement" | "editElement", layerKey, geometry }
+  mapState: {},
   // ticket related fields
   ticketId: null,
   // shape : { **Network state, **ticket fields, area_pocket: {},
@@ -42,6 +44,9 @@ const planningGisSlice = createSlice({
     // payload: ticketId ( Number ) | null
     setTicketId: (state, { payload }) => {
       state.ticketId = payload;
+    },
+    setMapState: (state, { payload }) => {
+      state.mapState = { ...payload };
     },
   },
   extraReducers: {
@@ -129,5 +134,5 @@ const planningGisSlice = createSlice({
   },
 });
 
-export const { setTicketId } = planningGisSlice.actions;
+export const { setTicketId, setMapState } = planningGisSlice.actions;
 export default planningGisSlice.reducer;

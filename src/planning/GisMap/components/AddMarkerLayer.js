@@ -1,11 +1,10 @@
-import React, { forwardRef, useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { DrawingManager } from "@react-google-maps/api";
 
-import PDPViewIcon from "assets/markers/p_dp_view.svg";
 import { Box, Button, Portal, Stack, Typography } from "@mui/material";
 import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
 
-const AddMarkerLayer = (props) => {
+const AddMarkerLayer = ({ icon, helpText }) => {
   const markerRef = useRef();
   // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
@@ -29,7 +28,7 @@ const AddMarkerLayer = (props) => {
         options={{
           drawingControl: false,
           markerOptions: {
-            icon: PDPViewIcon,
+            icon,
             clickable: true,
             draggable: true,
             editable: true,
@@ -50,7 +49,7 @@ const AddMarkerLayer = (props) => {
             minWidth: "250px",
           }}
         >
-          <Typography variant="h6">Create New Element</Typography>
+          <Typography variant="h6">{helpText}</Typography>
           <Stack>
             <Button onClick={handleAddComplete}>Submit</Button>
             <Button>Cancel</Button>
