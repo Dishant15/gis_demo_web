@@ -8,6 +8,7 @@ import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
 
 import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 import { getLayerCompFromKey } from "./utils";
+import AddMarkerLayer from "./components/AddMarkerLayer";
 
 const GisMap = React.memo(({ ticketId }) => {
   // get list of selected layer-keys
@@ -23,6 +24,7 @@ const GisMap = React.memo(({ ticketId }) => {
   return (
     <Box width="100%" height="100%">
       <Map center={mapCenter}>
+        <AddMarkerLayer />
         {!isNull(ticketId) ? <TicketMapLayers /> : null}
         {Layers}
       </Map>

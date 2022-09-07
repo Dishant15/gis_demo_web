@@ -51,6 +51,10 @@ export const getCoordinatesFromFeature = (feature) => {
   return resultLatLongs;
 };
 
+export const getMarkerCoordinatesFromFeature = (marker) => {
+  return marker.getPosition().toJSON();
+};
+
 export const getFillColor = (layer_index) => {
   return get(uniq_colors, layer_index - 1, "#59666C");
 };
