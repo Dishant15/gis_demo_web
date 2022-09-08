@@ -5,6 +5,7 @@ export const INITIAL_DATA = {
   address: "",
   unique_id: "REG_DP_",
   status: { value: "P", label: "Planned" },
+  coordinates: {},
 };
 
 // this will become function -> generate From Configs

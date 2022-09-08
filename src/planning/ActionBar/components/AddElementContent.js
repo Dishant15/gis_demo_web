@@ -11,8 +11,9 @@ import Typography from "@mui/material/Typography";
 import { fetchLayerList } from "planning/data/actionBar.services";
 import { ICONS } from "utils/icons";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { MAP_STATE } from "planning/GisMap/utils";
+import { LayerKeyMappings, MAP_STATE } from "planning/GisMap/utils";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
  * Parent:
@@ -33,14 +34,25 @@ const AddElementContent = () => {
 
   const handleAddElementClick = useCallback(
     (layerKey) => () => {
-      if (!event) {
+      // show error if one event already running
+      if (event) {
         dispatch(
-          setMapState({
-            event: MAP_STATE.addElement,
-            layerKey,
+          addNotification({
+            type: "warning",
+            title: "Operation can not start",
+            text: "Please complete current operation before starting new",
           })
         );
+        return;
       }
+      // start event if no other event running
+      dispatch(
+        setMapState({
+          event: MAP_STATE.addElement,
+          layerKey,
+          data: LayerKeyMappings[layerKey]["INITIAL_DATA"],
+        })
+      );
     },
     [event]
   );

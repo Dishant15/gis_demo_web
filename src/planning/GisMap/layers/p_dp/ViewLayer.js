@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import { Marker } from "@react-google-maps/api";
 
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
+import DynamicForm from "components/common/DynamicForm";
 import PDPViewIcon from "assets/markers/p_dp_view.svg";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
-import { LAYER_KEY, FORM_CONFIGS } from "./configurations";
+import { FORM_CONFIGS, LAYER_KEY } from "./configurations";
+import { MAP_STATE } from "planning/GisMap/utils";
 
 export const Geometry = ({ coordinates }) => (
   <Marker icon={{ url: PDPViewIcon }} position={coordinates} />
@@ -37,8 +39,26 @@ export const AddLayer = () => {
     <AddMarkerLayer
       icon={PDPViewIcon}
       helpText="Click on map to add new Distribution Point location"
+      nextEvent={{
+        event: MAP_STATE.showElementForm, // event for "layerForm"
+        layerKey: LAYER_KEY,
+        // init data will be updated by addElement event
+      }}
     />
   );
 };
 
-// export EditLayer
+export const ElementForm = () => {
+  const onSubmit = () => {};
+  const onClose = () => {};
+  const isLoading = false;
+
+  return (
+    <DynamicForm
+      formConfigs={FORM_CONFIGS}
+      onSubmit={onSubmit}
+      onClose={onClose}
+      isLoading={isLoading}
+    />
+  );
+};

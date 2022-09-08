@@ -1,10 +1,18 @@
 import React, { useCallback, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { DrawingManager } from "@react-google-maps/api";
 
-import { Box, Button, Portal, Stack, Typography } from "@mui/material";
-import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
+import { Button, Stack, Typography } from "@mui/material";
+import GisMapPopups from "./GisMapPopups";
 
-const AddMarkerLayer = ({ icon, helpText }) => {
+import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
+import {
+  setMapState,
+  updateMapStateData,
+} from "planning/data/planningGis.reducer";
+
+const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
+  const dispatch = useDispatch();
   const markerRef = useRef();
   // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
@@ -16,10 +24,15 @@ const AddMarkerLayer = ({ icon, helpText }) => {
 
   const handleAddComplete = useCallback(() => {
     const markerCoords = getMarkerCoordinatesFromFeature(markerRef.current);
-    console.log(
-      "🚀 ~ file: AddMarkerLayer.js ~ line 20 ~ handleAddComplete ~ markerCoords",
-      markerCoords
-    );
+    // set marker coords to form data
+    dispatch(updateMapStateData({ coordinates: markerCoords }));
+    // complete current event -> fire next event
+    dispatch(setMapState(nextEvent));
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    dispatch(setMapState({}));
+    markerRef.current.setMap(null);
   }, []);
 
   return (
@@ -39,23 +52,13 @@ const AddMarkerLayer = ({ icon, helpText }) => {
         drawingMode={isAdd ? "marker" : null}
         onMarkerComplete={handleMarkerCreate}
       />
-      <Portal>
-        <Box
-          sx={{
-            backgroundColor: "background.default",
-            position: "fixed",
-            top: "10%",
-            right: "10%",
-            minWidth: "250px",
-          }}
-        >
-          <Typography variant="h6">{helpText}</Typography>
-          <Stack>
-            <Button onClick={handleAddComplete}>Submit</Button>
-            <Button>Cancel</Button>
-          </Stack>
-        </Box>
-      </Portal>
+      <GisMapPopups>
+        <Typography variant="h6">{helpText}</Typography>
+        <Stack>
+          <Button onClick={handleAddComplete}>Submit</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </Stack>
+      </GisMapPopups>
     </>
   );
 };
