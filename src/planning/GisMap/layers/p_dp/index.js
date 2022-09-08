@@ -1,8 +1,3 @@
-export { ViewLayer, AddLayer, Geometry } from "./ViewLayer";
+export { ViewLayer, AddLayer, ElementForm, Geometry } from "./ViewLayer";
 
-export {
-  LAYER_KEY,
-  FORM_CONFIGS,
-  onSubmit,
-  INITIAL_DATA,
-} from "./configurations";
+export { LAYER_KEY, FORM_CONFIGS, INITIAL_DATA } from "./configurations";

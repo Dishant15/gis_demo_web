@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { fetchLayerList } from "planning/data/actionBar.services";
 import { ICONS } from "utils/icons";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { LayerKeyMappings, MAP_STATE } from "planning/GisMap/utils";
+import { MAP_STATE } from "planning/GisMap/utils";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 
@@ -50,7 +50,6 @@ const AddElementContent = () => {
         setMapState({
           event: MAP_STATE.addElement,
           layerKey,
-          data: LayerKeyMappings[layerKey]["INITIAL_DATA"],
         })
       );
     },

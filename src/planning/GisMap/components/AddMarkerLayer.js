@@ -25,7 +25,12 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
   const handleAddComplete = useCallback(() => {
     const markerCoords = getMarkerCoordinatesFromFeature(markerRef.current);
     // set marker coords to form data
-    dispatch(updateMapStateData({ coordinates: markerCoords }));
+    nextEvent.data = {
+      ...nextEvent.data,
+      coordinates: markerCoords,
+    };
+    // clear map refs
+    markerRef.current.setMap(null);
     // complete current event -> fire next event
     dispatch(setMapState(nextEvent));
   }, []);
@@ -55,7 +60,9 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
       <GisMapPopups>
         <Typography variant="h6">{helpText}</Typography>
         <Stack>
-          <Button onClick={handleAddComplete}>Submit</Button>
+          <Button disabled={isAdd} onClick={handleAddComplete}>
+            Submit
+          </Button>
           <Button onClick={handleCancel}>Cancel</Button>
         </Stack>
       </GisMapPopups>

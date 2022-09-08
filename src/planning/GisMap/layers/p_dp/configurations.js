@@ -4,6 +4,7 @@ export const INITIAL_DATA = {
   name: "",
   address: "",
   unique_id: "REG_DP_",
+  ref_code: "",
   status: { value: "P", label: "Planned" },
   coordinates: {},
 };
@@ -13,6 +14,7 @@ export const FORM_CONFIGS = {
   sections: [
     {
       title: "Distribution Point Form",
+      showCloseIcon: true,
       fieldConfigs: [
         {
           field_key: "name",
@@ -44,9 +46,6 @@ export const FORM_CONFIGS = {
   ],
 };
 
-export const onSubmit = (data) => {
-  console.log("🚀 ~ file: configurations.js ~ line 47 ~ onSubmit ~ data", data);
-};
 // export detailsPopup = {
 //   "name" : "String"
 // }

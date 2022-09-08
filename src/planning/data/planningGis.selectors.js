@@ -12,9 +12,13 @@ export const getLayerNetworkState = (layerKey) =>
 
 export const getLayerViewData = (layerKey) =>
   createSelector(getAllLayersData, (layerData) => get(layerData, layerKey, {}));
-export const getPlanningMapState = (store) => store.planningGis.mapState;
-// ticket selectors
 
+// Gis Map Event selectors
+export const getPlanningMapState = (store) => store.planningGis.mapState;
+export const getPlanningMapStateData = (store) =>
+  store.planningGis.mapState.data || {};
+
+// ticket selectors
 export const getPlanningTicketId = (store) => store.planningGis.ticketId;
 export const getPlanningTicketNetworkStatus = (store) => ({
   isLoading: store.planningGis.ticketData.isLoading,
