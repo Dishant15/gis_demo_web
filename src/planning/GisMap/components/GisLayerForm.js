@@ -27,7 +27,6 @@ export const GisLayerForm = ({
     (mutationData) => addNewElement({ data: mutationData, layerKey }),
     {
       onSuccess: (res) => {
-        console.log("🚀 ~ file: GisLayerForm.js ~ line 28 ~ res", res);
         // close form
         dispatch(setMapState({}));
         // refetch layer

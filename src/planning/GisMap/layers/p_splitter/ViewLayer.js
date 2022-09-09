@@ -7,13 +7,11 @@ import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 
-export const LAYER_KEY = "p_splitter";
-
-export const Geometry = ({ coordinates, splitter_type }) => {
+export const Geometry = ({ coordinates, splitterType }) => {
   return (
     <Marker
       icon={{
-        url: splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon,
+        url: splitterType === "P" ? PrimarySpliterIcon : SecondarySpliterIcon,
       }}
       position={coordinates}
     />
@@ -33,15 +31,10 @@ export const ViewLayer = () => {
       {data.map((splitter) => {
         const { id, coordinates, splitter_type } = splitter;
         return (
-          <Marker
-            icon={{
-              url:
-                splitter_type === "P"
-                  ? PrimarySpliterIcon
-                  : SecondarySpliterIcon,
-            }}
+          <Geometry
             key={id}
-            position={coordinates}
+            splitterType={splitter_type}
+            coordinates={coordinates}
           />
         );
       })}
