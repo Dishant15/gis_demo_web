@@ -74,6 +74,8 @@ export const apiPutUnitEdit = (unitId = ":unit_id") =>
 
 // planning apis
 export const apiGetPlanningConfigs = () => "/api/planning/configs/";
+export const apiGetPlanningConfigsDetails = () =>
+  "/api/planning/configs/details/";
 export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 
 export const apiPostAddElement = (layerKey) =>

@@ -4,6 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   apiGetRegionList,
   apiGetPlanningConfigs,
+  apiGetPlanningConfigsDetails,
   apiGetPlanningLayerData,
 } from "utils/url.constants";
 
@@ -14,6 +15,11 @@ export const fetchRegionList = async () => {
 
 export const fetchLayerList = async () => {
   const res = await Api.get(apiGetPlanningConfigs());
+  return res.data;
+};
+
+export const fetchLayerListDetails = async () => {
+  const res = await Api.get(apiGetPlanningConfigsDetails());
   return res.data;
 };
 

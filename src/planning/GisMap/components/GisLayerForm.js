@@ -1,17 +1,17 @@
 import React, { useRef } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { get } from "lodash";
 
 import DynamicForm from "components/common/DynamicForm";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 
-import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
-
 import { addNewElement } from "planning/data/layer.services";
-import { setMapState } from "planning/data/planningGis.reducer";
-import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
-import { get } from "lodash";
+import { setMapState } from "planning/data/planningGis.reducer";
+import { addNotification } from "redux/reducers/notification.reducer";
+import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 
 export const GisLayerForm = ({
   layerKey,
@@ -27,6 +27,12 @@ export const GisLayerForm = ({
     (mutationData) => addNewElement({ data: mutationData, layerKey }),
     {
       onSuccess: (res) => {
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Element Added Successfully",
+          })
+        );
         // close form
         dispatch(setMapState({}));
         // refetch layer
@@ -38,14 +44,33 @@ export const GisLayerForm = ({
         );
       },
       onError: (err) => {
-        let errData = get(err, "response.data");
-
-        for (const fieldKey in errData) {
-          if (Object.hasOwnProperty.call(errData, fieldKey)) {
-            const errList = errData[fieldKey];
-            formRef.current.onError(fieldKey, get(errList, "0", ""));
+        const errStatus = get(err, "response.status");
+        let notiText;
+        if (errStatus === 400) {
+          let errData = get(err, "response.data");
+          for (const fieldKey in errData) {
+            if (Object.hasOwnProperty.call(errData, fieldKey)) {
+              const errList = errData[fieldKey];
+              formRef.current.onError(fieldKey, get(errList, "0", ""));
+            }
           }
+          notiText = "Please correct input errors and submit again";
+        } else {
+          // maybe Internal server or network error
+          formRef.current.onError(
+            "__all__",
+            "Something went wrong. Can not perform operation"
+          );
+          notiText =
+            "Something went wrong at our side. Please try again after refreshing the page.";
         }
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Operation Failed",
+            text: notiText,
+          })
+        );
       },
     }
   );

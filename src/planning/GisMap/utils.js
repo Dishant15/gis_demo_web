@@ -10,11 +10,13 @@ import {
   Geometry as DPGeometry,
   LAYER_KEY as DpKey,
   ElementForm as DpForm,
+  Icon as DpIcon,
 } from "./layers/p_dp";
 import {
   ViewLayer as SplitterLayer,
   Geometry as SplitterGeometry,
   LAYER_KEY as SplitterKey,
+  getIcon as SplitterGetIcon,
 } from "./layers/p_splitter";
 
 import { coordsToLatLongMap } from "utils/map.utils";
@@ -29,9 +31,11 @@ export const LayerKeyMappings = {
   [DpKey]: {
     [MAP_STATE.addElement]: <DPAddLayer />,
     [MAP_STATE.showElementForm]: <DpForm />,
+    Icon: DpIcon,
   },
   [SplitterKey]: {
     // [MAP_STATE.addElement]: AddMarkerLayer,
+    Icon: SplitterGetIcon,
   },
 };
 

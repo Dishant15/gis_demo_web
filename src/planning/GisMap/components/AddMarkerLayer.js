@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { DrawingManager } from "@react-google-maps/api";
 
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
 import GisMapPopups from "./GisMapPopups";
 
 import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
@@ -10,6 +10,7 @@ import {
   setMapState,
   updateMapStateData,
 } from "planning/data/planningGis.reducer";
+import { Box } from "@mui/system";
 
 const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
   const dispatch = useDispatch();
@@ -58,13 +59,31 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
         onMarkerComplete={handleMarkerCreate}
       />
       <GisMapPopups>
-        <Typography variant="h6">{helpText}</Typography>
-        <Stack>
-          <Button disabled={isAdd} onClick={handleAddComplete}>
-            Submit
-          </Button>
-          <Button onClick={handleCancel}>Cancel</Button>
-        </Stack>
+        <Paper>
+          <Box sx={{ backgroundColor: "secondary.light" }} p={2}>
+            <Typography color="background.default" mb={2} variant="h6">
+              {helpText}
+            </Typography>
+            <Stack spacing={2} direction="row">
+              <Button
+                sx={{ minWidth: "10em" }}
+                disableElevation
+                variant="contained"
+                disabled={isAdd}
+                onClick={handleAddComplete}
+              >
+                Submit
+              </Button>
+              <Button
+                color="error"
+                sx={{ minWidth: "10em" }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        </Paper>
       </GisMapPopups>
     </>
   );

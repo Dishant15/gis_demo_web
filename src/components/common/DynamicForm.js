@@ -122,18 +122,20 @@ const DynamicForm = forwardRef(
             </Stack>
           );
         })}
-        <Stack p={2}>
+        <Stack p={3} spacing={3} direction="row">
+          <Button sx={{ minWidth: "10em" }} color="error" onClick={onCancel}>
+            Cancel
+          </Button>
           <LoadingButton
-            variant="outlined"
+            sx={{ minWidth: "10em" }}
+            variant="contained"
+            disableElevation
             color="success"
             type="submit"
             loading={isLoading}
           >
             Submit
           </LoadingButton>
-          <Button color="error" onClick={onCancel}>
-            Cancel
-          </Button>
         </Stack>
       </Box>
     );

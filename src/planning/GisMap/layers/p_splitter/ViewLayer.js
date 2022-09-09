@@ -6,12 +6,16 @@ import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
+import { LAYER_KEY } from "./configurations";
+
+export const getIcon = ({ splitter_type }) =>
+  splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
 
 export const Geometry = ({ coordinates, splitterType }) => {
   return (
     <Marker
       icon={{
-        url: splitterType === "P" ? PrimarySpliterIcon : SecondarySpliterIcon,
+        url: getIcon({ splitter_type: splitterType }),
       }}
       position={coordinates}
     />
@@ -41,18 +45,3 @@ export const ViewLayer = () => {
     </>
   );
 };
-
-// export EditLayer
-
-// export detailsPopup = {
-//   "name" : "String"
-// }
-
-// export addForm
-
-// export editForm = {
-//   "name" : "String"
-//   "multi sel": {
-//     options :
-//   }
-// }
