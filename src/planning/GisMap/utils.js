@@ -14,8 +14,10 @@ import {
 } from "./layers/p_dp";
 import {
   ViewLayer as SplitterLayer,
+  AddLayer as SplitterAddLayer,
   Geometry as SplitterGeometry,
   LAYER_KEY as SplitterKey,
+  ElementForm as SplitterForm,
   getIcon as SplitterGetIcon,
   ELEMENT_CONFIG_TEMPLATE as SplitterConfigFormTemplate,
   INITIAL_CONFIG_DATA as SplitterConfigInitData,
@@ -23,7 +25,8 @@ import {
 
 import { coordsToLatLongMap } from "utils/map.utils";
 
-export const MAP_STATE = {
+// possible events that can happen on map
+export const PLANNING_EVENT = {
   addElement: "A",
   editElement: "E",
   showElementForm: "F",
@@ -34,19 +37,20 @@ export const LayerKeyMappings = {
     ViewLayer: RegionViewLayer,
   },
   [DpKey]: {
-    [MAP_STATE.addElement]: <DPAddLayer />,
-    [MAP_STATE.showElementForm]: <DpForm />,
+    [PLANNING_EVENT.addElement]: <DPAddLayer />,
+    [PLANNING_EVENT.showElementForm]: <DpForm />,
     ViewLayer: DPViewLayer,
-    Icon: DpIcon,
     Geometry: DPGeometry,
+    Icon: DpIcon,
   },
   [SplitterKey]: {
-    // [MAP_STATE.addElement]: AddMarkerLayer,
+    [PLANNING_EVENT.addElement]: <SplitterAddLayer />,
+    [PLANNING_EVENT.showElementForm]: <SplitterForm />,
+    ViewLayer: SplitterLayer,
+    Geometry: SplitterGeometry,
     Icon: SplitterGetIcon,
     ConfigFormTemplate: SplitterConfigFormTemplate,
     ConfigInitData: SplitterConfigInitData,
-    ViewLayer: SplitterLayer,
-    Geometry: SplitterGeometry,
   },
 };
 

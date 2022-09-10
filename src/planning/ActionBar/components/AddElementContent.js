@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { filter, find, get, size } from "lodash";
+import { filter, get, size } from "lodash";
 
 import DummyListLoader from "./DummyListLoader";
 import Grid from "@mui/material/Grid";
@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 
-import { LayerKeyMappings, MAP_STATE } from "planning/GisMap/utils";
+import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -52,8 +52,12 @@ const AddElementContent = () => {
                 })
               );
               // select default configs to show first
-              const configId = get(configuration, "0.id");
-              dispatch(selectConfiguration({ layerKey: layer_key, configId }));
+              dispatch(
+                selectConfiguration({
+                  layerKey: layer_key,
+                  configuration: configuration[0],
+                })
+              );
             }
           }
         }
@@ -89,7 +93,7 @@ const AddElementContent = () => {
       // start event if no other event running
       dispatch(
         setMapState({
-          event: MAP_STATE.addElement,
+          event: PLANNING_EVENT.addElement,
           layerKey,
         })
       );
@@ -148,11 +152,7 @@ const AddElementContent = () => {
           // get icon
           let Icon;
           if (is_configurable) {
-            let currConfig = find(configuration, [
-              "id",
-              get(selectedConfigurations, layer_key, 0),
-            ]);
-
+            let currConfig = get(selectedConfigurations, layer_key, false);
             if (!currConfig) currConfig = configuration[0];
             // configurable layers will have getIcon function
             Icon = LayerKeyMappings[layer_key]["Icon"](currConfig);

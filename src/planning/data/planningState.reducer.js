@@ -14,7 +14,7 @@ const initialState = {
   // select default options and set as selectedConfigurations
   // shape: { layerKey: [ config1, config2, ...], ... }
   layerConfigurations: {},
-  // shape: { layerKey: configId, ...}
+  // shape: { layerKey: { **configuration data }, ...}
   selectedConfigurations: {},
 };
 
@@ -56,9 +56,9 @@ const planningStateSlice = createSlice({
         ...payload.configurationList,
       ];
     },
-    // payload : { layerKey, configId }
+    // payload : { layerKey, configuration }
     selectConfiguration: (state, { payload }) => {
-      state.selectedConfigurations[payload.layerKey] = payload.configId;
+      state.selectedConfigurations[payload.layerKey] = payload.configuration;
     },
   },
 });

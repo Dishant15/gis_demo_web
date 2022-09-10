@@ -14,8 +14,9 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 
 export const GisLayerForm = ({
-  layerKey,
   formConfig,
+  isConfigurable,
+  layerKey,
   transformAndValidateData,
 }) => {
   const dispatch = useDispatch();
@@ -74,6 +75,7 @@ export const GisLayerForm = ({
       },
     }
   );
+
   const onSubmit = (data, setError, clearErrors) => {
     clearErrors();
     // convert data to server friendly form
