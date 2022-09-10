@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useMemo } from "react";
 import { useQuery, useMutation } from "react-query";
 
 import {
@@ -88,7 +88,7 @@ const ConfigurationContentWrapper = ({ layerKey }) => {
  *    delete dialog
  */
 const ConfigurationContent = ({ layerKey }) => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(null);
   const [showDialog, setshowDialog] = useState(false);
   const [formData, setFormData] = useState(null); // null for add, data for edit
   const gridRef = useRef();
@@ -130,13 +130,13 @@ const ConfigurationContent = ({ layerKey }) => {
   };
 
   const onAddClick = () => {
-    setShowForm(true);
+    setShowForm(layerKey);
     setFormData(null);
   };
 
   const onEditClick = (data) => {
     setFormData(data);
-    setShowForm(true);
+    setShowForm(layerKey);
   };
 
   const onDeleteClick = (data) => {
@@ -154,9 +154,25 @@ const ConfigurationContent = ({ layerKey }) => {
   };
 
   const handleFormClose = useCallback(() => {
-    setShowForm(false);
+    setShowForm(null);
     setFormData(null);
   }, []);
+
+  const mayRenderFormDialog = useMemo(() => {
+    return (
+      <Dialog onClose={handleFormClose} open={!!showForm}>
+        {!!showForm ? (
+          <DynamicForm
+            formConfigs={LayerKeyMappings[layerKey]["ConfigFormTemplate"]}
+            data={formData || LayerKeyMappings[layerKey]["ConfigInitData"]}
+            onSubmit={upsertElementConfigMutation}
+            onCancel={handleFormClose}
+            isLoading={upsertElementConfigLoading}
+          />
+        ) : null}
+      </Dialog>
+    );
+  }, [showForm, formData, layerKey, upsertElementConfigLoading]);
 
   return (
     <Stack divider={<Divider flexItem />} height="100%">
@@ -215,17 +231,7 @@ const ConfigurationContent = ({ layerKey }) => {
           />
         </Box>
       )}
-      <Dialog onClose={handleFormClose} open={showForm}>
-        {showForm ? (
-          <DynamicForm
-            formConfigs={LayerKeyMappings[layerKey]["ConfigFormTemplate"]}
-            data={formData || LayerKeyMappings[layerKey]["ConfigInitData"]}
-            onSubmit={upsertElementConfigMutation}
-            onClose={handleFormClose}
-            isLoading={upsertElementConfigLoading}
-          />
-        ) : null}
-      </Dialog>
+      {mayRenderFormDialog}
       <Dialog open={showDialog} onClose={handleDeleteClose}>
         {showDialog ? (
           <>

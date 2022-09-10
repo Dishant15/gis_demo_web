@@ -6,5 +6,4 @@ export {
   ELEMENT_FORM_TEMPLATE,
   onSubmit,
   INITIAL_CONFIG_DATA,
-  INITIAL_DATA,
 } from "./configurations";
