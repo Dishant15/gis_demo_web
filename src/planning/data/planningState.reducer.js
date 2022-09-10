@@ -10,6 +10,12 @@ const initialState = {
   // list of layer keys
   selectedLayerKeys: [],
   loadingLayerKeys: [],
+  // when user go to add element tab fetch all config options
+  // select default options and set as selectedConfigurations
+  // shape: { layerKey: [ config1, config2, ...], ... }
+  layerConfigurations: {},
+  // shape: { layerKey: configId, ...}
+  selectedConfigurations: {},
 };
 
 const planningStateSlice = createSlice({
@@ -44,6 +50,16 @@ const planningStateSlice = createSlice({
         state.selectedLayerKeys.splice(layerSerchInd, 1);
       }
     },
+    // payload : { layerKey, configurationList }
+    setLayerConfigurations: (state, { payload }) => {
+      state.layerConfigurations[payload.layerKey] = [
+        ...payload.configurationList,
+      ];
+    },
+    // payload : { layerKey, configId }
+    selectConfiguration: (state, { payload }) => {
+      state.selectedConfigurations[payload.layerKey] = payload.configId;
+    },
   },
 });
 
@@ -53,5 +69,7 @@ export const {
   handleRegionExpand,
   handleLayerSelect,
   removeLayerSelect,
+  setLayerConfigurations,
+  selectConfiguration,
 } = planningStateSlice.actions;
 export default planningStateSlice.reducer;

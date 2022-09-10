@@ -7,3 +7,6 @@ export const getExpandedRegionIds = (store) =>
 
 export const getSelectedLayerKeys = (store) =>
   store.planningState.selectedLayerKeys;
+
+export const getSelectedConfigurations = (store) =>
+  store.planningState.selectedConfigurations;

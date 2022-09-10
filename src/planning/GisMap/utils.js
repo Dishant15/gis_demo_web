@@ -17,6 +17,8 @@ import {
   Geometry as SplitterGeometry,
   LAYER_KEY as SplitterKey,
   getIcon as SplitterGetIcon,
+  ELEMENT_CONFIG_TEMPLATE as SplitterConfigFormTemplate,
+  INITIAL_CONFIG_DATA as SplitterConfigInitData,
 } from "./layers/p_splitter";
 
 import { coordsToLatLongMap } from "utils/map.utils";
@@ -36,6 +38,8 @@ export const LayerKeyMappings = {
   [SplitterKey]: {
     // [MAP_STATE.addElement]: AddMarkerLayer,
     Icon: SplitterGetIcon,
+    ConfigFormTemplate: SplitterConfigFormTemplate,
+    ConfigInitData: SplitterConfigInitData,
   },
 };
 

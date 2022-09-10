@@ -26,17 +26,13 @@ import { get } from "lodash";
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
 import DynamicForm from "components/common/DynamicForm";
-import {
-  FORM_CONFIGS,
-  INITIAL_DATA,
-  onSubmit,
-} from "planning/GisMap/layers/p_splitter";
 
 import {
   deleteElementConfig,
   fetchElementList,
   upsertElementConfig,
 } from "ElementConfig/data/services";
+import { LayerKeyMappings } from "planning/GisMap/utils";
 
 /**
  *
@@ -139,10 +135,6 @@ const ConfigurationContent = ({ layerKey }) => {
   };
 
   const onEditClick = (data) => {
-    console.log(
-      "🚀 ~ file: ConfigurationContent.js ~ line 89 ~ onEditClick ~ data",
-      data
-    );
     setFormData(data);
     setShowForm(true);
   };
@@ -226,8 +218,8 @@ const ConfigurationContent = ({ layerKey }) => {
       <Dialog onClose={handleFormClose} open={showForm}>
         {showForm ? (
           <DynamicForm
-            formConfigs={FORM_CONFIGS}
-            data={formData || INITIAL_DATA}
+            formConfigs={LayerKeyMappings[layerKey]["ConfigFormTemplate"]}
+            data={formData || LayerKeyMappings[layerKey]["ConfigInitData"]}
             onSubmit={upsertElementConfigMutation}
             onClose={handleFormClose}
             isLoading={upsertElementConfigLoading}

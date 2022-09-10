@@ -7,6 +7,7 @@ import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { LAYER_KEY } from "./configurations";
+import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 
 export const getIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
@@ -43,5 +44,22 @@ export const ViewLayer = () => {
         );
       })}
     </>
+  );
+};
+
+export const AddLayer = () => {
+  // get configuration
+
+  return (
+    <AddMarkerLayer
+      icon={Icon}
+      helpText="Click on map to add new Splitter"
+      nextEvent={{
+        event: MAP_STATE.showElementForm, // event for "layerForm"
+        layerKey: LAYER_KEY,
+        // init data
+        data: INITIAL_DATA,
+      }}
+    />
   );
 };
