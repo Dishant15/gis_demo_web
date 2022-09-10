@@ -1,6 +1,6 @@
 export const LAYER_KEY = "p_dp";
 
-export const INITIAL_DATA = {
+export const INITIAL_ELEMENT_DATA = {
   name: "",
   address: "",
   unique_id: "REG_DP_",
@@ -10,7 +10,7 @@ export const INITIAL_DATA = {
 };
 
 // this will become function -> generate From Configs
-export const FORM_CONFIGS = {
+export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
       title: "Distribution Point Form",
@@ -45,16 +45,3 @@ export const FORM_CONFIGS = {
     },
   ],
 };
-
-// export detailsPopup = {
-//   "name" : "String"
-// }
-
-// export addForm
-
-// export editForm = {
-//   "name" : "String"
-//   "multi sel": {
-//     options :
-//   }
-// }

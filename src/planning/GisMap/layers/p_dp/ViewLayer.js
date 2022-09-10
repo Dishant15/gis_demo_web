@@ -6,7 +6,11 @@ import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
-import { FORM_CONFIGS, INITIAL_DATA, LAYER_KEY } from "./configurations";
+import {
+  ELEMENT_FORM_TEMPLATE,
+  INITIAL_ELEMENT_DATA,
+  LAYER_KEY,
+} from "./configurations";
 import { MAP_STATE } from "planning/GisMap/utils";
 
 import { default as Icon } from "assets/markers/p_dp_view.svg";
@@ -19,7 +23,7 @@ export const Geometry = ({ coordinates }) => (
 export const ViewLayer = () => {
   /**
    * Parent:
-   *  GisMap > utils > getLayerCompFromKey
+   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
    */
   const layerData = useSelector(getLayerViewData(LAYER_KEY));
   const data = layerData.viewData;
@@ -43,7 +47,7 @@ export const AddLayer = () => {
         event: MAP_STATE.showElementForm, // event for "layerForm"
         layerKey: LAYER_KEY,
         // init data
-        data: INITIAL_DATA,
+        data: INITIAL_ELEMENT_DATA,
       }}
     />
   );
@@ -64,7 +68,7 @@ export const ElementForm = () => {
   return (
     <GisLayerForm
       layerKey={LAYER_KEY}
-      formConfig={FORM_CONFIGS}
+      formConfig={ELEMENT_FORM_TEMPLATE}
       transformAndValidateData={transformAndValidateData}
     />
   );

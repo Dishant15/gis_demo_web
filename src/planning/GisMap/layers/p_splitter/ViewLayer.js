@@ -26,7 +26,7 @@ export const Geometry = ({ coordinates, splitterType }) => {
 export const ViewLayer = () => {
   /**
    * Parent:
-   *  GisMap > utils > getLayerCompFromKey
+   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
    */
   const layerData = useSelector(getLayerViewData(LAYER_KEY));
   const data = layerData.viewData;
@@ -47,19 +47,19 @@ export const ViewLayer = () => {
   );
 };
 
-export const AddLayer = () => {
-  // get configuration
+// export const AddLayer = () => {
+//   // get configuration
 
-  return (
-    <AddMarkerLayer
-      icon={Icon}
-      helpText="Click on map to add new Splitter"
-      nextEvent={{
-        event: MAP_STATE.showElementForm, // event for "layerForm"
-        layerKey: LAYER_KEY,
-        // init data
-        data: INITIAL_DATA,
-      }}
-    />
-  );
-};
+//   return (
+//     <AddMarkerLayer
+//       icon={Icon}
+//       helpText="Click on map to add new Splitter"
+//       nextEvent={{
+//         event: MAP_STATE.showElementForm, // event for "layerForm"
+//         layerKey: LAYER_KEY,
+//         // init data
+//         data: INITIAL_DATA,
+//       }}
+//     />
+//   );
+// };

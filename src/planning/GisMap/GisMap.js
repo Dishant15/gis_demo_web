@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 
 import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
-import { getLayerCompFromKey } from "./utils";
+import { LayerKeyMappings } from "./utils";
 
 const GisMap = React.memo(({ ticketId }) => {
   // get list of selected layer-keys
@@ -17,7 +17,8 @@ const GisMap = React.memo(({ ticketId }) => {
 
   const Layers = useMemo(() => {
     return mapLayers.map((layerKey) => {
-      return getLayerCompFromKey(layerKey);
+      const ViewLayerComponent = LayerKeyMappings[layerKey]["ViewLayer"];
+      return <ViewLayerComponent key={layerKey} />;
     });
   }, [mapLayers]);
 

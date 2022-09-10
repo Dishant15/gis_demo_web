@@ -30,49 +30,24 @@ export const MAP_STATE = {
 };
 
 export const LayerKeyMappings = {
+  [RegionKey]: {
+    ViewLayer: RegionViewLayer,
+  },
   [DpKey]: {
     [MAP_STATE.addElement]: <DPAddLayer />,
     [MAP_STATE.showElementForm]: <DpForm />,
+    ViewLayer: DPViewLayer,
     Icon: DpIcon,
+    Geometry: DPGeometry,
   },
   [SplitterKey]: {
     // [MAP_STATE.addElement]: AddMarkerLayer,
     Icon: SplitterGetIcon,
     ConfigFormTemplate: SplitterConfigFormTemplate,
     ConfigInitData: SplitterConfigInitData,
+    ViewLayer: SplitterLayer,
+    Geometry: SplitterGeometry,
   },
-};
-
-export const getLayerCompFromKey = (layerKey) => {
-  switch (layerKey) {
-    case RegionKey:
-      return <RegionViewLayer key={layerKey} />;
-
-    case DpKey:
-      return <DPViewLayer key={layerKey} />;
-
-    case SplitterKey:
-      return <SplitterLayer key={layerKey} />;
-
-    default:
-      return null;
-  }
-};
-
-export const getGeometryFromKey = (props) => {
-  switch (props.layer_key) {
-    // case RegionKey:
-    //   return <RegionViewLayer key={layerKey} />;
-
-    case DpKey:
-      return <DPGeometry {...props} />;
-
-    case SplitterKey:
-      return <SplitterGeometry {...props} />;
-
-    default:
-      return null;
-  }
 };
 
 export const covertLayerServerData = (layerKey, serverData) => {

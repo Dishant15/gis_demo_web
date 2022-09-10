@@ -11,7 +11,7 @@ export const LAYER_KEY = "region";
 export const ViewLayer = () => {
   /**
    * Parent:
-   *  GisMap > utils > getLayerCompFromKey
+   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
    */
   // get data of region layer
   const regionData = useSelector(getLayerViewData(LAYER_KEY));
