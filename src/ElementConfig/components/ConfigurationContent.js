@@ -172,7 +172,14 @@ const ConfigurationContent = ({ layerKey }) => {
         ) : null}
       </Dialog>
     );
-  }, [showForm, formData, layerKey, upsertElementConfigLoading]);
+  }, [
+    showForm,
+    formData,
+    layerKey,
+    upsertElementConfigLoading,
+    handleFormClose,
+    upsertElementConfigMutation,
+  ]);
 
   return (
     <Stack divider={<Divider flexItem />} height="100%">

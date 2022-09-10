@@ -7,6 +7,7 @@ import DummyListLoader from "./DummyListLoader";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Popover from "@mui/material/Popover";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 
 import { LayerKeyMappings, MAP_STATE } from "planning/GisMap/utils";
@@ -22,6 +23,9 @@ import { getSelectedConfigurations } from "planning/data/planningState.selectors
 import { IconButton } from "@mui/material";
 import ElementConfigPopup from "./ElementConfigPopup";
 
+const getElementIdName = (layerKey) => {
+  return `pl-add-element-${layerKey}`;
+};
 /**
  * Parent:
  *    ActionBar
@@ -106,6 +110,32 @@ const AddElementContent = () => {
     setLayerConfigPopup(null);
   }, []);
 
+  const mayRenderElementConfigPopup = useMemo(() => {
+    const showPopover = !!layerConfigPopup;
+    // anchorEl required node element, so not saving full element in state
+    // generate ids for layer keys and get element by simple javascript method
+    return (
+      <Popover
+        open={showPopover}
+        onClose={handleLayerConfigPopupHide}
+        anchorEl={
+          showPopover
+            ? document.getElementById(getElementIdName(layerConfigPopup))
+            : null
+        }
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transitionDuration={0}
+      >
+        {showPopover ? (
+          <ElementConfigPopup layerKey={layerConfigPopup} />
+        ) : null}
+      </Popover>
+    );
+  }, [layerConfigPopup]);
+
   if (isLoading) {
     return <DummyListLoader />;
   }
@@ -135,6 +165,7 @@ const AddElementContent = () => {
               <Box
                 onClick={handleAddElementClick(layer_key)}
                 className="pl-add-element-item"
+                id={getElementIdName(layer_key)}
               >
                 <img src={Icon} alt="" />
                 <Typography variant="body2">{name}</Typography>
@@ -154,9 +185,7 @@ const AddElementContent = () => {
           );
         })}
 
-        {!!layerConfigPopup ? (
-          <ElementConfigPopup layerKey={layerConfigPopup} />
-        ) : null}
+        {mayRenderElementConfigPopup}
       </Grid>
     );
   } else {
