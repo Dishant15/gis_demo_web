@@ -21,11 +21,11 @@ import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 export const getIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
 
-export const Geometry = ({ coordinates, splitterType }) => {
+export const Geometry = ({ coordinates, splitter_type }) => {
   return (
     <Marker
       icon={{
-        url: getIcon({ splitter_type: splitterType }),
+        url: getIcon({ splitter_type }),
       }}
       position={coordinates}
     />
@@ -42,12 +42,12 @@ export const ViewLayer = () => {
 
   return (
     <>
-      {data.map((splitter) => {
-        const { id, coordinates, splitter_type } = splitter;
+      {data.map((element) => {
+        const { id, coordinates, splitter_type } = element;
         return (
           <Geometry
             key={id}
-            splitterType={splitter_type}
+            splitter_type={splitter_type}
             coordinates={coordinates}
           />
         );

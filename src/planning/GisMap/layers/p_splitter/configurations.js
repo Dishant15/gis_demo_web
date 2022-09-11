@@ -13,7 +13,6 @@ export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
       title: "Splitter Form",
-      showCloseIcon: true,
       fieldConfigs: [
         {
           field_key: "name",
@@ -53,7 +52,6 @@ export const INITIAL_CONFIG_DATA = {
   vendor: "",
 };
 
-// this will become function -> generate From Configs
 export const ELEMENT_CONFIG_TEMPLATE = {
   sections: [
     {
@@ -93,3 +91,8 @@ export const ELEMENT_CONFIG_TEMPLATE = {
     },
   ],
 };
+
+export const transformAndValidateConfigData = (data) => ({
+  ...data,
+  splitter_type: data.splitter_type.value,
+});

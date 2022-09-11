@@ -1,7 +1,9 @@
 ## Steps to add new layer on frontend side
 
-- Add Gis layer component in src/planning/GisMap/layers folder with layer-key as file name
+- update files in src/planning/GisMap/layers
   - create ViewLayer component
+  - create configurations
+  - export everythin from index
 - Update src/planning/GisMap/utils
-  - getLayerCompGromKey -> import and add ViewLayer with LAYER_KEY
-  - covertLayerServerData -> add converter function to convert coordinates data
+  - import all details and update mapping -> LayerKeyMappings
+  - update converter function -> covertLayerServerData

@@ -1,3 +1,4 @@
+import { LayerKeyMappings } from "planning/GisMap/utils";
 import Api from "utils/api.utils";
 import {
   apiDeleteLayerConfig,
@@ -16,10 +17,14 @@ export const upsertElementConfig = async (data, layerKey) => {
 
   if (configId) {
     delete data.id;
-    const res = await Api.put(apiPutLayerConfigEdit(layerKey, configId), data);
+    const postData = LayerKeyMappings[layerKey]["configTransformData"](data);
+    const res = await Api.put(
+      apiPutLayerConfigEdit(layerKey, configId),
+      postData
+    );
     return res.data;
   } else {
-    const postData = { ...data, splitter_type: data.splitter_type.value };
+    const postData = LayerKeyMappings[layerKey]["configTransformData"](data);
     const res = await Api.post(apiPostLayerConfigAdd(layerKey), postData);
     return res.data;
   }

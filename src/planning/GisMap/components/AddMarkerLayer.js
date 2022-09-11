@@ -6,10 +6,7 @@ import { Button, Paper, Stack, Typography } from "@mui/material";
 import GisMapPopups from "./GisMapPopups";
 
 import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
-import {
-  setMapState,
-  updateMapStateData,
-} from "planning/data/planningGis.reducer";
+import { setMapState } from "planning/data/planningGis.reducer";
 import { Box } from "@mui/system";
 
 const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
