@@ -77,7 +77,7 @@ export const LayerKeyMappings = {
   },
 };
 
-export const covertLayerServerData = (layerKey, serverData) => {
+export const convertLayerServerData = (layerKey, serverData) => {
   let resultData = cloneDeep(serverData) || [];
 
   // PolyLine

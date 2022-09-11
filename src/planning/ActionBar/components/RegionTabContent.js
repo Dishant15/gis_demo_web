@@ -42,6 +42,7 @@ import {
   getSelectedLayerKeys,
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
+import { resetUnselectedLayerGisData } from "planning/data/planningGis.reducer";
 
 const RegionTabContent = () => {
   /**
@@ -121,6 +122,7 @@ const RegionTabContent = () => {
         const currLayerKey = selectedLayerKeys[l_ind];
         dispatch(fetchLayerDataThunk({ regionIdList, layerKey: currLayerKey }));
       }
+      dispatch(resetUnselectedLayerGisData(selectedLayerKeys));
     }
     // change tab to layers
     dispatch(setActiveTab(1));

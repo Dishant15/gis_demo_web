@@ -1,6 +1,12 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Box, Typography, Stack, IconButton, Divider } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
+import { getSingleLayerConfigurationList } from "planning/data/planningState.selectors";
+import { selectConfiguration } from "planning/data/planningState.reducer";
 
 /**
  * Show list on configurations
@@ -9,7 +15,20 @@ import CloseIcon from "@mui/icons-material/Close";
  * Parent
  *  AddElementContent
  */
-const ElementConfigPopup = ({ layerKey }) => {
+const ElementConfigPopup = ({ layerKey, onClose }) => {
+  const dispatch = useDispatch();
+  const configList = useSelector(getSingleLayerConfigurationList(layerKey));
+
+  const handleConfigChange = (config) => () => {
+    dispatch(
+      selectConfiguration({
+        layerKey,
+        configuration: { ...config },
+      })
+    );
+    onClose();
+  };
+
   return (
     <Box
       p={3}
@@ -19,10 +38,10 @@ const ElementConfigPopup = ({ layerKey }) => {
       }}
     >
       <Stack direction="row" spacing={2} width="100%" alignItems="center">
-        <Typography variant="h6" color="primary.dark" flex={1}>
-          {layerKey} list
+        <Typography variant="h6" color="primary.main" flex={1}>
+          Select Configuration
         </Typography>
-        <IconButton aria-label="close">
+        <IconButton onClick={onClose} aria-label="close">
           <CloseIcon />
         </IconButton>
       </Stack>
@@ -34,7 +53,22 @@ const ElementConfigPopup = ({ layerKey }) => {
         }}
       />
       <Stack spacing={2}>
-        <Typography>{layerKey}</Typography>
+        {configList.map((config) => {
+          const { id, config_name } = config;
+
+          return (
+            <Stack
+              onClick={handleConfigChange(config)}
+              key={id}
+              direction="row"
+            >
+              <Box flex={1}>{config_name}</Box>
+              <IconButton size="small">
+                <ArrowForwardIosIcon fontSize="small" />
+              </IconButton>
+            </Stack>
+          );
+        })}
       </Stack>
     </Box>
   );

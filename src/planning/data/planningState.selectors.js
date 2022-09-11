@@ -11,6 +11,15 @@ export const getExpandedRegionIds = (store) =>
 export const getSelectedLayerKeys = (store) =>
   store.planningState.selectedLayerKeys;
 
+// Get list of all configurable layerKey -> ConfigList
+export const getLayerConfigurations = (store) =>
+  store.planningState.layerConfigurations;
+
+export const getSingleLayerConfigurationList = (layerKey) =>
+  createSelector(getLayerConfigurations, (layerConfigList) =>
+    get(layerConfigList, layerKey, [])
+  );
+
 export const getSelectedConfigurations = (store) =>
   store.planningState.selectedConfigurations;
 

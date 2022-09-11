@@ -6,4 +6,4 @@
   - export everythin from index
 - Update src/planning/GisMap/utils
   - import all details and update mapping -> LayerKeyMappings
-  - update converter function -> covertLayerServerData
+  - update converter function -> convertLayerServerData

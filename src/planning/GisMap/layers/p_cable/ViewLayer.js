@@ -15,10 +15,10 @@ import { getLayerSelectedConfiguration } from "planning/data/planningState.selec
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToLineCoords } from "utils/map.utils";
 
-import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
+import CableIcon from "assets/markers/line_pin.svg";
 
 // for Add tab and show pills on FE
-export const getIcon = ({ color_on_map }) => PrimarySpliterIcon;
+export const getIcon = ({ color_on_map }) => CableIcon;
 
 export const getOptions = ({ color_on_map }) => {
   return {

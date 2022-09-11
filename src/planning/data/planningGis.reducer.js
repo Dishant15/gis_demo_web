@@ -5,9 +5,9 @@ import size from "lodash/size";
 
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
-import { covertLayerServerData } from "../GisMap/utils";
+import { convertLayerServerData } from "../GisMap/utils";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
-import { cloneDeep } from "lodash";
+import { cloneDeep, difference } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -52,6 +52,25 @@ const planningGisSlice = createSlice({
       const mapStateData = get(state.mapState, "data", {});
       state.mapState.data = { ...mapStateData, ...payload };
     },
+    // payload => list of selected layerKey
+    // when region changes remove data for all inactive layers, so user can fetch fresh on click
+    resetUnselectedLayerGisData: (state, { payload }) => {
+      const allNSLayerKeys = difference(
+        Object.keys(state.layerNetworkState),
+        payload
+      );
+      for (let lk_ind = 0; lk_ind < allNSLayerKeys.length; lk_ind++) {
+        const currNsKey = allNSLayerKeys[lk_ind];
+        // reset data
+        state.layerNetworkState[currNsKey] = {
+          ...defaultLayerNetworkState,
+        };
+        state.layerData[currNsKey] = {
+          viewData: [],
+          editData: {},
+        };
+      }
+    },
   },
   extraReducers: {
     // payload : layerKey
@@ -83,10 +102,6 @@ const planningGisSlice = createSlice({
           editData: {},
         };
       }
-      // if layerKey is region, region changed
-      // clear data for all unselected layers
-      // create list of layerKeys for all un selected layers
-      // loop over and reset data
     },
     // fetch success
     [fetchLayerDataThunk.fulfilled]: (state, action) => {
@@ -95,7 +110,7 @@ const planningGisSlice = createSlice({
       state.layerNetworkState[layerKey].isFetched = true;
       state.layerNetworkState[layerKey].count = size(action.payload);
       // convert payload coordinates into google coordinates data
-      state.layerData[layerKey].viewData = covertLayerServerData(
+      state.layerData[layerKey].viewData = convertLayerServerData(
         layerKey,
         action.payload
       );
@@ -125,7 +140,7 @@ const planningGisSlice = createSlice({
         const currWO = ticketGisData.work_orders[tg_ind];
         if (currWO.element?.id) {
           // delete type WO may not have element
-          currWO.element = covertLayerServerData(currWO.layer_key, [
+          currWO.element = convertLayerServerData(currWO.layer_key, [
             currWO.element,
           ])[0];
         }
@@ -138,6 +153,10 @@ const planningGisSlice = createSlice({
   },
 });
 
-export const { setTicketId, setMapState, updateMapStateData } =
-  planningGisSlice.actions;
+export const {
+  setTicketId,
+  setMapState,
+  updateMapStateData,
+  resetUnselectedLayerGisData,
+} = planningGisSlice.actions;
 export default planningGisSlice.reducer;

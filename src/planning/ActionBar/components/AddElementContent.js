@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { filter, get, size } from "lodash";
 
-import DummyListLoader from "./DummyListLoader";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
+import IconButton from "@mui/material/IconButton";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+
+import DummyListLoader from "./DummyListLoader";
+import ElementConfigPopup from "./ElementConfigPopup";
 
 import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
@@ -20,8 +23,6 @@ import {
 } from "planning/data/planningState.reducer";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
-import { IconButton } from "@mui/material";
-import ElementConfigPopup from "./ElementConfigPopup";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -134,7 +135,10 @@ const AddElementContent = () => {
         transitionDuration={0}
       >
         {showPopover ? (
-          <ElementConfigPopup layerKey={layerConfigPopup} />
+          <ElementConfigPopup
+            onClose={handleLayerConfigPopupHide}
+            layerKey={layerConfigPopup}
+          />
         ) : null}
       </Popover>
     );
