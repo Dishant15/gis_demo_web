@@ -91,9 +91,7 @@ export const ElementForm = () => {
   const transformAndValidateData = useCallback((formData) => {
     return {
       ...formData,
-      // remove coordinates and add geometry
-      coordinates: undefined,
-      geometry: latLongMapToLineCoords(formData.coordinates),
+      // AddPolyLineLayer will give transformed coordinates in geometry field
       // convert select fields to simple values
       status: formData.status.value,
       cable_type: formData.cable_type.value,

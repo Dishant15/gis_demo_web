@@ -48,7 +48,7 @@ export const ELEMENT_FORM_TEMPLATE = {
         },
         {
           field_key: "gis_len",
-          label: "Gis Length",
+          label: "Gis Length (Km)",
           field_type: "input",
         },
         {
