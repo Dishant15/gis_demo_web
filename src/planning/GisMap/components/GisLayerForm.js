@@ -27,7 +27,7 @@ export const GisLayerForm = ({
   const { mutate: addElement, isLoading } = useMutation(
     (mutationData) => addNewElement({ data: mutationData, layerKey }),
     {
-      onSuccess: (res) => {
+      onSuccess: () => {
         dispatch(
           addNotification({
             type: "success",
