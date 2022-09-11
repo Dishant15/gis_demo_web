@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Marker } from "@react-google-maps/api";
 
+import { Marker } from "@react-google-maps/api";
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
 

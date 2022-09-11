@@ -5,36 +5,37 @@ import { DrawingManager } from "@react-google-maps/api";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import GisMapPopups from "./GisMapPopups";
 
-import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
+import { getCoordinatesFromFeature } from "utils/map.utils";
 import { setMapState } from "planning/data/planningGis.reducer";
 
-const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
+const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
   const dispatch = useDispatch();
-  const markerRef = useRef();
+  const featureRef = useRef();
   // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
 
-  const handleMarkerCreate = useCallback((marker) => {
-    markerRef.current = marker;
+  const handleFeatureCreate = useCallback((feature) => {
+    featureRef.current = feature;
     setIsAdd(false);
   }, []);
 
   const handleAddComplete = useCallback(() => {
-    const markerCoords = getMarkerCoordinatesFromFeature(markerRef.current);
-    // set marker coords to form data
+    const featureCoords = getCoordinatesFromFeature(featureRef.current);
+    // set coords to form data
     nextEvent.data = {
       ...nextEvent.data,
-      coordinates: markerCoords,
+      coordinates: featureCoords,
+      // get gis_len
     };
     // clear map refs
-    markerRef.current.setMap(null);
+    featureRef.current.setMap(null);
     // complete current event -> fire next event
     dispatch(setMapState(nextEvent));
   }, []);
 
   const handleCancel = useCallback(() => {
     dispatch(setMapState({}));
-    markerRef.current.setMap(null);
+    featureRef.current.setMap(null);
   }, []);
 
   return (
@@ -42,22 +43,15 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
       <DrawingManager
         options={{
           drawingControl: false,
-          markerOptions: {
-            icon,
-            clickable: true,
-            draggable: true,
-            editable: true,
-            geodesic: false,
-            zIndex: 10,
-          },
+          polylineOptions: { ...options, editable: true },
         }}
-        drawingMode={isAdd ? "marker" : null}
-        onMarkerComplete={handleMarkerCreate}
+        drawingMode={isAdd ? "polyline" : null}
+        onPolylineComplete={handleFeatureCreate}
       />
       <GisMapPopups>
         <Paper>
-          <Box sx={{ backgroundColor: "secondary.light" }} p={2}>
-            <Typography color="background.default" mb={2} variant="h6">
+          <Box backgroundColor="secondary.light" p={2}>
+            <Typography color="background.paper" mb={2} variant="h6">
               {helpText}
             </Typography>
             <Stack spacing={2} direction="row">
@@ -85,4 +79,4 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
   );
 };
 
-export default AddMarkerLayer;
+export default AddPolyLineLayer;

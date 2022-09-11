@@ -1,6 +1,9 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
+
 import { Polyline } from "@react-google-maps/api";
+import AddPolyLineLayer from "planning/GisMap/components/AddPolyLineLayer";
+import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import {
@@ -8,6 +11,9 @@ import {
   ELEMENT_FORM_TEMPLATE,
   LAYER_KEY,
 } from "./configurations";
+import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
+import { PLANNING_EVENT } from "planning/GisMap/utils";
+import { latLongMapToLineCoords } from "utils/map.utils";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 
@@ -57,5 +63,50 @@ export const ViewLayer = () => {
         );
       })}
     </>
+  );
+};
+
+export const AddLayer = () => {
+  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+  // get icon
+  const options = getOptions(configuration);
+
+  return (
+    <AddPolyLineLayer
+      options={options}
+      helpText="Click on map to create line on map. Double click to complete."
+      nextEvent={{
+        event: PLANNING_EVENT.showElementForm, // event for "layerForm"
+        layerKey: LAYER_KEY,
+        // init data
+        data: INITIAL_ELEMENT_DATA,
+      }}
+    />
+  );
+};
+
+export const ElementForm = () => {
+  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+
+  const transformAndValidateData = useCallback((formData) => {
+    return {
+      ...formData,
+      // remove coordinates and add geometry
+      coordinates: undefined,
+      geometry: latLongMapToLineCoords(formData.coordinates),
+      // convert select fields to simple values
+      status: formData.status.value,
+      cable_type: formData.cable_type.value,
+      configuration: configuration.id,
+    };
+  }, []);
+
+  return (
+    <GisLayerForm
+      isConfigurable
+      layerKey={LAYER_KEY}
+      formConfig={ELEMENT_FORM_TEMPLATE}
+      transformAndValidateData={transformAndValidateData}
+    />
   );
 };

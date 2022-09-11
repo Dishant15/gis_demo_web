@@ -6,4 +6,10 @@ export {
   transformAndValidateConfigData,
 } from "./configurations";
 
-export { ViewLayer, Geometry, getIcon } from "./ViewLayer";
+export {
+  ViewLayer,
+  Geometry,
+  AddLayer,
+  ElementForm,
+  getIcon,
+} from "./ViewLayer";
