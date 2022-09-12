@@ -15,6 +15,7 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToCoords } from "utils/map.utils";
 
 import { default as Icon } from "assets/markers/p_dp_view.svg";
+import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
 
 export const Geometry = ({ coordinates }) => (
   <Marker icon={{ url: Icon }} position={coordinates} />
@@ -41,7 +42,7 @@ export const ViewLayer = () => {
 export const AddLayer = () => {
   return (
     <AddMarkerLayer
-      icon={Icon}
+      icon={EditIcon}
       helpText="Click on map to add new Distribution Point location"
       nextEvent={{
         event: PLANNING_EVENT.showElementForm, // event for "layerForm"

@@ -16,10 +16,15 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToCoords } from "utils/map.utils";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
+import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
 import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
+import SecondarySpliterEditIcon from "assets/markers/spliter_edit.svg";
 
 export const getIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
+
+export const getEditIcon = ({ splitter_type }) =>
+  splitter_type === "P" ? PrimarySpliterEditIcon : SecondarySpliterEditIcon;
 
 export const Geometry = ({ coordinates, splitter_type }) => {
   return (
@@ -59,7 +64,7 @@ export const ViewLayer = () => {
 export const AddLayer = () => {
   const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   // get icon
-  const Icon = getIcon(configuration);
+  const Icon = getEditIcon(configuration);
 
   return (
     <AddMarkerLayer
