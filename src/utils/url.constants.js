@@ -84,6 +84,8 @@ export const apiPostAddElement = (layerKey) =>
 export const apiGetTicketWorkorderElements = (ticketId = ":ticketId") =>
   `/api/ticket/${ticketId}/workorders/elements/`;
 
+export const apiPutTicketWorkorderEdit = (workOrderId) =>
+  `/api/ticket/workorder/${workOrderId}/edit/`;
 // layer config api
 export const apiGetLayerConfigList = (layerKey = ":layer_key") =>
   `/api/layer/config/${layerKey}/list/`;
