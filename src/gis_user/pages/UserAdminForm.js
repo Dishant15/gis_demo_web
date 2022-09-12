@@ -35,38 +35,41 @@ const UserAdminForm = () => {
   const [step, setStep] = useState(0);
   // in case if edit, userId filled from url
   const [userId, setUserId] = useState(params.userId);
-  const [userPermissions, setUserPermissions] = useState(null);
 
-  const { isLoading, data } = useQuery(
+  const { isLoading, data, refetch } = useQuery(
     ["userDetails", params.userId],
     fetchUserDetails,
-    { enabled: !!params.userId }
+    {
+      enabled: !!params.userId,
+      staleTime: Infinity,
+    }
   );
+
+  const user = get(data, "user", {});
+  const permissions = get(data, "permissions", {});
 
   const handleUserCreate = useCallback((res) => {
     setUserId(res.user.id);
-    setUserPermissions(res.permissions);
     goToNextStep();
   }, []);
 
-  const handleUserEdit = useCallback((res) => {
-    // user id already set from param
-    setUserPermissions(res.permissions);
+  const handleUserEdit = useCallback(() => {
+    refetch();
     goToNextStep();
-  }, []);
+  }, [refetch]);
 
-  const handleUserEditPerm = useCallback((res) => {
-    setUserPermissions(res);
+  const handleUserEditPerm = useCallback(() => {
+    refetch();
     goToNextStep();
   }, []);
 
   const goToNextStep = useCallback(() => {
     setStep((step) => step + 1);
-  }, [setStep]);
+  }, [step, setStep]);
 
   const goToPrevStep = useCallback(() => {
     setStep((step) => step - 1);
-  }, [setStep]);
+  }, [step, setStep]);
 
   const goToStep = useCallback(
     (step) => {
@@ -74,39 +77,6 @@ const UserAdminForm = () => {
     },
     [setStep]
   );
-
-  const isEdit = !!size(data);
-
-  const FormComponent = useMemo(() => {
-    switch (step) {
-      case 0:
-        return !!size(data) ? (
-          <UserEditForm onSubmit={handleUserEdit} formData={data} />
-        ) : (
-          <UserAddForm onSubmit={handleUserCreate} />
-        );
-
-      case 1:
-        return (
-          <UserPermissions
-            userId={userId}
-            userPermissions={userPermissions}
-            onSubmit={handleUserEditPerm}
-            goBack={goToPrevStep}
-            isSuperUser={get(data, "is_superuser", false)}
-          />
-        );
-
-      case 2:
-        return (
-          <UserRegionSelect
-            userId={userId}
-            goBack={goToPrevStep}
-            regions={get(data, "regions", [])}
-          />
-        );
-    }
-  }, [step, data]);
 
   if (isLoading) {
     return (
@@ -116,6 +86,46 @@ const UserAdminForm = () => {
         </Stack>
       </Box>
     );
+  }
+
+  const isEdit = !!userId;
+  let FormComponent;
+
+  switch (step) {
+    case 0:
+      FormComponent = isEdit ? (
+        <UserEditForm
+          // user edited data is not updated if we don't force re render this form
+          key={Number(new Date())}
+          onSubmit={handleUserEdit}
+          formData={user}
+        />
+      ) : (
+        <UserAddForm onSubmit={handleUserCreate} />
+      );
+      break;
+
+    case 1:
+      FormComponent = (
+        <UserPermissions
+          userId={userId}
+          userPermissions={permissions || {}}
+          onSubmit={handleUserEditPerm}
+          goBack={goToPrevStep}
+          isSuperUser={get(user, "is_superuser", false)}
+        />
+      );
+      break;
+
+    case 2:
+      FormComponent = (
+        <UserRegionSelect
+          userId={userId}
+          goBack={goToPrevStep}
+          regions={get(user, "regions", [])}
+        />
+      );
+      break;
   }
 
   return (

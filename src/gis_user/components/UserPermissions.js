@@ -12,6 +12,15 @@ import { FormCheckbox } from "components/common/FormFields";
 
 import { addNotification } from "redux/reducers/notification.reducer";
 import { updateUserPerm } from "gis_user/data/services";
+import { get, has } from "lodash";
+
+const USER_LAYER_PERMS_CONFIG = [
+  { name: "Distribution Point", layerKey: "p_dp" },
+  { name: "Spliter", layerKey: "p_splitter" },
+  { name: "Cable", layerKey: "p_cable" },
+  { name: "Survey area", layerKey: "p_survey_area" },
+  { name: "Survey building", layerKey: "p_survey_building" },
+];
 
 /**
  * Parent:
@@ -285,179 +294,49 @@ const UserPermissions = ({
         </Stack>
       </Stack>
       <Divider />
-      <Stack
-        spacing={2}
-        direction={{ md: "row", xs: "column" }}
-        minHeight={54}
-        justifyContent="center"
-      >
-        <PermissionLabel>Survey area</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
-          <FormCheckbox
-            label="View"
-            name="p_survey_area_view"
-            control={control}
-            error={!!errors.p_survey_area_view}
-            helperText={errors.p_survey_area_view?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Add"
-            name="p_survey_area_add"
-            control={control}
-            error={!!errors.p_survey_area_add}
-            helperText={errors.p_survey_area_add?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Edit"
-            name="p_survey_area_edit"
-            control={control}
-            error={!!errors.p_survey_area_edit}
-            helperText={errors.p_survey_area_edit?.message}
-            color="secondary"
-          />
-        </Stack>
-      </Stack>
-      <Divider />
-      <Stack
-        spacing={2}
-        direction={{ md: "row", xs: "column" }}
-        minHeight={54}
-        justifyContent="center"
-      >
-        <PermissionLabel>Survey building</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
-          <FormCheckbox
-            label="View"
-            name="p_survey_building_view"
-            control={control}
-            error={!!errors.p_survey_building_view}
-            helperText={errors.p_survey_building_view?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Add"
-            name="p_survey_building_add"
-            control={control}
-            error={!!errors.p_survey_building_add}
-            helperText={errors.p_survey_building_add?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Edit"
-            name="p_survey_building_edit"
-            control={control}
-            error={!!errors.p_survey_building_edit}
-            helperText={errors.p_survey_building_edit?.message}
-            color="secondary"
-          />
-        </Stack>
-      </Stack>
-      <Divider />
-      <Stack
-        spacing={2}
-        direction={{ md: "row", xs: "column" }}
-        minHeight={54}
-        justifyContent="center"
-      >
-        <PermissionLabel>Distribution Point</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
-          <FormCheckbox
-            label="View"
-            name="p_dp_view"
-            control={control}
-            error={!!errors.p_dp_view}
-            helperText={errors.p_dp_view?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Add"
-            name="p_dp_add"
-            control={control}
-            error={!!errors.p_dp_add}
-            helperText={errors.p_dp_add?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Edit"
-            name="p_dp_edit"
-            control={control}
-            error={!!errors.p_dp_edit}
-            helperText={errors.p_dp_edit?.message}
-            color="secondary"
-          />
-        </Stack>
-      </Stack>
-      <Divider />
-      <Stack
-        spacing={2}
-        direction={{ md: "row", xs: "column" }}
-        minHeight={54}
-        justifyContent="center"
-      >
-        <PermissionLabel>Spliter</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
-          <FormCheckbox
-            label="View"
-            name="p_splitter_view"
-            control={control}
-            error={!!errors.p_splitter_view}
-            helperText={errors.p_splitter_view?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Add"
-            name="p_splitter_add"
-            control={control}
-            error={!!errors.p_splitter_add}
-            helperText={errors.p_splitter_add?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Edit"
-            name="p_splitter_edit"
-            control={control}
-            error={!!errors.p_splitter_edit}
-            helperText={errors.p_splitter_edit?.message}
-            color="secondary"
-          />
-        </Stack>
-      </Stack>
-      <Stack
-        spacing={2}
-        direction={{ md: "row", xs: "column" }}
-        minHeight={54}
-        justifyContent="center"
-      >
-        <PermissionLabel>Cable</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
-          <FormCheckbox
-            label="View"
-            name="p_cable_view"
-            control={control}
-            error={!!errors.p_cable_view}
-            helperText={errors.p_cable_view?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Add"
-            name="p_cable_add"
-            control={control}
-            error={!!errors.p_cable_add}
-            helperText={errors.p_cable_add?.message}
-            color="secondary"
-          />
-          <FormCheckbox
-            label="Edit"
-            name="p_cable_edit"
-            control={control}
-            error={!!errors.p_cable_edit}
-            helperText={errors.p_cable_edit?.message}
-            color="secondary"
-          />
-        </Stack>
-      </Stack>
+      {USER_LAYER_PERMS_CONFIG.map((userPermConf) => {
+        const { name, layerKey } = userPermConf;
+
+        return (
+          <React.Fragment key={layerKey}>
+            <Stack
+              spacing={2}
+              direction={{ md: "row", xs: "column" }}
+              minHeight={54}
+              justifyContent="center"
+            >
+              <PermissionLabel>{name}</PermissionLabel>
+              <Stack flexDirection="row" minWidth={240}>
+                <FormCheckbox
+                  label="View"
+                  name={`${layerKey}_view`}
+                  control={control}
+                  error={has(errors, `${layerKey}_view`)}
+                  helperText={get(errors, `${layerKey}_view.message`, "")}
+                  color="secondary"
+                />
+                <FormCheckbox
+                  label="Add"
+                  name={`${layerKey}_add`}
+                  control={control}
+                  error={has(errors, `${layerKey}_add`)}
+                  helperText={get(errors, `${layerKey}_add.message`, "")}
+                  color="secondary"
+                />
+                <FormCheckbox
+                  label="Edit"
+                  name={`${layerKey}_edit`}
+                  control={control}
+                  error={has(errors, `${layerKey}_edit`)}
+                  helperText={get(errors, `${layerKey}_edit.message`, "")}
+                  color="secondary"
+                />
+              </Stack>
+            </Stack>
+            <Divider />
+          </React.Fragment>
+        );
+      })}
       <Stack flex={1} direction="row" justifyContent="space-between" pt={4}>
         <Button
           variant="outlined"

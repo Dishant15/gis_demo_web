@@ -9,7 +9,6 @@ import {
   Stack,
   Divider,
   Button,
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,8 +16,6 @@ import {
   DialogTitle,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { LoadingButton } from "@mui/lab";
 
 import { get } from "lodash";
@@ -33,6 +30,10 @@ import {
   upsertElementConfig,
 } from "ElementConfig/data/services";
 import { LayerKeyMappings } from "planning/GisMap/utils";
+import {
+  ActionCell,
+  SelectValueCell,
+} from "components/common/AgGridCustomCells";
 
 /**
  *
@@ -214,9 +215,7 @@ const ConfigurationContent = ({ layerKey }) => {
             ref={gridRef}
             rowData={data}
             columnDefs={[
-              { field: "config_name" },
-              { field: "ratio" },
-              { field: "vendor" },
+              ...LayerKeyMappings[layerKey]["TableColDefs"],
               {
                 headerName: "Action",
                 field: "id",
@@ -262,28 +261,6 @@ const ConfigurationContent = ({ layerKey }) => {
           </>
         ) : null}
       </Dialog>
-    </Stack>
-  );
-};
-
-/**
- * Render edit icon
- */
-const ActionCell = (props) => {
-  const handleEdit = () => {
-    props.onEditClick(props.data);
-  };
-  const handleDelete = () => {
-    props.onDeleteClick(props.data);
-  };
-  return (
-    <Stack direction="row" spacing={1}>
-      <IconButton aria-label="edit" color="secondary" onClick={handleEdit}>
-        <EditIcon />
-      </IconButton>
-      <IconButton aria-label="delete" color="error" onClick={handleDelete}>
-        <DeleteIcon />
-      </IconButton>
     </Stack>
   );
 };

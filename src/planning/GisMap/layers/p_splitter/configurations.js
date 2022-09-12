@@ -91,6 +91,12 @@ export const ELEMENT_CONFIG_TEMPLATE = {
   ],
 };
 
+export const CONFIG_LIST_TABLE_COL_DEFS = [
+  { headerName: "Name", field: "config_name" },
+  { headerName: "Ratio", field: "ratio" },
+  { headerName: "Splitter Type", field: "splitter_type_display" },
+];
+
 export const transformAndValidateConfigData = (data) => ({
   ...data,
   splitter_type: data.splitter_type.value,

@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
-import { noop, pick, isEqual } from "lodash";
+import React, { useCallback, useRef, useState } from "react";
+import { noop, pick, isEqual, size } from "lodash";
 import { format } from "date-fns";
 import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Divider, Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -13,27 +14,34 @@ import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Popover from "@mui/material/Popover";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 
-import StatusChangeForm from "./StatusChangeForm";
+import ChangeForm from "ticket/components/StatusChangeForm";
 
 import { addNotification } from "redux/reducers/notification.reducer";
-import { updateTicketWorkOrder } from "planning/data/ticket.services";
+import { getPlanningTicketId } from "planning/data/planningGis.selectors";
+import {
+  fetchTicketWorkorderDataThunk,
+  updateTicketWorkOrder,
+} from "planning/data/ticket.services";
 
 import AcceptImg from "assets/accept.png";
 import CancelImg from "assets/cancel.png";
 import InprogressImg from "assets/inprogress.png";
 
-export const getTicketElementId = (id) => {
-  return `ticket-workorder-${id}`;
-};
-
+/**
+ * Parent
+ *   TicketSideBar
+ */
 const TicketWorkOrderList = ({ workOrderList = [] }) => {
-  const [statusData, setStatusData] = useState({});
   const dispatch = useDispatch();
+  const $anchorEl = useRef();
+  const [statusData, setStatusData] = useState({});
+  const ticketId = useSelector(getPlanningTicketId);
 
   const { mutate, isLoading } = useMutation(
     (mutationData) => {
@@ -56,6 +64,7 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
 
   const handleStatusEdit = useCallback(
     (workOrder) => (e) => {
+      $anchorEl.current = e.target;
       setStatusData(pick(workOrder, ["id", "status", "remark"]));
     },
     []
@@ -63,6 +72,7 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
 
   const handleStatusCancel = useCallback(() => {
     setStatusData({});
+    $anchorEl.current = null;
   }, []);
 
   const handleStatusEditSubmit = useCallback(
@@ -76,7 +86,10 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
             data: { status: data.status, remark: data.remark },
           },
           {
-            onSuccess: handleStatusCancel,
+            onSuccess: () => {
+              dispatch(fetchTicketWorkorderDataThunk(ticketId));
+              handleStatusCancel();
+            },
           }
         );
       }
@@ -95,24 +108,29 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
           remark,
           updated_on,
         } = workOrder;
+
+        const showStatusChangeIcon = status !== "V";
+
         const formatedUpdatedOn = format(
           new Date(updated_on),
           "do MMM, hh:mm aaa"
         );
+
         return (
           <Card elevation={0} key={id}>
             <CardHeader
               avatar={<StatusAvatar status={status} />}
               action={
-                <Tooltip title="Change Status" placement="top">
-                  <IconButton
-                    aria-label="settings"
-                    id={getTicketElementId(id)}
-                    onClick={handleStatusEdit(workOrder)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                </Tooltip>
+                showStatusChangeIcon ? (
+                  <Tooltip title="Change Status" placement="top">
+                    <IconButton
+                      aria-label="settings"
+                      onClick={handleStatusEdit(workOrder)}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Tooltip>
+                ) : null
               }
               title={layer_key}
               subheader={formatedUpdatedOn}
@@ -135,12 +153,23 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
           </Card>
         );
       })}
-      <StatusChangeForm
-        statusData={statusData}
-        handleStatusCancel={handleStatusCancel}
-        isLoading={isLoading}
-        handleStatusEditSubmit={handleStatusEditSubmit}
-      />
+
+      <Popover
+        open={!!size(statusData)}
+        anchorEl={$anchorEl.current}
+        onClose={handleStatusCancel}
+        anchorOrigin={{
+          vertical: "center",
+          horizontal: "center",
+        }}
+      >
+        <ChangeForm
+          data={statusData}
+          editSurveyLoading={isLoading}
+          onEditComplete={handleStatusEditSubmit}
+          handleSurveyStatusCancel={handleStatusCancel}
+        />
+      </Popover>
     </Stack>
   );
 };

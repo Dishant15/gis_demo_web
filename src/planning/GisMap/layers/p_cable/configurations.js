@@ -80,6 +80,13 @@ export const INITIAL_CONFIG_DATA = {
   vendor: "",
 };
 
+export const CONFIG_LIST_TABLE_COL_DEFS = [
+  { headerName: "Name", field: "config_name" },
+  { headerName: "Tubes", field: "no_of_tube" },
+  { headerName: "Core / Tube", field: "core_per_tube" },
+  { headerName: "Color", field: "color_on_map" },
+];
+
 export const ELEMENT_CONFIG_TEMPLATE = {
   sections: [
     {

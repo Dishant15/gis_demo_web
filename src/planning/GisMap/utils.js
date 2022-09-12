@@ -21,6 +21,7 @@ import {
   getIcon as SplitterGetIcon,
   ELEMENT_CONFIG_TEMPLATE as SplitterConfigFormTemplate,
   INITIAL_CONFIG_DATA as SplitterConfigInitData,
+  CONFIG_LIST_TABLE_COL_DEFS as SplitterTableColDefs,
   transformAndValidateConfigData as spConfigTransformData,
 } from "./layers/p_splitter";
 import {
@@ -32,6 +33,7 @@ import {
   getIcon as CableGetIcon,
   ELEMENT_CONFIG_TEMPLATE as CableConfigFormTemplate,
   INITIAL_CONFIG_DATA as CableConfigInitData,
+  CONFIG_LIST_TABLE_COL_DEFS as CableTableColDefs,
   transformAndValidateConfigData as cblConfigTransformData,
 } from "./layers/p_cable";
 
@@ -63,6 +65,7 @@ export const LayerKeyMappings = {
     Icon: SplitterGetIcon,
     ConfigFormTemplate: SplitterConfigFormTemplate,
     ConfigInitData: SplitterConfigInitData,
+    TableColDefs: SplitterTableColDefs,
     configTransformData: spConfigTransformData,
   },
   [CableKey]: {
@@ -73,6 +76,7 @@ export const LayerKeyMappings = {
     Icon: CableGetIcon,
     ConfigFormTemplate: CableConfigFormTemplate,
     ConfigInitData: CableConfigInitData,
+    TableColDefs: CableTableColDefs,
     configTransformData: cblConfigTransformData,
   },
 };

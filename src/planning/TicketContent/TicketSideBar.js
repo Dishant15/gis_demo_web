@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { Box, Paper } from "@mui/material";
+import { Box, IconButton, Paper, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
 
 import TicketWorkOrderList from "./components/TicketWorkOrderList";
 import TicketSideBarDummyLoading from "./components/TicketSideBarDummyLoading";
 
 import { fetchTicketWorkorderDataThunk } from "planning/data/ticket.services";
 import { getPlanningTicketData } from "planning/data/planningGis.selectors";
+import { getPlanningPage } from "utils/url.constants";
 
 /**
  * Parent
@@ -16,12 +19,17 @@ import { getPlanningTicketData } from "planning/data/planningGis.selectors";
  */
 const TicketSideBar = React.memo(({ ticketId }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const ticketData = useSelector(getPlanningTicketData);
   const { isLoading, isError, name, work_orders } = ticketData;
   // fetch ticket details
   useEffect(() => {
     dispatch(fetchTicketWorkorderDataThunk(ticketId));
   }, [ticketId]);
+
+  const handleCloseTicketSideBar = useCallback(() => {
+    navigate(getPlanningPage());
+  }, []);
 
   if (isLoading) {
     return <TicketSideBarDummyLoading />;
@@ -36,13 +44,22 @@ const TicketSideBar = React.memo(({ ticketId }) => {
 
   return (
     <Paper className="ticket-sidebar-wrapper">
-      <Typography
-        sx={{ backgroundColor: "primary.dark", color: "white" }}
-        className="ticket-sidebar-heading"
-        variant="h5"
+      <Stack
+        sx={{ backgroundColor: "primary.dark", color: "background.paper" }}
+        direction="row"
+        width="100%"
       >
-        {name}
-      </Typography>
+        <Typography className="ticket-sidebar-heading" variant="h5">
+          {name}
+        </Typography>
+
+        <IconButton
+          onClick={handleCloseTicketSideBar}
+          sx={{ color: "#ffffff73" }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Stack>
 
       <Box className="ticket-sidebar-content">
         <TicketWorkOrderList workOrderList={work_orders} />
