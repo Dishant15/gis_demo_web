@@ -14,7 +14,6 @@ export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
       title: "Distribution Point Form",
-      showCloseIcon: true,
       fieldConfigs: [
         {
           field_key: "name",

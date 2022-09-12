@@ -116,7 +116,6 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           field_type: "input",
         },
       ],
-      showCloseIcon: true,
     },
   ],
 };

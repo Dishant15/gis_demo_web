@@ -38,7 +38,6 @@ const DynamicForm = forwardRef(
     } = useForm({
       defaultValues: data,
     });
-    console.log("🚀 ~ file: DynamicForm.js ~ line 32 ~ errors", errors);
 
     useImperativeHandle(ref, () => ({
       onError: (fieldKey, errorMsg) => {
@@ -53,20 +52,26 @@ const DynamicForm = forwardRef(
     return (
       <Box ref={ref} component="form" onSubmit={handleSubmit(onFormSubmit)}>
         {sections.map((section, s_id) => {
-          const { title, fieldConfigs, showCloseIcon } = section;
+          const { title, fieldConfigs } = section;
+
           return (
-            <Stack key={s_id} spacing={2} p={2} divider={<Divider />}>
-              <Stack direction="row" spacing={2} width="100%">
+            <Stack key={s_id} spacing={2} p={2}>
+              <IconButton
+                sx={{ position: "absolute", top: "10px", right: "10px" }}
+                aria-label="close"
+                onClick={onCancel}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Stack direction="row" width="100%">
                 <Typography color="primary.dark" flex={1} variant="h5">
                   {title}
                 </Typography>
-                {showCloseIcon ? (
-                  <IconButton aria-label="close" onClick={onCancel}>
-                    <CloseIcon />
-                  </IconButton>
-                ) : null}
               </Stack>
-              <Grid container spacing={2} width="100%">
+
+              <Divider />
+
+              <Grid container pr={2} spacing={2} width="100%">
                 {fieldConfigs.map((config) => {
                   const { field_key, label, field_type } = config;
 

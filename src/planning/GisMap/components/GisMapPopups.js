@@ -10,10 +10,10 @@ const GisMapPopups = ({ children }) => {
           position: "fixed",
           top: "10%",
           right: "10%",
-          minWidth: "250px",
+          maxWidth: "550px",
         }}
       >
-        <Paper>{children}</Paper>
+        <Paper elevation={3}>{children}</Paper>
       </Box>
     </Portal>
   );
