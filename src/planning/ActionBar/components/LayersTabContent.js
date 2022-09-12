@@ -2,11 +2,13 @@ import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 
 import { get, noop, size } from "lodash";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Divider, Stack, Typography, Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
+import SyncIcon from "@mui/icons-material/Sync";
 
 import DummyListLoader from "./DummyListLoader";
 
@@ -14,7 +16,6 @@ import {
   fetchLayerDataThunk,
   fetchLayerList,
 } from "planning/data/actionBar.services";
-import { LoadingButton } from "@mui/lab";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getLayerNetworkState,
@@ -25,7 +26,10 @@ import {
   removeLayerSelect,
   setActiveTab,
 } from "planning/data/planningState.reducer";
-import { getSelectedRegionIds } from "planning/data/planningState.selectors";
+import {
+  getSelectedLayerKeys,
+  getSelectedRegionIds,
+} from "planning/data/planningState.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 
 const regionLayerConfig = {
@@ -44,7 +48,7 @@ const LayersTabContent = () => {
    * Parent
    *  ActionBar
    */
-
+  const dispatch = useDispatch();
   const { isLoading, data: layerCofigs = [] } = useQuery(
     "planningLayerConfigs",
     fetchLayerList,
@@ -56,11 +60,34 @@ const LayersTabContent = () => {
     }
   );
   const regionIdList = useSelector(getSelectedRegionIds);
+  const selectedLayerKeys = useSelector(getSelectedLayerKeys);
+
+  const handleFullDataRefresh = useCallback(() => {
+    for (let l_ind = 0; l_ind < selectedLayerKeys.length; l_ind++) {
+      const currLayerKey = selectedLayerKeys[l_ind];
+      dispatch(fetchLayerDataThunk({ regionIdList, layerKey: currLayerKey }));
+    }
+  }, [regionIdList, selectedLayerKeys]);
 
   if (isLoading) return <DummyListLoader />;
 
   return (
     <Stack>
+      <Stack p={2} direction="row" justifyContent="space-between">
+        <Typography variant="h6" color="primary">
+          Select Layers
+        </Typography>
+        <Button
+          variant="outlined"
+          color="success"
+          size="small"
+          startIcon={<SyncIcon />}
+          onClick={handleFullDataRefresh}
+        >
+          Refresh
+        </Button>
+      </Stack>
+      <Divider />
       {layerCofigs.map((layer) => {
         return (
           <LayerTab
@@ -80,7 +107,6 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const dispatch = useDispatch();
   const [isExpanded, setExpanded] = useState(false);
   const layerNetState = useSelector(getLayerNetworkState(layer_key));
-  const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
@@ -93,7 +119,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
 
   const onLayerClick = () => {
     if (isLoading) return;
-    if (!size(selectedRegionIds)) {
+    if (!size(regionIdList)) {
       // show error notification to select regions first
       dispatch(
         addNotification({

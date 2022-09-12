@@ -61,14 +61,16 @@ const planningGisSlice = createSlice({
       );
       for (let lk_ind = 0; lk_ind < allNSLayerKeys.length; lk_ind++) {
         const currNsKey = allNSLayerKeys[lk_ind];
-        // reset data
-        state.layerNetworkState[currNsKey] = {
-          ...defaultLayerNetworkState,
-        };
-        state.layerData[currNsKey] = {
-          viewData: [],
-          editData: {},
-        };
+        if (currNsKey !== "region") {
+          // reset data
+          state.layerNetworkState[currNsKey] = {
+            ...defaultLayerNetworkState,
+          };
+          state.layerData[currNsKey] = {
+            viewData: [],
+            editData: {},
+          };
+        }
       }
     },
   },
