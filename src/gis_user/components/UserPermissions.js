@@ -424,6 +424,40 @@ const UserPermissions = ({
           />
         </Stack>
       </Stack>
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        minHeight={54}
+        justifyContent="center"
+      >
+        <PermissionLabel>Cable</PermissionLabel>
+        <Stack flexDirection="row" minWidth={240}>
+          <FormCheckbox
+            label="View"
+            name="p_cable_view"
+            control={control}
+            error={!!errors.p_cable_view}
+            helperText={errors.p_cable_view?.message}
+            color="secondary"
+          />
+          <FormCheckbox
+            label="Add"
+            name="p_cable_add"
+            control={control}
+            error={!!errors.p_cable_add}
+            helperText={errors.p_cable_add?.message}
+            color="secondary"
+          />
+          <FormCheckbox
+            label="Edit"
+            name="p_cable_edit"
+            control={control}
+            error={!!errors.p_cable_edit}
+            helperText={errors.p_cable_edit?.message}
+            color="secondary"
+          />
+        </Stack>
+      </Stack>
       <Stack flex={1} direction="row" justifyContent="space-between" pt={4}>
         <Button
           variant="outlined"

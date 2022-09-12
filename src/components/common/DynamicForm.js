@@ -1,6 +1,8 @@
 import React, { forwardRef, useCallback, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
 
+import { get } from "lodash";
+
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -76,6 +78,8 @@ const DynamicForm = forwardRef(
                             className="full-width"
                             label={label}
                             {...register(field_key)}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
                           />
                         </Grid>
                       );
@@ -89,6 +93,8 @@ const DynamicForm = forwardRef(
                             rows={3}
                             label={label}
                             {...register(field_key)}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
                           />
                         </Grid>
                       );
@@ -104,6 +110,8 @@ const DynamicForm = forwardRef(
                             textFieldSx={{
                               width: "100%",
                             }}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
                           />
                         </Grid>
                       );
