@@ -1,3 +1,5 @@
+import { LAYER_STATUS_OPTIONS } from "../common/configuration";
+
 export const LAYER_KEY = "p_cable";
 
 export const INITIAL_ELEMENT_DATA = {
@@ -10,6 +12,12 @@ export const INITIAL_ELEMENT_DATA = {
   cable_type: { value: "O", label: "Overhead" },
   // gis_len ,actual_len, start_reading ,end_reading
 };
+
+export const CABLE_TYPE_OPTIONS = [
+  { value: "O", label: "Overhead" },
+  { value: "U", label: "Underground" },
+  { value: "W", label: "Wall Clamped" },
+];
 
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
@@ -27,24 +35,21 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_type: "input",
         },
         {
+          field_key: "ref_code",
+          label: "Reff Code",
+          field_type: "input",
+        },
+        {
           field_key: "status",
           label: "Status",
           field_type: "select",
-          options: [
-            { value: "T", label: "Ticket Open" },
-            { value: "P", label: "Planned" },
-            { value: "V", label: "Verified" },
-          ],
+          options: LAYER_STATUS_OPTIONS,
         },
         {
           field_key: "cable_type",
           label: "Cable Type",
           field_type: "select",
-          options: [
-            { value: "O", label: "Overhead" },
-            { value: "U", label: "Underground" },
-            { value: "W", label: "Wall Clamped" },
-          ],
+          options: CABLE_TYPE_OPTIONS,
         },
         {
           field_key: "gis_len",

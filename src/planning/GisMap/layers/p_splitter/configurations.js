@@ -1,3 +1,5 @@
+import { LAYER_STATUS_OPTIONS } from "../common/configuration";
+
 export const LAYER_KEY = "p_splitter";
 
 export const INITIAL_ELEMENT_DATA = {
@@ -33,11 +35,7 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "status",
           label: "Status",
           field_type: "select",
-          options: [
-            { value: "T", label: "Ticket Open" },
-            { value: "P", label: "Planned" },
-            { value: "V", label: "Verified" },
-          ],
+          options: LAYER_STATUS_OPTIONS,
         },
       ],
     },
@@ -51,6 +49,11 @@ export const INITIAL_CONFIG_DATA = {
   specification: "",
   vendor: "",
 };
+
+export const SPLITTER_TYPE_OPTIONS = [
+  { value: "P", label: "Primary" },
+  { value: "S", label: "Secondary" },
+];
 
 export const ELEMENT_CONFIG_TEMPLATE = {
   sections: [
@@ -66,10 +69,7 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           field_key: "splitter_type",
           label: "Splitter Type",
           field_type: "select",
-          options: [
-            { value: "P", label: "Primary" },
-            { value: "S", label: "Secondary" },
-          ],
+          options: SPLITTER_TYPE_OPTIONS,
         },
         {
           field_key: "ratio",

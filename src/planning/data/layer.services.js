@@ -1,13 +1,22 @@
 import Api from "utils/api.utils";
-import { apiGetElementDetails, apiPostAddElement } from "utils/url.constants";
+import {
+  apiGetElementDetails,
+  apiPostAddElement,
+  apiPutEditElement,
+} from "utils/url.constants";
+
+export const fetchElementDetails = async ({ queryKey }) => {
+  const [_key, layerKey, elementId] = queryKey;
+  const res = await Api.get(apiGetElementDetails(layerKey, elementId));
+  return res.data;
+};
 
 export const addNewElement = async ({ data, layerKey }) => {
   const res = await Api.post(apiPostAddElement(layerKey), data);
   return res.data;
 };
 
-export const fetchElementDetails = async ({ queryKey }) => {
-  const [_key, layerKey, elementId] = queryKey;
-  const res = await Api.get(apiGetElementDetails(layerKey, elementId));
+export const editElementDetails = async ({ data, layerKey, elementId }) => {
+  const res = await Api.put(apiPutEditElement(layerKey, elementId), data);
   return res.data;
 };

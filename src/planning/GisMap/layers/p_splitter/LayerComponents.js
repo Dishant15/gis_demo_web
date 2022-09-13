@@ -1,11 +1,17 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
+import find from "lodash/find";
 
 import { Marker } from "@react-google-maps/api";
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
+import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
 
-import { getLayerViewData } from "planning/data/planningGis.selectors";
+import {
+  getLayerViewData,
+  getPlanningMapStateData,
+  getPlanningMapStateEvent,
+} from "planning/data/planningGis.selectors";
 import {
   INITIAL_ELEMENT_DATA,
   ELEMENT_FORM_TEMPLATE,
@@ -14,6 +20,7 @@ import {
 import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToCoords } from "utils/map.utils";
+import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
@@ -82,25 +89,75 @@ export const AddLayer = () => {
 
 export const ElementForm = () => {
   const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+  const currEvent = useSelector(getPlanningMapStateEvent);
+  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
 
-  const transformAndValidateData = useCallback((formData) => {
-    return {
-      ...formData,
-      // remove coordinates and add geometry
-      coordinates: undefined,
-      geometry: latLongMapToCoords([formData.coordinates])[0],
-      // convert select fields to simple values
-      status: formData.status.value,
-      configuration: configuration.id,
-    };
-  }, []);
+  const transformAndValidateData = useCallback(
+    (formData) => {
+      if (isEdit) {
+        return {
+          ...formData,
+          // remove geometry
+          geometry: undefined,
+          // convert select fields to simple values
+          status: formData.status.value,
+          configuration: configuration.id,
+        };
+      } else {
+        return {
+          ...formData,
+          // remove coordinates and add geometry
+          coordinates: undefined,
+          geometry: latLongMapToCoords([formData.coordinates])[0],
+          // convert select fields to simple values
+          status: formData.status.value,
+          configuration: configuration.id,
+        };
+      }
+    },
+    [isEdit]
+  );
 
   return (
     <GisLayerForm
       isConfigurable
+      isEdit={isEdit}
       layerKey={LAYER_KEY}
       formConfig={ELEMENT_FORM_TEMPLATE}
       transformAndValidateData={transformAndValidateData}
+    />
+  );
+};
+
+const ELEMENT_TABLE_FIELDS = [
+  { label: "Name", field: "name", type: "simple" },
+  { label: "Unique Id", field: "unique_id", type: "simple" },
+  { label: "Reff Code", field: "ref_code", type: "simple" },
+  { label: "Splitter Type", field: "splitter_type_display", type: "simple" },
+  { label: "Address", field: "address", type: "simple" },
+  { label: "Ratio", field: "ratio", type: "simple" },
+  { label: "Specification", field: "specification", type: "simple" },
+  { label: "Vendor", field: "vendor", type: "simple" },
+  { label: "Status", field: "status", type: "status" },
+];
+
+const convertDataBeforeForm = (data) => {
+  return {
+    ...data,
+    // convert status to select format
+    status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
+  };
+};
+
+export const ElementDetails = () => {
+  const { elementId } = useSelector(getPlanningMapStateData);
+
+  return (
+    <ElementDetailsTable
+      rowDefs={ELEMENT_TABLE_FIELDS}
+      layerKey={LAYER_KEY}
+      elementId={elementId}
+      onEditDataConverter={convertDataBeforeForm}
     />
   );
 };

@@ -1,71 +1,148 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useQuery } from "react-query";
 import get from "lodash/get";
+import range from "lodash/range";
 
-import { Divider, Stack, Typography, Skeleton, Chip, Box } from "@mui/material";
+import {
+  Divider,
+  Stack,
+  Typography,
+  Skeleton,
+  Chip,
+  Box,
+  IconButton,
+  Button,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 
 import GisMapPopups from "./GisMapPopups";
-import { useQuery } from "react-query";
+
 import { fetchElementDetails } from "planning/data/layer.services";
-import { range } from "lodash";
+import { useDispatch } from "react-redux";
+import { setMapState } from "planning/data/planningGis.reducer";
+import { PLANNING_EVENT } from "../utils";
 
 /**
  * fetch element details
  * handle loading
  * show data in table form
  */
-const ElementDetailsTable = ({ rowDefs, layerKey, elementId }) => {
+const ElementDetailsTable = ({
+  rowDefs,
+  layerKey,
+  elementId,
+  onEditDataConverter,
+}) => {
+  const dispatch = useDispatch();
   const { data: elemData, isLoading } = useQuery(
     ["elementDetails", layerKey, elementId],
-    fetchElementDetails,
-    { staleTime: Infinity }
+    fetchElementDetails
   );
+
+  const handleCloseDetails = useCallback(() => {
+    dispatch(setMapState({}));
+  }, [dispatch]);
+
+  const handleEditDetails = useCallback(() => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.editElementDetails,
+        layerKey,
+        data: onEditDataConverter(elemData),
+      })
+    );
+  }, [dispatch, layerKey, elemData, onEditDataConverter]);
 
   // show dummy loader for loading
   if (isLoading) return <ElemTableDummyLoader />;
+
   return (
     <GisMapPopups>
-      <Stack minWidth="350px" divider={<Divider />}>
-        {rowDefs.map((row) => {
-          const { label, field, type } = row;
+      <Box minWidth="350px">
+        {/* Table header */}
+        <Stack
+          sx={{ backgroundColor: "primary.main", color: "background.default" }}
+          direction="row"
+          p={1}
+        >
+          <Typography variant="h6" textAlign="left" flex={1}>
+            Element Details
+          </Typography>
+          <IconButton onClick={handleCloseDetails}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+        {/* Button container */}
+        <Stack p={2} direction="row" spacing={2}>
+          <Button
+            onClick={handleEditDetails}
+            startIcon={<EditIcon />}
+            variant="outlined"
+            color="secondary"
+          >
+            Details
+          </Button>
+          <Button
+            startIcon={<EditLocationAltIcon />}
+            variant="outlined"
+            color="secondary"
+          >
+            Location
+          </Button>
+        </Stack>
+        <Divider />
+        {/* Table Content */}
+        <Stack divider={<Divider />}>
+          {rowDefs.map((row) => {
+            const { label, field, type } = row;
+            let ValueCell;
 
-          switch (type) {
-            case "status":
-              const elemStatus = get(elemData, field);
-              const color =
-                elemStatus === "V"
-                  ? "success"
-                  : elemStatus === "P"
-                  ? "warning"
-                  : "danger";
+            switch (type) {
+              case "status":
+                const elemStatus = get(elemData, field);
+                const color =
+                  elemStatus === "V"
+                    ? "success"
+                    : elemStatus === "P"
+                    ? "warning"
+                    : "error";
 
-              return (
-                <Stack direction="row" key={field} p={2}>
-                  <Typography textAlign="left" width={"50%"}>
-                    {label}
-                  </Typography>
+                ValueCell = (
                   <Box textAlign="center" width={"50%"}>
                     <Chip
                       label={get(elemData, `${field}_display`)}
                       color={color}
                     />
                   </Box>
-                </Stack>
-              );
+                );
+                break;
 
-            default:
-              return (
-                <Stack direction="row" key={field} p={2}>
-                  <Typography textAlign="left" width={"50%"}>
-                    {label}
-                  </Typography>
-                  <Typography textAlign="center" width={"50%"}>
+              default:
+                ValueCell = (
+                  <Typography
+                    sx={{ whiteSpace: "pre" }}
+                    textAlign="center"
+                    width={"50%"}
+                  >
                     {get(elemData, field, "--") || "--"}
                   </Typography>
-                </Stack>
-              );
-          }
-        })}
-      </Stack>
+                );
+                break;
+            }
+
+            return (
+              <Stack direction="row" key={field} p={2}>
+                <Typography color="primary.main" textAlign="left" width={"50%"}>
+                  {label}
+                </Typography>
+                {ValueCell}
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Box>
     </GisMapPopups>
   );
 };

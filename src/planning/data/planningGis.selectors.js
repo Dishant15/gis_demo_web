@@ -17,6 +17,8 @@ export const getLayerViewData = (layerKey) =>
 export const getPlanningMapState = (store) => store.planningGis.mapState;
 export const getPlanningMapStateData = (store) =>
   store.planningGis.mapState.data || {};
+export const getPlanningMapStateEvent = (store) =>
+  store.planningGis.mapState.event || "";
 
 // ticket selectors
 export const getPlanningTicketId = (store) => store.planningGis.ticketId;

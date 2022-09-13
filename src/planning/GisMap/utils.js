@@ -19,6 +19,7 @@ import {
   Geometry as SplitterGeometry,
   AddLayer as SplitterAddLayer,
   ElementForm as SplitterForm,
+  ElementDetails as SplitterDetails,
   getIcon as SplitterGetIcon,
   ELEMENT_CONFIG_TEMPLATE as SplitterConfigFormTemplate,
   INITIAL_CONFIG_DATA as SplitterConfigInitData,
@@ -31,6 +32,7 @@ import {
   Geometry as CableGeometry,
   AddLayer as CableAddLayer,
   ElementForm as CableForm,
+  ElementDetails as CableDetails,
   getIcon as CableGetIcon,
   ELEMENT_CONFIG_TEMPLATE as CableConfigFormTemplate,
   INITIAL_CONFIG_DATA as CableConfigInitData,
@@ -46,6 +48,7 @@ export const PLANNING_EVENT = {
   editElement: "E",
   showElementForm: "F",
   showElementDetails: "D",
+  editElementDetails: "EF",
 };
 
 export const LayerKeyMappings = {
@@ -56,6 +59,7 @@ export const LayerKeyMappings = {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
     [PLANNING_EVENT.showElementForm]: <DpForm />,
     [PLANNING_EVENT.showElementDetails]: <DpDetails />,
+    [PLANNING_EVENT.editElementDetails]: <DpForm />,
     ViewLayer: DPViewLayer,
     Geometry: DPGeometry,
     Icon: DpIcon,
@@ -63,6 +67,8 @@ export const LayerKeyMappings = {
   [SplitterKey]: {
     [PLANNING_EVENT.addElement]: <SplitterAddLayer />,
     [PLANNING_EVENT.showElementForm]: <SplitterForm />,
+    [PLANNING_EVENT.showElementDetails]: <SplitterDetails />,
+    [PLANNING_EVENT.editElementDetails]: <SplitterForm />,
     ViewLayer: SplitterLayer,
     Geometry: SplitterGeometry,
     Icon: SplitterGetIcon,
@@ -74,6 +80,8 @@ export const LayerKeyMappings = {
   [CableKey]: {
     [PLANNING_EVENT.addElement]: <CableAddLayer />,
     [PLANNING_EVENT.showElementForm]: <CableForm />,
+    [PLANNING_EVENT.showElementDetails]: <CableDetails />,
+    [PLANNING_EVENT.editElementDetails]: <CableForm />,
     ViewLayer: CableLayer,
     Geometry: CableGeometry,
     Icon: CableGetIcon,
