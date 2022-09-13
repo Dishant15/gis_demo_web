@@ -81,6 +81,9 @@ export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 export const apiPostAddElement = (layerKey) =>
   `/api/planning/layer/${layerKey}/add/`;
 
+export const apiGetElementDetails = (layerKey, elementId) =>
+  `/api/planning/layer/${layerKey}/${elementId}/details/`;
+
 export const apiGetTicketWorkorderElements = (ticketId = ":ticketId") =>
   `/api/ticket/${ticketId}/workorders/elements/`;
 

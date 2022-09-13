@@ -10,6 +10,7 @@ import {
   Geometry as DPGeometry,
   LAYER_KEY as DpKey,
   ElementForm as DpForm,
+  ElementDetails as DpDetails,
   Icon as DpIcon,
 } from "./layers/p_dp";
 import {
@@ -44,6 +45,7 @@ export const PLANNING_EVENT = {
   addElement: "A",
   editElement: "E",
   showElementForm: "F",
+  showElementDetails: "D",
 };
 
 export const LayerKeyMappings = {
@@ -53,6 +55,7 @@ export const LayerKeyMappings = {
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
     [PLANNING_EVENT.showElementForm]: <DpForm />,
+    [PLANNING_EVENT.showElementDetails]: <DpDetails />,
     ViewLayer: DPViewLayer,
     Geometry: DPGeometry,
     Icon: DpIcon,

@@ -22,7 +22,7 @@ const initialState = {
   layerNetworkState: {},
   // shape : { layer-key: { viewData: [], editData: {} } }
   layerData: {},
-  // shape: { event: "addElement" | "editElement", data: { **Edit / init form data }, layerKey }
+  // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey }
   mapState: {},
   // ticket related fields
   ticketId: null,

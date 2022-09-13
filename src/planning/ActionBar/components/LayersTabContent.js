@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 
 import { get, noop, size } from "lodash";
@@ -16,7 +17,6 @@ import {
   fetchLayerDataThunk,
   fetchLayerList,
 } from "planning/data/actionBar.services";
-import { useDispatch, useSelector } from "react-redux";
 import {
   getLayerNetworkState,
   getLayerViewData,
@@ -31,6 +31,8 @@ import {
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { setMapState } from "planning/data/planningGis.reducer";
+import { PLANNING_EVENT } from "planning/GisMap/utils";
 
 const regionLayerConfig = {
   layer_key: "region",
@@ -188,8 +190,22 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
 };
 
 const ElementList = ({ layerKey }) => {
+  const dispatch = useDispatch();
   // get list of elements for current key
   const { viewData = [] } = useSelector(getLayerViewData(layerKey));
+
+  const handleElementClick = useCallback(
+    (elementId) => () => {
+      dispatch(
+        setMapState({
+          event: PLANNING_EVENT.showElementDetails,
+          layerKey,
+          data: { elementId },
+        })
+      );
+    },
+    [layerKey]
+  );
 
   return (
     <>
@@ -197,7 +213,12 @@ const ElementList = ({ layerKey }) => {
         const { id, name } = element;
         return (
           <Box key={id} className="reg-list-pill-child">
-            <Stack direction="row" width="100%" spacing={2}>
+            <Stack
+              onClick={handleElementClick(id)}
+              direction="row"
+              width="100%"
+              spacing={2}
+            >
               <Stack
                 direction="row"
                 flex={1}

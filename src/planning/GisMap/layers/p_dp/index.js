@@ -1,9 +1,3 @@
-export { ViewLayer, AddLayer, ElementForm, Geometry } from "./ViewLayer";
-
+export * from "./configurations";
+export * from "./LayerComponents";
 export { default as Icon } from "assets/markers/p_dp_view.svg";
-
-export {
-  LAYER_KEY,
-  ELEMENT_FORM_TEMPLATE,
-  INITIAL_ELEMENT_DATA,
-} from "./configurations";
