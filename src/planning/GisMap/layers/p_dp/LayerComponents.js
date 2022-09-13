@@ -23,6 +23,7 @@ import { default as Icon } from "assets/markers/p_dp_view.svg";
 import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
 import { LAYER_STATUS_OPTIONS } from "../common/configuration";
+import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 
 export const Geometry = ({ coordinates }) => (
   <Marker icon={{ url: Icon }} position={coordinates} />
@@ -46,7 +47,7 @@ export const ViewLayer = () => {
   );
 };
 
-export const AddLayer = () => {
+export const AddMapLayer = () => {
   return (
     <AddMarkerLayer
       icon={EditIcon}
@@ -57,6 +58,17 @@ export const AddLayer = () => {
         // init data
         data: INITIAL_ELEMENT_DATA,
       }}
+    />
+  );
+};
+
+export const EditMapLayer = () => {
+  return (
+    <EditMarkerLayer
+      icon={EditIcon}
+      helpText="Click or drag and drop marker to new location"
+      layerKey={LAYER_KEY}
+      featureType="marker"
     />
   );
 };

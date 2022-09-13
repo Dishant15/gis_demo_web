@@ -26,6 +26,7 @@ import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
 import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 import SecondarySpliterEditIcon from "assets/markers/spliter_edit.svg";
+import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 
 export const getIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
@@ -68,7 +69,7 @@ export const ViewLayer = () => {
   );
 };
 
-export const AddLayer = () => {
+export const AddMapLayer = () => {
   const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   // get icon
   const Icon = getEditIcon(configuration);
@@ -83,6 +84,21 @@ export const AddLayer = () => {
         // init data
         data: INITIAL_ELEMENT_DATA,
       }}
+    />
+  );
+};
+
+export const EditMapLayer = () => {
+  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+  // get icon
+  const Icon = getEditIcon(configuration);
+
+  return (
+    <EditMarkerLayer
+      icon={Icon}
+      helpText="Click or drag and drop splitter marker to new location"
+      layerKey={LAYER_KEY}
+      featureType="marker"
     />
   );
 };

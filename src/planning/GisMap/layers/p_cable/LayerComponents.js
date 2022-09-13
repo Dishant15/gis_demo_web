@@ -23,6 +23,7 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import CableIcon from "assets/markers/line_pin.svg";
+import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 
 // for Add tab and show pills on FE
 export const getIcon = ({ color_on_map }) => CableIcon;
@@ -73,7 +74,7 @@ export const ViewLayer = () => {
   );
 };
 
-export const AddLayer = () => {
+export const AddMapLayer = () => {
   const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   // get icon
   const options = getOptions(configuration);
@@ -88,6 +89,21 @@ export const AddLayer = () => {
         // init data
         data: INITIAL_ELEMENT_DATA,
       }}
+    />
+  );
+};
+
+export const EditMapLayer = () => {
+  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+  // get icon
+  const options = getOptions(configuration);
+
+  return (
+    <EditMarkerLayer
+      options={options}
+      helpText="Click on map to create line on map. Double click to complete."
+      featureType="polyline"
+      layerKey={LAYER_KEY}
     />
   );
 };

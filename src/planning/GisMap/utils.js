@@ -6,7 +6,8 @@ import {
 } from "./layers/region";
 import {
   ViewLayer as DPViewLayer,
-  AddLayer as DPAddLayer,
+  AddMapLayer as DPAddLayer,
+  EditMapLayer as DpEditMapLayer,
   Geometry as DPGeometry,
   LAYER_KEY as DpKey,
   ElementForm as DpForm,
@@ -17,7 +18,8 @@ import {
   LAYER_KEY as SplitterKey,
   ViewLayer as SplitterLayer,
   Geometry as SplitterGeometry,
-  AddLayer as SplitterAddLayer,
+  AddMapLayer as SplitterAddLayer,
+  EditMapLayer as SplitterEditMapLayer,
   ElementForm as SplitterForm,
   ElementDetails as SplitterDetails,
   getIcon as SplitterGetIcon,
@@ -30,7 +32,8 @@ import {
   LAYER_KEY as CableKey,
   ViewLayer as CableLayer,
   Geometry as CableGeometry,
-  AddLayer as CableAddLayer,
+  AddMapLayer as CableAddLayer,
+  EditMapLayer as CableEditMapLayer,
   ElementForm as CableForm,
   ElementDetails as CableDetails,
   getIcon as CableGetIcon,
@@ -45,7 +48,7 @@ import { coordsToLatLongMap } from "utils/map.utils";
 // possible events that can happen on map
 export const PLANNING_EVENT = {
   addElement: "A",
-  editElement: "E",
+  editElementLocation: "E",
   showElementForm: "F",
   showElementDetails: "D",
   editElementDetails: "EF",
@@ -57,6 +60,7 @@ export const LayerKeyMappings = {
   },
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
+    [PLANNING_EVENT.editElementLocation]: <DpEditMapLayer />,
     [PLANNING_EVENT.showElementForm]: <DpForm />,
     [PLANNING_EVENT.showElementDetails]: <DpDetails />,
     [PLANNING_EVENT.editElementDetails]: <DpForm />,
@@ -66,6 +70,7 @@ export const LayerKeyMappings = {
   },
   [SplitterKey]: {
     [PLANNING_EVENT.addElement]: <SplitterAddLayer />,
+    [PLANNING_EVENT.editElementLocation]: <SplitterEditMapLayer />,
     [PLANNING_EVENT.showElementForm]: <SplitterForm />,
     [PLANNING_EVENT.showElementDetails]: <SplitterDetails />,
     [PLANNING_EVENT.editElementDetails]: <SplitterForm />,
@@ -79,6 +84,7 @@ export const LayerKeyMappings = {
   },
   [CableKey]: {
     [PLANNING_EVENT.addElement]: <CableAddLayer />,
+    [PLANNING_EVENT.editElementLocation]: <CableEditMapLayer />,
     [PLANNING_EVENT.showElementForm]: <CableForm />,
     [PLANNING_EVENT.showElementDetails]: <CableDetails />,
     [PLANNING_EVENT.editElementDetails]: <CableForm />,

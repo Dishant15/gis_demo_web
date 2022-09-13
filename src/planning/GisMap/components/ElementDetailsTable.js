@@ -55,6 +55,16 @@ const ElementDetailsTable = ({
     );
   }, [dispatch, layerKey, elemData, onEditDataConverter]);
 
+  const handleEditLocation = useCallback(() => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.editElementLocation,
+        layerKey,
+        data: { elementId: elemData.id, coordinates: elemData.coordinates },
+      })
+    );
+  }, [dispatch, layerKey, elemData]);
+
   // show dummy loader for loading
   if (isLoading) return <ElemTableDummyLoader />;
 
@@ -85,6 +95,7 @@ const ElementDetailsTable = ({
             Details
           </Button>
           <Button
+            onClick={handleEditLocation}
             startIcon={<EditLocationAltIcon />}
             variant="outlined"
             color="secondary"
