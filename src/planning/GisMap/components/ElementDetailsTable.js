@@ -43,10 +43,6 @@ const ElementDetailsTable = ({
   );
 
   const windowHeight = useSelector(getContentHeight);
-  console.log(
-    "🚀 ~ file: ElementDetailsTable.js ~ line 46 ~ windowHeight",
-    windowHeight
-  );
   // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title + action btns)
   const contentHeight = windowHeight - windowHeight * 0.1 - (60 + 70);
 

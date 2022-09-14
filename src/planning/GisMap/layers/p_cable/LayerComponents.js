@@ -56,12 +56,12 @@ export const ViewLayer = () => {
    *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
    */
   const layerData = useSelector(getLayerViewData(LAYER_KEY));
-  const data = layerData.viewData;
 
   return (
     <>
-      {data.map((element) => {
-        const { id, coordinates, color_on_map } = element;
+      {layerData.map((element) => {
+        const { id, hidden, coordinates, color_on_map } = element;
+        if (hidden) return null;
         return (
           <Geometry
             key={id}

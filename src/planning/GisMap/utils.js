@@ -1,5 +1,5 @@
-import cloneDeep from "lodash/cloneDeep";
-
+import orderBy from "lodash/orderBy";
+import { coordsToLatLongMap } from "utils/map.utils";
 import {
   ViewLayer as RegionViewLayer,
   LAYER_KEY as RegionKey,
@@ -42,8 +42,6 @@ import {
   CONFIG_LIST_TABLE_COL_DEFS as CableTableColDefs,
   transformAndValidateConfigData as cblConfigTransformData,
 } from "./layers/p_cable";
-
-import { coordsToLatLongMap } from "utils/map.utils";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -99,7 +97,7 @@ export const LayerKeyMappings = {
 };
 
 export const convertLayerServerData = (layerKey, serverData) => {
-  let resultData = cloneDeep(serverData) || [];
+  let resultData = orderBy(serverData, ["id"], ["desc"]);
 
   // PolyLine
   if (layerKey === CableKey) {

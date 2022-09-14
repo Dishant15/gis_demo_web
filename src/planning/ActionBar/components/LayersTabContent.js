@@ -193,7 +193,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
 const ElementList = ({ layerKey }) => {
   const dispatch = useDispatch();
   // get list of elements for current key
-  const { viewData = [] } = useSelector(getLayerViewData(layerKey));
+  const layerData = useSelector(getLayerViewData(layerKey));
 
   const handleElementClick = useCallback(
     (elementId) => () => {
@@ -210,7 +210,7 @@ const ElementList = ({ layerKey }) => {
 
   return (
     <>
-      {viewData.map((element) => {
+      {layerData.map((element) => {
         const { id, name } = element;
         return (
           <Box key={id} className="reg-list-pill-child">

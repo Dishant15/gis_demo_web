@@ -15,11 +15,10 @@ export const ViewLayer = () => {
    */
   // get data of region layer
   const regionData = useSelector(getLayerViewData(LAYER_KEY));
-  const regionList = regionData.viewData;
 
   return (
     <>
-      {regionList.map((reg) => {
+      {regionData.map((reg) => {
         const { id, coordinates, layer } = reg;
         const color = getFillColor(layer);
 
