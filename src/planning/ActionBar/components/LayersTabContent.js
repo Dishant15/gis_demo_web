@@ -10,6 +10,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import SyncIcon from "@mui/icons-material/Sync";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 import DummyListLoader from "./DummyListLoader";
 
@@ -216,22 +217,19 @@ const ElementList = ({ layerKey }) => {
             <Stack
               onClick={handleElementClick(id)}
               direction="row"
-              width="100%"
-              spacing={2}
+              flex={1}
+              p={1}
+              pl={3}
+              sx={{
+                cursor: "pointer",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-              <Stack
-                direction="row"
-                flex={1}
-                sx={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-                onClick={noop}
-              >
-                <span>{name}</span>
-                <MyLocationIcon />
-              </Stack>
+              <Typography color="secondary.dark" variant="span">
+                {name}
+              </Typography>
+              <FormatListBulletedIcon />
             </Stack>
 
             <Divider flexItem />

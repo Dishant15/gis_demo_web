@@ -20,9 +20,10 @@ import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { PLANNING_EVENT } from "../utils";
+import { getContentHeight } from "redux/selectors/appState.selectors";
 
 /**
  * fetch element details
@@ -40,6 +41,14 @@ const ElementDetailsTable = ({
     ["elementDetails", layerKey, elementId],
     fetchElementDetails
   );
+
+  const windowHeight = useSelector(getContentHeight);
+  console.log(
+    "🚀 ~ file: ElementDetailsTable.js ~ line 46 ~ windowHeight",
+    windowHeight
+  );
+  // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title + action btns)
+  const contentHeight = windowHeight - windowHeight * 0.1 - (60 + 70);
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -70,7 +79,7 @@ const ElementDetailsTable = ({
 
   return (
     <GisMapPopups>
-      <Box minWidth="350px">
+      <Box minWidth="350px" maxWidth="550px">
         {/* Table header */}
         <Stack
           sx={{ backgroundColor: "primary.main", color: "background.default" }}
@@ -85,7 +94,12 @@ const ElementDetailsTable = ({
           </IconButton>
         </Stack>
         {/* Button container */}
-        <Stack p={2} direction="row" spacing={2}>
+        <Stack
+          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
+          p={2}
+          direction="row"
+          spacing={2}
+        >
           <Button
             onClick={handleEditDetails}
             startIcon={<EditIcon />}
@@ -103,9 +117,14 @@ const ElementDetailsTable = ({
             Location
           </Button>
         </Stack>
-        <Divider />
         {/* Table Content */}
-        <Stack divider={<Divider />}>
+        <Stack
+          sx={{
+            maxHeight: `${contentHeight}px`,
+            overflowY: "auto",
+          }}
+          divider={<Divider />}
+        >
           {rowDefs.map((row) => {
             const { label, field, type } = row;
             let ValueCell;

@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { get } from "lodash";
 
+import Box from "@mui/material/Box";
 import DynamicForm from "components/common/DynamicForm";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 
@@ -110,14 +111,16 @@ export const GisLayerForm = ({
 
   return (
     <GisMapPopups>
-      <DynamicForm
-        ref={formRef}
-        formConfigs={formConfig}
-        data={data}
-        onSubmit={onSubmit}
-        onCancel={onClose}
-        isLoading={isEdit ? isEditLoading : isAddLoading}
-      />
+      <Box minWidth="350px" maxWidth="550px">
+        <DynamicForm
+          ref={formRef}
+          formConfigs={formConfig}
+          data={data}
+          onSubmit={onSubmit}
+          onCancel={onClose}
+          isLoading={isEdit ? isEditLoading : isAddLoading}
+        />
+      </Box>
     </GisMapPopups>
   );
 };

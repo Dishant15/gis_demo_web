@@ -59,7 +59,12 @@ const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
       />
       <GisMapPopups>
         <Paper>
-          <Box backgroundColor="secondary.light" p={2}>
+          <Box
+            minWidth="350px"
+            maxWidth="550px"
+            backgroundColor="secondary.light"
+            p={2}
+          >
             <Typography color="background.paper" mb={2} variant="h6">
               {helpText}
             </Typography>
