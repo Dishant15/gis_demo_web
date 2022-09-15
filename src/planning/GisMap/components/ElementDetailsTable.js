@@ -65,7 +65,12 @@ const ElementDetailsTable = ({
       setMapState({
         event: PLANNING_EVENT.editElementLocation,
         layerKey,
-        data: { elementId: elemData.id, coordinates: elemData.coordinates },
+        // pass elem data to update edit icon / style based on configs
+        data: {
+          ...elemData,
+          elementId: elemData.id,
+          coordinates: elemData.coordinates,
+        },
       })
     );
   }, [dispatch, layerKey, elemData]);

@@ -34,7 +34,7 @@ export const getOptions = ({ color_on_map }) => {
     strokeOpacity: 0.8,
     strokeWeight: 2,
     fillColor: color_on_map,
-    fillOpacity: 0.35,
+    fillOpacity: 1,
     clickable: false,
     draggable: false,
     editable: false,
@@ -94,9 +94,9 @@ export const AddMapLayer = () => {
 };
 
 export const EditMapLayer = () => {
-  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
+  const elemData = useSelector(getPlanningMapStateData);
   // get icon
-  const options = getOptions(configuration);
+  const options = getOptions(elemData);
 
   return (
     <EditMarkerLayer
@@ -155,7 +155,7 @@ const ELEMENT_TABLE_FIELDS = [
   { label: "Unique Id", field: "unique_id", type: "simple" },
   { label: "Reff Code", field: "ref_code", type: "simple" },
   { label: "Cable Type", field: "cable_type_display", type: "simple" },
-  { label: "Gis Length", field: "gis_len", type: "simple" },
+  { label: "Gis Length (Km)", field: "gis_len", type: "simple" },
   { label: "Actual Length", field: "actual_len", type: "simple" },
   { label: "Start Reading", field: "start_reading", type: "simple" },
   { label: "End Reading", field: "end_reading", type: "simple" },

@@ -1,7 +1,9 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
+import { addNotification } from "redux/reducers/notification.reducer";
+import { setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings } from "../utils";
 
 /**
@@ -20,11 +22,33 @@ import { LayerKeyMappings } from "../utils";
  *  {LayerKey} -> AddLayer (export from layers folder) -> AddMarkerLayer | AddPolygonLayer
  */
 const GisMapEventLayer = React.memo(() => {
+  const dispatch = useDispatch();
   const mapState = useSelector(getPlanningMapState);
 
+  useEffect(() => {
+    if (!!mapState.event) {
+      const MappedComponent =
+        LayerKeyMappings[mapState.layerKey][mapState.event];
+      if (!MappedComponent) {
+        // if no component found dispatch error and reset mapState
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Can not process requested operation",
+          })
+        );
+        dispatch(setMapState({}));
+      }
+    }
+  }, [mapState.event, mapState.layerKey]);
+
   if (!!mapState.event) {
-    return LayerKeyMappings[mapState.layerKey][mapState.event];
+    const MappedComponent = LayerKeyMappings[mapState.layerKey][mapState.event];
+    if (!!MappedComponent) {
+      return MappedComponent;
+    }
   }
+
   return null;
 });
 

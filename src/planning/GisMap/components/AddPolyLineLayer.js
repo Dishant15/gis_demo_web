@@ -1,17 +1,18 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { DrawingManager } from "@react-google-maps/api";
+
 import { lineString, length } from "@turf/turf";
+import round from "lodash/round";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import GisMapPopups from "./GisMapPopups";
 
+import { setMapState } from "planning/data/planningGis.reducer";
 import {
   getCoordinatesFromFeature,
   latLongMapToLineCoords,
 } from "utils/map.utils";
-import { setMapState } from "planning/data/planningGis.reducer";
-import { round } from "lodash";
 
 const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
   const dispatch = useDispatch();
@@ -28,13 +29,14 @@ const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
     const featureCoords = getCoordinatesFromFeature(featureRef.current);
     // set coords to form data
     const coordinates = latLongMapToLineCoords(featureCoords);
-    const gis_len = length(lineString(coordinates));
+    // get length and round to 4 decimals
+    const gis_len = round(length(lineString(coordinates)), 4);
 
     nextEvent.data = {
       ...nextEvent.data,
       geometry: coordinates,
       // get gis_len
-      gis_len: round(gis_len, 4),
+      gis_len,
     };
     // clear map refs
     featureRef.current.setMap(null);

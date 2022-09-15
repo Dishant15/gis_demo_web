@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Marker, Polyline } from "@react-google-maps/api";
 
 import get from "lodash/get";
+import round from "lodash/round";
+import { lineString, length } from "@turf/turf";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -105,17 +107,16 @@ const EditGisLayer = ({
 
   const handleSubmit = useCallback(() => {
     // convert markder coordinates
-    let geometry;
+    let submitData = {};
     if (featureType === "polyline") {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
-      geometry = latLongMapToLineCoords(featureCoords);
+      submitData.geometry = latLongMapToLineCoords(featureCoords);
+      submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
     } else {
       const featureCoords = getMarkerCoordinatesFromFeature(featureRef.current);
-      geometry = latLongMapToCoords([featureCoords])[0];
+      submitData.geometry = latLongMapToCoords([featureCoords])[0];
     }
-    editElement({
-      geometry,
-    });
+    editElement(submitData);
   }, []);
 
   const handleEditFeatureLoad = useCallback((feature) => {
@@ -144,6 +145,7 @@ const EditGisLayer = ({
             clickable: true,
             draggable: true,
             editable: true,
+            strokeWeight: 4,
             zIndex: 50,
           }}
           onLoad={handleEditFeatureLoad}
