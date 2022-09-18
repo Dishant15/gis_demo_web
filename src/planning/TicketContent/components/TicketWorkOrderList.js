@@ -5,6 +5,7 @@ import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -96,6 +97,16 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
     },
     [statusData]
   );
+
+  if (!size(workOrderList)) {
+    return (
+      <Box px={2} py="20%">
+        <Typography variant="h5">
+          No workOrders added to this ticket yet !!
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Stack spacing={2} divider={<Divider />}>

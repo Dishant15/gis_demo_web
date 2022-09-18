@@ -10,7 +10,6 @@ import {
   Button,
   Stack,
   Divider,
-  Paper,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -21,12 +20,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { fetchDashboardData } from "./dashboard.service";
 import { getTicketListPage, getUserListPage } from "utils/url.constants";
-import DynamicForm from "components/common/DynamicForm";
-import {
-  FORM_CONFIGS,
-  INITIAL_DATA,
-  onSubmit,
-} from "planning/GisMap/layers/p_dp";
 
 export default function HomePage() {
   const contentHeight = useSelector(getContentHeight);
