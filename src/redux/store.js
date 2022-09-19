@@ -35,7 +35,8 @@ const persistConfig = {
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, rootReducer),
-  devTools: true,
+  devTools: process.env.NODE_ENV !== "production",
+  // comment out lines bellow only if you need to use Set and Map in redux states
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -8,9 +8,9 @@ import {
   noop,
   groupBy,
   map,
-  xor,
   orderBy,
   size,
+  xor,
 } from "lodash";
 import {
   Box,
@@ -26,23 +26,17 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import DummyListLoader from "./DummyListLoader";
 
-import {
-  fetchLayerDataThunk,
-  fetchRegionList,
-} from "planning/data/actionBar.services";
+import { fetchRegionList } from "planning/data/actionBar.services";
 import { getFillColor } from "utils/map.utils";
 import {
-  handleLayerSelect,
   handleRegionExpand,
-  handleRegionSelect,
   setActiveTab,
 } from "planning/data/planningState.reducer";
 import {
   getExpandedRegionIds,
-  getSelectedLayerKeys,
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
-import { resetUnselectedLayerGisData } from "planning/data/planningGis.reducer";
+import { onRegionSelectionUpdate } from "planning/data/planning.actions";
 
 const RegionTabContent = () => {
   /**
@@ -57,7 +51,6 @@ const RegionTabContent = () => {
   const dispatch = useDispatch();
   const selectedRegionIds = useSelector(getSelectedRegionIds);
   const expandedRegionIds = useSelector(getExpandedRegionIds);
-  const selectedLayerKeys = useSelector(getSelectedLayerKeys);
   const [selectedRegionSet, setSelectedRegion] = useState(
     new Set(selectedRegionIds)
   );
@@ -109,24 +102,11 @@ const RegionTabContent = () => {
     if (!size(regionIdList)) return;
     // check if regions changed
     if (size(xor(regionIdList, selectedRegionIds))) {
-      // set selected regions
-      dispatch(handleRegionSelect(regionIdList));
-      // add region in selectedLayerKeys if not
-      if (selectedLayerKeys.indexOf("region") === -1) {
-        dispatch(handleLayerSelect("region"));
-      }
-      // fetch data gis data for all region polygons
-      dispatch(fetchLayerDataThunk({ regionIdList, layerKey: "region" }));
-      // re fetch data for each selected layers
-      for (let l_ind = 0; l_ind < selectedLayerKeys.length; l_ind++) {
-        const currLayerKey = selectedLayerKeys[l_ind];
-        dispatch(fetchLayerDataThunk({ regionIdList, layerKey: currLayerKey }));
-      }
-      dispatch(resetUnselectedLayerGisData(selectedLayerKeys));
+      dispatch(onRegionSelectionUpdate(regionIdList));
     }
     // change tab to layers
     dispatch(setActiveTab(1));
-  }, [selectedRegionSet, selectedRegionIds, selectedLayerKeys]);
+  }, [selectedRegionSet, selectedRegionIds]);
 
   if (isLoading) return <DummyListLoader />;
 
