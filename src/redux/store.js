@@ -1,6 +1,15 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistStore, persistReducer } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import { debounce } from "lodash";
 
 import authReducer from "redux/reducers/auth.reducer";
@@ -27,6 +36,13 @@ const persistConfig = {
 const store = configureStore({
   reducer: persistReducer(persistConfig, rootReducer),
   devTools: process.env.NODE_ENV !== "production",
+  // comment out lines bellow only if you need to use Set and Map in redux states
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
