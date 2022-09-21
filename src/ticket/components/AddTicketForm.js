@@ -34,11 +34,10 @@ const AddTicketForm = ({ formData, onSubmit }) => {
   const navigate = useNavigate();
   const isEdit = !!size(formData);
 
-  const { isLoading: regionListLoading, data: regionList } = useQuery(
-    "regionList",
+  const { isLoading: regionListLoading = [], data: regionList } = useQuery(
+    ["regionList", "data"],
     fetchRegionList,
     {
-      initialData: [],
       onSuccess: (res) => {
         const region = find(res, ["id", get(formData, "region.id")]);
         if (region) {
@@ -48,11 +47,10 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     }
   );
 
-  const { isLoading: userListLoading, data: userList } = useQuery(
+  const { isLoading: userListLoading = [], data: userList } = useQuery(
     "userList",
     fetchUserList,
     {
-      initialData: [],
       onSuccess: (res) => {
         const assignee = find(res, ["id", get(formData, "assignee")]);
         if (assignee) {
