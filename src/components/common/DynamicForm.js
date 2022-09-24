@@ -18,6 +18,16 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { FormSelect } from "./FormFields";
 
+export const FIELD_TYPES = {
+  Input: "input",
+  TextArea: "textArea",
+  // single select
+  Select: "select",
+  // NOT IMPLEMENTED YET
+  SelectCreatable: "selectCreatable",
+  CheckBox: "checkBox",
+};
+
 /**
  * Render dynamicall generated formConfig based forms
  *
@@ -76,7 +86,7 @@ const DynamicForm = forwardRef(
                   const { field_key, label, field_type } = config;
 
                   switch (field_type) {
-                    case "input":
+                    case FIELD_TYPES.Input:
                       return (
                         <Grid item xs={12} sm={6} key={field_key}>
                           <TextField
@@ -89,7 +99,7 @@ const DynamicForm = forwardRef(
                         </Grid>
                       );
 
-                    case "textArea":
+                    case FIELD_TYPES.TextArea:
                       return (
                         <Grid item xs={12} sm={6} key={field_key}>
                           <TextField
@@ -104,7 +114,7 @@ const DynamicForm = forwardRef(
                         </Grid>
                       );
 
-                    case "select":
+                    case FIELD_TYPES.Select:
                       return (
                         <Grid item xs={12} sm={6} key={field_key}>
                           <FormSelect

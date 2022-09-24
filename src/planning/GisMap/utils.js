@@ -45,13 +45,23 @@ import {
 import {
   ViewLayer as BuildingViewLayer,
   AddMapLayer as BuildingAddLayer,
-  EditMapLayer as BuildintEditMapLayer,
+  EditMapLayer as BuildingEditMapLayer,
   Geometry as BuildingGeometry,
   LAYER_KEY as BuildingKey,
   ElementForm as BuildingForm,
   ElementDetails as BuildingDetails,
   Icon as BuildingIcon,
 } from "./layers/p_survey_building";
+import {
+  ViewLayer as SAreaViewLayer,
+  AddMapLayer as SAreaAddLayer,
+  EditMapLayer as SAreaEditMapLayer,
+  Geometry as SAreaGeometry,
+  LAYER_KEY as SAreaKey,
+  ElementForm as SAreaForm,
+  ElementDetails as SAreaDetails,
+  Icon as SAreaIcon,
+} from "./layers/p_survey_area";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -106,7 +116,7 @@ export const LayerKeyMappings = {
   },
   [BuildingKey]: {
     [PLANNING_EVENT.addElement]: <BuildingAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <BuildintEditMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <BuildingEditMapLayer />,
     [PLANNING_EVENT.showElementForm]: <BuildingForm />,
     [PLANNING_EVENT.showElementDetails]: <BuildingDetails />,
     [PLANNING_EVENT.editElementDetails]: <BuildingForm />,
@@ -114,13 +124,23 @@ export const LayerKeyMappings = {
     Geometry: BuildingGeometry,
     Icon: BuildingIcon,
   },
+  [SAreaKey]: {
+    [PLANNING_EVENT.addElement]: <SAreaAddLayer />,
+    [PLANNING_EVENT.editElementLocation]: <SAreaEditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <SAreaForm />,
+    [PLANNING_EVENT.showElementDetails]: <SAreaDetails />,
+    [PLANNING_EVENT.editElementDetails]: <SAreaForm />,
+    ViewLayer: SAreaViewLayer,
+    Geometry: SAreaGeometry,
+    Icon: SAreaIcon,
+  },
 };
 
 export const convertLayerServerData = (layerKey, serverData) => {
   let resultData = orderBy(serverData, ["id"], ["desc"]);
 
   // PolyLine
-  if (layerKey === CableKey) {
+  if (layerKey === CableKey || layerKey === SAreaKey) {
     resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates);

@@ -15,7 +15,7 @@ export const INITIAL_ELEMENT_DATA = {
   floors: 0,
   house_per_floor: 0,
   total_home_pass: 0,
-  unique_id: "REG_DP_",
+  unique_id: "REG_SB_",
   ref_code: "",
   status: { value: "P", label: "Planned" },
   coordinates: {},

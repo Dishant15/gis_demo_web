@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import find from "lodash/find";
 
-import { Polyline } from "@react-google-maps/api";
+import { Polygon } from "@react-google-maps/api";
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
 import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
@@ -16,38 +16,35 @@ import {
   INITIAL_ELEMENT_DATA,
   ELEMENT_FORM_TEMPLATE,
   LAYER_KEY,
-  CABLE_TYPE_OPTIONS,
+  AREA_LOCALITY_OPTIONS,
 } from "./configurations";
-import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
-import CableIcon from "assets/markers/line_pin.svg";
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
 
-// for Add tab and show pills on FE
-export const getIcon = ({ color_on_map }) => CableIcon;
+// const STROKE_COLOR = "#88B14B";
+const STROKE_COLOR = "#CE855A";
 
-export const getOptions = ({ color_on_map }) => {
+export const getOptions = ({ hidden = false }) => {
   return {
-    strokeColor: color_on_map,
+    strokeColor: STROKE_COLOR,
     strokeOpacity: 0.8,
     strokeWeight: 2,
-    fillColor: color_on_map,
-    fillOpacity: 1,
+    fillColor: STROKE_COLOR,
+    fillOpacity: 0.3,
     clickable: false,
     draggable: false,
     editable: false,
-    visible: true,
-    radius: 30000,
+    visible: !hidden,
     zIndex: 1,
   };
 };
 
-export const Geometry = ({ coordinates, color_on_map }) => {
-  const options = getOptions({ color_on_map });
+export const Geometry = ({ coordinates, hidden }) => {
+  const options = getOptions({ hidden });
 
-  return <Polyline path={coordinates} options={options} />;
+  return <Polygon path={coordinates} options={options} />;
 };
 
 export const ViewLayer = () => {
@@ -60,30 +57,23 @@ export const ViewLayer = () => {
   return (
     <>
       {layerData.map((element) => {
-        const { id, hidden, coordinates, color_on_map } = element;
-        if (hidden) return null;
-        return (
-          <Geometry
-            key={id}
-            color_on_map={color_on_map}
-            coordinates={coordinates}
-          />
-        );
+        const { id, hidden, coordinates } = element;
+
+        return <Geometry key={id} hidden={hidden} coordinates={coordinates} />;
       })}
     </>
   );
 };
 
 export const AddMapLayer = () => {
-  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   // get icon
-  const options = getOptions(configuration);
+  const options = getOptions({});
 
   return (
     <AddGisMapLayer
       options={options}
-      featureType="polyline"
-      helpText="Click on map to create line on map. Double click to complete."
+      featureType="polygon"
+      helpText="Click on map to place area points on map. Complete polygon and adjust points."
       nextEvent={{
         event: PLANNING_EVENT.showElementForm, // event for "layerForm"
         layerKey: LAYER_KEY,
@@ -95,22 +85,19 @@ export const AddMapLayer = () => {
 };
 
 export const EditMapLayer = () => {
-  const elemData = useSelector(getPlanningMapStateData);
-  // get icon
-  const options = getOptions(elemData);
+  const options = getOptions({});
 
   return (
     <EditGisLayer
       options={options}
-      helpText="Click on map to create line on map. Double click to complete."
-      featureType="polyline"
+      helpText="Click on map to place area points on map. Complete polygon and adjust points."
+      featureType="polygon"
       layerKey={LAYER_KEY}
     />
   );
 };
 
 export const ElementForm = () => {
-  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   const currEvent = useSelector(getPlanningMapStateEvent);
   const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
 
@@ -123,8 +110,7 @@ export const ElementForm = () => {
           geometry: undefined,
           // convert select fields to simple values
           status: formData.status.value,
-          cable_type: formData.cable_type.value,
-          configuration: configuration.id,
+          locality_status: formData.locality_status.value,
         };
       } else {
         return {
@@ -132,8 +118,7 @@ export const ElementForm = () => {
           // AddGisMapLayer will give transformed coordinates in geometry field
           // convert select fields to simple values
           status: formData.status.value,
-          cable_type: formData.cable_type.value,
-          configuration: configuration.id,
+          locality_status: formData.locality_status.value,
         };
       }
     },
@@ -155,15 +140,35 @@ const ELEMENT_TABLE_FIELDS = [
   { label: "Name", field: "name", type: "simple" },
   { label: "Unique Id", field: "unique_id", type: "simple" },
   { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Cable Type", field: "cable_type_display", type: "simple" },
-  { label: "Gis Length (Km)", field: "gis_len", type: "simple" },
-  { label: "Actual Length", field: "actual_len", type: "simple" },
-  { label: "Start Reading", field: "start_reading", type: "simple" },
-  { label: "End Reading", field: "end_reading", type: "simple" },
-  { label: "No of tubes", field: "no_of_tube", type: "simple" },
-  { label: "Core / Tube", field: "core_per_tube", type: "simple" },
-  { label: "Specification", field: "specification", type: "simple" },
-  { label: "Vendor", field: "vendor", type: "simple" },
+  { label: "Address", field: "address", type: "simple" },
+  { label: "Area", field: "area", type: "simple" },
+  { label: "City", field: "city", type: "simple" },
+  { label: "State", field: "state", type: "simple" },
+  { label: "Pincode", field: "pincode", type: "simple" },
+  { label: "Tags", field: "tags", type: "simple" },
+  { label: "Over Head Cable", field: "over_head_cable", type: "boolean" },
+  { label: "Cabling Required", field: "cabling_required", type: "boolean" },
+  {
+    label: "Poll Cabling possible",
+    field: "poll_cabling_possible",
+    type: "boolean",
+  },
+  {
+    label: "Locality Status",
+    field: "locality_status_display",
+    type: "simple",
+  },
+  // multi select comma separeted string
+  {
+    label: "Broadband Availability",
+    field: "broadband_availability",
+    type: "simple",
+  },
+  {
+    label: "Cable Tv Availability",
+    field: "cable_tv_availability",
+    type: "simple",
+  },
   { label: "Status", field: "status", type: "status" },
 ];
 
@@ -172,7 +177,10 @@ const convertDataBeforeForm = (data) => {
     ...data,
     // convert status to select format
     status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
-    cable_type: find(CABLE_TYPE_OPTIONS, ["value", data.cable_type]),
+    locality_status: find(AREA_LOCALITY_OPTIONS, [
+      "value",
+      data.locality_status,
+    ]),
   };
 };
 

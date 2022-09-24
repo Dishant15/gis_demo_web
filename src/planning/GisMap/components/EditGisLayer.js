@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { Marker, Polyline } from "@react-google-maps/api";
+import { Marker, Polygon, Polyline } from "@react-google-maps/api";
 
 import get from "lodash/get";
 import round from "lodash/round";
@@ -26,14 +26,27 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "../utils";
 
+const GisEditOptions = {
+  clickable: true,
+  draggable: true,
+  editable: true,
+  strokeWeight: 4,
+  zIndex: 50,
+};
+
 const EditGisLayer = ({
   icon,
   helpText,
   layerKey,
-  featureType, // marker | polyline
+  featureType, // marker | polyline | polygon
   options = {},
   nextEvent = {},
 }) => {
+  console.log("🚀 ~ file: EditGisLayer.js ~ line 45 ~ options", options);
+  console.log(
+    "🚀 ~ file: EditGisLayer.js ~ line 45 ~ featureType",
+    featureType
+  );
   const dispatch = useDispatch();
   const featureRef = useRef();
   const { elementId, coordinates } = useSelector(getPlanningMapStateData);
@@ -112,6 +125,9 @@ const EditGisLayer = ({
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToLineCoords(featureCoords);
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
+    } else if (featureType === "polygon") {
+      const featureCoords = getCoordinatesFromFeature(featureRef.current);
+      submitData.geometry = latLongMapToCoords(featureCoords);
     } else {
       const featureCoords = getMarkerCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
@@ -142,11 +158,18 @@ const EditGisLayer = ({
           path={coordsToLatLongMap(coordinates)}
           options={{
             ...options,
-            clickable: true,
-            draggable: true,
-            editable: true,
-            strokeWeight: 4,
-            zIndex: 50,
+            ...GisEditOptions,
+          }}
+          onLoad={handleEditFeatureLoad}
+        />
+      );
+    } else if (featureType === "polygon") {
+      return (
+        <Polygon
+          path={coordsToLatLongMap(coordinates)}
+          options={{
+            ...options,
+            ...GisEditOptions,
           }}
           onLoad={handleEditFeatureLoad}
         />

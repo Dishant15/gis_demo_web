@@ -16,6 +16,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import GisMapPopups from "./GisMapPopups";
 
@@ -146,6 +148,18 @@ const ElementDetailsTable = ({
                       label={get(elemData, `${field}_display`)}
                       color={color}
                     />
+                  </Box>
+                );
+                break;
+
+              case "boolean":
+                const elemBoolData = get(elemData, field);
+
+                ValueCell = (
+                  <Box textAlign="center" width={"50%"}>
+                    <IconButton color={elemBoolData ? "success" : "error"}>
+                      {elemBoolData ? <CheckIcon /> : <ClearIcon />}
+                    </IconButton>
                   </Box>
                 );
                 break;

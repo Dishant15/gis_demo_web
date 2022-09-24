@@ -11,10 +11,19 @@ import GisMapPopups from "./GisMapPopups";
 import { setMapState } from "planning/data/planningGis.reducer";
 import {
   getCoordinatesFromFeature,
+  latLongMapToCoords,
   latLongMapToLineCoords,
 } from "utils/map.utils";
 
-const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
+const GisEditOptions = {
+  clickable: true,
+  draggable: true,
+  editable: true,
+  strokeWeight: 4,
+  zIndex: 50,
+};
+
+const AddGisMapLayer = ({ options, featureType, helpText, nextEvent = {} }) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
   // once user adds marker go in edit mode
@@ -28,21 +37,24 @@ const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
   const handleAddComplete = useCallback(() => {
     const featureCoords = getCoordinatesFromFeature(featureRef.current);
     // set coords to form data
-    const coordinates = latLongMapToLineCoords(featureCoords);
-    // get length and round to 4 decimals
-    const gis_len = round(length(lineString(coordinates)), 4);
+    let submitData = {};
+    if (featureType === "polyline") {
+      submitData.geometry = latLongMapToLineCoords(featureCoords);
+      // get length and round to 4 decimals
+      submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
+    } else if (featureType === "polygon") {
+      submitData.geometry = latLongMapToCoords(featureCoords);
+    }
 
     nextEvent.data = {
       ...nextEvent.data,
-      geometry: coordinates,
-      // get gis_len
-      gis_len,
+      ...submitData,
     };
     // clear map refs
     featureRef.current.setMap(null);
     // complete current event -> fire next event
     dispatch(setMapState(nextEvent));
-  }, []);
+  }, [featureType]);
 
   const handleCancel = useCallback(() => {
     dispatch(setMapState({}));
@@ -54,10 +66,12 @@ const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
       <DrawingManager
         options={{
           drawingControl: false,
-          polylineOptions: { ...options, editable: true },
+          polylineOptions: { ...options, ...GisEditOptions },
+          polygonOptions: { ...options, ...GisEditOptions },
         }}
-        drawingMode={isAdd ? "polyline" : null}
+        drawingMode={isAdd ? featureType : null}
         onPolylineComplete={handleFeatureCreate}
+        onPolygonComplete={handleFeatureCreate}
       />
       <GisMapPopups>
         <Paper>
@@ -95,4 +109,4 @@ const AddPolyLineLayer = ({ options, helpText, nextEvent = {} }) => {
   );
 };
 
-export default AddPolyLineLayer;
+export default AddGisMapLayer;
