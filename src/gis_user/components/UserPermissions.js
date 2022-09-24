@@ -18,8 +18,8 @@ const USER_LAYER_PERMS_CONFIG = [
   { name: "Distribution Point", layerKey: "p_dp" },
   { name: "Spliter", layerKey: "p_splitter" },
   { name: "Cable", layerKey: "p_cable" },
-  { name: "Survey area", layerKey: "p_survey_area" },
   { name: "Survey building", layerKey: "p_survey_building" },
+  { name: "Survey area", layerKey: "p_survey_area" },
 ];
 
 /**

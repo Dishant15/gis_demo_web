@@ -42,6 +42,16 @@ import {
   CONFIG_LIST_TABLE_COL_DEFS as CableTableColDefs,
   transformAndValidateConfigData as cblConfigTransformData,
 } from "./layers/p_cable";
+import {
+  ViewLayer as BuildingViewLayer,
+  AddMapLayer as BuildingAddLayer,
+  EditMapLayer as BuildintEditMapLayer,
+  Geometry as BuildingGeometry,
+  LAYER_KEY as BuildingKey,
+  ElementForm as BuildingForm,
+  ElementDetails as BuildingDetails,
+  Icon as BuildingIcon,
+} from "./layers/p_survey_building";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -94,6 +104,16 @@ export const LayerKeyMappings = {
     TableColDefs: CableTableColDefs,
     configTransformData: cblConfigTransformData,
   },
+  [BuildingKey]: {
+    [PLANNING_EVENT.addElement]: <BuildingAddLayer />,
+    [PLANNING_EVENT.editElementLocation]: <BuildintEditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <BuildingForm />,
+    [PLANNING_EVENT.showElementDetails]: <BuildingDetails />,
+    [PLANNING_EVENT.editElementDetails]: <BuildingForm />,
+    ViewLayer: BuildingViewLayer,
+    Geometry: BuildingGeometry,
+    Icon: BuildingIcon,
+  },
 };
 
 export const convertLayerServerData = (layerKey, serverData) => {
@@ -109,7 +129,11 @@ export const convertLayerServerData = (layerKey, serverData) => {
     return resultData;
   }
   // Point gis layer
-  else if (layerKey === DpKey || layerKey === SplitterKey) {
+  else if (
+    layerKey === DpKey ||
+    layerKey === SplitterKey ||
+    layerKey === BuildingKey
+  ) {
     resultData.map((d) => {
       d.coordinates = coordsToLatLongMap([d.coordinates])[0];
     });

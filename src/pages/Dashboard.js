@@ -114,17 +114,6 @@ export default function HomePage() {
             User Activity Logs
           </Typography>
         </Paper>
-      </Stack>
-
-      <Stack my={2}>
-        <Paper p={3}>
-          <DynamicForm
-            formConfigs={FORM_CONFIGS}
-            data={INITIAL_DATA}
-            onSubmit={onSubmit}
-            isLoading={false}
-          />
-        </Paper>
       </Stack> */}
     </Container>
   );
