@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { get } from "lodash";
+import { get, noop } from "lodash";
 
 import Box from "@mui/material/Box";
 import DynamicForm from "components/common/DynamicForm";
@@ -16,6 +16,8 @@ import { setMapState } from "planning/data/planningGis.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
+import UnitEditForm from "ticket/components/UnitEditForm";
+import { SURVEY_TAG_LIST } from "utils/constant";
 
 export const BuildingLayerForm = ({
   formConfig,
@@ -94,10 +96,12 @@ export const BuildingLayerForm = ({
     }
   );
 
-  const onSubmit = (data, setError, clearErrors) => {
-    clearErrors();
+  const onSubmit = (submitData, setError, clearErrors) => {
     // convert data to server friendly form
-    const validatedData = transformAndValidateData(data, setError);
+    const validatedData = transformAndValidateData(
+      { ...submitData, coordinates: data.coordinates },
+      setError
+    );
     if (isEdit) {
       editElement(validatedData);
     } else {
@@ -109,16 +113,22 @@ export const BuildingLayerForm = ({
     dispatch(setMapState({}));
   };
 
+  const onEditComplete = (data, isDirty) => {
+    onSubmit(data, noop, noop);
+  };
+
   return (
     <GisMapPopups>
       <Box minWidth="350px" maxWidth="550px">
-        <DynamicForm
+        <UnitEditForm
           ref={formRef}
-          formConfigs={formConfig}
-          data={data}
-          onSubmit={onSubmit}
-          onCancel={onClose}
-          isLoading={isEdit ? isEditLoading : isAddLoading}
+          formData={data}
+          editUnitLoading={isEdit ? isEditLoading : isAddLoading}
+          onEditComplete={onEditComplete}
+          handleUnitDetailsCancel={onClose}
+          surveyTagList={SURVEY_TAG_LIST}
+          showUniqueId={true}
+          isEdit={isEdit}
         />
       </Box>
     </GisMapPopups>

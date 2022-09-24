@@ -13,8 +13,8 @@ import {
   get,
   orderBy,
   countBy,
+  includes,
 } from "lodash";
-import JSZip from "jszip";
 
 import {
   Box,
@@ -47,7 +47,7 @@ import {
   updateWorkOrder,
 } from "ticket/data/services";
 import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
-import { workOrderStatusTypes } from "utils/constant";
+import { SURVEY_TAG_LIST, workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getTicketListPage } from "utils/url.constants";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
@@ -624,6 +624,12 @@ const WorkOrderPage = () => {
               editUnitLoading={editUnitLoading}
               onEditComplete={handleUnitDetailSubmit}
               handleUnitDetailsCancel={handleUnitDetailsCancel}
+              surveyTagList={filter(SURVEY_TAG_LIST, function (o) {
+                return includes(
+                  get(surveyData, "selectedSurveyTags", []),
+                  o.value
+                );
+              })}
             />
           ) : null}
         </Dialog>

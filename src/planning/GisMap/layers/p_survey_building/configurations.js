@@ -11,13 +11,13 @@ export const INITIAL_ELEMENT_DATA = {
   name: "",
   address: "",
   tags: "",
-  category: { value: "M", label: "MDU" },
+  category: "M",
   floors: 0,
   house_per_floor: 0,
   total_home_pass: 0,
   unique_id: "REG_SB_",
   ref_code: "",
-  status: { value: "P", label: "Planned" },
+  status: "P",
   coordinates: {},
 };
 

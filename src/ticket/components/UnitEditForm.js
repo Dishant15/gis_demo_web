@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import {
@@ -16,27 +16,23 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 
-import { SURVEY_TAG_LIST } from "utils/constant";
 import { filter, includes } from "lodash";
-
-const CATEGORY_OPTS = [
-  { value: "M", label: "MDU" },
-  { value: "S", label: "SDU" },
-];
+import { BUILDING_CATEGORY_OPTIONS } from "planning/GisMap/layers/p_survey_building";
 
 /**
  * Parent:
  *    WorkOrderPage
  */
 const UnitEditForm = (props) => {
-  const { formData, editUnitLoading, onEditComplete, handleUnitDetailsCancel } =
-    props;
-
-  const surveyTagList = useMemo(() => {
-    return filter(SURVEY_TAG_LIST, function (o) {
-      return includes(formData.selectedSurveyTags, o.value);
-    });
-  }, [formData.selectedSurveyTags]);
+  const {
+    formData,
+    editUnitLoading,
+    onEditComplete,
+    handleUnitDetailsCancel,
+    surveyTagList = [],
+    showUniqueId = false,
+    isEdit,
+  } = props;
 
   const {
     register,
@@ -46,6 +42,7 @@ const UnitEditForm = (props) => {
     formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
+      unique_id: formData.unique_id || undefined,
       name: formData.name,
       category: formData.category,
       tags: formData.tags,
@@ -92,6 +89,27 @@ const UnitEditForm = (props) => {
           overflow: "auto",
         }}
       >
+        {showUniqueId ? (
+          <Stack spacing={2} my={3} direction={{ md: "row", xs: "column" }}>
+            <Stack
+              spacing={2}
+              sx={{
+                width: "100%",
+              }}
+            >
+              <TextField
+                required
+                error={!!errors.unique_id}
+                label="Unique Id"
+                {...register("unique_id", {
+                  required: "This fields is required.",
+                })}
+                helperText={errors.unique_id?.message}
+                disabled={isEdit}
+              />
+            </Stack>
+          </Stack>
+        ) : null}
         <Stack spacing={2} my={3} direction={{ md: "row", xs: "column" }}>
           <Stack
             spacing={2}
@@ -119,7 +137,7 @@ const UnitEditForm = (props) => {
                   <Stack>
                     <InputLabel>Category</InputLabel>
                     <Stack direction="row" spacing={1}>
-                      {CATEGORY_OPTS.map((opt) => {
+                      {BUILDING_CATEGORY_OPTIONS.map((opt) => {
                         const selected = opt.value === field.value;
                         return (
                           <Chip
