@@ -22,6 +22,7 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
+import { map, split } from "lodash";
 
 // const STROKE_COLOR = "#88B14B";
 const STROKE_COLOR = "#CE855A";
@@ -103,6 +104,16 @@ export const ElementForm = () => {
 
   const transformAndValidateData = useCallback(
     (formData) => {
+      const broadband_availability = Array.isArray(
+        formData.broadband_availability
+      )
+        ? map(formData.broadband_availability, "value").join(",")
+        : "";
+      const cable_tv_availability = Array.isArray(
+        formData.cable_tv_availability
+      )
+        ? map(formData.cable_tv_availability, "value").join(",")
+        : "";
       if (isEdit) {
         return {
           ...formData,
@@ -111,6 +122,8 @@ export const ElementForm = () => {
           // convert select fields to simple values
           status: formData.status.value,
           locality_status: formData.locality_status.value,
+          broadband_availability,
+          cable_tv_availability,
         };
       } else {
         return {
@@ -119,6 +132,8 @@ export const ElementForm = () => {
           // convert select fields to simple values
           status: formData.status.value,
           locality_status: formData.locality_status.value,
+          broadband_availability,
+          cable_tv_availability,
         };
       }
     },
@@ -181,6 +196,13 @@ const convertDataBeforeForm = (data) => {
       "value",
       data.locality_status,
     ]),
+    broadband_availability: split(data.broadband_availability, ",").map(
+      (v) => ({ label: v, value: v })
+    ),
+    cable_tv_availability: split(data.cable_tv_availability, ",").map((v) => ({
+      label: v,
+      value: v,
+    })),
   };
 };
 

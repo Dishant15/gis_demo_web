@@ -88,27 +88,27 @@ export const ELEMENT_FORM_TEMPLATE = {
         },
         {
           field_key: "over_head_cable",
-          label: "Name",
+          label: "Over head cable allowed",
           field_type: FIELD_TYPES.CheckBox,
         },
         {
           field_key: "cabling_required",
-          label: "Name",
+          label: "In Building cabeling required",
           field_type: FIELD_TYPES.CheckBox,
         },
         {
           field_key: "poll_cabling_possible",
-          label: "Name",
+          label: "Pole to pole cabling possible",
           field_type: FIELD_TYPES.CheckBox,
         },
         {
           field_key: "broadband_availability",
-          label: "Name",
+          label: "Broadband Service Availability",
           field_type: FIELD_TYPES.SelectCreatable,
         },
         {
           field_key: "cable_tv_availability",
-          label: "Name",
+          label: "Cable TV Service Availability",
           field_type: FIELD_TYPES.SelectCreatable,
         },
         {
