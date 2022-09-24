@@ -14,6 +14,7 @@ export const INITIAL_ELEMENT_DATA = {
   state: "",
   pincode: "",
   tags: "",
+  home_pass: 0,
   over_head_cable: false,
   cabling_required: false,
   poll_cabling_possible: false,
@@ -84,6 +85,11 @@ export const ELEMENT_FORM_TEMPLATE = {
         {
           field_key: "tags",
           label: "Tags",
+          field_type: FIELD_TYPES.Input,
+        },
+        {
+          field_key: "home_pass",
+          label: "Home Pass",
           field_type: FIELD_TYPES.Input,
         },
         {

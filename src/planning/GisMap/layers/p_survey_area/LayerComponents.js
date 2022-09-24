@@ -161,6 +161,7 @@ const ELEMENT_TABLE_FIELDS = [
   { label: "State", field: "state", type: "simple" },
   { label: "Pincode", field: "pincode", type: "simple" },
   { label: "Tags", field: "tags", type: "simple" },
+  { label: "Home Pass", field: "home_pass", type: "simple" },
   { label: "Over Head Cable", field: "over_head_cable", type: "boolean" },
   { label: "Cabling Required", field: "cabling_required", type: "boolean" },
   {
