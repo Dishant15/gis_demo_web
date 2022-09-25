@@ -18,8 +18,8 @@ import { latLongMapToCoords } from "utils/map.utils";
 
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
 import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
-import { default as Icon } from "assets/markers/p_dp_view.svg";
-import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
+import { default as Icon } from "assets/markers/building_view.svg";
+import { default as EditIcon } from "assets/markers/building_pin.svg";
 
 export const Geometry = ({ coordinates }) => (
   <Marker icon={{ url: Icon }} position={coordinates} />
