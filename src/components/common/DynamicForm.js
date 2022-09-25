@@ -64,10 +64,10 @@ const DynamicForm = forwardRef(
         ref={ref}
         component="form"
         onSubmit={handleSubmit(onFormSubmit)}
-        height="80vh"
-        sx={{
-          overflow: "auto",
-        }}
+        // height="80vh"
+        // sx={{
+        //   overflow: "auto",
+        // }}
       >
         <Stack p={2}>
           {sections.map((section, s_id) => {

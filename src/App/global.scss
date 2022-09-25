@@ -46,6 +46,70 @@ code {
   .form-select__menu {
     z-index: 2;
   }
+
+  &:hover {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(0, 0, 0, 0.87);
+      &.Mui-error {
+        border-color: $error-color;
+      }
+    }
+  }
+  .MuiOutlinedInput-notchedOutline {
+    text-align: left;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: -5px;
+    left: 0;
+    margin: 0;
+    padding: 0 8px;
+    pointer-events: none;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    min-width: 0%;
+    border-color: rgba(0, 0, 0, 0.23);
+
+    &.active {
+      .legend {
+        max-width: 100%;
+      }
+    }
+
+    &.highlight {
+      border-color: $primary-main-color;
+      border-width: 2px;
+    }
+
+    &.Mui-error {
+      border-color: $error-color;
+    }
+
+    .legend {
+      float: unset;
+      overflow: hidden;
+      display: block;
+      width: auto;
+      padding: 0;
+      height: 11px;
+      font-size: 0.75em;
+      visibility: hidden;
+      max-width: 0.01px;
+      -webkit-transition: max-width 100ms cubic-bezier(0, 0, 0.2, 1) 50ms;
+      transition: max-width 100ms cubic-bezier(0, 0, 0.2, 1) 50ms;
+      white-space: nowrap;
+
+      span {
+        padding-left: 5px;
+        padding-right: 5px;
+        display: inline-block;
+        opacity: 0;
+        visibility: visible;
+      }
+    }
+  }
 }
 
 .form-select-controller {
@@ -94,4 +158,8 @@ code {
 
 .full-width {
   width: 100% !important;
+}
+
+.g-relative {
+  position: relative;
 }

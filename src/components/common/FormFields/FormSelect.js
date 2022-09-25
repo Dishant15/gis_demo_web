@@ -1,68 +1,85 @@
-import React, { useState, forwardRef } from "react";
+import React from "react";
 import { Controller } from "react-hook-form";
-import { InputLabel, TextField } from "@mui/material";
-import { get, size } from "lodash";
+import {
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  outlinedInputClasses,
+} from "@mui/material";
 
-import Select from "react-select";
+import { get } from "lodash";
+
+import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
+// Good: Custom component declared outside of the Select scope
+const Control = ({ children, ...props }) => {
+  const menuIsOpen = props?.menuIsOpen;
+  const hasValue = props?.hasValue;
+  const shrink = hasValue || menuIsOpen;
+  const { error, helperText, label, required, disabled } = get(
+    props,
+    "selectProps",
+    {}
+  );
+
+  return (
+    <FormControl
+      fullWidth
+      error={error}
+      variant="outlined"
+      required={!!required}
+      disabled={disabled}
+      color="primary"
+    >
+      <InputLabel
+        variant="outlined"
+        shrink={!!shrink}
+        required={!!required}
+        sx={{
+          color: !!menuIsOpen && "primary.main",
+        }}
+      >
+        {label}
+      </InputLabel>
+      <div className="g-relative">
+        <components.Control {...props}>{children}</components.Control>
+        <fieldset
+          className={`${outlinedInputClasses.notchedOutline} ${
+            shrink ? "active" : ""
+          } ${props?.menuIsOpen ? "highlight" : ""} ${
+            error ? outlinedInputClasses.error : ""
+          }`}
+        >
+          <legend className="legend">
+            {required ? <span>{label} &nbsp;*</span> : <span>{label}</span>}
+          </legend>
+        </fieldset>
+      </div>
+      {error ? <FormHelperText>{helperText}</FormHelperText> : null}
+    </FormControl>
+  );
+};
+
 export const FormSelect = ({
+  className = "",
   name,
   control,
   rules,
-  label,
-  required,
-  helperText,
-  error,
-  onBlur,
-  textFieldSx = {},
   ...rest
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <Controller
       render={({ field }) => {
-        const shrink = menuOpen || !!size(field.value);
         return (
-          <TextField
-            ref={field.ref}
-            id={name}
-            label={label}
-            variant="outlined"
-            multiline
-            focused={menuOpen}
-            required={required}
-            error={error}
-            InputLabelProps={{ shrink }}
-            className="form-select-controller"
-            sx={textFieldSx}
-            InputProps={{
-              className: "form-select-input-wrapper",
-              notched: shrink,
-              inputComponent: (inputProps) => {
-                const { className } = inputProps;
-                return (
-                  <Select
-                    {...rest}
-                    value={field.value}
-                    onChange={field.onChange}
-                    isDisabled={get(rest, "disabled", false)}
-                    className={`${className} form-select`}
-                    classNamePrefix="form-select"
-                    placeholder=" "
-                    blurInputOnSelect
-                    menuIsOpen={menuOpen}
-                    onMenuOpen={() => setMenuOpen(true)}
-                    onMenuClose={() => setMenuOpen(false)}
-                    onBlur={(e) => {
-                      setMenuOpen(false);
-                      if (onBlur) onBlur(e);
-                    }}
-                  />
-                );
-              },
-            }}
-            helperText={helperText}
+          <Select
+            {...rest}
+            value={field.value}
+            onChange={field.onChange}
+            className={`${className} form-select`}
+            classNamePrefix="form-select"
+            placeholder=" "
+            components={{ Control }}
           />
         );
       }}
@@ -74,55 +91,24 @@ export const FormSelect = ({
 };
 
 export const FormCreatableSelect = ({
+  className = "",
   name,
   control,
   rules,
-  label,
-  required,
-  helperText,
-  error,
   ...rest
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <Controller
       render={({ field }) => {
-        const shrink = menuOpen || !!size(field.value);
         return (
-          <TextField
-            ref={field.ref}
-            id={name}
-            label={label}
-            variant="outlined"
-            multiline
-            focused={menuOpen}
-            required={required}
-            error={error}
-            InputLabelProps={{ shrink }}
-            className="form-creatable-select-controller"
-            InputProps={{
-              className: "form-creatable-select-input-wrapper",
-              notched: shrink,
-              inputComponent: (inputProps) => {
-                const { className } = inputProps;
-                return (
-                  <CreatableSelect
-                    value={field.value}
-                    onChange={field.onChange}
-                    isDisabled={get(rest, "disabled", false)}
-                    className={`${className} form-creatable-select`}
-                    classNamePrefix="form-creatable-select"
-                    placeholder=" "
-                    openMenuOnClick
-                    menuIsOpen={menuOpen}
-                    onMenuOpen={() => setMenuOpen(true)}
-                    onMenuClose={() => setMenuOpen(false)}
-                    {...rest}
-                  />
-                );
-              },
-            }}
-            helperText={helperText}
+          <CreatableSelect
+            {...rest}
+            value={field.value}
+            onChange={field.onChange}
+            className={`${className} form-select`}
+            classNamePrefix="form-select"
+            placeholder=" "
+            components={{ Control }}
           />
         );
       }}
