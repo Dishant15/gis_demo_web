@@ -34,6 +34,19 @@ export const workOrderStatusTypes = {
   },
 };
 
+export const workOrderStatusFormTypes = {
+  V: {
+    value: "V",
+    label: "Verified",
+    color: "success",
+  },
+  R: {
+    value: "R",
+    label: "Rejected",
+    color: "error",
+  },
+};
+
 export const BroadbandProviders = [
   {
     label: "GTPL",

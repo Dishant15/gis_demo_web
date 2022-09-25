@@ -15,8 +15,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 
-import { workOrderStatusTypes } from "utils/constant";
 import { map } from "lodash";
+
+import { workOrderStatusFormTypes, workOrderStatusTypes } from "utils/constant";
 
 /**
  * Parent:
@@ -35,6 +36,7 @@ const StatusChangeForm = ({
     formState: { errors },
     handleSubmit,
     control,
+    watch,
   } = useForm({
     defaultValues: {
       id,
@@ -42,6 +44,8 @@ const StatusChangeForm = ({
       status: status || null,
     },
   });
+
+  const formStatus = watch("status");
 
   return (
     <Box
@@ -82,7 +86,7 @@ const StatusChangeForm = ({
               <Stack>
                 <InputLabel>Status</InputLabel>
                 <Stack direction="row" spacing={1}>
-                  {map(workOrderStatusTypes, (wStatus) => {
+                  {map(workOrderStatusFormTypes, (wStatus) => {
                     const selected = field.value === wStatus.value;
                     return (
                       <Chip
@@ -111,6 +115,7 @@ const StatusChangeForm = ({
               marginLeft: "2px",
             }}
             loading={editSurveyLoading}
+            disabled={formStatus === workOrderStatusTypes.S.value}
           >
             Submit
           </LoadingButton>
