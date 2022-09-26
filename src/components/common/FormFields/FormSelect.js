@@ -21,7 +21,7 @@ const Control = ({ children, ...props }) => {
   const menuIsOpen = props?.menuIsOpen;
   const hasValue = props?.hasValue;
   const shrink = hasValue || menuIsOpen;
-  const { error, helperText, label, required, disabled } = get(
+  const { error, helperText, label, required, isDisabled } = get(
     props,
     "selectProps",
     {}
@@ -33,7 +33,7 @@ const Control = ({ children, ...props }) => {
       error={error}
       variant="outlined"
       required={!!required}
-      disabled={disabled}
+      disabled={isDisabled}
       color="primary"
     >
       <InputLabel
@@ -74,18 +74,24 @@ export const FormSelect = ({
   isMulti,
   labelKey = "label",
   valueKey = "value",
+  simpleValue = false,
   ...rest
 }) => {
   return (
     <Controller
       render={({ field }) => {
-        const selectValue = isMulti
-          ? !!field.value
-            ? map(split(field.value, ","), (d) =>
-                find(options, (val) => val[valueKey] == d)
-              )
-            : []
-          : find(options, (val) => val[valueKey] == field.value);
+        let selectValue;
+        if (simpleValue) {
+          selectValue = field.value;
+        } else {
+          selectValue = isMulti
+            ? !!field.value
+              ? map(split(field.value, ","), (d) =>
+                  find(options, (val) => val[valueKey] == d)
+                )
+              : []
+            : find(options, (val) => val[valueKey] == field.value);
+        }
 
         return (
           <Select
@@ -94,9 +100,14 @@ export const FormSelect = ({
             options={options}
             value={selectValue}
             onChange={(newValue) => {
-              const newValueOp = isMulti
-                ? map(newValue, valueKey).join(",")
-                : get(newValue, valueKey, "");
+              let newValueOp;
+              if (simpleValue) {
+                newValueOp = newValue;
+              } else {
+                newValueOp = isMulti
+                  ? map(newValue, valueKey).join(",")
+                  : get(newValue, valueKey, "");
+              }
               field.onChange(newValueOp);
             }}
             className={`${className} form-select`}
@@ -123,22 +134,28 @@ export const FormCreatableSelect = ({
   options,
   labelKey = "label",
   valueKey = "value",
+  simpleValue = false,
   ...rest
 }) => {
   return (
     <Controller
       render={({ field }) => {
-        // convert "valueKey1,valueKey1" to [ { [labelKey], [valueKey] } ,...]
-        const valueItems = !!field.value ? split(field.value, ",") : [];
-        // get option from options otherwise create new
-        const creatableValues = map(
-          valueItems,
-          (d) =>
-            find(options, (val) => val[valueKey] == d) || {
-              [labelKey]: d,
-              [valueKey]: d,
-            }
-        );
+        let creatableValues;
+        if (simpleValue) {
+          creatableValues = field.value;
+        } else {
+          // convert "valueKey1,valueKey1" to [ { [labelKey], [valueKey] } ,...]
+          const valueItems = !!field.value ? split(field.value, ",") : [];
+          // get option from options otherwise create new
+          creatableValues = map(
+            valueItems,
+            (d) =>
+              find(options, (val) => val[valueKey] == d) || {
+                [labelKey]: d,
+                [valueKey]: d,
+              }
+          );
+        }
 
         return (
           <CreatableSelect
@@ -147,7 +164,9 @@ export const FormCreatableSelect = ({
             value={creatableValues}
             onChange={(newValue) => {
               // convert [ { [labelKey], [valueKey] } ,...] to "valueKey1,valueKey1"
-              const newValueOp = map(newValue, valueKey).join(",");
+              const newValueOp = simpleValue
+                ? newValue
+                : map(newValue, valueKey).join(",");
               field.onChange(newValueOp);
             }}
             className={`${className} form-select`}

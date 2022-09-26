@@ -35,7 +35,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
   const isEdit = !!size(formData);
 
   const { isLoading: regionListLoading = [], data: regionList } = useQuery(
-    ["regionList", "data"],
+    ["regionList", "detail"],
     fetchRegionList,
     {
       onSuccess: (res) => {
@@ -91,9 +91,9 @@ const AddTicketForm = ({ formData, onSubmit }) => {
         "unique_id",
       ]);
       // transform ticket data into server acceptable data
-      ticketSubmitData.status = data.status.value;
-      ticketSubmitData.ticket_type = data.ticket_type.value;
-      ticketSubmitData.network_type = data.network_type.value;
+      ticketSubmitData.status = data.status;
+      ticketSubmitData.ticket_type = data.ticket_type;
+      ticketSubmitData.network_type = data.network_type;
       ticketSubmitData.assigneeId = data.assignee.id;
       ticketSubmitData.regionId = data.region.id;
       ticketSubmitData.regionCoords = coordsToLatLongMap(
@@ -128,16 +128,10 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
       unique_id: get(formData, "unique_id", "REG_TKTS_"),
-      status: find(TicketStatusList, ["value", get(formData, "status") || "A"]),
+      status: get(formData, "status") || "A",
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
-      ticket_type: find(TicketTypeList, [
-        "value",
-        get(formData, "ticket_type"),
-      ]),
-      network_type: find(NetworkTypeList, [
-        "value",
-        get(formData, "network_type"),
-      ]),
+      ticket_type: get(formData, "ticket_type"),
+      network_type: get(formData, "network_type"),
       assignee: find(userList, ["id", get(formData, "assignee")]),
       regionId: find(regionList, ["id", get(formData, "region.id")]),
     },
@@ -147,7 +141,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
     const [region, ticket_type] = getValues(["region", "ticket_type"]);
     setValue(
       "unique_id",
-      generateTicketUid(get(region, "unique_id"), get(ticket_type, "value"))
+      generateTicketUid(get(region, "unique_id"), ticket_type)
     );
   }, []);
 
@@ -174,12 +168,13 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Select Region"
             required
-            disabled={isEdit}
+            isDisabled={isEdit}
             name="region"
             control={control}
             options={regionList}
-            getOptionLabel={(opt) => opt.name}
-            getOptionValue={(opt) => opt.id}
+            labelKey="name"
+            valueKey="id"
+            simpleValue
             error={!!errors.region}
             helperText={errors.region?.message}
             isLoading={regionListLoading}
@@ -201,7 +196,7 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Ticket Type"
             required
-            disabled={isEdit}
+            isDisabled={isEdit}
             name="ticket_type"
             control={control}
             options={TicketTypeList}
@@ -288,11 +283,14 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           <FormSelect
             label="Assign to"
             required
+            simpleValue
             name="assignee"
             control={control}
             options={userList}
             getOptionLabel={(opt) => `${opt.name} - ${opt.username}`}
             getOptionValue={(opt) => opt.id}
+            labelKey="name"
+            valueKey="id"
             error={!!errors.assignee}
             helperText={errors.assignee?.message}
             isLoading={userListLoading}
