@@ -5,6 +5,7 @@ import {
   InputLabel,
   FormHelperText,
   outlinedInputClasses,
+  Box,
 } from "@mui/material";
 
 import { get } from "lodash";
@@ -42,7 +43,7 @@ const Control = ({ children, ...props }) => {
       >
         {label}
       </InputLabel>
-      <div className="g-relative">
+      <Box position="relative">
         <components.Control {...props}>{children}</components.Control>
         <fieldset
           className={`${outlinedInputClasses.notchedOutline} ${
@@ -55,7 +56,7 @@ const Control = ({ children, ...props }) => {
             {required ? <span>{label} &nbsp;*</span> : <span>{label}</span>}
           </legend>
         </fieldset>
-      </div>
+      </Box>
       {error ? <FormHelperText>{helperText}</FormHelperText> : null}
     </FormControl>
   );
