@@ -8,7 +8,10 @@ import {
   Box,
 } from "@mui/material";
 
-import { get } from "lodash";
+import get from "lodash/get";
+import find from "lodash/find";
+import map from "lodash/map";
+import split from "lodash/split";
 
 import Select, { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -67,6 +70,9 @@ export const FormSelect = ({
   name,
   control,
   rules,
+  options,
+  labelKey = "label",
+  valueKey = "value",
   ...rest
 }) => {
   return (
@@ -75,12 +81,17 @@ export const FormSelect = ({
         return (
           <Select
             {...rest}
-            value={field.value}
-            onChange={field.onChange}
+            options={options}
+            value={find(options, [valueKey, field.value])}
+            onChange={(newValue) => {
+              field.onChange(get(newValue, valueKey, ""));
+            }}
             className={`${className} form-select`}
             classNamePrefix="form-select"
             placeholder=" "
             components={{ Control }}
+            getOptionLabel={(o) => o[labelKey]}
+            getOptionValue={(o) => o[valueKey]}
           />
         );
       }}
@@ -96,20 +107,50 @@ export const FormCreatableSelect = ({
   name,
   control,
   rules,
+  options,
+  labelKey = "label",
+  valueKey = "value",
   ...rest
 }) => {
   return (
     <Controller
       render={({ field }) => {
+        // convert "valueKey1,valueKey1" to [ { [labelKey], [valueKey] } ,...]
+        const valueItems = !!field.value ? split(field.value, ",") : [];
+        // get option from options otherwise create new
+        const creatableValues = map(
+          valueItems,
+          (d) =>
+            find(options, [valueKey, d]) || {
+              [labelKey]: d,
+              [valueKey]: d,
+            }
+        );
+
         return (
           <CreatableSelect
             {...rest}
-            value={field.value}
-            onChange={field.onChange}
+            options={options}
+            value={creatableValues}
+            onChange={(newValue) => {
+              // convert [ { [labelKey], [valueKey] } ,...] to "valueKey1,valueKey1"
+              const newValueOp = map(newValue, valueKey).join(",");
+              field.onChange(newValueOp);
+            }}
             className={`${className} form-select`}
             classNamePrefix="form-select"
             placeholder=" "
             components={{ Control }}
+            getOptionLabel={(o) => o[labelKey]}
+            getOptionValue={(o) => o[valueKey]}
+            getNewOptionData={(inputValue, optionLabel) => {
+              // return new created object
+              return {
+                [labelKey]: optionLabel,
+                [valueKey]: inputValue,
+                __isNew__: true,
+              };
+            }}
           />
         );
       }}

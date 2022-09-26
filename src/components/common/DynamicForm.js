@@ -173,9 +173,11 @@ const DynamicForm = forwardRef(
                           <Grid item xs={12} sm={6} key={field_key}>
                             <Stack width="100%">
                               <FormCreatableSelect
+                                isMulti
                                 label={label}
                                 name={field_key}
-                                isMulti
+                                labelKey={config.labelKey}
+                                valueKey={config.valueKey}
                                 control={control}
                                 options={config.options || []}
                                 error={!!get(errors, [field_key])}

@@ -156,12 +156,19 @@ const INITIAL_ELEMENT_DATA = {
   unique_id: "REG_DP_",
   // status: { value: "P", label: "Planned" },
   status: "",
+  status2: "T,P",
 };
 
 const LAYER_STATUS_OPTIONS = [
   { value: "T", label: "Ticket Open" },
   { value: "P", label: "Planned" },
   { value: "V", label: "Verified" },
+];
+
+const LAYER_STATUS_OPTIONS_2 = [
+  { id: "T", name: "Ticket Open" },
+  { id: "P", name: "Planned" },
+  { id: "V", name: "Verified" },
 ];
 
 // this will become function -> generate From Configs
@@ -185,7 +192,9 @@ const ELEMENT_FORM_TEMPLATE = {
           field_key: "status2",
           label: "Status 2",
           field_type: "selectCreatable",
-          options: LAYER_STATUS_OPTIONS,
+          options: LAYER_STATUS_OPTIONS_2,
+          labelKey: "name",
+          valueKey: "id",
         },
       ],
     },
