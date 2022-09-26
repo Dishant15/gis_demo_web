@@ -143,7 +143,6 @@ const WorkOrderPage = () => {
         );
       },
       onSuccess: (res) => {
-        console.log("🚀 ~ file: WorkOrderPage ~ res", res);
         handleFilePickerCancel();
         dispatch(
           addNotification({
@@ -220,10 +219,6 @@ const WorkOrderPage = () => {
 
   const handleZipFileUpload = useCallback(
     (files) => {
-      console.log(
-        "🚀 ~ file: WorkOrderPage.js ~ line 187 ~ handleFileUpload ~ files",
-        files
-      );
       const data = new FormData();
       data.append("file", files[0], ticketData.name + ".zip");
       importTicketMutation({ ticketId: ticketData.id, data });
@@ -287,10 +282,7 @@ const WorkOrderPage = () => {
 
   const handleUnitDetailSubmit = useCallback((data, isDirty) => {
     if (isDirty) {
-      editUnitMutation(
-        { ...data, tags: map(data.tags, "value").join(",") },
-        { onSuccess: handleUnitDetailsCancel }
-      );
+      editUnitMutation(data, { onSuccess: handleUnitDetailsCancel });
     } else {
       handleUnitDetailsCancel();
     }
@@ -334,18 +326,7 @@ const WorkOrderPage = () => {
         editSurveyMutation(
           {
             workOrderId: data.id,
-            data: {
-              ...data,
-              tags: map(data.tags, "value").join(","),
-              cable_tv_availability: map(
-                data.cable_tv_availability,
-                "value"
-              ).join(","),
-              broadband_availability: map(
-                data.broadband_availability,
-                "value"
-              ).join(","),
-            },
+            data,
           },
           {
             onSuccess: handleSurveyDetailsCancel,

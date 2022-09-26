@@ -59,27 +59,9 @@ const SurveyEditForm = (props) => {
       cabling_required: formData.cabling_required,
       poll_cabling_possible: formData.poll_cabling_possible,
       locality_status: formData.locality_status,
-      tags: filter(SURVEY_TAG_LIST, (d) =>
-        includes(formData.tags.split(","), d.value)
-      ),
-      broadband_availability: map(
-        !!formData.broadband_availability
-          ? formData.broadband_availability.split(",")
-          : [],
-        (d) => ({
-          label: d,
-          value: d,
-        })
-      ),
-      cable_tv_availability: map(
-        !!formData.cable_tv_availability
-          ? formData.cable_tv_availability.split(",")
-          : [],
-        (d) => ({
-          label: d,
-          value: d,
-        })
-      ),
+      tags: formData.tags,
+      broadband_availability: formData.broadband_availability,
+      cable_tv_availability: formData.cable_tv_availability,
     },
   });
 

@@ -46,9 +46,6 @@ const UnitEditForm = (props) => {
       name: formData.name,
       category: formData.category,
       tags: formData.tags,
-      tags: filter(surveyTagList, (d) =>
-        includes(formData.tags.split(","), d.value)
-      ),
       floors: String(formData.floors),
       house_per_floor: String(formData.house_per_floor),
       total_home_pass: String(formData.total_home_pass),
