@@ -10,7 +10,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { addNewUser, fetchApplicationList } from "../data/services";
-import { FormCheckbox, FormMUISelect } from "components/common/FormFields";
+import { FormCheckbox, FormSelect } from "components/common/FormFields";
 import { parseBadRequest } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -128,7 +128,7 @@ const UserAddForm = ({ onSubmit }) => {
             })}
             helperText={errors.confirm_password?.message}
           />
-          <FormMUISelect
+          <FormSelect
             label="Access Type *"
             isMulti
             name="access_ids"

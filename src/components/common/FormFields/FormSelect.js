@@ -71,6 +71,7 @@ export const FormSelect = ({
   control,
   rules,
   options,
+  isMulti,
   labelKey = "label",
   valueKey = "value",
   ...rest
@@ -78,13 +79,25 @@ export const FormSelect = ({
   return (
     <Controller
       render={({ field }) => {
+        const selectValue = isMulti
+          ? !!field.value
+            ? map(split(field.value, ","), (d) =>
+                find(options, (val) => val[valueKey] == d)
+              )
+            : []
+          : find(options, (val) => val[valueKey] == field.value);
+
         return (
           <Select
             {...rest}
+            isMulti={isMulti}
             options={options}
-            value={find(options, [valueKey, field.value])}
+            value={selectValue}
             onChange={(newValue) => {
-              field.onChange(get(newValue, valueKey, ""));
+              const newValueOp = isMulti
+                ? map(newValue, valueKey).join(",")
+                : get(newValue, valueKey, "");
+              field.onChange(newValueOp);
             }}
             className={`${className} form-select`}
             classNamePrefix="form-select"
@@ -121,7 +134,7 @@ export const FormCreatableSelect = ({
         const creatableValues = map(
           valueItems,
           (d) =>
-            find(options, [valueKey, d]) || {
+            find(options, (val) => val[valueKey] == d) || {
               [labelKey]: d,
               [valueKey]: d,
             }

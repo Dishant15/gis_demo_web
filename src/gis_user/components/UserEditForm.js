@@ -2,14 +2,16 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useForm } from "react-hook-form";
-import { map, get, split, join } from "lodash";
 import { useDispatch } from "react-redux";
+
+import get from "lodash/get";
 
 import { Box, TextField, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
-import { FormCheckbox, FormMUISelect } from "components/common/FormFields";
+
+import { FormCheckbox, FormSelect } from "components/common/FormFields";
 
 import { editUserDetails, fetchApplicationList } from "../data/services";
 import { parseBadRequest } from "utils/api.utils";
@@ -28,14 +30,7 @@ const UserEditForm = ({ onSubmit, formData }) => {
 
   const { isLoading: applicationsLoading, data } = useQuery(
     "applicationList",
-    fetchApplicationList,
-    {
-      onSuccess: (res) => {
-        let appIds = formData.access_ids ? split(formData.access_ids, ",") : [];
-        appIds = map(appIds, (id) => Number(id));
-        setValue("access_ids", appIds);
-      },
-    }
+    fetchApplicationList
   );
 
   const { mutate, isLoading: isUserEditing } = useMutation(editUserDetails, {
@@ -64,7 +59,7 @@ const UserEditForm = ({ onSubmit, formData }) => {
   const onHandleSubmit = (resData) => {
     mutate({
       userId: formData.id,
-      data: { ...resData, access_ids: join(resData.access_ids, ",") },
+      data: resData,
     });
   };
 
@@ -83,7 +78,7 @@ const UserEditForm = ({ onSubmit, formData }) => {
       email: get(formData, "email", ""),
       is_staff: !!get(formData, "is_staff"),
       is_active: !!get(formData, "is_active"),
-      access_ids: [],
+      access_ids: get(formData, "access_ids", ""),
     },
   });
 
@@ -132,7 +127,7 @@ const UserEditForm = ({ onSubmit, formData }) => {
             width: "100%",
           }}
         >
-          <FormMUISelect
+          <FormSelect
             label="Access Type"
             isMulti
             name="access_ids"

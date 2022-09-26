@@ -2,8 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "react-query";
-import { map, filter, indexOf } from "lodash";
 import { useDispatch } from "react-redux";
+
+import split from "lodash/split";
+import join from "lodash/join";
 
 import { Box, Skeleton, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -27,13 +29,7 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
     {
       initialData: [],
       onSuccess: (regionListData) => {
-        const region = filter(
-          regionListData,
-          (regionData) => indexOf(regions, regionData.id) !== -1
-        );
-        if (region) {
-          setValue("region", region);
-        }
+        setValue("region", join(regions, ","));
       },
     }
   );
@@ -62,7 +58,14 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
   });
 
   const onSubmit = (data) => {
-    mutate({ userId, data: { regionIdList: map(data.region, "id") } });
+    mutate({
+      userId,
+      data: {
+        regionIdList: !!data.region
+          ? split(data.region, ",").map((d) => Number(d))
+          : [],
+      },
+    });
   };
 
   const {
@@ -92,8 +95,8 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
               name="region"
               control={control}
               options={regionList}
-              getOptionLabel={(opt) => opt.name}
-              getOptionValue={(opt) => opt.id}
+              labelKey="name"
+              valueKey="id"
               error={!!errors.region}
               helperText={errors.region?.message}
             />

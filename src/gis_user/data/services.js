@@ -24,7 +24,6 @@ export const addNewUser = async (data) => {
   const postData = {
     ...data,
     confirm_password: undefined,
-    access_ids: join(data.access_ids, ","),
   };
   const res = await Api.post(apiAddUser(), postData);
   return res.data;
