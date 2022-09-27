@@ -25,13 +25,14 @@ import { setMapState } from "planning/data/planningGis.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "../utils";
+import { zIndexMapping } from "../layers/common/configuration";
 
 const GisEditOptions = {
   clickable: true,
   draggable: true,
   editable: true,
   strokeWeight: 4,
-  zIndex: 50,
+  zIndex: zIndexMapping.edit,
 };
 
 const EditGisLayer = ({
@@ -42,11 +43,6 @@ const EditGisLayer = ({
   options = {},
   nextEvent = {},
 }) => {
-  console.log("🚀 ~ file: EditGisLayer.js ~ line 45 ~ options", options);
-  console.log(
-    "🚀 ~ file: EditGisLayer.js ~ line 45 ~ featureType",
-    featureType
-  );
   const dispatch = useDispatch();
   const featureRef = useRef();
   const { elementId, coordinates } = useSelector(getPlanningMapStateData);
@@ -183,7 +179,7 @@ const EditGisLayer = ({
             draggable: true,
             editable: true,
             geodesic: false,
-            zIndex: 50,
+            zIndex: zIndexMapping.edit,
             ...options,
           }}
           onLoad={handleEditFeatureLoad}

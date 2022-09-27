@@ -18,9 +18,14 @@ import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable"
 import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 import { default as Icon } from "assets/markers/building_view.svg";
 import { default as EditIcon } from "assets/markers/building_pin.svg";
+import { zIndexMapping } from "../common/configuration";
 
 export const Geometry = ({ coordinates }) => (
-  <Marker icon={{ url: Icon }} position={coordinates} />
+  <Marker
+    icon={{ url: Icon }}
+    zIndex={zIndexMapping[LAYER_KEY]}
+    position={coordinates}
+  />
 );
 
 export const ViewLayer = () => {

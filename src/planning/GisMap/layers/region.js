@@ -5,6 +5,7 @@ import { Polygon } from "@react-google-maps/api";
 
 import { getFillColor } from "utils/map.utils";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
+import { zIndexMapping } from "./common/configuration";
 
 export const LAYER_KEY = "region";
 
@@ -35,7 +36,7 @@ export const ViewLayer = () => {
                 draggable: false,
                 editable: false,
                 geodesic: false,
-                zIndex: 1,
+                zIndex: zIndexMapping[LAYER_KEY],
               }}
               paths={polyCoord}
             />

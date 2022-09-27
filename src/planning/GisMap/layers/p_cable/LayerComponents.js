@@ -21,6 +21,7 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 
 import CableIcon from "assets/markers/line_pin.svg";
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
+import { zIndexMapping } from "../common/configuration";
 
 // for Add tab and show pills on FE
 export const getIcon = ({ color_on_map }) => CableIcon;
@@ -37,7 +38,7 @@ export const getOptions = ({ color_on_map }) => {
     editable: false,
     visible: true,
     radius: 30000,
-    zIndex: 1,
+    zIndex: zIndexMapping[LAYER_KEY],
   };
 };
 

@@ -25,6 +25,7 @@ import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
 import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 import SecondarySpliterEditIcon from "assets/markers/spliter_edit.svg";
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
+import { zIndexMapping } from "../common/configuration";
 
 export const getIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterIcon : SecondarySpliterIcon;
@@ -38,6 +39,7 @@ export const Geometry = ({ coordinates, splitter_type }) => {
       icon={{
         url: getIcon({ splitter_type }),
       }}
+      zIndex={zIndexMapping[LAYER_KEY]}
       position={coordinates}
     />
   );
