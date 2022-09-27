@@ -13,11 +13,11 @@ import find from "lodash/find";
 import map from "lodash/map";
 import split from "lodash/split";
 
-import Select, { components } from "react-select";
+import Select, { components as SelectComponent } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 // Good: Custom component declared outside of the Select scope
-const Control = ({ children, ...props }) => {
+const MuiSelectOverride = ({ children, ...props }) => {
   const menuIsOpen = props?.menuIsOpen;
   const hasValue = props?.hasValue;
   const shrink = hasValue || menuIsOpen;
@@ -47,7 +47,7 @@ const Control = ({ children, ...props }) => {
         {label}
       </InputLabel>
       <Box position="relative">
-        <components.Control {...props}>{children}</components.Control>
+        <SelectComponent.Control {...props}>{children}</SelectComponent.Control>
         <fieldset
           className={`${outlinedInputClasses.notchedOutline} ${
             shrink ? "active" : ""
@@ -113,7 +113,7 @@ export const FormSelect = ({
             className={`${className} form-select`}
             classNamePrefix="form-select"
             placeholder=" "
-            components={{ Control }}
+            components={{ Control: MuiSelectOverride }}
             getOptionLabel={(o) => o[labelKey]}
             getOptionValue={(o) => o[valueKey]}
           />
@@ -140,6 +140,8 @@ export const FormCreatableSelect = ({
   return (
     <Controller
       render={({ field }) => {
+        // return all options that are selected
+        // creatable takes { value, label } object list only
         let creatableValues;
         if (simpleValue) {
           creatableValues = field.value;
@@ -172,7 +174,7 @@ export const FormCreatableSelect = ({
             className={`${className} form-select`}
             classNamePrefix="form-select"
             placeholder=" "
-            components={{ Control }}
+            components={{ Control: MuiSelectOverride }}
             getOptionLabel={(o) => o[labelKey]}
             getOptionValue={(o) => o[valueKey]}
             getNewOptionData={(inputValue, optionLabel) => {

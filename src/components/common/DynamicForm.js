@@ -21,11 +21,11 @@ import { FormSelect, FormCheckbox, FormCreatableSelect } from "./FormFields";
 export const FIELD_TYPES = {
   Input: "input",
   TextArea: "textArea",
+  CheckBox: "checkBox",
   // single select
   Select: "select",
-  // NOT IMPLEMENTED YET
+  SelectMulti: "selectMulti",
   SelectCreatable: "selectCreatable",
-  CheckBox: "checkBox",
 };
 
 /**
@@ -128,17 +128,13 @@ const DynamicForm = forwardRef(
                           </Grid>
                         );
 
-                      case FIELD_TYPES.Select:
+                      case FIELD_TYPES.CheckBox:
                         return (
                           <Grid item xs={12} sm={6} key={field_key}>
-                            <FormSelect
+                            <FormCheckbox
                               label={label}
                               name={field_key}
                               control={control}
-                              options={config.options || []}
-                              textFieldSx={{
-                                width: "100%",
-                              }}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
@@ -148,13 +144,34 @@ const DynamicForm = forwardRef(
                             />
                           </Grid>
                         );
-                      case FIELD_TYPES.CheckBox:
+
+                      case FIELD_TYPES.Select:
                         return (
                           <Grid item xs={12} sm={6} key={field_key}>
-                            <FormCheckbox
+                            <FormSelect
                               label={label}
                               name={field_key}
                               control={control}
+                              options={config.options || []}
+                              error={!!get(errors, [field_key])}
+                              helperText={get(
+                                errors,
+                                [field_key, "message"],
+                                ""
+                              )}
+                            />
+                          </Grid>
+                        );
+
+                      case FIELD_TYPES.SelectMulti:
+                        return (
+                          <Grid item xs={12} sm={6} key={field_key}>
+                            <FormSelect
+                              isMulti
+                              label={label}
+                              name={field_key}
+                              control={control}
+                              options={config.options || []}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
