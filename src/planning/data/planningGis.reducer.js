@@ -10,6 +10,7 @@ import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { convertLayerServerData, PLANNING_EVENT } from "../GisMap/utils";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
+import { coordsToLatLongMap } from "utils/map.utils";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -167,6 +168,14 @@ const planningGisSlice = createSlice({
     [fetchTicketWorkorderDataThunk.fulfilled]: (state, action) => {
       let ticketGisData = cloneDeep(action.payload);
       // convert ticket gis data into google coordinate data
+      // convert ticket area, center
+      ticketGisData.area_pocket.coordinates = coordsToLatLongMap(
+        ticketGisData.area_pocket.coordinates
+      );
+      ticketGisData.area_pocket.center = coordsToLatLongMap([
+        ticketGisData.area_pocket.center,
+      ])[0];
+      // convert all workorder coordinate data
       for (
         let tg_ind = 0;
         tg_ind < ticketGisData.work_orders.length;
