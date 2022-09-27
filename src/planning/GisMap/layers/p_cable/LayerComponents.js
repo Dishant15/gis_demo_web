@@ -173,6 +173,7 @@ export const ElementDetails = () => {
       rowDefs={ELEMENT_TABLE_FIELDS}
       layerKey={LAYER_KEY}
       elementId={elementId}
+      extraControls={["connections"]}
       onEditDataConverter={convertDataBeforeForm}
     />
   );

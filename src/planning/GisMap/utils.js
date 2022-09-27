@@ -27,6 +27,8 @@ import {
   INITIAL_CONFIG_DATA as SplitterConfigInitData,
   CONFIG_LIST_TABLE_COL_DEFS as SplitterTableColDefs,
   transformAndValidateConfigData as spConfigTransformData,
+  ElementConnections as SpListElemConn,
+  LayerAddConnection as SpAddElemConn,
 } from "./layers/p_splitter";
 import {
   LAYER_KEY as CableKey,
@@ -68,8 +70,10 @@ export const PLANNING_EVENT = {
   addElement: "A",
   editElementLocation: "E",
   showElementForm: "F",
-  showElementDetails: "D",
   editElementDetails: "EF",
+  showElementDetails: "D",
+  showElementConnections: "EC",
+  addElementConnection: "AC",
 };
 
 export const LayerKeyMappings = {
@@ -99,6 +103,8 @@ export const LayerKeyMappings = {
     ConfigInitData: SplitterConfigInitData,
     TableColDefs: SplitterTableColDefs,
     configTransformData: spConfigTransformData,
+    [PLANNING_EVENT.showElementConnections]: <SpListElemConn />,
+    [PLANNING_EVENT.addElementConnection]: <SpAddElemConn />,
   },
   [CableKey]: {
     [PLANNING_EVENT.addElement]: <CableAddLayer />,
@@ -142,6 +148,7 @@ export const convertLayerServerData = (layerKey, serverData) => {
   // PolyLine
   if (layerKey === CableKey || layerKey === SAreaKey) {
     resultData.map((d) => {
+      d.geometry = [...d.coordinates];
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates);
       d.center = coordsToLatLongMap([d.center])[0];
@@ -155,6 +162,7 @@ export const convertLayerServerData = (layerKey, serverData) => {
     layerKey === BuildingKey
   ) {
     resultData.map((d) => {
+      d.geometry = [...d.coordinates];
       d.coordinates = coordsToLatLongMap([d.coordinates])[0];
     });
     return resultData;

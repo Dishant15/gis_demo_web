@@ -108,3 +108,6 @@ export const apiDeleteLayerConfig = (
   layerKey = ":layer_key",
   configId = ":config_id"
 ) => `/api/layer/config/${layerKey}/${configId}/delete/`;
+
+export const apiGetElementConnections = (layerKey, elementId) =>
+  `/api/planning/layer/${layerKey}/${elementId}/connections/`;

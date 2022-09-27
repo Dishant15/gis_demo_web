@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import get from "lodash/get";
 import range from "lodash/range";
@@ -18,11 +19,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import CableIcon from "@mui/icons-material/Cable";
 
 import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
-import { useDispatch, useSelector } from "react-redux";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
@@ -36,6 +37,8 @@ const ElementDetailsTable = ({
   rowDefs,
   layerKey,
   elementId,
+  // connections | associations
+  extraControls = [],
   onEditDataConverter,
 }) => {
   const dispatch = useDispatch();
@@ -76,6 +79,34 @@ const ElementDetailsTable = ({
       })
     );
   }, [dispatch, layerKey, elemData]);
+
+  const ExtraControls = extraControls.map((ctrl) => {
+    if (ctrl === "connections") {
+      return (
+        <Button
+          key={ctrl}
+          onClick={() =>
+            dispatch(
+              setMapState({
+                event: PLANNING_EVENT.showElementConnections,
+                layerKey,
+                data: {
+                  ...elemData,
+                  elementId: elemData.id,
+                  elementGeometry: elemData.coordinates,
+                },
+              })
+            )
+          }
+          startIcon={<CableIcon />}
+          variant="outlined"
+          color="secondary"
+        >
+          Connections
+        </Button>
+      );
+    }
+  });
 
   // show dummy loader for loading
   if (isLoading) return <ElemTableDummyLoader />;
@@ -119,6 +150,7 @@ const ElementDetailsTable = ({
           >
             Location
           </Button>
+          {ExtraControls}
         </Stack>
         {/* Table Content */}
         <Stack
@@ -192,7 +224,7 @@ const ElementDetailsTable = ({
   );
 };
 
-const ElemTableDummyLoader = () => {
+export const ElemTableDummyLoader = () => {
   const rowPills = range(6);
   return (
     <GisMapPopups>
