@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
-import find from "lodash/find";
 
 import { Marker } from "@react-google-maps/api";
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
@@ -20,7 +19,6 @@ import {
 import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToCoords } from "utils/map.utils";
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
@@ -115,8 +113,6 @@ export const ElementForm = () => {
           ...formData,
           // remove geometry
           geometry: undefined,
-          // convert select fields to simple values
-          status: formData.status.value,
           configuration: configuration.id,
         };
       } else {
@@ -125,8 +121,6 @@ export const ElementForm = () => {
           // remove coordinates and add geometry
           coordinates: undefined,
           geometry: latLongMapToCoords([formData.coordinates])[0],
-          // convert select fields to simple values
-          status: formData.status.value,
           configuration: configuration.id,
         };
       }
@@ -158,11 +152,7 @@ const ELEMENT_TABLE_FIELDS = [
 ];
 
 const convertDataBeforeForm = (data) => {
-  return {
-    ...data,
-    // convert status to select format
-    status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
-  };
+  return data;
 };
 
 export const ElementDetails = () => {

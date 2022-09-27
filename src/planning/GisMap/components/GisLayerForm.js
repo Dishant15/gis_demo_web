@@ -111,7 +111,7 @@ export const GisLayerForm = ({
 
   return (
     <GisMapPopups>
-      <Box minWidth="350px" maxWidth="550px">
+      <Box minWidth="350px" maxWidth="550px" overflow="auto" maxHeight="85vh">
         <DynamicForm
           ref={formRef}
           formConfigs={formConfig}

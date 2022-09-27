@@ -64,24 +64,21 @@ const DynamicForm = forwardRef(
         ref={ref}
         component="form"
         onSubmit={handleSubmit(onFormSubmit)}
-        // height="80vh"
-        // sx={{
-        //   overflow: "auto",
-        // }}
+        position="relative"
       >
+        <IconButton
+          sx={{ position: "absolute", top: "10px", right: "10px" }}
+          aria-label="close"
+          onClick={onCancel}
+        >
+          <CloseIcon />
+        </IconButton>
         <Stack p={2}>
           {sections.map((section, s_id) => {
             const { title, fieldConfigs } = section;
 
             return (
               <Stack key={s_id} spacing={2}>
-                <IconButton
-                  sx={{ position: "absolute", top: "10px", right: "10px" }}
-                  aria-label="close"
-                  onClick={onCancel}
-                >
-                  <CloseIcon />
-                </IconButton>
                 <Stack direction="row" width="100%">
                   <Typography color="primary.dark" flex={1} variant="h5">
                     {title}

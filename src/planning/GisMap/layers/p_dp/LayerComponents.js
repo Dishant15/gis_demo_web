@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Marker } from "@react-google-maps/api";
-import find from "lodash/find";
 
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
@@ -22,7 +21,6 @@ import { latLongMapToCoords } from "utils/map.utils";
 import { default as Icon } from "assets/markers/p_dp_view.svg";
 import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 
 export const Geometry = ({ coordinates }) => (
@@ -86,8 +84,6 @@ export const ElementForm = () => {
           ...formData,
           // remove geometry
           geometry: undefined,
-          // convert select fields to simple values
-          status: formData.status.value,
         };
       } else {
         return {
@@ -95,8 +91,6 @@ export const ElementForm = () => {
           // remove coordinates and add geometry
           coordinates: undefined,
           geometry: latLongMapToCoords([formData.coordinates])[0],
-          // convert select fields to simple values
-          status: formData.status.value,
         };
       }
     },
@@ -122,11 +116,7 @@ const ELEMENT_TABLE_FIELDS = [
 ];
 
 const convertDataBeforeForm = (data) => {
-  return {
-    ...data,
-    // convert status to select format
-    status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
-  };
+  return data;
 };
 
 export const ElementDetails = () => {

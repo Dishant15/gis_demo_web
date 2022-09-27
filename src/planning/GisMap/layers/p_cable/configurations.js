@@ -6,10 +6,10 @@ export const INITIAL_ELEMENT_DATA = {
   name: "",
   unique_id: "REG_CBL_",
   ref_code: "",
-  status: { value: "P", label: "Planned" },
+  status: "P",
   coordinates: [],
   // editable
-  cable_type: { value: "O", label: "Overhead" },
+  cable_type: "O",
   // gis_len ,actual_len, start_reading ,end_reading
 };
 

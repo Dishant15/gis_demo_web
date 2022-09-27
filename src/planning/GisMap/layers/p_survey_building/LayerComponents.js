@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Marker } from "@react-google-maps/api";
 
-import { map } from "lodash";
-
 import AddMarkerLayer from "planning/GisMap/components/AddMarkerLayer";
 import { BuildingLayerForm } from "./BuildingLayerForm";
 
@@ -77,16 +75,11 @@ export const ElementForm = () => {
   // transform and validate data according to that
   const transformAndValidateData = useCallback(
     (formData) => {
-      const tags = Array.isArray(formData.tags)
-        ? map(formData.tags, "value").join(",")
-        : "";
       if (isEdit) {
         return {
           ...formData,
           // remove coordinates
           geometry: undefined,
-          // convert select fields to simple values
-          tags,
           address: "",
         };
       } else {
@@ -94,8 +87,6 @@ export const ElementForm = () => {
           ...formData,
           // remove coordinates and add geometry
           geometry: latLongMapToCoords([formData.coordinates])[0],
-          // convert select fields to simple values
-          tags,
           address: "",
         };
       }

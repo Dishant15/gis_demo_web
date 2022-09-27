@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
-import find from "lodash/find";
 
 import { Polygon } from "@react-google-maps/api";
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
@@ -16,13 +15,10 @@ import {
   INITIAL_ELEMENT_DATA,
   ELEMENT_FORM_TEMPLATE,
   LAYER_KEY,
-  AREA_LOCALITY_OPTIONS,
 } from "./configurations";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
-import { map, split } from "lodash";
 
 // const STROKE_COLOR = "#88B14B";
 const STROKE_COLOR = "#CE855A";
@@ -104,37 +100,14 @@ export const ElementForm = () => {
 
   const transformAndValidateData = useCallback(
     (formData) => {
-      const broadband_availability = Array.isArray(
-        formData.broadband_availability
-      )
-        ? map(formData.broadband_availability, "value").join(",")
-        : "";
-      const cable_tv_availability = Array.isArray(
-        formData.cable_tv_availability
-      )
-        ? map(formData.cable_tv_availability, "value").join(",")
-        : "";
       if (isEdit) {
         return {
           ...formData,
           // remove geometry
           geometry: undefined,
-          // convert select fields to simple values
-          status: formData.status.value,
-          locality_status: formData.locality_status.value,
-          broadband_availability,
-          cable_tv_availability,
         };
       } else {
-        return {
-          ...formData,
-          // AddGisMapLayer will give transformed coordinates in geometry field
-          // convert select fields to simple values
-          status: formData.status.value,
-          locality_status: formData.locality_status.value,
-          broadband_availability,
-          cable_tv_availability,
-        };
+        return formData;
       }
     },
     [isEdit]
@@ -189,22 +162,7 @@ const ELEMENT_TABLE_FIELDS = [
 ];
 
 const convertDataBeforeForm = (data) => {
-  return {
-    ...data,
-    // convert status to select format
-    status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
-    locality_status: find(AREA_LOCALITY_OPTIONS, [
-      "value",
-      data.locality_status,
-    ]),
-    broadband_availability: split(data.broadband_availability, ",").map(
-      (v) => ({ label: v, value: v })
-    ),
-    cable_tv_availability: split(data.cable_tv_availability, ",").map((v) => ({
-      label: v,
-      value: v,
-    })),
-  };
+  return data;
 };
 
 export const ElementDetails = () => {

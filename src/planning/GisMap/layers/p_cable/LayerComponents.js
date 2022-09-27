@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
-import find from "lodash/find";
 
 import { Polyline } from "@react-google-maps/api";
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
@@ -16,11 +15,9 @@ import {
   INITIAL_ELEMENT_DATA,
   ELEMENT_FORM_TEMPLATE,
   LAYER_KEY,
-  CABLE_TYPE_OPTIONS,
 } from "./configurations";
 import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import CableIcon from "assets/markers/line_pin.svg";
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
@@ -122,8 +119,6 @@ export const ElementForm = () => {
           // remove geometry
           geometry: undefined,
           // convert select fields to simple values
-          status: formData.status.value,
-          cable_type: formData.cable_type.value,
           configuration: configuration.id,
         };
       } else {
@@ -131,8 +126,6 @@ export const ElementForm = () => {
           ...formData,
           // AddGisMapLayer will give transformed coordinates in geometry field
           // convert select fields to simple values
-          status: formData.status.value,
-          cable_type: formData.cable_type.value,
           configuration: configuration.id,
         };
       }
@@ -168,12 +161,7 @@ const ELEMENT_TABLE_FIELDS = [
 ];
 
 const convertDataBeforeForm = (data) => {
-  return {
-    ...data,
-    // convert status to select format
-    status: find(LAYER_STATUS_OPTIONS, ["value", data.status]),
-    cable_type: find(CABLE_TYPE_OPTIONS, ["value", data.cable_type]),
-  };
+  return data;
 };
 
 export const ElementDetails = () => {

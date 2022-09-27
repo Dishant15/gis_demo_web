@@ -7,7 +7,7 @@ export const INITIAL_ELEMENT_DATA = {
   name: "",
   unique_id: "REG_SA_",
   ref_code: "",
-  status: { value: "P", label: "Planned" },
+  status: "P",
   address: "",
   area: "",
   city: "",
