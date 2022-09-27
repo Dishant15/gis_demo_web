@@ -31,6 +31,44 @@ export const AREA_LOCALITY_OPTIONS = [
   { value: "4", label: "Poor" },
 ];
 
+export const AREA_TAG_OPTIONS = [
+  { label: "Residential", value: "residential" },
+  { label: "Commercial", value: "commercial" },
+  { label: "Government", value: "government" },
+  { label: "Hospital", value: "hospital" },
+  { label: "Educational", value: "educational" },
+];
+
+export const AREA_BROADBAND_PROVIDERS = [
+  {
+    label: "GTPL",
+    value: "GTPL",
+  },
+  {
+    label: "JIO",
+    value: "JIO",
+  },
+  {
+    label: "Airtel",
+    value: "Airtel",
+  },
+];
+
+export const AREA_TV_PROVIDERS = [
+  {
+    label: "GTPL",
+    value: "GTPL",
+  },
+  {
+    label: "DEN",
+    value: "DEN",
+  },
+  {
+    label: "IN CABLE",
+    value: "IN CABLE",
+  },
+];
+
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
@@ -85,7 +123,8 @@ export const ELEMENT_FORM_TEMPLATE = {
         {
           field_key: "tags",
           label: "Tags",
-          field_type: FIELD_TYPES.Input,
+          field_type: FIELD_TYPES.SelectMulti,
+          options: AREA_TAG_OPTIONS,
         },
         {
           field_key: "home_pass",
@@ -111,11 +150,13 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "broadband_availability",
           label: "Broadband Service Availability",
           field_type: FIELD_TYPES.SelectCreatable,
+          options: AREA_BROADBAND_PROVIDERS,
         },
         {
           field_key: "cable_tv_availability",
           label: "Cable TV Service Availability",
           field_type: FIELD_TYPES.SelectCreatable,
+          options: AREA_TV_PROVIDERS,
         },
         {
           field_key: "locality_status",
