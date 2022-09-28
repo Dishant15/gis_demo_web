@@ -19,6 +19,7 @@ import {
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
+import { zIndexMapping } from "../common/configuration";
 
 // const STROKE_COLOR = "#88B14B";
 const STROKE_COLOR = "#CE855A";
@@ -34,7 +35,7 @@ export const getOptions = ({ hidden = false }) => {
     draggable: false,
     editable: false,
     visible: !hidden,
-    zIndex: 1,
+    zIndex: zIndexMapping[LAYER_KEY],
   };
 };
 

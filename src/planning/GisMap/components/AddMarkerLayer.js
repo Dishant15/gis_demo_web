@@ -7,6 +7,7 @@ import GisMapPopups from "./GisMapPopups";
 
 import { getMarkerCoordinatesFromFeature } from "utils/map.utils";
 import { setMapState } from "planning/data/planningGis.reducer";
+import { zIndexMapping } from "../layers/common/configuration";
 
 const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const AddMarkerLayer = ({ icon, helpText, nextEvent = {} }) => {
             draggable: true,
             editable: true,
             geodesic: false,
-            zIndex: 10,
+            zIndex: zIndexMapping.edit,
           },
         }}
         drawingMode={isAdd ? "marker" : null}
