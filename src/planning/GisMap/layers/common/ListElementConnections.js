@@ -7,8 +7,6 @@ import {
   Divider,
   Stack,
   Typography,
-  Skeleton,
-  Chip,
   Box,
   IconButton,
   Button,
@@ -19,7 +17,6 @@ import { ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsT
 
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
-import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { onElementAddConnectionEvent } from "planning/data/planning.actions";
 
 const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
@@ -35,7 +32,12 @@ const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
 
   const handleAddConnection = () => {
     dispatch(
-      onElementAddConnectionEvent({ layerKey, elementGeometry, elementId })
+      onElementAddConnectionEvent({
+        layerKey,
+        elementGeometry,
+        elementId,
+        existingConnections: elemConnectionData,
+      })
     );
   };
 

@@ -15,6 +15,7 @@ import {
   setMapState,
 } from "./planningGis.reducer";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {
@@ -48,9 +49,22 @@ export const onRegionSelectionUpdate =
   };
 
 export const onElementAddConnectionEvent =
-  ({ layerKey, elementId, elementGeometry }) =>
+  ({ layerKey, elementId, elementGeometry, existingConnections }) =>
   (dispatch, getState) => {
     const storeState = getState();
+    // check if cable layer is selected in layers tab
+    const selectedLayerKeys = getSelectedLayerKeys(storeState);
+    if (selectedLayerKeys.indexOf("p_cable") === -1) {
+      // dispatch error notification if not
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Please select Cable layer",
+          text: "Cable layer needs to be selected to add connections",
+        })
+      );
+      return;
+    }
     let resultCableList = [];
     // if point element
     const elementPoint = point(elementGeometry);
@@ -88,6 +102,7 @@ export const onElementAddConnectionEvent =
           elementList: resultCableList,
           elementId,
           layerKey,
+          existingConnections,
         },
       })
     );

@@ -91,7 +91,6 @@ const ElementDetailsTable = ({
                 event: PLANNING_EVENT.showElementConnections,
                 layerKey,
                 data: {
-                  ...elemData,
                   elementId: elemData.id,
                   elementGeometry: elemData.coordinates,
                 },
