@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
+import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { GOOGLE_MAP_KEY, MAP_LIBRARIES } from "./map.constants";
-import { PIN_P, SQUARE_P } from "./MarkerPaths";
+import { MAP_LIBRARIES } from "./map.constants";
+import { PIN_P } from "./MarkerPaths";
 
 import SPinIcon from "assets/s_pin.svg";
 
@@ -24,7 +24,10 @@ const GoogleMapWrapper = ({
   containerStyle = DEFAULT_CONTAINER_STYLE,
 }) => {
   return (
-    <LoadScript libraries={MAP_LIBRARIES} googleMapsApiKey={GOOGLE_MAP_KEY}>
+    <LoadScript
+      libraries={MAP_LIBRARIES}
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+    >
       <GoogleMap
         clickableIcons={false}
         mapContainerStyle={containerStyle}

@@ -11,8 +11,6 @@ import React, { useEffect, useRef } from "react";
 
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 
-import { GOOGLE_MAP_KEY } from "utils/constant";
-
 const render = (status) => {
   if (status === Status.LOADING) return <h3>{status} ...</h3>;
   if (status === Status.FAILURE) return <h3>{status} ...</h3>;
@@ -81,7 +79,11 @@ const AreaPocketMap = ({ surveyList }) => {
 const WrapperComponent = ({ surveyList }) => {
   return (
     <div className="survey-page page-wrapper">
-      <Wrapper apiKey={GOOGLE_MAP_KEY} libraries={["drawing"]} render={render}>
+      <Wrapper
+        apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+        libraries={["drawing"]}
+        render={render}
+      >
         <AreaPocketMap surveyList={surveyList} />
       </Wrapper>
     </div>
