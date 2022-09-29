@@ -4,6 +4,7 @@ import {
   apiGetElementDetails,
   apiPostAddElement,
   apiPutEditElement,
+  apiUpdateElementConnections,
 } from "utils/url.constants";
 
 export const fetchElementDetails = async ({ queryKey }) => {
@@ -25,5 +26,10 @@ export const addNewElement = async ({ data, layerKey }) => {
 
 export const editElementDetails = async ({ data, layerKey, elementId }) => {
   const res = await Api.put(apiPutEditElement(layerKey, elementId), data);
+  return res.data;
+};
+
+export const addElementConnection = async ({ data, cableId }) => {
+  const res = await Api.put(apiUpdateElementConnections(cableId), data);
   return res.data;
 };

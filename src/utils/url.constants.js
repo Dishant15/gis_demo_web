@@ -111,3 +111,7 @@ export const apiDeleteLayerConfig = (
 
 export const apiGetElementConnections = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/connections/`;
+
+// same api as edit element -> cable edit
+export const apiUpdateElementConnections = (cableId) =>
+  apiPutEditElement("p_cable", cableId);

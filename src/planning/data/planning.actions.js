@@ -90,7 +90,7 @@ export const onElementAddConnectionEvent =
         const distanceB = distance(elementPoint, point(Bend));
         const cable_end = distanceA > distanceB ? "B" : "A";
         // add list of cables into data of current element, with cable end marker
-        resultCableList.push({ ...c_cable, cable_end });
+        resultCableList.push({ ...c_cable, cable_end, layerKey: "p_cable" });
       }
     }
     // dispatch addElementConection
