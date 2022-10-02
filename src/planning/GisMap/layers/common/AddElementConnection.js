@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "react-query";
 import some from "lodash/some";
+import indexOf from "lodash/indexOf";
 
 import {
   Divider,
   Stack,
   Typography,
-  Skeleton,
-  Chip,
   Box,
   IconButton,
   Button,
@@ -18,11 +18,10 @@ import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { useMutation } from "react-query";
 import { addElementConnection } from "planning/data/layer.services";
-import { indexOf } from "lodash";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const AddElementConnection = () => {
   const dispatch = useDispatch();
@@ -45,10 +44,26 @@ const AddElementConnection = () => {
             layerKey: "p_cable",
           })
         );
+        // success notification
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Connection updated",
+            text: "Element to table connection was updated successfully",
+          })
+        );
         // mark current cable as connected
         setNewConnection((currNewConns) => [...currNewConns, res.id]);
       },
-      onError: (err) => console.log(err),
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Connection update failed",
+          })
+        );
+        console.log(err);
+      },
     }
   );
 
@@ -69,7 +84,22 @@ const AddElementConnection = () => {
       };
       updateConnectionMutation({ data, cableId });
     },
-    [elementId, layerKey, isLoading]
+    [elementId, layerKey]
+  );
+
+  const handleRemove = useCallback(
+    (cableId, cable_end) => {
+      // required data = cable id, cable end
+      // element id, element layer key
+      const data = {
+        connection: {
+          cable_end,
+          is_delete: true,
+        },
+      };
+      updateConnectionMutation({ data, cableId });
+    },
+    [elementId, layerKey]
   );
 
   // loop over possible connections, This will be p_cable elements only for element connections
@@ -78,6 +108,7 @@ const AddElementConnection = () => {
     // check if same layer_key, id data in existingConnections
     const isConnected =
       some(existingConnections, ["element.id", id]) ||
+      // if user just connected one of the cable, get that from state
       indexOf(newConnection, id) !== -1;
     // if true than disable connect btn
 
@@ -87,7 +118,15 @@ const AddElementConnection = () => {
           {name} ( {cable_end} End )
         </Typography>
         {isConnected ? (
-          <Button disabled>Connected</Button>
+          <>
+            <Button disabled>Connected</Button>
+            <Button
+              disabled={isLoading}
+              onClick={() => handleRemove(id, cable_end)}
+            >
+              remove
+            </Button>
+          </>
         ) : (
           <Button
             disabled={isLoading}
