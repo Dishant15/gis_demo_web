@@ -115,6 +115,7 @@ $primary-color: #3b42d9;
         display: inline-block;
         text-align: left;
         min-height: 22.3em;
+        width: 60%;
       }
 
       .forgot-pass {
@@ -181,6 +182,9 @@ $primary-color: #3b42d9;
 
       .form-block {
         width: 96%;
+        .form-inner-block {
+          width: 82%;
+        }
       }
     }
 
@@ -216,6 +220,10 @@ $primary-color: #3b42d9;
 
     .login-page {
       width: 96%;
+
+      .form-inner-block {
+        width: 99%;
+      }
     }
   }
 }

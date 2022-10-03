@@ -7,8 +7,12 @@ import { useMutation } from "react-query";
 import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import { FormHelperTextControl } from "components/common/FormFields";
+
+import { get } from "lodash";
+
 import { postLogin } from "pages/Authentication/services";
-import { parseErrorMessage } from "utils/api.utils";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 import { login } from "redux/reducers/auth.reducer";
 import { getIsUserLoggedIn } from "redux/selectors/auth.selectors";
 import { getHomePath } from "utils/url.constants";
@@ -63,8 +67,12 @@ const LoginForm = () => {
       dispatch(login(res));
     },
     onError: (err) => {
-      const errorMessage = parseErrorMessage(err);
-      setError("password", { message: errorMessage });
+      const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+      for (let index = 0; index < fieldList.length; index++) {
+        const field = fieldList[index];
+        const errorMessage = messageList[index];
+        setError(field, { message: errorMessage });
+      }
     },
   });
 
@@ -94,6 +102,11 @@ const LoginForm = () => {
           {...register("password", { required: "Password is required." })}
           helperText={errors.password?.message}
         />
+        {!!errors.__all__ ? (
+          <FormHelperTextControl error={!!errors.__all__} className="mt-8">
+            {get(errors, "__all__.message", "")}
+          </FormHelperTextControl>
+        ) : null}
         {isLoading ? (
           <LoadingButton variant="contained" loading>
             Loading...
