@@ -73,11 +73,7 @@ const UserListPage = () => {
         ) : null}
       </Stack>
 
-      <Box
-        p={2}
-        className="ag-theme-alpine"
-        style={{ height: "100vh", width: "100%" }}
-      >
+      <Box p={2} className="ag-theme-alpine" width="100%">
         <AgGridReact
           ref={gridRef}
           rowData={data}
@@ -116,6 +112,7 @@ const UserListPage = () => {
             sortable: true,
           }}
           onGridReady={onGridReady}
+          domLayout="autoHeight"
         />
       </Box>
     </Stack>

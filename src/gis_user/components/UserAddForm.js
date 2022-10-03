@@ -10,8 +10,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { addNewUser, fetchApplicationList } from "../data/services";
-import { FormCheckbox, FormSelect } from "components/common/FormFields";
-import { parseBadRequest } from "utils/api.utils";
+import {
+  FormCheckbox,
+  FormSelect,
+  FormHelperTextControl,
+} from "components/common/FormFields";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 import { getUserListPage } from "utils/url.constants";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getRequiredFieldMessage } from "utils/constant";
@@ -39,13 +43,11 @@ const UserAddForm = ({ onSubmit }) => {
       );
     },
     onError: (err) => {
-      const parsedError = parseBadRequest(err);
-      if (parsedError) {
-        for (const key in parsedError) {
-          if (Object.hasOwnProperty.call(parsedError, key)) {
-            setError(key, { message: parsedError[key][0] });
-          }
-        }
+      const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+      for (let index = 0; index < fieldList.length; index++) {
+        const field = fieldList[index];
+        const errorMessage = messageList[index];
+        setError(field, { message: errorMessage });
       }
     },
   });
@@ -146,8 +148,8 @@ const UserAddForm = ({ onSubmit }) => {
             label="Active"
             name="is_active"
             control={control}
-            error={!!errors.is_staff}
-            helperText={errors.is_staff?.message}
+            error={!!errors.is_active}
+            helperText={errors.is_active?.message}
           />
           <FormCheckbox
             label="Admin"
@@ -156,6 +158,11 @@ const UserAddForm = ({ onSubmit }) => {
             error={!!errors.is_staff}
             helperText={errors.is_staff?.message}
           />
+          {!!errors.__all__ ? (
+            <FormHelperTextControl error={!!errors.__all__} className="mt-8">
+              {get(errors, "__all__.message", "")}
+            </FormHelperTextControl>
+          ) : null}
         </Stack>
       </Stack>
       <Stack flex={1} direction="row" p={4} justifyContent="space-between">
