@@ -98,9 +98,9 @@ const NavigationBar = () => {
               Planning
             </Button>
           ) : null}
-          <Button component={Link} to={"#"} color="inherit">
+          {/* <Button component={Link} to={"#"} color="inherit">
             Analysis
-          </Button>
+          </Button> */}
           {showAdministration ? (
             <Button
               color="inherit"
