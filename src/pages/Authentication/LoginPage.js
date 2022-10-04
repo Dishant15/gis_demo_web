@@ -8,6 +8,7 @@ import { Box, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { FormHelperTextControl } from "components/common/FormFields";
+import Notification from "components/common/Notification";
 
 import { get } from "lodash";
 
@@ -35,6 +36,7 @@ const LoginPage = (props) => {
 
   return (
     <div className="auth-page">
+      <Notification />
       <div className="shadow" />
       <div className="login-page">
         <div className="login-page-content">

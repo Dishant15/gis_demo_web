@@ -4,6 +4,7 @@ import { isNil, map, keys, join, get } from "lodash";
 import store from "redux/store";
 import { logout } from "redux/reducers/auth.reducer";
 import { format } from "date-fns";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
@@ -142,8 +143,8 @@ export const formatSubmitDate = (date) => {
 };
 
 export const parseErrorMessagesWithFields = (error) => {
-  let msgList = ["Something Went Wrong"];
-  let fieldList = ["__all__"];
+  let msgList = [];
+  let fieldList = [];
   const status = get(error, "response.status");
 
   if (status) {
@@ -154,15 +155,38 @@ export const parseErrorMessagesWithFields = (error) => {
       for (const key in errorData) {
         if (Object.hasOwnProperty.call(errorData, key)) {
           const errorList = errorData[key];
-          fieldList.push(key);
-          msgList.push(get(errorList, 0, "Undefined Error"));
+          if (key === "__all__") {
+            store.dispatch(
+              addNotification({
+                type: "error",
+                title: "Input Error",
+                text: get(errorList, 0, "Undefined Error"),
+                timeout: 10000,
+              })
+            );
+          } else {
+            fieldList.push(key);
+            msgList.push(get(errorList, 0, "Undefined Error"));
+          }
         }
       }
     } else if (status === 403) {
-      msgList = ["Unauthorized"];
+      store.dispatch(
+        addNotification({
+          type: "error",
+          title: "Unauthorized",
+          timeout: 10000,
+        })
+      );
     }
   } else {
-    msgList = [error.message];
+    store.dispatch(
+      addNotification({
+        type: "error",
+        title: "Something Went Wrong",
+        timeout: 10000,
+      })
+    );
   }
 
   return { fieldList, messageList: msgList };
