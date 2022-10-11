@@ -29,7 +29,7 @@ import CloseIcon from "@mui/icons-material/Close";
  *    additional remove selected file option
  */
 const FilePickerDialog = (props) => {
-  const { onSubmit, onClose, loading } = props;
+  const { onSubmit, onClose, loading, accept, heading = "" } = props;
   const [files, setFiles] = useState([]);
 
   const handleFileUpload = useCallback((event) => {
@@ -61,9 +61,13 @@ const FilePickerDialog = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <UploadButton text="Add More" onChange={handleFileUpload} />
+          <UploadButton
+            text="Add More"
+            onChange={handleFileUpload}
+            accept={accept}
+          />
           <Typography variant="h6" color="primary.dark">
-            Import Shapefiles
+            {heading}
           </Typography>
           <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
@@ -138,7 +142,7 @@ const FilePickerDialog = (props) => {
         >
           <div />
           <Typography variant="h6" color="primary.dark">
-            Import Shapefiles
+            {heading}
           </Typography>
           <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
@@ -153,7 +157,11 @@ const FilePickerDialog = (props) => {
             width: "100%",
           }}
         >
-          <UploadButton text="Select Files" onChange={handleFileUpload} />
+          <UploadButton
+            text="Select Files"
+            onChange={handleFileUpload}
+            accept={accept}
+          />
         </DialogContent>
       </>
     );
@@ -170,7 +178,7 @@ const UploadInput = styled("input")({
  *
  * separate file picker button
  */
-const UploadButton = ({ text, onChange }) => {
+const UploadButton = ({ text, onChange, accept = "*" }) => {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <label htmlFor="contained-button-file">
@@ -178,7 +186,7 @@ const UploadButton = ({ text, onChange }) => {
           id="contained-button-file"
           type="file"
           onChange={onChange}
-          accept=".zip"
+          accept={accept}
         />
         <Button variant="text" component="span">
           {text}

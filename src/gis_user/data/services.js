@@ -8,6 +8,7 @@ import {
   apiGetUserDetails,
   apiGetUserList,
   apiUpdateUserRegion,
+  apiUploadExcel,
 } from "utils/url.constants";
 
 export const fetchUserList = async () => {
@@ -50,5 +51,10 @@ export const editUserDetails = async ({ data, userId }) => {
 
 export const updateUserPerm = async ({ data, userId }) => {
   const res = await Api.put(apiEditUserPermission(userId), data);
+  return res.data;
+};
+
+export const importUser = async (data) => {
+  const res = await Api.post(apiUploadExcel(), data);
   return res.data;
 };

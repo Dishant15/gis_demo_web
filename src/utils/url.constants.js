@@ -43,6 +43,7 @@ export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 // user & Auth apis
 export const apiGetUserList = () => "/api/user/list/";
 export const apiAddUser = () => "/api/user/add/";
+export const apiUploadExcel = () => "/api/user/import-excel/";
 export const apiUpdateUserRegion = (userId) =>
   `/api/user/${userId}/update/regions/`;
 export const apiGetUserDetails = (userId) => `/api/user/${userId}/details/`;

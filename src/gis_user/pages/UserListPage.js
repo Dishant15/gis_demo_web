@@ -1,6 +1,6 @@
-import React, { useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 import {
   Box,
@@ -9,18 +9,26 @@ import {
   Button,
   Divider,
   IconButton,
+  Dialog,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
-import { Add } from "@mui/icons-material";
+import { Add, Backup as BackupIcon } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import { AgGridReact } from "ag-grid-react";
+import FilePickerDialog from "components/common/FilePickerDialog";
 
-import { fetchApplicationList, fetchUserList } from "../data/services";
+import {
+  fetchApplicationList,
+  fetchUserList,
+  importUser,
+} from "../data/services";
 import { getAddUserPage, getEditUserPage } from "utils/url.constants";
 import { find, split } from "lodash";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
  * Parent:
@@ -28,15 +36,42 @@ import { checkUserPermission } from "redux/selectors/auth.selectors";
  */
 const UserListPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const canUserAdd = useSelector(checkUserPermission("user_add"));
   const canUserEdit = useSelector(checkUserPermission("user_edit"));
+  const [showImportPopup, setShowImportPopup] = useState(false);
 
-  const { isLoading, data } = useQuery("userList", fetchUserList);
+  const { isLoading, data, refetch } = useQuery("userList", fetchUserList);
   const { isLoading: applicationLoading, data: applicationList } = useQuery(
     "applicationList",
     fetchApplicationList
   );
+
+  const { mutate: importUserMutation, isLoading: loadingImportuser } =
+    useMutation(importUser, {
+      onError: (err) => {
+        console.log("🚀 ~ file: WorkOrderPage ~ err", err);
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Upload Excel",
+            text: "Failed to upload excel file.",
+          })
+        );
+      },
+      onSuccess: (res) => {
+        handleFilePickerCancel();
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Upload Excel",
+            text: "User Excel uploaded successfully",
+          })
+        );
+        refetch();
+      },
+    });
 
   const gridRef = useRef();
 
@@ -47,6 +82,21 @@ const UserListPage = () => {
   const onEditClick = (userId) => {
     navigate(getEditUserPage(userId));
   };
+
+  // file import logic
+  const handleFilePickerCancel = useCallback(() => {
+    setShowImportPopup(false);
+  }, [setShowImportPopup]);
+
+  const handleZipFileUpload = useCallback((files) => {
+    console.log(
+      "🚀 ~ file: UserListPage.js ~ line 60 ~ UserListPage ~ files",
+      files
+    );
+    const data = new FormData();
+    data.append("file", files[0], files[0].name);
+    importUserMutation(data);
+  }, []);
 
   return (
     <Stack divider={<Divider flexItem />}>
@@ -62,14 +112,24 @@ const UserListPage = () => {
           User Management
         </Typography>
         {canUserAdd ? (
-          <Button
-            sx={{ minWidth: "150px" }}
-            component={Link}
-            to={getAddUserPage()}
-            startIcon={<Add />}
-          >
-            Add New User
-          </Button>
+          <>
+            <LoadingButton
+              color="secondary"
+              startIcon={<BackupIcon />}
+              onClick={() => setShowImportPopup(true)}
+              sx={{ ml: 1 }}
+            >
+              Upload Excel
+            </LoadingButton>
+            <Button
+              sx={{ minWidth: "150px" }}
+              component={Link}
+              to={getAddUserPage()}
+              startIcon={<Add />}
+            >
+              Add New User
+            </Button>
+          </>
         ) : null}
       </Stack>
 
@@ -115,6 +175,25 @@ const UserListPage = () => {
           domLayout="autoHeight"
         />
       </Box>
+
+      <Dialog
+        onClose={handleFilePickerCancel}
+        open={showImportPopup}
+        scroll="paper" // used to scroll content into dialog
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        fullWidth
+        maxWidth="sm"
+      >
+        {showImportPopup ? (
+          <FilePickerDialog
+            onSubmit={handleZipFileUpload}
+            onClose={handleFilePickerCancel}
+            heading="Import User Excel"
+            accept=".xlsx, .xls, .csv"
+          />
+        ) : null}
+      </Dialog>
     </Stack>
   );
 };

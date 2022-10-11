@@ -627,6 +627,8 @@ const WorkOrderPage = () => {
             <FilePickerDialog
               onSubmit={handleZipFileUpload}
               onClose={handleFilePickerCancel}
+              accept=".zip"
+              heading="Import Shapefiles"
             />
           ) : null}
         </Dialog>
