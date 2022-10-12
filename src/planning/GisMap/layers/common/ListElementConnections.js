@@ -12,6 +12,9 @@ import {
   Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import AddIcon from "@mui/icons-material/Add";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import { ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsTable";
 
@@ -59,6 +62,22 @@ const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
           </IconButton>
         </Stack>
 
+        <Stack
+          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
+          p={2}
+          direction="row"
+          spacing={2}
+        >
+          <Button
+            onClick={handleAddConnection}
+            variant="outlined"
+            color="success"
+            startIcon={<AddIcon />}
+          >
+            Add Connection
+          </Button>
+        </Stack>
+
         {!!size(elemConnectionData) ? (
           <Stack
             sx={{
@@ -68,15 +87,28 @@ const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
           >
             {elemConnectionData.map((connection) => {
               const { element, layer_info } = connection;
+              const EndIcon =
+                element.cable_end === "A" ? (
+                  <LastPageIcon />
+                ) : (
+                  <FirstPageIcon />
+                );
 
               return (
-                <Stack key={element.id}>
-                  <Typography>
-                    {layer_info.name} #{element.unique_id}
-                  </Typography>
-                  <Typography>
-                    {element.name} ( {element.cable_end} End )
-                  </Typography>
+                <Stack p={1} key={element.id}>
+                  <Box>
+                    <Typography component="b">#{element.unique_id}</Typography>
+                    <Typography color="#757575" component="i">
+                      {" "}
+                      Cable
+                    </Typography>
+                  </Box>
+                  <Stack spacing={2} direction="row">
+                    {EndIcon}
+                    <Typography component="span">
+                      {element.name} ( {element.cable_end} End )
+                    </Typography>
+                  </Stack>
                 </Stack>
               );
             })}
@@ -86,15 +118,6 @@ const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
             <Typography variant="h6">No Connections</Typography>
           </Box>
         )}
-        <Box>
-          <Button
-            onClick={handleAddConnection}
-            variant="outlined"
-            color="success"
-          >
-            Add Connection
-          </Button>
-        </Box>
       </Box>
     </GisMapPopups>
   );
