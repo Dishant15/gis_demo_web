@@ -457,7 +457,7 @@ const WorkOrderPage = () => {
           Workorders : {ticketData.name}
         </Typography>
         <Stack direction="row" alignItems="center">
-          {canTicketWorkorderAdd ? (
+          {/* {canTicketWorkorderAdd ? (
             <LoadingButton
               color="secondary"
               startIcon={<BackupIcon />}
@@ -467,7 +467,7 @@ const WorkOrderPage = () => {
             >
               Upload
             </LoadingButton>
-          ) : null}
+          ) : null} */}
           <LoadingButton
             color="secondary"
             startIcon={<GetAppIcon />}
