@@ -51,9 +51,7 @@ import "./ag-grid.scss";
 import "./ag-theme-alpine.scss";
 import "react-datetime-range-super-picker/dist/index.css";
 
-// test imports
-
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const App = () => {
   return (

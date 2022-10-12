@@ -7,6 +7,7 @@ import difference from "lodash/difference";
 import findIndex from "lodash/findIndex";
 
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
+import { logout } from "redux/reducers/auth.reducer";
 import { convertLayerServerData, PLANNING_EVENT } from "../GisMap/utils";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
@@ -193,6 +194,9 @@ const planningGisSlice = createSlice({
       state.ticketData.isLoading = false;
       state.ticketData.isFetched = true;
       state.ticketData.isError = false;
+    },
+    [logout]: () => {
+      return initialState;
     },
   },
 });

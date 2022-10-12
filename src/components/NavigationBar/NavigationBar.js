@@ -31,7 +31,8 @@ import {
   getIsSuperAdminUser,
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
-import { logout } from "redux/reducers/auth.reducer";
+import { handleLogoutUser } from "redux/actions/auth.actions";
+
 import "./navigation-bar.scss";
 
 const NavigationBar = () => {
@@ -63,7 +64,7 @@ const NavigationBar = () => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    dispatch(logout());
+    dispatch(handleLogoutUser);
     navigate(getLoginPath());
   }, []);
 

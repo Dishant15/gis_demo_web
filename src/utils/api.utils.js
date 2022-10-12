@@ -1,10 +1,10 @@
 import axios from "axios";
+import store from "redux/store";
+import { format } from "date-fns";
 import { isNil, map, keys, join, get } from "lodash";
 
-import store from "redux/store";
-import { logout } from "redux/reducers/auth.reducer";
-import { format } from "date-fns";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { handleLogoutUser } from "redux/actions/auth.actions";
 
 export function convertObjectToQueryParams(object) {
   if (!isNil(object)) {
@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
     // dispatch logout action if request unauthorised.
     const status = get(error, "response.status");
     if (status === 401 && !!token) {
-      store.dispatch(logout());
+      store.dispatch(handleLogoutUser);
       // fire notification
     }
     return Promise.reject(error);

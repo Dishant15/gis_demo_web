@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import get from "lodash/get";
 
+import { logout } from "redux/reducers/auth.reducer";
+
 const initialState = {
   // 0: region, 1: Layers, 2: Add Element
   activeTab: 0,
@@ -59,6 +61,11 @@ const planningStateSlice = createSlice({
     // payload : { layerKey, configuration }
     selectConfiguration: (state, { payload }) => {
       state.selectedConfigurations[payload.layerKey] = payload.configuration;
+    },
+  },
+  extraReducers: {
+    [logout]: () => {
+      return initialState;
     },
   },
 });
