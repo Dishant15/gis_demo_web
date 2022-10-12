@@ -139,7 +139,7 @@ const TicketListPage = () => {
 };
 
 /**
- * Render view and delete icons
+ * Render view and edit icons
  */
 const ActionCell = ({
   canTicketWorkorderView,
