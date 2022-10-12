@@ -44,14 +44,21 @@ const AddRegionForm = ({
 }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const isEdit = !!data?.id;
+
   const { mutate, isLoading } = useMutation(
     (formData) => {
-      let submitData = pick(formData, ["parentId", "name", "unique_id"]);
-      // convert coordinate to list of [lat, lng]
-      submitData.coordinates = latLongMapToCoords(formData.coordinates);
+      let submitData = pick(formData, ["name", "unique_id"]);
+      // dont send center of polygon. let backend calculate center
       if (has(formData, "id")) {
+        submitData.parentId = formData.parent;
+        // convert coordinate to list of [lat, lng]
+        submitData.coordinates = latLongMapToCoords(formData.coordinates[0]);
         Api.put(apiPutRegionEdit(data.id), submitData);
       } else {
+        submitData.parentId = formData.parentId;
+        // convert coordinate to list of [lat, lng]
+        submitData.coordinates = latLongMapToCoords(formData.coordinates);
         Api.post(apiPostRegionAdd(), submitData);
       }
     },
@@ -163,8 +170,10 @@ const AddRegionForm = ({
               label="Unique ID *"
               {...register("unique_id", {
                 required: getRequiredFieldMessage("Unique ID"),
+                disabled: isEdit,
               })}
               helperText={errors.unique_id?.message}
+              disabled={isEdit}
             />
 
             <Stack direction="row">
@@ -178,11 +187,11 @@ const AddRegionForm = ({
                   type="submit"
                   startIcon={<DoneIcon />}
                 >
-                  {!!data.id ? "Update" : "Add"}
+                  {isEdit ? "Update" : "Add"}
                 </Button>
               )}
 
-              {!!data.id ? (
+              {isEdit ? (
                 deleteLoading ? (
                   <LoadingButton sx={{ minWidth: "150px" }} loading>
                     Loading...
