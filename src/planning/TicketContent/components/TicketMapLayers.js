@@ -10,20 +10,22 @@ const TicketMapLayers = React.memo(() => {
 
   return (
     <>
-      <Polygon
-        path={area_pocket.coordinates}
-        options={{
-          strokeColor: "#88B14B",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#88B14B",
-          fillOpacity: 0.3,
-          clickable: false,
-          draggable: false,
-          editable: false,
-          zIndex: 1,
-        }}
-      />
+      {area_pocket?.coordinates ? (
+        <Polygon
+          path={area_pocket.coordinates}
+          options={{
+            strokeColor: "#88B14B",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#88B14B",
+            fillOpacity: 0.3,
+            clickable: false,
+            draggable: false,
+            editable: false,
+            zIndex: 1,
+          }}
+        />
+      ) : null}
       {work_orders.map((workOrder) => {
         const { id, layer_key, element } = workOrder;
         if (element.id) {
