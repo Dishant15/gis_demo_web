@@ -23,16 +23,12 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  const { isLoading: regionListLoading, data: regionList } = useQuery(
-    ["regionList", "data"],
-    fetchRegionList,
-    {
-      initialData: [],
-      onSuccess: (regionListData) => {
-        setValue("region", join(regions, ","));
-      },
-    }
-  );
+  const queryRes = useQuery(["regionList", "data"], fetchRegionList, {
+    onSuccess: (regionListData) => {
+      setValue("region", join(regions, ","));
+    },
+  });
+  const { isFetching: regionListLoading, data: regionList } = queryRes;
 
   const { mutate, isLoading } = useMutation(updateUserRegion, {
     onSuccess: (res) => {
@@ -94,7 +90,7 @@ const UserRegionSelect = ({ goBack, userId, regions }) => {
               required
               name="region"
               control={control}
-              options={regionList}
+              options={regionList || []}
               labelKey="name"
               valueKey="id"
               error={!!errors.region}
