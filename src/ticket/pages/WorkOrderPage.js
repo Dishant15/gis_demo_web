@@ -72,8 +72,7 @@ const WorkOrderPage = () => {
 
   const { isLoading, data, refetch } = useQuery(
     ["ticketWorkOrderList", ticketId],
-    fetchTicketWorkorders,
-    { initialData: {} }
+    fetchTicketWorkorders
   );
 
   const { mutate: editSurveyMutation, isLoading: editSurveyLoading } =
@@ -156,7 +155,7 @@ const WorkOrderPage = () => {
     });
   // data Transformation stage
   const ticketData = useMemo(() => {
-    let ticket = cloneDeep(data);
+    let ticket = cloneDeep(data || {});
     if (!size(ticket)) return {};
     // work order here is Survey workorder
     let { area_pocket, work_orders } = ticket;
@@ -449,7 +448,6 @@ const WorkOrderPage = () => {
           component={Link}
           to={getTicketListPage()}
           startIcon={<ArrowBackIcon />}
-          loading={loadingExportTicket}
         >
           Go Back
         </Button>
