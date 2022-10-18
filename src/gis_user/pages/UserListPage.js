@@ -62,11 +62,25 @@ const UserListPage = () => {
       },
       onSuccess: (res) => {
         handleFilePickerCancel();
+        let type = "success";
+        let text = "";
+        if (res.success_count) {
+          text = res.success_count + " Users created.";
+        }
+        if (res.error_count) {
+          type = "warning";
+          text = `${text} ${res.error_count} user data is invalid.`;
+        }
+        if (!text) {
+          type = "info";
+          text = "No user created from given excel.";
+        }
         dispatch(
           addNotification({
-            type: "success",
+            type,
             title: "Upload Excel",
-            text: "User Excel uploaded successfully",
+            text,
+            timeout: 10000,
           })
         );
         refetch();
@@ -191,6 +205,7 @@ const UserListPage = () => {
             onClose={handleFilePickerCancel}
             heading="Import User Excel"
             accept=".xlsx, .xls, .csv"
+            loading={loadingImportuser}
           />
         ) : null}
       </Dialog>
