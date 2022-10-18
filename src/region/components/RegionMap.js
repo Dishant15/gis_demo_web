@@ -1,14 +1,23 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { Polygon, DrawingManager } from "@react-google-maps/api";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Dialog } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
-
-import { getCoordinatesFromFeature, getFillColor } from "utils/map.utils";
 import Map from "components/common/Map";
+import FilePickerDialog from "components/common/FilePickerDialog";
+
+import {
+  coordsToLatLongMap,
+  getCoordinatesFromFeature,
+  getFillColor,
+} from "utils/map.utils";
+import { uploadKml } from "region/data/services";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 /**
  * Show all polygons of regionList
@@ -34,10 +43,51 @@ const RegionMap = ({
   onDrawComplete,
   onSubmit,
   onCancel,
+  onKmlComplete,
 }) => {
+  const dispatch = useDispatch();
   const polyRef = useRef();
   const [showSubmit, setShowSubmit] = useState(false);
+  const [showFilePicker, setShowFilePicker] = useState(false);
   const showEdit = !!editRegionPocket || editRegionLoading;
+
+  const { mutate: uploadKmlMutation, isLoading } = useMutation(uploadKml, {
+    onError: (err) => {
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Upload KML",
+          text: "Failed to upload KML file.",
+        })
+      );
+    },
+    onSuccess: (res) => {
+      handleFilePickerCancel();
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "Upload KML",
+          text: "KML file uploaded successfully",
+        })
+      );
+      onKmlComplete(coordsToLatLongMap(res.coordinates[0]));
+    },
+  });
+
+  // file import logic
+  const handleFilePickerShow = useCallback(() => {
+    setShowFilePicker(true);
+  }, [setShowFilePicker]);
+
+  const handleFilePickerCancel = useCallback(() => {
+    setShowFilePicker(false);
+  }, [setShowFilePicker]);
+
+  const handleFileUpload = useCallback((files) => {
+    const data = new FormData();
+    data.append("file", files[0], files[0].name);
+    uploadKmlMutation(data);
+  }, []);
 
   const onPolygonComplete = useCallback(
     (polygon) => {
@@ -95,6 +145,15 @@ const RegionMap = ({
               </Typography>
             </CardContent>
             <CardActions>
+              <Button
+                variant="contained"
+                disableElevation
+                color="primary"
+                onClick={handleFilePickerShow}
+                size="small"
+              >
+                + Upload KML
+              </Button>
               <Button
                 variant="contained"
                 disableElevation
@@ -231,6 +290,24 @@ const RegionMap = ({
           return <React.Fragment key={id}>{multiPolygons}</React.Fragment>;
         })}
       </Map>
+      <Dialog
+        onClose={handleFilePickerCancel}
+        open={showFilePicker}
+        scroll="paper" // used to scroll content into dialog
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        fullWidth
+        maxWidth="sm"
+      >
+        {showFilePicker ? (
+          <FilePickerDialog
+            onSubmit={handleFileUpload}
+            onClose={handleFilePickerCancel}
+            accept=".kml"
+            heading="Import KML file"
+          />
+        ) : null}
+      </Dialog>
     </Box>
   );
 };

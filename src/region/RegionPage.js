@@ -272,6 +272,11 @@ const RegionPage = () => {
     setEditRegionData(null);
   }, []);
 
+  const handleKmlComplete = useCallback((coordinates) => {
+    setCreateRegion("K");
+    setNewRegionCoords(coordinates);
+  }, []);
+
   const selectedRegionData = useMemo(() => {
     if (regionListData) {
       return regionListData.filter((d) => selectedRegion.has(d.id));
@@ -341,8 +346,21 @@ const RegionPage = () => {
               onDrawComplete={() => setCreateRegion("E")}
               onSubmit={handleMapSubmit}
               onCancel={resetAllSelection}
+              onKmlComplete={handleKmlComplete}
             />
             {createRegion === "D" ? (
+              <div className="reg-map-details">
+                <AddRegionForm
+                  key="add"
+                  data={{
+                    coordinates: newRegionCoords,
+                    parentId: newRegionParentId,
+                  }}
+                  onAreaCreate={resetAllSelection}
+                />
+              </div>
+            ) : null}
+            {createRegion === "K" ? (
               <div className="reg-map-details">
                 <AddRegionForm
                   key="add"

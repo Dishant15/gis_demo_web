@@ -39,6 +39,7 @@ export const apiGetRegionList = (query_type = "detail") =>
 export const apiPostRegionAdd = () => "/api/region/add/";
 export const apiPutRegionEdit = (regionId) => `/api/region/${regionId}/edit/`;
 export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
+export const apiKmlToCoordinates = () => `/api/region/kml-to-coordinates/`;
 
 // user & Auth apis
 export const apiGetUserList = () => "/api/user/list/";
