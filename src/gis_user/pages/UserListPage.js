@@ -27,8 +27,12 @@ import {
 import { getAddUserPage, getEditUserPage } from "utils/url.constants";
 import { find, split } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserPermission } from "redux/selectors/auth.selectors";
+import {
+  checkUserPermission,
+  getIsSuperAdminUser,
+} from "redux/selectors/auth.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 /**
  * Parent:
@@ -40,6 +44,8 @@ const UserListPage = () => {
 
   const canUserAdd = useSelector(checkUserPermission("user_add"));
   const canUserEdit = useSelector(checkUserPermission("user_edit"));
+  const isSuperAdminUser = useSelector(getIsSuperAdminUser);
+
   const [showImportPopup, setShowImportPopup] = useState(false);
 
   const { isLoading, data, refetch } = useQuery("userList", fetchUserList);
@@ -51,14 +57,19 @@ const UserListPage = () => {
   const { mutate: importUserMutation, isLoading: loadingImportuser } =
     useMutation(importUser, {
       onError: (err) => {
-        console.log("🚀 ~ file: WorkOrderPage ~ err", err);
-        dispatch(
-          addNotification({
-            type: "error",
-            title: "Upload Excel",
-            text: "Failed to upload excel file.",
-          })
-        );
+        handleFilePickerCancel();
+        const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+        for (let index = 0; index < fieldList.length; index++) {
+          const field = fieldList[index];
+          const errorMessage = messageList[index];
+          dispatch(
+            addNotification({
+              type: "error",
+              title: field,
+              text: errorMessage,
+            })
+          );
+        }
       },
       onSuccess: (res) => {
         handleFilePickerCancel();
@@ -127,14 +138,16 @@ const UserListPage = () => {
         </Typography>
         {canUserAdd ? (
           <>
-            <LoadingButton
-              color="secondary"
-              startIcon={<BackupIcon />}
-              onClick={() => setShowImportPopup(true)}
-              sx={{ ml: 1 }}
-            >
-              Upload Excel
-            </LoadingButton>
+            {isSuperAdminUser ? (
+              <LoadingButton
+                color="secondary"
+                startIcon={<BackupIcon />}
+                onClick={() => setShowImportPopup(true)}
+                sx={{ ml: 1 }}
+              >
+                Upload Excel
+              </LoadingButton>
+            ) : null}
             <Button
               sx={{ minWidth: "150px" }}
               component={Link}
