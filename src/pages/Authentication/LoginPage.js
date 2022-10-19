@@ -17,7 +17,6 @@ import { parseErrorMessagesWithFields } from "utils/api.utils";
 import { login } from "redux/reducers/auth.reducer";
 import { getIsUserLoggedIn } from "redux/selectors/auth.selectors";
 import { getHomePath } from "utils/url.constants";
-import { CLIENT_ID } from "utils/constant";
 
 import "./login-page.scss";
 /**
@@ -79,7 +78,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = useCallback((data) => {
-    mutate({ ...data, client_id: CLIENT_ID });
+    mutate({ ...data, client_id: process.env.REACT_APP_CLIENT_ID });
   }, []);
 
   return (

@@ -14,7 +14,7 @@ import {
   size,
 } from "lodash";
 
-import { Box, Button, Divider, Stack } from "@mui/material";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 import RegionMap from "./components/RegionMap";
@@ -315,21 +315,32 @@ const RegionPage = () => {
 
             <Divider flexItem orientation="horizontal" />
 
-            {baseRegionList.map((region) => {
-              return (
-                <RegionListItem
-                  key={region.id}
-                  region={region}
-                  regionGroupData={regionGroupData}
-                  selectedRegion={selectedRegion}
-                  expandedRegions={expandedRegions}
-                  handleRegionClick={handleRegionClick}
-                  handleRegionDetails={handleRegionDetails}
-                  handleRegionExpandClick={handleRegionExpandClick}
-                  canUserEditRegion={canUserEditRegion}
-                />
-              );
-            })}
+            {baseRegionList.length ? (
+              baseRegionList.map((region) => {
+                return (
+                  <RegionListItem
+                    key={region.id}
+                    region={region}
+                    regionGroupData={regionGroupData}
+                    selectedRegion={selectedRegion}
+                    expandedRegions={expandedRegions}
+                    handleRegionClick={handleRegionClick}
+                    handleRegionDetails={handleRegionDetails}
+                    handleRegionExpandClick={handleRegionExpandClick}
+                    canUserEditRegion={canUserEditRegion}
+                  />
+                );
+              })
+            ) : (
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                textAlign="center"
+                paddingY={4}
+              >
+                Region List Empty
+              </Typography>
+            )}
           </div>
         </div>
 
