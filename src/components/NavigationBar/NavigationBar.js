@@ -32,6 +32,7 @@ import {
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
 import { handleLogoutUser } from "redux/actions/auth.actions";
+import LOGO from "assets/gpstek.svg";
 
 import "./navigation-bar.scss";
 
@@ -74,17 +75,13 @@ const NavigationBar = () => {
     (isAdminUser && (canUserView || canRegionView || canTicketView));
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, cursor: "pointer" }}
-          onClick={() => navigate(getHomePath())}
-        >
-          Network GIS
-        </Typography>
-
+    <AppBar position="static" id="navigation-bar">
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+        }}
+      >
+        <img src={LOGO} className="logo" />
         <Stack direction="row" spacing={2}>
           <Button to={getHomePath()} component={Link} color="inherit">
             Home
