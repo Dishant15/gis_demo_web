@@ -13,6 +13,7 @@ import { FormCheckbox } from "components/common/FormFields";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { updateUserPerm } from "gis_user/data/services";
 import { get, has } from "lodash";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 const USER_LAYER_PERMS_CONFIG = [
   { name: "Distribution Point", layerKey: "p_dp" },
@@ -47,10 +48,18 @@ const UserPermissions = ({
       onSubmit(res);
     },
     onError: (err) => {
-      console.log(
-        "🚀 ~ file: UserPermissions.js ~ line 29 ~ UserPermissions ~ err",
-        err
-      );
+      const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+      for (let index = 0; index < fieldList.length; index++) {
+        const field = fieldList[index];
+        const errorMessage = messageList[index];
+        dispatch(
+          addNotification({
+            type: "error",
+            title: field,
+            text: errorMessage,
+          })
+        );
+      }
     },
   });
 

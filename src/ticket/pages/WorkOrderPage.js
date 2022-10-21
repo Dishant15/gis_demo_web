@@ -51,6 +51,7 @@ import { SURVEY_TAG_LIST, workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getTicketListPage } from "utils/url.constants";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 import "../styles/ticket_survey_list.scss";
 
@@ -132,14 +133,18 @@ const WorkOrderPage = () => {
   const { mutate: importTicketMutation, isLoading: loadingImportTicket } =
     useMutation(importTicket, {
       onError: (err) => {
-        console.log("🚀 ~ file: WorkOrderPage ~ err", err);
-        dispatch(
-          addNotification({
-            type: "error",
-            title: "Upload shapefile",
-            text: "Failed to upload shapefile.",
-          })
-        );
+        const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+        for (let index = 0; index < fieldList.length; index++) {
+          const field = fieldList[index];
+          const errorMessage = messageList[index];
+          dispatch(
+            addNotification({
+              type: "error",
+              title: field,
+              text: errorMessage,
+            })
+          );
+        }
       },
       onSuccess: (res) => {
         handleFilePickerCancel();

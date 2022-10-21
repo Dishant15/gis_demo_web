@@ -18,6 +18,7 @@ import {
 } from "utils/map.utils";
 import { uploadKml } from "region/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { size } from "lodash";
 
 /**
  * Show all polygons of regionList
@@ -70,7 +71,9 @@ const RegionMap = ({
           text: "KML file uploaded successfully",
         })
       );
-      onKmlComplete(coordsToLatLongMap(res.coordinates[0]));
+      // convert coordinate data
+      const isMulti = size(res.coordinates) <= 1;
+      onKmlComplete(coordsToLatLongMap(res.coordinates, isMulti));
     },
   });
 

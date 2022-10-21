@@ -114,10 +114,6 @@ const UserListPage = () => {
   }, [setShowImportPopup]);
 
   const handleZipFileUpload = useCallback((files) => {
-    console.log(
-      "🚀 ~ file: UserListPage.js ~ line 60 ~ UserListPage ~ files",
-      files
-    );
     const data = new FormData();
     data.append("file", files[0], files[0].name);
     importUserMutation(data);

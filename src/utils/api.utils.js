@@ -147,39 +147,37 @@ export const parseErrorMessagesWithFields = (error) => {
   let fieldList = [];
   const status = get(error, "response.status");
 
-  if (status) {
-    if (status === 400) {
-      const errorData = get(error, "response.data", {});
-      fieldList = [];
-      msgList = [];
-      for (const key in errorData) {
-        if (Object.hasOwnProperty.call(errorData, key)) {
-          const errorList = errorData[key];
-          if (key === "__all__") {
-            store.dispatch(
-              addNotification({
-                type: "error",
-                title: "Input Error",
-                text: get(errorList, 0, "Undefined Error"),
-                timeout: 10000,
-              })
-            );
-          } else {
-            fieldList.push(key);
-            msgList.push(get(errorList, 0, "Undefined Error"));
-          }
+  if (status === 400) {
+    const errorData = get(error, "response.data", {});
+    fieldList = [];
+    msgList = [];
+    for (const key in errorData) {
+      if (Object.hasOwnProperty.call(errorData, key)) {
+        const errorList = errorData[key];
+        if (key === "__all__") {
+          store.dispatch(
+            addNotification({
+              type: "error",
+              title: "Input Error",
+              text: get(errorList, 0, "Undefined Error"),
+              timeout: 10000,
+            })
+          );
+        } else {
+          fieldList.push(key);
+          msgList.push(get(errorList, 0, "Undefined Error"));
         }
       }
-    } else if (status === 403) {
-      store.dispatch(
-        addNotification({
-          type: "error",
-          title: "Unauthorized",
-          timeout: 10000,
-        })
-      );
     }
-  } else {
+  } else if (status === 403) {
+    store.dispatch(
+      addNotification({
+        type: "error",
+        title: "Unauthorized",
+        timeout: 10000,
+      })
+    );
+  } else if (status === 500 || !status) {
     store.dispatch(
       addNotification({
         type: "error",
@@ -188,6 +186,5 @@ export const parseErrorMessagesWithFields = (error) => {
       })
     );
   }
-
   return { fieldList, messageList: msgList };
 };
