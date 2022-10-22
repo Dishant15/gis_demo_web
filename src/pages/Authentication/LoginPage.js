@@ -16,7 +16,7 @@ import { postLogin } from "pages/Authentication/services";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
 import { login } from "redux/reducers/auth.reducer";
 import { getIsUserLoggedIn } from "redux/selectors/auth.selectors";
-import { getHomePath } from "utils/url.constants";
+import { getHomePath, getPrivacyPolicy } from "utils/url.constants";
 
 import "./login-page.scss";
 /**
@@ -46,6 +46,9 @@ const LoginPage = (props) => {
           </div>
           <div className="form-block">
             <LoginForm />
+            <div class="privacy-policy-link">
+              <a href={getPrivacyPolicy()}>Read Privacy Policy</a>
+            </div>
           </div>
         </div>
       </div>
