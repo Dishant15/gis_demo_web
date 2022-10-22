@@ -28,6 +28,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 import { latLongMapToCoords } from "utils/map.utils";
 import Api from "utils/api.utils";
 import { getRequiredFieldMessage } from "utils/constant";
+import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 const DEFAULT_DATA = {
   name: "",
@@ -79,6 +80,20 @@ const AddRegionForm = ({
         // refetch list after add success
         queryClient.invalidateQueries("regionList");
         onAreaCreate();
+      },
+      onError: (err) => {
+        const { fieldList, messageList } = parseErrorMessagesWithFields(err);
+        for (let index = 0; index < fieldList.length; index++) {
+          const field = fieldList[index];
+          const errorMessage = messageList[index];
+          dispatch(
+            addNotification({
+              type: "error",
+              title: field,
+              text: errorMessage,
+            })
+          );
+        }
       },
     }
   );

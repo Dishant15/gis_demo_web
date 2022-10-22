@@ -73,7 +73,9 @@ const RegionMap = ({
       );
       // convert coordinate data
       const isMulti = size(res.coordinates) <= 1;
-      onKmlComplete(coordsToLatLongMap(res.coordinates, isMulti));
+      onKmlComplete(
+        coordsToLatLongMap(isMulti ? res.coordinates[0] : res.coordinates)
+      );
     },
   });
 
