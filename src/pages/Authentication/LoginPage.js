@@ -46,7 +46,7 @@ const LoginPage = (props) => {
           </div>
           <div className="form-block">
             <LoginForm />
-            <div class="privacy-policy-link">
+            <div className="privacy-policy-link">
               <a href={getPrivacyPolicy()}>Read Privacy Policy</a>
             </div>
           </div>

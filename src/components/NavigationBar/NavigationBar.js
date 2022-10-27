@@ -32,7 +32,7 @@ import {
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
 import { handleLogoutUser } from "redux/actions/auth.actions";
-import LOGO from "assets/gpstek.svg";
+import LOGO from "assets/gtpl.jpeg";
 
 import "./navigation-bar.scss";
 

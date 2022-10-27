@@ -1,0 +1,11 @@
+.watermark {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 120px;
+  pointer-events: none;
+  .logo {
+    width: 100%;
+    height: auto;
+  }
+}
