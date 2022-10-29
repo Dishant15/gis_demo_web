@@ -2,11 +2,15 @@ import { join } from "lodash";
 import Api from "utils/api.utils";
 import {
   apiAddUser,
+  apiDeleteUserRole,
   apiEditUserDetails,
   apiEditUserPermission,
   apiGetApplicationsList,
   apiGetUserDetails,
   apiGetUserList,
+  apiGetUserRoles,
+  apiPostUserRoleAdd,
+  apiPostUserRoleEdit,
   apiUpdateUserRegion,
   apiUploadExcel,
 } from "utils/url.constants";
@@ -56,5 +60,25 @@ export const updateUserPerm = async ({ data, userId }) => {
 
 export const importUser = async (data) => {
   const res = await Api.post(apiUploadExcel(), data);
+  return res.data;
+};
+
+export const fetchUserRoles = async () => {
+  const res = await Api.get(apiGetUserRoles());
+  return res.data;
+};
+
+export const addUserRole = async (data) => {
+  const res = await Api.post(apiPostUserRoleAdd(), data);
+  return res.data;
+};
+
+export const updateUserRole = async ({ data, roleId }) => {
+  const res = await Api.put(apiPostUserRoleEdit(roleId), data);
+  return res.data;
+};
+
+export const deleteUserRole = async (roleId) => {
+  const res = await Api.delete(apiDeleteUserRole(roleId));
   return res.data;
 };

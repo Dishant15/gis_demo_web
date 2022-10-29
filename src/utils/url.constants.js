@@ -11,6 +11,7 @@ export const getPlanningTicketPage = (ticketId) =>
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
 export const getEditUserPage = (userId = ":userId") => `/users/edit/${userId}`;
+export const getUserManagementPage = () => "/users/management";
 
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";
@@ -52,6 +53,12 @@ export const apiGetUserDetails = (userId) => `/api/user/${userId}/details/`;
 export const apiEditUserDetails = (userId) => `/api/user/${userId}/edit/`;
 export const apiEditUserPermission = (userId) =>
   `/api/user/${userId}/update/permissions/`;
+export const apiGetUserRoles = () => "/api/user/roles/";
+export const apiPostUserRoleAdd = () => "/api/user/roles/add/";
+export const apiPostUserRoleEdit = (roleId) =>
+  `/api/user/roles/${roleId}/edit/`;
+export const apiDeleteUserRole = (roleId) =>
+  `/api/user/roles/${roleId}/delete/`;
 
 export const apiGetApplicationsList = () => "/api/applications/";
 

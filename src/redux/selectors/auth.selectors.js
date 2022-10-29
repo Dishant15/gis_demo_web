@@ -18,3 +18,18 @@ export const checkUserPermission = (perm) =>
     getIsSuperAdminUser,
     (permissions, isSuperuser) => get(permissions, perm, false) || isSuperuser
   );
+
+// create user permission obj from current logged in user
+export const createDefaultPermissions = createSelector(
+  getUserPermissions,
+  (permissions) => {
+    let perm = {};
+    for (const key in permissions) {
+      if (Object.hasOwnProperty.call(permissions, key)) {
+        if (key === "id") continue;
+        perm[key] = false;
+      }
+    }
+    return perm;
+  }
+);

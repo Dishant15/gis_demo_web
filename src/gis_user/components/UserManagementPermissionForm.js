@@ -1,114 +1,169 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
+import { useMutation, useQueryClient } from "react-query";
 
-import { Box, Stack, Button, Divider, Typography } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Typography,
+  Box,
+  Stack,
+  Divider,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import DoneIcon from "@mui/icons-material/Done";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { FormCheckbox } from "components/common/FormFields";
 
+import { isEmpty, isNull, get, has } from "lodash";
+import { createDefaultPermissions } from "redux/selectors/auth.selectors";
+import {
+  PermissionHeader,
+  PermissionLabel,
+  USER_LAYER_PERMS_CONFIG,
+} from "./UserPermissions";
+import { getRequiredFieldMessage } from "utils/constant";
+import {
+  addUserRole,
+  deleteUserRole,
+  updateUserRole,
+} from "gis_user/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { updateUserPerm } from "gis_user/data/services";
-import { get, has } from "lodash";
-import { parseErrorMessagesWithFields } from "utils/api.utils";
-
-export const USER_LAYER_PERMS_CONFIG = [
-  { name: "Distribution Point", layerKey: "p_dp" },
-  { name: "Spliter", layerKey: "p_splitter" },
-  { name: "Cable", layerKey: "p_cable" },
-  { name: "Survey building", layerKey: "p_survey_building" },
-  { name: "Survey area", layerKey: "p_survey_area" },
-];
 
 /**
  * Parent:
- *    UserAdminForm
+ *    UserManagementPage
+ *
+ * data: if data is empty object, its add otherwise edit.
  */
-const UserPermissions = ({
-  userId,
-  isSuperUser,
-  userPermissions,
-  onSubmit,
-  goBack,
-}) => {
+const UserManagementPermissionForm = ({ data, handleRoleSelect }) => {
+  const defaultPermissions = useSelector(createDefaultPermissions);
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { mutate, isLoading } = useMutation(updateUserPerm, {
-    onSuccess: (res) => {
-      dispatch(
-        addNotification({
-          type: "success",
-          title: "User Permissions",
-          text: "User permissions updated successfully",
-        })
-      );
-      onSubmit(res);
-    },
-    onError: (err) => {
-      const { fieldList, messageList } = parseErrorMessagesWithFields(err);
-      for (let index = 0; index < fieldList.length; index++) {
-        const field = fieldList[index];
-        const errorMessage = messageList[index];
-        dispatch(
-          addNotification({
-            type: "error",
-            title: field,
-            text: errorMessage,
-          })
-        );
-      }
-    },
-  });
+  const [showDialog, setshowDialog] = useState(null); // null or role id
+  const isAdd = isEmpty(data);
 
   const {
     formState: { errors, isDirty },
     handleSubmit,
     control,
+    register,
   } = useForm({
-    defaultValues: userPermissions,
+    defaultValues: isAdd ? { name: "", ...defaultPermissions } : data,
   });
+
+  const { mutate: addUserRoleMutate, isLoading: addUserRoleLoading } =
+    useMutation(addUserRole, {
+      onSuccess: (res) => {
+        // set new data to parent, for convert add form into edit
+        handleRoleSelect(res)();
+        queryClient.invalidateQueries("userRoles");
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "User role",
+            text: "User role added successfully",
+          })
+        );
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "User role",
+            text: "failed to add user role",
+          })
+        );
+      },
+    });
+
+  const { mutate: updateUserRoleMutate, isLoading: updateUserRoleLoading } =
+    useMutation(updateUserRole, {
+      onSuccess: (res) => {
+        queryClient.invalidateQueries("userRoles");
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "User role",
+            text: "User role updated successfully",
+          })
+        );
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "User role",
+            text: "failed to update user role",
+          })
+        );
+      },
+    });
+
+  const { mutate: deleteMutation, isLoading: deleteLoading } = useMutation(
+    deleteUserRole,
+    {
+      onSuccess: () => {
+        // reset permission data
+        handleRoleSelect(null)();
+        handleDeleteClose();
+        queryClient.invalidateQueries("userRoles");
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "User role",
+            text: "User role deleted successfully",
+          })
+        );
+      },
+      onError: () => {
+        // reset permission data
+        handleRoleSelect(null)();
+        handleDeleteClose();
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "User role",
+            text: "failed to delete user role",
+          })
+        );
+      },
+    }
+  );
 
   const handlePermissionSubmit = (data) => {
     if (isDirty) {
-      mutate({ userId, data: { ...data, id: undefined } });
-    } else {
-      onSubmit(userPermissions);
+      if (data.id) {
+        // edit
+        updateUserRoleMutate({ roleId: data.id, data });
+      } else {
+        // add
+        addUserRoleMutate(data);
+      }
     }
   };
 
-  if (isSuperUser) {
-    return (
-      <Box p={4}>
-        <Stack minHeight={400} alignItems="center" justifyContent="center">
-          <Typography variant="h4" color="primary">
-            You don't required any permissions.
-          </Typography>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" pt={4}>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<ArrowBackIosIcon />}
-            onClick={goBack}
-          >
-            Back
-          </Button>
-          <LoadingButton
-            variant="outlined"
-            color="success"
-            type="submit"
-            endIcon={<ArrowForwardIosIcon />}
-            onClick={() => onSubmit(userPermissions)}
-          >
-            Next
-          </LoadingButton>
-        </Stack>
-      </Box>
-    );
-  }
+  const onDeleteConfirm = () => {
+    deleteMutation(data.id);
+  };
+
+  const handleDeleteClose = () => {
+    setshowDialog(null);
+  };
+
+  const handleDeleteShow = (roleId) => () => {
+    setshowDialog(roleId);
+  };
 
   return (
     <Box
@@ -116,10 +171,27 @@ const UserPermissions = ({
       pt={2}
       component="form"
       onSubmit={handleSubmit(handlePermissionSubmit)}
-      sx={{
-        overflow: "auto",
-      }}
     >
+      <Stack
+        spacing={2}
+        direction={{ md: "row", xs: "column" }}
+        justifyContent="center"
+      >
+        <PermissionLabel>Role Name</PermissionLabel>
+        <Stack flexDirection="row" minWidth={260}>
+          <TextField
+            error={!!errors.name}
+            label="Role Name *"
+            {...register("name", {
+              required: getRequiredFieldMessage("Role Name"),
+            })}
+            helperText={errors.name?.message}
+            sx={{
+              width: "100%",
+            }}
+          />
+        </Stack>
+      </Stack>
       <PermissionHeader>General</PermissionHeader>
       <Divider />
       <Stack
@@ -346,55 +418,57 @@ const UserPermissions = ({
           </React.Fragment>
         );
       })}
-      <Stack flex={1} direction="row" justifyContent="space-between" pt={4}>
-        <Button
-          variant="outlined"
-          color="error"
-          startIcon={<ArrowBackIosIcon />}
-          onClick={goBack}
-        >
-          Back
-        </Button>
+      <Stack
+        flex={1}
+        direction="row"
+        justifyContent={isAdd ? "flex-end" : "space-between"}
+        pt={4}
+      >
+        {isAdd ? null : (
+          <LoadingButton
+            variant="outlined"
+            color="error"
+            type="submit"
+            startIcon={<DeleteOutlineIcon />}
+            onClick={handleDeleteShow(data.id)}
+          >
+            Delete
+          </LoadingButton>
+        )}
         <LoadingButton
           variant="outlined"
           color="success"
           type="submit"
-          endIcon={<ArrowForwardIosIcon />}
-          loading={isLoading}
+          startIcon={<DoneIcon />}
+          loading={addUserRoleLoading || updateUserRoleLoading}
         >
-          Next
+          Submit
         </LoadingButton>
       </Stack>
+      <Dialog open={showDialog} onClose={handleDeleteClose}>
+        {showDialog ? (
+          <>
+            <DialogTitle>Delete Role</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure to delete Role <b>{get(data, "name")}</b>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDeleteClose}>Close</Button>
+              <LoadingButton
+                onClick={onDeleteConfirm}
+                autoFocus
+                loading={deleteLoading}
+              >
+                Submit
+              </LoadingButton>
+            </DialogActions>
+          </>
+        ) : null}
+      </Dialog>
     </Box>
   );
 };
 
-export const PermissionLabel = (props) => {
-  return (
-    <Typography
-      variant="h6"
-      component="div"
-      color="primary"
-      mt="10px"
-      minWidth={200}
-    >
-      {props.children}
-    </Typography>
-  );
-};
-
-export const PermissionHeader = (props) => {
-  return (
-    <Typography
-      variant="h5"
-      gutterBottom
-      component="div"
-      textAlign="center"
-      mt={2.5}
-    >
-      {props.children}
-    </Typography>
-  );
-};
-
-export default UserPermissions;
+export default UserManagementPermissionForm;
