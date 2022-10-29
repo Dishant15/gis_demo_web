@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { get, noop } from "lodash";
 
 import Box from "@mui/material/Box";
-import DynamicForm from "components/common/DynamicForm";
+
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 
 import {
@@ -20,10 +20,8 @@ import UnitEditForm from "ticket/components/UnitEditForm";
 import { SURVEY_TAG_LIST } from "utils/constant";
 
 export const BuildingLayerForm = ({
-  formConfig,
   layerKey,
   transformAndValidateData,
-  isConfigurable,
   isEdit,
 }) => {
   const dispatch = useDispatch();

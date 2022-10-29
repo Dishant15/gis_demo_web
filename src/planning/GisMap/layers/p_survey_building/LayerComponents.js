@@ -103,7 +103,6 @@ export const ElementForm = () => {
     <BuildingLayerForm
       isEdit={isEdit}
       layerKey={LAYER_KEY}
-      formConfig={{}}
       transformAndValidateData={transformAndValidateData}
     />
   );
