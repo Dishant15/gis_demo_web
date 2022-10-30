@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { isNull } from "lodash";
+import isNull from "lodash/isNull";
+
+import Box from "@mui/material/Box";
 
 import Map from "components/common/Map";
 import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
-import { Box } from "@mui/material";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 
 import { getSelectedLayerKeys } from "planning/data/planningState.selectors";

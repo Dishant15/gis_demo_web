@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
-import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { get, noop } from "lodash";
+import { useMutation } from "react-query";
 
+import get from "lodash/get";
+import noop from "lodash/noop";
 import Box from "@mui/material/Box";
 
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";

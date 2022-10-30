@@ -1,5 +1,3 @@
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
-
 export const LAYER_KEY = "p_survey_building";
 
 export const BUILDING_CATEGORY_OPTIONS = [
