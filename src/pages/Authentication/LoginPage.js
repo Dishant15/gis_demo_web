@@ -10,7 +10,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { FormHelperTextControl } from "components/common/FormFields";
 import Notification from "components/common/Notification";
 
-import { get } from "lodash";
+import get from "lodash/get";
+import trim from "lodash/trim";
 
 import { postLogin } from "pages/Authentication/services";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
@@ -81,7 +82,11 @@ const LoginForm = () => {
   });
 
   const onSubmit = useCallback((data) => {
-    mutate({ ...data, client_id: process.env.REACT_APP_CLIENT_ID });
+    mutate({
+      username: trim(data.username),
+      password: trim(data.password),
+      client_id: process.env.REACT_APP_CLIENT_ID,
+    });
   }, []);
 
   return (
