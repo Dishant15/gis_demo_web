@@ -1,4 +1,5 @@
-import { join } from "lodash";
+import trim from "lodash/trim";
+
 import Api from "utils/api.utils";
 import {
   apiAddUser,
@@ -69,11 +70,13 @@ export const fetchUserRoles = async () => {
 };
 
 export const addUserRole = async (data) => {
+  data.name = trim(data.name);
   const res = await Api.post(apiPostUserRoleAdd(), data);
   return res.data;
 };
 
 export const updateUserRole = async ({ data, roleId }) => {
+  data.name = trim(data.name);
   const res = await Api.put(apiPostUserRoleEdit(roleId), data);
   return res.data;
 };
