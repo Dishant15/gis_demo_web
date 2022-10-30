@@ -23,6 +23,8 @@ export const getTicketWorkorderPage = (ticketId = ":ticketId") =>
 export const getElementConfigPage = () => "/element/config";
 
 export const getPrivacyPolicy = () => "/privacy-policy/";
+export const get404 = () => "/404";
+
 /* External server apis **/
 export const apiGetDashboard = () => "/api/dashboard/";
 
