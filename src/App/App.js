@@ -15,7 +15,7 @@ import RegionPage from "../region/RegionPage";
 import UserAdminPage from "gis_user/UserAdminPage";
 import UserListPage from "gis_user/pages/UserListPage";
 import UserAdminForm from "gis_user/pages/UserAdminForm";
-import UserManagementPage from "gis_user/pages/UserManagementPage";
+import UserRoleAdminPage from "gis_user/pages/UserRoleAdminPage";
 
 import TicketAdminPage from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
@@ -45,7 +45,7 @@ import {
   getTicketListPage,
   getTicketWorkorderPage,
   getUserListPage,
-  getUserManagementPage,
+  getUserRolePage,
 } from "../utils/url.constants";
 
 import "./global.scss";
@@ -107,10 +107,10 @@ const App = () => {
                     }
                   />
                   <Route
-                    path={getUserManagementPage()}
+                    path={getUserRolePage()}
                     element={
                       <RequireAuth>
-                        <UserManagementPage />
+                        <UserRoleAdminPage />
                       </RequireAuth>
                     }
                   />

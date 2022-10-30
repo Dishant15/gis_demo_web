@@ -18,7 +18,7 @@ import { size, get, isNull } from "lodash";
 
 import PermissionNotFound from "components/common/PermissionNotFound";
 import RegionDummyLoader from "region/components/RegionDummyLoader";
-import UserManagementPermissionForm from "gis_user/components/UserManagementPermissionForm";
+import UserRoleForm from "gis_user/components/UserRoleForm";
 
 import {
   getIsAdminUser,
@@ -30,11 +30,10 @@ import { fetchUserRoles } from "gis_user/data/services";
  * Parent
  *    App
  */
-const UserManagementPageWrapper = (props) => {
+const UserRoleAdminPage = () => {
   const isSuperUser = useSelector(getIsSuperAdminUser);
-  const isAdminUser = useSelector(getIsAdminUser);
 
-  if (isSuperUser || isAdminUser) {
+  if (isSuperUser) {
     return <UserManagementPage />;
   } else {
     return (
@@ -159,7 +158,7 @@ const UserManagementPage = () => {
                   </Typography>
                 </Box>
               ) : (
-                <UserManagementPermissionForm
+                <UserRoleForm
                   data={selectedConfig}
                   handleRoleSelect={handleRoleSelect}
                   key={get(selectedConfig, "id", null)}
@@ -173,4 +172,4 @@ const UserManagementPage = () => {
   );
 };
 
-export default UserManagementPageWrapper;
+export default UserRoleAdminPage;

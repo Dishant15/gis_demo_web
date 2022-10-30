@@ -24,7 +24,7 @@ import {
   getRegionPage,
   getTicketListPage,
   getUserListPage,
-  getUserManagementPage,
+  getUserRolePage,
 } from "utils/url.constants";
 
 import {
@@ -135,15 +135,6 @@ const NavigationBar = () => {
               Region Management
             </MenuItem>
           ) : null}
-          {isAdminUser || isSuperAdminUser ? (
-            <MenuItem
-              onClick={handleClose}
-              component={Link}
-              to={getUserManagementPage()}
-            >
-              User Management
-            </MenuItem>
-          ) : null}
           {canUserView ? (
             <MenuItem
               onClick={handleClose}
@@ -151,6 +142,15 @@ const NavigationBar = () => {
               to={getUserListPage()}
             >
               Users & Permissions
+            </MenuItem>
+          ) : null}
+          {isSuperAdminUser ? (
+            <MenuItem
+              onClick={handleClose}
+              component={Link}
+              to={getUserRolePage()}
+            >
+              Role Management
             </MenuItem>
           ) : null}
           {canTicketView ? (

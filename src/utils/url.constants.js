@@ -11,7 +11,7 @@ export const getPlanningTicketPage = (ticketId) =>
 export const getUserListPage = () => "/users/list";
 export const getAddUserPage = () => "/users/add";
 export const getEditUserPage = (userId = ":userId") => `/users/edit/${userId}`;
-export const getUserManagementPage = () => "/users/management";
+export const getUserRolePage = () => "/users/roles";
 
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";

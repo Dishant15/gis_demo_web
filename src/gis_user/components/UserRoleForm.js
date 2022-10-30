@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
+import { useForm } from "react-hook-form";
+import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
+import has from "lodash/has";
 
 import {
-  Container,
-  Paper,
-  Typography,
   Box,
   Stack,
   Divider,
@@ -24,7 +24,6 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { FormCheckbox } from "components/common/FormFields";
 
-import { isEmpty, isNull, get, has } from "lodash";
 import { createDefaultPermissions } from "redux/selectors/auth.selectors";
 import {
   PermissionHeader,
@@ -45,7 +44,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
  *
  * data: if data is empty object, its add otherwise edit.
  */
-const UserManagementPermissionForm = ({ data, handleRoleSelect }) => {
+const UserRoleForm = ({ data, handleRoleSelect }) => {
   const defaultPermissions = useSelector(createDefaultPermissions);
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -471,4 +470,4 @@ const UserManagementPermissionForm = ({ data, handleRoleSelect }) => {
   );
 };
 
-export default UserManagementPermissionForm;
+export default UserRoleForm;
