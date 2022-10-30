@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import {
@@ -16,14 +16,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
 
-import { filter, includes } from "lodash";
 import { BUILDING_CATEGORY_OPTIONS } from "planning/GisMap/layers/p_survey_building";
 
 /**
  * Parent:
  *    WorkOrderPage
  */
-const UnitEditForm = (props) => {
+const UnitEditForm = forwardRef((props, ref) => {
   const {
     formData,
     editUnitLoading,
@@ -250,6 +249,6 @@ const UnitEditForm = (props) => {
       </Box>
     </Stack>
   );
-};
+});
 
 export default UnitEditForm;
