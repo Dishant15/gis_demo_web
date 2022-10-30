@@ -3,6 +3,7 @@ import { createTheme } from "@mui/material";
 export const COLORS = {
   primary: {
     main: "#1881bc",
+    contrastText: "#fff",
   },
   secondary: {
     main: "#b98919",

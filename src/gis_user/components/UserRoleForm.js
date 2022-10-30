@@ -37,10 +37,11 @@ import {
   updateUserRole,
 } from "gis_user/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { COLORS } from "App/theme";
 
 /**
  * Parent:
- *    UserManagementPage
+ *    UserRoleAdminPage
  *
  * data: if data is empty object, its add otherwise edit.
  */
@@ -165,18 +166,24 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
   };
 
   return (
-    <Box
-      p={4}
-      pt={2}
-      component="form"
-      onSubmit={handleSubmit(handlePermissionSubmit)}
-    >
+    <Box component="form" onSubmit={handleSubmit(handlePermissionSubmit)}>
+      <Box
+        p={1}
+        mb={2}
+        sx={{
+          background: COLORS.primary.main,
+          color: COLORS.primary.contrastText,
+          textAlign: "center",
+        }}
+      >
+        User Role Form
+      </Box>
       <Stack
         spacing={2}
         direction={{ md: "row", xs: "column" }}
         justifyContent="center"
       >
-        <PermissionLabel>Role Name</PermissionLabel>
+        <PermissionLabel>Name</PermissionLabel>
         <Stack flexDirection="row" minWidth={260}>
           <TextField
             error={!!errors.name}
@@ -191,6 +198,17 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
           />
         </Stack>
       </Stack>
+      <Box
+        p={1}
+        my={2}
+        sx={{
+          background: COLORS.primary.main,
+          color: COLORS.primary.contrastText,
+          textAlign: "center",
+        }}
+      >
+        Permissions
+      </Box>
       <PermissionHeader>General</PermissionHeader>
       <Divider />
       <Stack
@@ -421,7 +439,7 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
         flex={1}
         direction="row"
         justifyContent={isAdd ? "flex-end" : "space-between"}
-        pt={4}
+        p={4}
       >
         {isAdd ? null : (
           <LoadingButton
@@ -459,8 +477,9 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
                 onClick={onDeleteConfirm}
                 autoFocus
                 loading={deleteLoading}
+                color="error"
               >
-                Submit
+                Delete
               </LoadingButton>
             </DialogActions>
           </>

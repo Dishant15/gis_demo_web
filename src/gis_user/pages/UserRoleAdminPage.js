@@ -14,16 +14,17 @@ import {
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import AddIcon from "@mui/icons-material/Add";
 
-import { size, get, isNull } from "lodash";
+import size from "lodash/size";
+import get from "lodash/get";
+import isNull from "lodash/isNull";
 
 import PermissionNotFound from "components/common/PermissionNotFound";
-import RegionDummyLoader from "region/components/RegionDummyLoader";
+import RegionDummyLoader, {
+  RegionListDummyLoader,
+} from "region/components/RegionDummyLoader";
 import UserRoleForm from "gis_user/components/UserRoleForm";
 
-import {
-  getIsAdminUser,
-  getIsSuperAdminUser,
-} from "redux/selectors/auth.selectors";
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 import { fetchUserRoles } from "gis_user/data/services";
 
 /**
@@ -60,7 +61,11 @@ const UserRoleAdminPage = () => {
  */
 const UserManagementPage = () => {
   const [selectedConfig, setSelectedConfig] = useState(null); // null, {}, {...role details}
-  const { isLoading, data = [] } = useQuery("userRoles", fetchUserRoles);
+  const {
+    isLoading,
+    isFetching,
+    data = [],
+  } = useQuery("userRoles", fetchUserRoles);
 
   const handleRoleSelect = useCallback(
     (config) => () => {
@@ -78,57 +83,63 @@ const UserManagementPage = () => {
       <div className="reg-content-wrapper">
         <div className="reg-pocket-list">
           <div className="reg-list-wrapper">
-            <Stack direction="row">
-              <Box
-                color="primary.dark"
-                flex={1}
-                className="reg-list-header-pill"
-              >
-                Select User Role
-              </Box>
-              <Button
-                color="success"
-                startIcon={<AddIcon />}
-                onClick={handleRoleSelect({})}
-              >
-                New Role
-              </Button>
-            </Stack>
-            <Divider flexItem orientation="horizontal" />
-
-            {size(data) ? (
-              data.map((config) => {
-                const { id, name } = config;
-                const isActive = id === selectedConfig?.id;
-
-                return (
-                  <Box className="reg-list-pill planning-pill" key={id}>
-                    <Stack
-                      direction="row"
-                      width="100%"
-                      spacing={2}
-                      px={1}
-                      py={1.5}
-                      justifyContent="space-between"
-                      className="clickable"
-                      onClick={handleRoleSelect(config)}
-                    >
-                      <span>{name}</span>
-                      {isActive ? <ArrowForwardIosIcon /> : null}
-                    </Stack>
-                    <Divider flexItem />
-                  </Box>
-                );
-              })
+            {isFetching ? (
+              <RegionListDummyLoader />
             ) : (
-              <Typography
-                variant="subtitle1"
-                gutterBottom
-                textAlign="center"
-                paddingY={4}
-              >
-                No user roles added yet!
-              </Typography>
+              <>
+                <Stack direction="row">
+                  <Box
+                    color="primary.dark"
+                    flex={1}
+                    className="reg-list-header-pill"
+                  >
+                    Select User Role
+                  </Box>
+                  <Button
+                    color="success"
+                    startIcon={<AddIcon />}
+                    onClick={handleRoleSelect({})}
+                  >
+                    New Role
+                  </Button>
+                </Stack>
+                <Divider flexItem orientation="horizontal" />
+
+                {size(data) ? (
+                  data.map((config) => {
+                    const { id, name } = config;
+                    const isActive = id === selectedConfig?.id;
+
+                    return (
+                      <Box className="reg-list-pill planning-pill" key={id}>
+                        <Stack
+                          direction="row"
+                          width="100%"
+                          spacing={2}
+                          px={1}
+                          py={1.5}
+                          justifyContent="space-between"
+                          className="clickable"
+                          onClick={handleRoleSelect(config)}
+                        >
+                          <span>{name}</span>
+                          {isActive ? <ArrowForwardIosIcon /> : null}
+                        </Stack>
+                        <Divider flexItem />
+                      </Box>
+                    );
+                  })
+                ) : (
+                  <Typography
+                    variant="subtitle1"
+                    gutterBottom
+                    textAlign="center"
+                    paddingY={4}
+                  >
+                    No user roles added yet!
+                  </Typography>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -75,6 +75,7 @@ export const FormSelect = ({
   labelKey = "label",
   valueKey = "value",
   simpleValue = false,
+  onChange = null,
   ...rest
 }) => {
   return (
@@ -109,6 +110,7 @@ export const FormSelect = ({
                   : get(newValue, valueKey, "");
               }
               field.onChange(newValueOp);
+              if (!!onChange) onChange(newValueOp);
             }}
             className={`${className} form-select`}
             classNamePrefix="form-select"

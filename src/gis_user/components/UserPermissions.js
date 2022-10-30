@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 
-import { Box, Stack, Button, Divider, Typography } from "@mui/material";
+import get from "lodash/get";
+import has from "lodash/has";
+import find from "lodash/find";
+
+import {
+  Box,
+  Stack,
+  Button,
+  Divider,
+  Typography,
+  Skeleton,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { FormCheckbox } from "components/common/FormFields";
+import { FormSelect } from "components/common/FormFields";
 
 import { addNotification } from "redux/reducers/notification.reducer";
-import { updateUserPerm } from "gis_user/data/services";
-import { get, has } from "lodash";
+import { fetchUserRoles, updateUserPerm } from "gis_user/data/services";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 export const USER_LAYER_PERMS_CONFIG = [
@@ -31,10 +42,12 @@ const UserPermissions = ({
   userId,
   isSuperUser,
   userPermissions,
+  role,
   onSubmit,
   goBack,
 }) => {
   const dispatch = useDispatch();
+  const { isFetching, data = [] } = useQuery("userRoles", fetchUserRoles);
 
   const { mutate, isLoading } = useMutation(updateUserPerm, {
     onSuccess: (res) => {
@@ -66,18 +79,59 @@ const UserPermissions = ({
   const {
     formState: { errors, isDirty },
     handleSubmit,
+    watch,
     control,
+    reset,
   } = useForm({
-    defaultValues: userPermissions,
+    defaultValues: { ...userPermissions, role_id: role },
   });
 
-  const handlePermissionSubmit = (data) => {
-    if (isDirty) {
-      mutate({ userId, data: { ...data, id: undefined } });
-    } else {
-      onSubmit(userPermissions);
-    }
-  };
+  const handlePermissionSubmit = useCallback(
+    (data) => {
+      if (isDirty) {
+        let newData;
+        if (!!data.role_id) {
+          newData = { role_id: data.role_id };
+        } else {
+          newData = {
+            ...data,
+            id: undefined,
+            role_id: undefined,
+            created_by: undefined,
+            created_on: undefined,
+            updated_on: undefined,
+            name: undefined,
+          };
+        }
+        mutate({ userId, data: newData });
+      } else {
+        onSubmit(userPermissions);
+      }
+    },
+    [isDirty]
+  );
+
+  const handleRoleChange = useCallback(
+    (newValue) => {
+      if (newValue) {
+        const currRole = find(data, ["id", newValue]);
+
+        reset(
+          {
+            ...currRole,
+            role_id: newValue,
+            created_by: undefined,
+            created_on: undefined,
+            updated_on: undefined,
+          },
+          { keepDirty: true }
+        );
+      }
+    },
+    [data, reset]
+  );
+
+  const disabledAll = !!watch("role_id");
 
   if (isSuperUser) {
     return (
@@ -120,6 +174,29 @@ const UserPermissions = ({
         overflow: "auto",
       }}
     >
+      <Stack
+        flex={1}
+        p={4}
+        justifyContent="center"
+        sx={{ width: "50%", margin: "0 auto" }}
+      >
+        {isFetching ? (
+          <Skeleton animation="wave" height={90} />
+        ) : (
+          <FormSelect
+            label="User Role"
+            name="role_id"
+            control={control}
+            options={data || []}
+            labelKey="name"
+            valueKey="id"
+            error={!!errors.role_id}
+            helperText={errors.role_id?.message}
+            isClearable
+            onChange={handleRoleChange}
+          />
+        )}
+      </Stack>
       <PermissionHeader>General</PermissionHeader>
       <Divider />
       <Stack
@@ -137,6 +214,7 @@ const UserPermissions = ({
             error={!!errors.user_view}
             helperText={errors.user_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Add"
@@ -145,6 +223,7 @@ const UserPermissions = ({
             error={!!errors.user_add}
             helperText={errors.user_add?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Edit"
@@ -153,6 +232,7 @@ const UserPermissions = ({
             error={!!errors.user_edit}
             helperText={errors.user_edit?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -172,6 +252,7 @@ const UserPermissions = ({
             error={!!errors.region_view}
             helperText={errors.region_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Add"
@@ -180,6 +261,7 @@ const UserPermissions = ({
             error={!!errors.region_add}
             helperText={errors.region_add?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Edit"
@@ -188,6 +270,7 @@ const UserPermissions = ({
             error={!!errors.region_edit}
             helperText={errors.region_edit?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -208,6 +291,7 @@ const UserPermissions = ({
             error={!!errors.ticket_view}
             helperText={errors.ticket_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Add"
@@ -216,6 +300,7 @@ const UserPermissions = ({
             error={!!errors.ticket_add}
             helperText={errors.ticket_add?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Edit"
@@ -224,6 +309,7 @@ const UserPermissions = ({
             error={!!errors.ticket_edit}
             helperText={errors.ticket_edit?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -243,6 +329,7 @@ const UserPermissions = ({
             error={!!errors.ticket_workorder_view}
             helperText={errors.ticket_workorder_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Add"
@@ -251,6 +338,7 @@ const UserPermissions = ({
             error={!!errors.ticket_workorder_add}
             helperText={errors.ticket_workorder_add?.message}
             color="secondary"
+            disabled={disabledAll}
           />
           <FormCheckbox
             label="Edit"
@@ -259,6 +347,7 @@ const UserPermissions = ({
             error={!!errors.ticket_workorder_edit}
             helperText={errors.ticket_workorder_edit?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -279,6 +368,7 @@ const UserPermissions = ({
             error={!!errors.survey_view}
             helperText={errors.survey_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -299,6 +389,7 @@ const UserPermissions = ({
             error={!!errors.planning_view}
             helperText={errors.planning_view?.message}
             color="secondary"
+            disabled={disabledAll}
           />
         </Stack>
       </Stack>
@@ -323,6 +414,7 @@ const UserPermissions = ({
                   error={has(errors, `${layerKey}_view`)}
                   helperText={get(errors, `${layerKey}_view.message`, "")}
                   color="secondary"
+                  disabled={disabledAll}
                 />
                 <FormCheckbox
                   label="Add"
@@ -331,6 +423,7 @@ const UserPermissions = ({
                   error={has(errors, `${layerKey}_add`)}
                   helperText={get(errors, `${layerKey}_add.message`, "")}
                   color="secondary"
+                  disabled={disabledAll}
                 />
                 <FormCheckbox
                   label="Edit"
@@ -339,6 +432,7 @@ const UserPermissions = ({
                   error={has(errors, `${layerKey}_edit`)}
                   helperText={get(errors, `${layerKey}_edit.message`, "")}
                   color="secondary"
+                  disabled={disabledAll}
                 />
               </Stack>
             </Stack>
