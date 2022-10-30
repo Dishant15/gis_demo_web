@@ -145,7 +145,7 @@ export const LayerKeyMappings = {
 export const convertLayerServerData = (layerKey, serverData) => {
   let resultData = orderBy(serverData, ["id"], ["desc"]);
 
-  // PolyLine
+  // PolyLine / Polygon
   if (layerKey === CableKey || layerKey === SAreaKey) {
     resultData.map((d) => {
       d.geometry = [...d.coordinates];
