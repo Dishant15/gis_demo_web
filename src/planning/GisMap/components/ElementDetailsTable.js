@@ -27,7 +27,14 @@ import { fetchElementDetails } from "planning/data/layer.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
+import MoreActions from "components/common/MoreActions";
 
+const options = [
+  // {
+  //   label: "Create a merge commit",
+  //   onClick: () => console.log("Create a merge commit"),
+  // },
+];
 /**
  * fetch element details
  * handle loading
@@ -149,6 +156,7 @@ const ElementDetailsTable = ({
           >
             Location
           </Button>
+          <MoreActions options={options} variant="outlined" color="secondary" />
           {ExtraControls}
         </Stack>
         {/* Table Content */}
