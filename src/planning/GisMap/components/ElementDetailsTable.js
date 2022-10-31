@@ -156,7 +156,7 @@ const ElementDetailsTable = ({
           >
             Location
           </Button>
-          <MoreActions options={options} variant="outlined" color="secondary" />
+          {/* <MoreActions options={options} variant="outlined" color="secondary" /> */}
           {ExtraControls}
         </Stack>
         {/* Table Content */}
