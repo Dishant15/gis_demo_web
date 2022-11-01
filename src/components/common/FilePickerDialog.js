@@ -18,6 +18,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { styled } from "@mui/material/styles";
 
 import CloseIcon from "@mui/icons-material/Close";
+import { Box } from "@mui/material";
 
 /**
  * Parent:
@@ -29,7 +30,14 @@ import CloseIcon from "@mui/icons-material/Close";
  *    additional remove selected file option
  */
 const FilePickerDialog = (props) => {
-  const { onSubmit, onClose, loading, accept, heading = "" } = props;
+  const {
+    onSubmit,
+    onClose,
+    loading,
+    accept,
+    isMulti = false,
+    heading = "",
+  } = props;
   const [files, setFiles] = useState([]);
 
   const handleFileUpload = useCallback((event) => {
@@ -52,27 +60,31 @@ const FilePickerDialog = (props) => {
   if (files.length) {
     return (
       <>
-        <DialogTitle
-          id="scroll-dialog-title"
+        <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
+            padding: "16px 24px",
           }}
         >
-          <UploadButton
-            text="Add More"
-            onChange={handleFileUpload}
-            accept={accept}
-          />
+          {isMulti ? (
+            <UploadButton
+              text="Add More"
+              onChange={handleFileUpload}
+              accept={accept}
+            />
+          ) : (
+            <div />
+          )}
           <Typography variant="h6" color="primary.dark">
             {heading}
           </Typography>
           <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
           </IconButton>
-        </DialogTitle>
+        </Box>
         <DialogContent
           dividers
           sx={{
@@ -131,13 +143,13 @@ const FilePickerDialog = (props) => {
   } else {
     return (
       <>
-        <DialogTitle
-          id="scroll-dialog-title"
+        <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
+            padding: "16px 24px",
           }}
         >
           <div />
@@ -147,7 +159,7 @@ const FilePickerDialog = (props) => {
           <IconButton aria-label="close" onClick={onClose}>
             <CloseIcon />
           </IconButton>
-        </DialogTitle>
+        </Box>
         <DialogContent
           dividers
           sx={{

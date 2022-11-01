@@ -19,7 +19,7 @@ export const FormDatePicker = ({
       render={({ field }) => {
         return (
           <DatePickerInput
-            date={field.value}
+            date={field.value || undefined}
             onDateUpdate={({ date }) => field.onChange(date)}
             inputComponent={
               <TextField
