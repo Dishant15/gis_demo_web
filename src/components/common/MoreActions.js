@@ -9,6 +9,12 @@ import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 
+/**
+ *
+ * @param {string} text Text to show in button
+ * @param {Array} options [{ label, onClick}, ...] : Menulist item label and actions
+ * @returns Button component with dropdown menu
+ */
 const MoreActions = ({
   variant,
   color,

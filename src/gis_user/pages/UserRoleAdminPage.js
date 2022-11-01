@@ -65,7 +65,9 @@ const UserManagementPage = () => {
     isLoading,
     isFetching,
     data = [],
-  } = useQuery("userRoles", fetchUserRoles);
+  } = useQuery("userRoles", fetchUserRoles, {
+    staleTime: Infinity,
+  });
 
   const handleRoleSelect = useCallback(
     (config) => () => {
