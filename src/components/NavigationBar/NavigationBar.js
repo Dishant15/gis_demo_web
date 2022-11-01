@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,6 +30,7 @@ import {
 import {
   getIsAdminUser,
   getIsSuperAdminUser,
+  getIsUserLoggedIn,
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
 import { handleLogoutUser } from "redux/actions/auth.actions";
@@ -44,6 +45,7 @@ const NavigationBar = () => {
   const isAdminUser = useSelector(getIsAdminUser);
   const isSuperAdminUser = useSelector(getIsSuperAdminUser);
   const permissions = useSelector(getUserPermissions);
+  const isUserLoggedIn = useSelector(getIsUserLoggedIn);
 
   const canUserView = get(permissions, "user_view", false) || isSuperAdminUser;
   const canRegionView =
@@ -75,14 +77,9 @@ const NavigationBar = () => {
     isSuperAdminUser ||
     (isAdminUser && (canUserView || canRegionView || canTicketView));
 
-  return (
-    <AppBar position="static" id="navigation-bar">
-      <Toolbar
-        sx={{
-          justifyContent: "space-between",
-        }}
-      >
-        <img src={LOGO} className="logo" />
+  const menuContent = useMemo(() => {
+    if (isUserLoggedIn) {
+      return (
         <Stack direction="row" spacing={2}>
           <Button to={getHomePath()} component={Link} color="inherit">
             Home
@@ -117,6 +114,27 @@ const NavigationBar = () => {
             Logout
           </Button>
         </Stack>
+      );
+    } else {
+      return (
+        <Stack direction="row" spacing={2}>
+          <Button to={getLoginPath()} component={Link} color="inherit">
+            Login
+          </Button>
+        </Stack>
+      );
+    }
+  }, [isUserLoggedIn, showAdministration, canPlanningView, canSurveyView]);
+
+  return (
+    <AppBar position="static" id="navigation-bar">
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+        }}
+      >
+        <img src={LOGO} className="logo" />
+        {menuContent}
         <Menu
           id="administration-menu"
           anchorEl={anchorEl}

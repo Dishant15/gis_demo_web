@@ -176,10 +176,10 @@ const App = () => {
                       }
                     />
                   </Route>
+                  <Route path={get404()} element={<PageNotFound />} />
+                  <Route path="*" element={<PageNotFound />} />
                 </Route>
                 <Route path={getLoginPath()} element={<LoginPage />} />
-                <Route path={get404()} element={<PageNotFound />} />
-                <Route path="*" element={<PageNotFound />} />
                 {/* testing routes */}
               </Routes>
             </BrowserRouter>
