@@ -159,7 +159,7 @@ const NavigationBar = () => {
               component={Link}
               to={getUserListPage()}
             >
-              Users & Permissions
+              User Management
             </MenuItem>
           ) : null}
           {isSuperAdminUser ? (

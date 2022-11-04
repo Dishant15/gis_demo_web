@@ -61,6 +61,7 @@ export const apiPostUserRoleEdit = (roleId) =>
   `/api/user/roles/${roleId}/edit/`;
 export const apiDeleteUserRole = (roleId) =>
   `/api/user/roles/${roleId}/delete/`;
+export const apiGetActiveUserCount = () => "/api/user/count/";
 
 export const apiGetApplicationsList = () => "/api/applications/";
 

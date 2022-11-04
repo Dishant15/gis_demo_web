@@ -33,6 +33,7 @@ import {
 } from "redux/selectors/auth.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
+import ActiveUserCount from "gis_user/components/ActiveUserCount";
 
 /**
  * Parent:
@@ -129,9 +130,12 @@ const UserListPage = () => {
         width="100%"
         alignItems="center"
       >
-        <Typography flex={1} className="dtl-title" variant="h5">
-          User Management
-        </Typography>
+        <Box flex={1} flexDirection="row" display="flex" alignItems="baseline">
+          <Typography className="dtl-title" variant="h5">
+            User Management&nbsp;
+          </Typography>
+          <ActiveUserCount />
+        </Box>
         {canUserAdd ? (
           <>
             {isSuperAdminUser ? (
@@ -167,8 +171,20 @@ const UserListPage = () => {
               field: "is_active",
               headerName: "Active",
               cellRenderer: TickCell,
+              width: 100,
+              className: "center",
             },
-            { field: "is_staff", headerName: "Admin", cellRenderer: TickCell },
+            {
+              field: "is_staff",
+              headerName: "Admin",
+              cellRenderer: TickCell,
+              width: 100,
+              className: "center",
+            },
+            {
+              field: "role.name",
+              headerName: "Role",
+            },
             {
               field: "access_ids",
               headerName: "Access",

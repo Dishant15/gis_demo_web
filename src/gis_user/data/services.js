@@ -6,6 +6,7 @@ import {
   apiDeleteUserRole,
   apiEditUserDetails,
   apiEditUserPermission,
+  apiGetActiveUserCount,
   apiGetApplicationsList,
   apiGetUserDetails,
   apiGetUserList,
@@ -83,5 +84,10 @@ export const updateUserRole = async ({ data, roleId }) => {
 
 export const deleteUserRole = async (roleId) => {
   const res = await Api.delete(apiDeleteUserRole(roleId));
+  return res.data;
+};
+
+export const fetchActiveUserCount = async () => {
+  const res = await Api.get(apiGetActiveUserCount());
   return res.data;
 };

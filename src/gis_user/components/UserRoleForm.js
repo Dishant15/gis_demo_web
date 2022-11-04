@@ -445,7 +445,7 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
           <LoadingButton
             variant="outlined"
             color="error"
-            type="submit"
+            type="button"
             startIcon={<DeleteOutlineIcon />}
             onClick={handleDeleteShow(data.id)}
           >
@@ -462,7 +462,7 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
           Submit
         </LoadingButton>
       </Stack>
-      <Dialog open={showDialog} onClose={handleDeleteClose}>
+      <Dialog open={!!showDialog} onClose={handleDeleteClose}>
         {showDialog ? (
           <>
             <DialogTitle>Delete Role</DialogTitle>
