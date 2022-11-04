@@ -308,7 +308,7 @@ const RegionMap = ({
           <FilePickerDialog
             onSubmit={handleFileUpload}
             onClose={handleFilePickerCancel}
-            accept=".kml"
+            accept=".kml, .kmz"
             heading="Import KML file"
           />
         ) : null}
