@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
+import { format } from "date-fns";
 import get from "lodash/get";
 import range from "lodash/range";
 
@@ -192,6 +193,23 @@ const ElementDetailsTable = ({
                       {elemBoolData ? <CheckIcon /> : <ClearIcon />}
                     </IconButton>
                   </Box>
+                );
+                break;
+
+              case "date":
+                const formattedDate = format(
+                  new Date(get(elemData, field)),
+                  "dd/MM/YYY"
+                );
+
+                ValueCell = (
+                  <Typography
+                    sx={{ whiteSpace: "pre" }}
+                    textAlign="center"
+                    width={"50%"}
+                  >
+                    {formattedDate}
+                  </Typography>
                 );
                 break;
 

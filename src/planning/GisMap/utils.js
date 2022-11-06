@@ -4,6 +4,7 @@ import {
   ViewLayer as RegionViewLayer,
   LAYER_KEY as RegionKey,
 } from "./layers/region";
+import * as TicketLayer from "./layers/ticket";
 import {
   ViewLayer as DPViewLayer,
   AddMapLayer as DPAddLayer,
@@ -80,6 +81,15 @@ export const LayerKeyMappings = {
   [RegionKey]: {
     ViewLayer: RegionViewLayer,
   },
+  [TicketLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <TicketLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <TicketLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <TicketLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <TicketLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <TicketLayer.ElementForm />,
+    ViewLayer: TicketLayer.ViewLayer,
+    Geometry: TicketLayer.Geometry,
+  },
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
     [PLANNING_EVENT.editElementLocation]: <DpEditMapLayer />,
@@ -146,7 +156,11 @@ export const convertLayerServerData = (layerKey, serverData) => {
   let resultData = orderBy(serverData, ["id"], ["desc"]);
 
   // PolyLine / Polygon
-  if (layerKey === CableKey || layerKey === SAreaKey) {
+  if (
+    layerKey === CableKey ||
+    layerKey === SAreaKey ||
+    layerKey === TicketLayer.LAYER_KEY
+  ) {
     resultData.map((d) => {
       d.geometry = [...d.coordinates];
       // [ [lat, lng], ...] -> [{lat, lng}, ...]

@@ -6,6 +6,7 @@ import {
   apiGetPlanningConfigs,
   apiGetPlanningConfigsDetails,
   apiGetPlanningLayerData,
+  apiGetTicketLayerData,
 } from "utils/url.constants";
 
 export const fetchRegionList = async () => {
@@ -29,6 +30,10 @@ export const fetchLayerData = async ({ regionIdList, layerKey }) => {
   if (layerKey === "region") {
     res = await Api.get(apiGetRegionList("detail"), {
       ids: regionIdList.join(","),
+    });
+  } else if (layerKey === "ticket") {
+    res = await Api.post(apiGetTicketLayerData(), {
+      regions: regionIdList,
     });
   } else {
     res = await Api.post(apiGetPlanningLayerData(), {

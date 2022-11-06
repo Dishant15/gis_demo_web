@@ -1,27 +1,22 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 
 import { Polygon } from "@react-google-maps/api";
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
-import { GisLayerForm } from "planning/GisMap/components/GisLayerForm";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
 
 import {
   getLayerViewData,
   getPlanningMapStateData,
-  getPlanningMapStateEvent,
 } from "planning/data/planningGis.selectors";
-import {
-  INITIAL_ELEMENT_DATA,
-  ELEMENT_FORM_TEMPLATE,
-  LAYER_KEY,
-} from "./configurations";
+import { INITIAL_ELEMENT_DATA, LAYER_KEY } from "./configurations";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
 import { zIndexMapping } from "../common/configuration";
+import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 
-const STROKE_COLOR = "#CE855A";
+const STROKE_COLOR = "#88B14B";
 
 export const getOptions = ({ hidden = false }) => {
   return {
@@ -95,70 +90,25 @@ export const EditMapLayer = () => {
 };
 
 export const ElementForm = () => {
-  const currEvent = useSelector(getPlanningMapStateEvent);
-  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
-
-  const transformAndValidateData = useCallback(
-    (formData) => {
-      if (isEdit) {
-        return {
-          ...formData,
-          // remove geometry
-          geometry: undefined,
-        };
-      } else {
-        return formData;
-      }
-    },
-    [isEdit]
-  );
-
   return (
-    <GisLayerForm
-      isConfigurable
-      isEdit={isEdit}
-      layerKey={LAYER_KEY}
-      formConfig={ELEMENT_FORM_TEMPLATE}
-      transformAndValidateData={transformAndValidateData}
-    />
+    <GisMapPopups>
+      <h1>This is going to be custom form</h1>
+    </GisMapPopups>
   );
 };
 
 const ELEMENT_TABLE_FIELDS = [
   { label: "Name", field: "name", type: "simple" },
   { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Address", field: "address", type: "simple" },
-  { label: "Area", field: "area", type: "simple" },
-  { label: "City", field: "city", type: "simple" },
-  { label: "State", field: "state", type: "simple" },
-  { label: "Pincode", field: "pincode", type: "simple" },
-  { label: "Tags", field: "tags", type: "simple" },
-  { label: "Home Pass", field: "home_pass", type: "simple" },
-  { label: "Over Head Cable", field: "over_head_cable", type: "boolean" },
-  { label: "Cabling Required", field: "cabling_required", type: "boolean" },
-  {
-    label: "Poll Cabling possible",
-    field: "poll_cabling_possible",
-    type: "boolean",
-  },
-  {
-    label: "Locality Status",
-    field: "locality_status_display",
-    type: "simple",
-  },
-  // multi select comma separeted string
-  {
-    label: "Broadband Availability",
-    field: "broadband_availability",
-    type: "simple",
-  },
-  {
-    label: "Cable Tv Availability",
-    field: "cable_tv_availability",
-    type: "simple",
-  },
-  { label: "Status", field: "status", type: "status" },
+  { label: "Ticket Type", field: "ticket_type_display", type: "simple" },
+  { label: "Network Type", field: "network_type_display", type: "simple" },
+  { label: "Due Date", field: "due_date", type: "date" },
+  { label: "Remarks", field: "remarks", type: "simple" },
+  // { label: "Assignee", field: "assignee.name", type: "simple" }, // need to update serializer, fix assignee in ticket edit after updating details serializer
+  { label: "Updated On", field: "updated_on", type: "date" },
+  { label: "Created On", field: "created_on", type: "date" },
+  { label: "Created By", field: "created_by.name", type: "simple" },
+  { label: "Ticket Status", field: "status_display", type: "simple" },
 ];
 
 const convertDataBeforeForm = (data) => {

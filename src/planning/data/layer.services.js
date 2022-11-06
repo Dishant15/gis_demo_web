@@ -2,6 +2,7 @@ import Api from "utils/api.utils";
 import {
   apiGetElementConnections,
   apiGetElementDetails,
+  apiGetTicketDetails,
   apiPostAddElement,
   apiPutEditElement,
   apiUpdateElementConnections,
@@ -9,8 +10,13 @@ import {
 
 export const fetchElementDetails = async ({ queryKey }) => {
   const [_key, layerKey, elementId] = queryKey;
-  const res = await Api.get(apiGetElementDetails(layerKey, elementId));
-  return res.data;
+  if (layerKey === "ticket") {
+    const res = await Api.get(apiGetTicketDetails(elementId));
+    return res.data;
+  } else {
+    const res = await Api.get(apiGetElementDetails(layerKey, elementId));
+    return res.data;
+  }
 };
 
 export const fetchElementConnections = async ({ queryKey }) => {

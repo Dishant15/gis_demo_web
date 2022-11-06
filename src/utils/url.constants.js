@@ -67,6 +67,7 @@ export const apiGetApplicationsList = () => "/api/applications/";
 
 // Ticket apis
 export const apiGetTicketList = () => "/api/ticket/list/";
+export const apiGetTicketLayerData = () => "/api/ticket/planning/layer/";
 export const apiPostTicketAdd = () => "/api/ticket/add/";
 export const apiPostTicketEdit = (ticketId) => `/api/ticket/${ticketId}/edit/`;
 export const apiPostTicketEditArea = (ticketId) =>
