@@ -1,22 +1,17 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "react-query";
 
-import { get, noop, size } from "lodash";
-import { Box, Divider, Stack, Typography, Button } from "@mui/material";
+import get from "lodash/get";
+import noop from "lodash/noop";
+import size from "lodash/size";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
-import SyncIcon from "@mui/icons-material/Sync";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
-import DummyListLoader from "./DummyListLoader";
-
-import {
-  fetchLayerDataThunk,
-  fetchLayerList,
-} from "planning/data/actionBar.services";
+import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import {
   getLayerNetworkState,
   getLayerViewData,
@@ -26,84 +21,17 @@ import {
   removeLayerSelect,
   setActiveTab,
 } from "planning/data/planningState.reducer";
-import {
-  getSelectedLayerKeys,
-  getSelectedRegionIds,
-} from "planning/data/planningState.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 
-const regionLayerConfig = {
-  layer_key: "region",
-  name: "Regions",
-  can_edit: false,
-  can_add: false,
-};
-
-const LayersTabContent = () => {
-  /**
-   * Render list of elements user can view on map
-   * User can click and get data of layers
-   * handle layer data loading
-   *
-   * Parent
-   *  ActionBar
-   */
-  const dispatch = useDispatch();
-  const { isLoading, data: layerCofigs = [] } = useQuery(
-    "planningLayerConfigs",
-    fetchLayerList,
-    {
-      staleTime: Infinity,
-      select: (data) => {
-        return [regionLayerConfig, ...data];
-      },
-    }
-  );
-  const regionIdList = useSelector(getSelectedRegionIds);
-  const selectedLayerKeys = useSelector(getSelectedLayerKeys);
-
-  const handleFullDataRefresh = useCallback(() => {
-    for (let l_ind = 0; l_ind < selectedLayerKeys.length; l_ind++) {
-      const currLayerKey = selectedLayerKeys[l_ind];
-      dispatch(fetchLayerDataThunk({ regionIdList, layerKey: currLayerKey }));
-    }
-  }, [regionIdList, selectedLayerKeys]);
-
-  if (isLoading) return <DummyListLoader />;
-
-  return (
-    <Stack>
-      <Stack p={2} direction="row" justifyContent="space-between">
-        <Typography variant="h6" color="primary">
-          Select Layers
-        </Typography>
-        <Button
-          variant="outlined"
-          color="success"
-          size="small"
-          startIcon={<SyncIcon />}
-          onClick={handleFullDataRefresh}
-        >
-          Refresh
-        </Button>
-      </Stack>
-      <Divider />
-      {layerCofigs.map((layer) => {
-        return (
-          <LayerTab
-            key={layer.layer_key}
-            layerConfig={layer}
-            regionIdList={regionIdList}
-          />
-        );
-      })}
-    </Stack>
-  );
-};
-
 const LayerTab = ({ layerConfig, regionIdList }) => {
+  /**
+   * Render each tab of a layer key
+   * Handle layer on click
+   * Handle layer collapsible expand
+   * Show list of elements on expand
+   */
   const { layer_key, name } = layerConfig;
 
   const dispatch = useDispatch();
@@ -239,4 +167,4 @@ const ElementList = ({ layerKey }) => {
   );
 };
 
-export default LayersTabContent;
+export default LayerTab;
