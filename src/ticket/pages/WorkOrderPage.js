@@ -255,6 +255,14 @@ const WorkOrderPage = () => {
           setMapCenter(center);
         }
       }
+      // center exist if clicked on workorder item
+      if (!center) {
+        // find list element using data-id from workorder item list
+        const $ele = document.querySelector(`div[data-id='${surveyId}']`);
+        if ($ele) {
+          $ele.scrollIntoView({ behavior: "smooth" });
+        }
+      }
     },
     [selectedSurveyId]
   );
@@ -507,7 +515,7 @@ const WorkOrderPage = () => {
               </Typography>
             ) : null}
             {hasWorkorders ? (
-              <Stack spacing={1} direction="row" alignItems="center">
+              <Stack spacing={1} direction="row" alignItems="center" ml={1}>
                 <Typography variant="body1">Filter :</Typography>
                 {map(workOrderStatusTypes, (wStatus) => {
                   const selected = statusFilter === wStatus.value;

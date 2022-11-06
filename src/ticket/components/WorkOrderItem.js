@@ -55,9 +55,14 @@ const WorkOrderItem = ({
   const isVerified = status === "V";
   const hasUnits = !!size(units);
   const showActions = canTicketWorkorderEdit && !isVerified;
+  const isActive = id === selectedSurveyId;
 
   return (
-    <Card elevation={0} sx={{ maxWidth: 345, backgroundColor: "#efefef" }}>
+    <Card
+      elevation={isActive ? 5 : 0}
+      sx={{ maxWidth: 345, backgroundColor: "#efefef" }}
+      data-id={id}
+    >
       <CardHeader
         avatar={<StatusAvatar status={status} />}
         action={
@@ -94,11 +99,7 @@ const WorkOrderItem = ({
             aria-label="add to favorites"
             onClick={handleSurveySelect(id, center)}
           >
-            {id === selectedSurveyId ? (
-              <MyLocationIcon />
-            ) : (
-              <LocationSearchingIcon />
-            )}
+            {isActive ? <MyLocationIcon /> : <LocationSearchingIcon />}
           </IconButton>
         </Tooltip>
         {showActions ? (
