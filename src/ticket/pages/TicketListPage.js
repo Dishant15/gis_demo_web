@@ -96,11 +96,12 @@ const TicketListPage = () => {
             columnDefs={[
               { field: "unique_id", headerName: "Unique Id" },
               { field: "name" },
-              { field: "ticket_type_display", headerName: "Type" },
-              { field: "status", cellRenderer: StatusCell },
+              { field: "ticket_type_display", headerName: "Type", width: 114 },
+              { field: "status", cellRenderer: StatusCell, width: 150 },
               {
                 field: "network_type",
                 headerName: "Network Type",
+                width: 180,
                 valueFormatter: (params) => {
                   if (params.value === "B") {
                     return "As Build";
@@ -112,6 +113,7 @@ const TicketListPage = () => {
                 },
               },
               { field: "region.name", headerName: "Region" },
+              { field: "assignee.name", headerName: "Assignee" },
               {
                 headerName: "Action",
                 field: "unique_id",
