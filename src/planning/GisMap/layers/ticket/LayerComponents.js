@@ -1,7 +1,9 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Polygon } from "@react-google-maps/api";
+import { polygon, booleanContains } from "@turf/turf";
+
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
 
@@ -15,6 +17,8 @@ import { PLANNING_EVENT } from "planning/GisMap/utils";
 import EditGisLayer from "planning/GisMap/components/EditGisLayer";
 import { zIndexMapping } from "../common/configuration";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
+import { editTicketArea } from "ticket/data/services";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const STROKE_COLOR = "#88B14B";
 
@@ -79,12 +83,57 @@ export const AddMapLayer = () => {
 export const EditMapLayer = () => {
   const options = getOptions({});
 
+  const dispatch = useDispatch();
+  const mapStateData = useSelector(getPlanningMapStateData);
+
+  const handleEditElementAction = useCallback(
+    (mutationData) => {
+      const coordinates = mutationData.geometry;
+      // check if coordinates are valid
+      const areaPoly = polygon([coordinates]);
+
+      for (
+        let regPolyInd = 0;
+        regPolyInd < mapStateData.region.coordinates.length;
+        regPolyInd++
+      ) {
+        const regionPoly = polygon([
+          mapStateData.region.coordinates[regPolyInd],
+        ]);
+
+        if (booleanContains(regionPoly, areaPoly)) {
+          editTicketArea({
+            ticketId: mapStateData.id,
+            data: { coordinates: mutationData.geometry },
+          }).then(() => {
+            // fire notification of area updated
+            dispatch(
+              addNotification({
+                type: "success",
+                title: "Ticket work area updated Successfully",
+              })
+            );
+          });
+          return;
+        }
+      }
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Input Error",
+          text: "Ticket work area must be inside ticket region",
+        })
+      );
+    },
+    [mapStateData]
+  );
   return (
     <EditGisLayer
       options={options}
       helpText="Click on map to place area points on map. Complete polygon and adjust points."
       featureType="polygon"
       layerKey={LAYER_KEY}
+      editElementAction={handleEditElementAction}
     />
   );
 };

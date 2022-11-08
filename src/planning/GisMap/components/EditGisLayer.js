@@ -40,6 +40,7 @@ const EditGisLayer = ({
   helpText,
   layerKey,
   featureType, // marker | polyline | polygon
+  editElementAction,
   options = {},
   nextEvent = {},
 }) => {
@@ -48,13 +49,16 @@ const EditGisLayer = ({
   const { elementId, coordinates } = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
 
-  const onSuccessHandler = () => {
-    dispatch(
-      addNotification({
-        type: "success",
-        title: "Element location updated Successfully",
-      })
-    );
+  const onSuccessHandler = (res) => {
+    // do not fire notification if response is undefined
+    if (res) {
+      dispatch(
+        addNotification({
+          type: "success",
+          title: "Element location updated Successfully",
+        })
+      );
+    }
     // refetch layer
     dispatch(
       fetchLayerDataThunk({
@@ -107,7 +111,9 @@ const EditGisLayer = ({
 
   const { mutate: editElement, isLoading: isEditLoading } = useMutation(
     (mutationData) =>
-      editElementDetails({ data: mutationData, layerKey, elementId }),
+      !!editElementAction
+        ? editElementAction(mutationData)
+        : editElementDetails({ data: mutationData, layerKey, elementId }),
     {
       onSuccess: onSuccessHandler,
       onError: onErrorHandler,
