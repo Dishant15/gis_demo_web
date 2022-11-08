@@ -1,14 +1,12 @@
 import React, { useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
-import { pick, get, find, size } from "lodash";
+import { pick, get, find } from "lodash";
 import { useDispatch } from "react-redux";
 
-import { Box, TextField, Stack, Button, Divider, Chip } from "@mui/material";
+import { Box, TextField, Stack, Divider, Chip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import CloseIcon from "@mui/icons-material/Close";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
 import {
@@ -24,15 +22,25 @@ import { coordsToLatLongMap } from "utils/map.utils";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { generateTicketUid } from "ticket/data/utils";
 
-const AddTicketForm = ({ formData, onSubmit }) => {
+const AddTicketForm = ({
+  formData,
+  onSubmit,
+  isEdit,
+  formCancelButton = null,
+  isAdding = false,
+  handleAfterEdit = false,
+  formActionProps = {},
+  formSubmitButtonProps = {},
+  formSubmitButtonText = "Submit",
+}) => {
   /**
    * Parent:
    *    TicketEditPage
    *    TicketAddForm
+   *    TicketLayerForm
    */
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isEdit = !!size(formData);
 
   const { isLoading: regionListLoading = [], data: regionList } = useQuery(
     ["regionList", "detail"],
@@ -62,7 +70,11 @@ const AddTicketForm = ({ formData, onSubmit }) => {
 
   const { mutate, isLoading: isTicketEditing } = useMutation(editTicket, {
     onSuccess: (res) => {
-      navigate(getTicketListPage());
+      if (handleAfterEdit) {
+        handleAfterEdit();
+      } else {
+        navigate(getTicketListPage());
+      }
       dispatch(
         addNotification({
           type: "success",
@@ -105,12 +117,6 @@ const AddTicketForm = ({ formData, onSubmit }) => {
       } else {
         // navigate to next step
         onSubmit(ticketSubmitData);
-        dispatch(
-          addNotification({
-            type: "warning",
-            title: "Please Add Coordinates.",
-          })
-        );
       }
     },
     [onSubmit]
@@ -352,24 +358,14 @@ const AddTicketForm = ({ formData, onSubmit }) => {
           />
         </Stack>
       </Stack>
-      <Stack flex={1} p={4} direction="row" justifyContent="space-between">
-        <Button
-          variant="outlined"
-          color="error"
-          component={Link}
-          to={getTicketListPage()}
-          startIcon={<CloseIcon />}
-        >
-          Cancel
-        </Button>
+      <Stack flex={1} direction="row" {...formActionProps}>
+        {formCancelButton}
         <LoadingButton
-          variant="outlined"
-          color="success"
           type="submit"
-          endIcon={<ArrowForwardIosIcon />}
-          loading={isTicketEditing}
+          loading={isTicketEditing || isAdding}
+          {...formSubmitButtonProps}
         >
-          {isEdit ? "Update" : "Next"}
+          {formSubmitButtonText}
         </LoadingButton>
       </Stack>
     </Box>

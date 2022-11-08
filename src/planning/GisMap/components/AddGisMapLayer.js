@@ -23,7 +23,13 @@ const GisEditOptions = {
   zIndex: 50,
 };
 
-const AddGisMapLayer = ({ options, featureType, helpText, nextEvent = {} }) => {
+const AddGisMapLayer = ({
+  options,
+  featureType,
+  helpText,
+  nextEvent = {},
+  validation = false,
+}) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
   // once user adds marker go in edit mode
@@ -36,6 +42,13 @@ const AddGisMapLayer = ({ options, featureType, helpText, nextEvent = {} }) => {
 
   const handleAddComplete = useCallback(() => {
     const featureCoords = getCoordinatesFromFeature(featureRef.current);
+    // apply validation before add coordinates
+    let validated = true;
+    if (validation) {
+      validated = validation(featureCoords);
+    }
+    if (!validated) return;
+
     // set coords to form data
     let submitData = {};
     if (featureType === "polyline") {

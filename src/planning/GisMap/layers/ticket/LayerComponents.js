@@ -6,17 +6,18 @@ import { polygon, booleanContains } from "@turf/turf";
 
 import AddGisMapLayer from "planning/GisMap/components/AddGisMapLayer";
 import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
+import EditGisLayer from "planning/GisMap/components/EditGisLayer";
+import TicketLayerForm from "./TicketLayerForm";
 
 import {
   getLayerViewData,
   getPlanningMapStateData,
+  getPlanningMapStateEvent,
 } from "planning/data/planningGis.selectors";
 import { INITIAL_ELEMENT_DATA, LAYER_KEY } from "./configurations";
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 
-import EditGisLayer from "planning/GisMap/components/EditGisLayer";
 import { zIndexMapping } from "../common/configuration";
-import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import { editTicketArea } from "ticket/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
 
@@ -64,6 +65,7 @@ export const ViewLayer = () => {
 export const AddMapLayer = () => {
   // get icon
   const options = getOptions({});
+  const mapStateData = useSelector(getPlanningMapStateData);
 
   return (
     <AddGisMapLayer
@@ -75,6 +77,26 @@ export const AddMapLayer = () => {
         layerKey: LAYER_KEY,
         // init data
         data: INITIAL_ELEMENT_DATA,
+      }}
+      validation={(featureCoords) => {
+        // const coordinates = latLongMapToCoords(featureCoords);
+        // // Note: map state is empty here
+        // // check if coordinates are valid
+        // const areaPoly = polygon([coordinates]);
+        // for (
+        //   let regPolyInd = 0;
+        //   regPolyInd < mapStateData.region.coordinates.length;
+        //   regPolyInd++
+        // ) {
+        //   const regionPoly = polygon([
+        //     mapStateData.region.coordinates[regPolyInd],
+        //   ]);
+
+        //   if (booleanContains(regionPoly, areaPoly)) {
+        //     return true;
+        //   }
+        // }
+        return true;
       }}
     />
   );
@@ -139,11 +161,12 @@ export const EditMapLayer = () => {
 };
 
 export const ElementForm = () => {
-  return (
-    <GisMapPopups>
-      <h1>This is going to be custom form</h1>
-    </GisMapPopups>
-  );
+  // get map state event
+  const currEvent = useSelector(getPlanningMapStateEvent);
+  // check if add or edit event
+  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
+
+  return <TicketLayerForm isEdit={isEdit} layerKey={LAYER_KEY} />;
 };
 
 const ELEMENT_TABLE_FIELDS = [

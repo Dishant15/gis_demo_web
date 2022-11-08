@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import {
   Box,
@@ -9,12 +9,16 @@ import {
   Tab,
   Tabs,
   CircularProgress,
+  Button,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { useQuery } from "react-query";
 import { fetchTicketDetails } from "ticket/data/services";
 import AddTicketForm from "ticket/components/AddTicketForm";
 import TicketEditMap from "ticket/components/TicketEditMap";
+import { getTicketListPage } from "utils/url.constants";
 
 function a11yProps(index) {
   return {
@@ -91,7 +95,31 @@ const TicketEditPage = () => {
             overflow: "auto",
           }}
         >
-          <AddTicketForm formData={ticketData} />
+          <AddTicketForm
+            formData={ticketData}
+            isEdit={true}
+            formCancelButton={
+              <Button
+                variant="outlined"
+                color="error"
+                component={Link}
+                to={getTicketListPage()}
+                startIcon={<CloseIcon />}
+              >
+                Cancel
+              </Button>
+            }
+            formActionProps={{
+              p: 4,
+              justifyContent: "space-between",
+            }}
+            formSubmitButtonProps={{
+              variant: "outlined",
+              color: "success",
+              endIcon: <ArrowForwardIosIcon />,
+            }}
+            formSubmitButtonText="Update"
+          />
         </TabPanel>
         <TabPanel
           value={tab}
