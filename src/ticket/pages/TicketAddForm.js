@@ -6,7 +6,7 @@ import { Box, Stack, Typography, Divider, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import AddTicketForm from "ticket/components/AddTicketForm";
+import TicketForm from "ticket/components/TicketForm";
 import TicketMap from "ticket/components/TicketMap";
 import UserFormSteps from "gis_user/components/UserFormSteps";
 import { getTicketListPage } from "utils/url.constants";
@@ -47,8 +47,8 @@ const TicketAddForm = () => {
     switch (step) {
       case 0:
         return (
-          <AddTicketForm
-            onSubmit={handleNextStep}
+          <TicketForm
+            handleFormSubmit={handleNextStep}
             formData={{}}
             isEdit={false}
             formCancelButton={

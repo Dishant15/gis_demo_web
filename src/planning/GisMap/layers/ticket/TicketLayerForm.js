@@ -13,11 +13,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
-import AddTicketForm from "ticket/components/AddTicketForm";
+import AddTicketForm from "ticket/components/TicketForm";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 
-import { addNewTicket } from "ticket/data/services";
+import { addNewTicket, editTicket } from "ticket/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
@@ -28,42 +28,83 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
   const data = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
 
-  const { mutate, isLoading: isTicketAdding } = useMutation(addNewTicket, {
-    onSuccess: (res) => {
-      dispatch(
-        addNotification({
-          type: "success",
-          title: "New Ticket created.",
-        })
-      );
-      handleClose();
-      dispatch(
-        fetchLayerDataThunk({
-          regionIdList: selectedRegionIds,
-          layerKey,
-        })
-      );
-    },
-    onError: (err) => {
-      dispatch(
-        addNotification({
-          type: "error",
-          title: "Error",
-          text: err.message,
-        })
-      );
-    },
-  });
+  const { mutate: addTicketMutate, isLoading: isTicketAdding } = useMutation(
+    addNewTicket,
+    {
+      onSuccess: (res) => {
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "New Ticket created.",
+          })
+        );
+        handleClose();
+        dispatch(
+          fetchLayerDataThunk({
+            regionIdList: selectedRegionIds,
+            layerKey,
+          })
+        );
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
+      },
+    }
+  );
 
-  const handleAfterEdit = useCallback(() => {
-    handleClose();
-    dispatch(
-      fetchLayerDataThunk({
-        regionIdList: selectedRegionIds,
-        layerKey,
-      })
-    );
-  }, [selectedRegionIds]);
+  const { mutate: editTicketMutation, isLoading: isTicketEditing } =
+    useMutation(editTicket, {
+      onSuccess: (res) => {
+        handleClose();
+        dispatch(
+          fetchLayerDataThunk({
+            regionIdList: selectedRegionIds,
+            layerKey,
+          })
+        );
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Ticket update",
+            text: "Ticket updated successfully",
+          })
+        );
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
+      },
+    });
+
+  const handleSubmit = useCallback(
+    (formData) => {
+      if (isEdit) {
+        editTicketMutation({
+          ticketId: data.id,
+          data: { ...formData, regionCoords: undefined },
+        });
+      } else {
+        addTicketMutate({
+          ...formData,
+          // remove region coordinates
+          regionCoords: undefined,
+          coordinates: data.geometry,
+        });
+      }
+    },
+    [isEdit, data]
+  );
 
   const handleClose = useCallback(() => {
     dispatch(setMapState({}));
@@ -90,19 +131,8 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
           <AddTicketForm
             formData={data}
             isEdit={isEdit}
-            onSubmit={(newData) => {
-              console.log(
-                "🚀 ~ file: LayerComponents.js ~ line 249 ~ ElementForm ~ newData",
-                newData
-              );
-              mutate({
-                ...newData,
-                // remove region coordinates
-                regionCoords: undefined,
-                coordinates: data.geometry,
-              });
-            }}
-            isAdding={isTicketAdding}
+            handleFormSubmit={handleSubmit}
+            isButtonLoading={isTicketAdding || isTicketEditing}
             formCancelButton={
               <Button
                 sx={{ minWidth: "10em" }}
@@ -112,7 +142,6 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
                 Cancel
               </Button>
             }
-            handleAfterEdit={handleAfterEdit}
             formActionProps={{
               py: 1,
               spacing: 3,

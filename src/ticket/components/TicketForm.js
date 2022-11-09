@@ -1,11 +1,9 @@
 import React, { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { pick, get, find } from "lodash";
-import { useDispatch } from "react-redux";
 
-import { Box, TextField, Stack, Divider, Chip } from "@mui/material";
+import { Box, TextField, Stack, Divider, Chip, Skeleton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
@@ -14,24 +12,20 @@ import {
   TicketTypeList,
   TicketStatusList,
 } from "utils/constant";
-import { editTicket } from "ticket/data/services";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
-import { getTicketListPage } from "utils/url.constants";
 import { coordsToLatLongMap } from "utils/map.utils";
-import { addNotification } from "redux/reducers/notification.reducer";
 import { generateTicketUid } from "ticket/data/utils";
 
-const AddTicketForm = ({
+const TicketFormWrapper = ({
   formData,
-  onSubmit,
   isEdit,
-  formCancelButton = null,
-  isAdding = false,
-  handleAfterEdit = false,
-  formActionProps = {},
-  formSubmitButtonProps = {},
-  formSubmitButtonText = "Submit",
+  handleFormSubmit,
+  formCancelButton,
+  isButtonLoading,
+  formActionProps,
+  formSubmitButtonProps,
+  formSubmitButtonText,
 }) => {
   /**
    * Parent:
@@ -39,61 +33,56 @@ const AddTicketForm = ({
    *    TicketAddForm
    *    TicketLayerForm
    */
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { isLoading: regionListLoading = [], data: regionList } = useQuery(
+  const { isLoading: regionListLoading, data: regionList = [] } = useQuery(
     ["regionList", "detail"],
-    fetchRegionList,
-    {
-      onSuccess: (res) => {
-        const region = find(res, ["id", get(formData, "region.id")]);
-        if (region) {
-          setValue("region", region);
-        }
-      },
-    }
+    fetchRegionList
   );
 
-  const { isLoading: userListLoading = [], data: userList } = useQuery(
+  const { isLoading: userListLoading, data: userList = [] } = useQuery(
     "userList",
-    fetchUserList,
-    {
-      onSuccess: (res) => {
-        const assignee = find(res, ["id", get(formData, "assignee")]);
-        if (assignee) {
-          setValue("assignee", assignee);
-        }
-      },
-    }
+    fetchUserList
   );
 
-  const { mutate, isLoading: isTicketEditing } = useMutation(editTicket, {
-    onSuccess: (res) => {
-      if (handleAfterEdit) {
-        handleAfterEdit();
-      } else {
-        navigate(getTicketListPage());
-      }
-      dispatch(
-        addNotification({
-          type: "success",
-          title: "Ticket update",
-          text: "Ticket updated successfully",
-        })
-      );
-    },
-    onError: (err) => {
-      dispatch(
-        addNotification({
-          type: "error",
-          title: "Error",
-          text: err.message,
-        })
-      );
-    },
-  });
+  const isLoading = regionListLoading || userListLoading;
+  if (isLoading) {
+    return (
+      <Box p={2}>
+        <Skeleton animation="wave" height="30rem" />
+      </Box>
+    );
+  }
 
+  return (
+    <TicketForm
+      formData={formData}
+      regionList={regionList}
+      userList={userList}
+      isEdit={isEdit}
+      handleFormSubmit={handleFormSubmit}
+      formCancelButton={formCancelButton}
+      isButtonLoading={isButtonLoading}
+      formActionProps={formActionProps}
+      formSubmitButtonProps={formSubmitButtonProps}
+      formSubmitButtonText={formSubmitButtonText}
+    />
+  );
+};
+
+const TicketForm = ({
+  formData,
+  regionList,
+  userList,
+  handleFormSubmit,
+  isEdit,
+  formCancelButton = null,
+  isButtonLoading = false,
+  formActionProps = {},
+  formSubmitButtonProps = {},
+  formSubmitButtonText = "Submit",
+}) => {
+  /**
+   * TicketFormWrapper
+   */
   const handleTicketDetailsSubmit = useCallback(
     (data) => {
       let ticketSubmitData = pick(data, [
@@ -108,19 +97,14 @@ const AddTicketForm = ({
       ticketSubmitData.network_type = data.network_type;
       ticketSubmitData.assigneeId = data.assignee.id;
       ticketSubmitData.regionId = data.region.id;
-      if (isEdit) {
-        mutate({ ticketId: formData.id, data: ticketSubmitData });
-      } else {
-        // for Ticket Map component
-        ticketSubmitData.regionCoords = coordsToLatLongMap(
-          data.region.coordinates,
-          true
-        );
-        // navigate to next step
-        onSubmit(ticketSubmitData);
-      }
+      // for Ticket Map component
+      ticketSubmitData.regionCoords = coordsToLatLongMap(
+        data.region.coordinates,
+        true
+      );
+      handleFormSubmit(ticketSubmitData);
     },
-    [onSubmit]
+    [handleFormSubmit]
   );
 
   const {
@@ -140,7 +124,7 @@ const AddTicketForm = ({
       ticket_type: get(formData, "ticket_type"),
       network_type: get(formData, "network_type"),
       assignee: find(userList, ["id", get(formData, "assignee")]),
-      regionId: find(regionList, ["id", get(formData, "region.id")]),
+      region: find(regionList, ["id", get(formData, "region.id")]),
     },
   });
 
@@ -184,7 +168,6 @@ const AddTicketForm = ({
             simpleValue
             error={!!errors.region}
             helperText={errors.region?.message}
-            isLoading={regionListLoading}
             onBlur={handleUniqueIdOnClose}
             rules={{
               required: "This fields is required.",
@@ -300,7 +283,6 @@ const AddTicketForm = ({
             valueKey="id"
             error={!!errors.assignee}
             helperText={errors.assignee?.message}
-            isLoading={userListLoading}
             rules={{
               required: "This fields is required.",
             }}
@@ -363,7 +345,7 @@ const AddTicketForm = ({
         {formCancelButton}
         <LoadingButton
           type="submit"
-          loading={isTicketEditing || isAdding}
+          loading={isButtonLoading}
           {...formSubmitButtonProps}
         >
           {formSubmitButtonText}
@@ -373,4 +355,4 @@ const AddTicketForm = ({
   );
 };
 
-export default AddTicketForm;
+export default TicketFormWrapper;

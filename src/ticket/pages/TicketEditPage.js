@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useDispatch } from "react-redux";
 
 import {
   Box,
@@ -14,11 +16,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import { useQuery } from "react-query";
-import { fetchTicketDetails } from "ticket/data/services";
-import AddTicketForm from "ticket/components/AddTicketForm";
+import TicketForm from "ticket/components/TicketForm";
 import TicketEditMap from "ticket/components/TicketEditMap";
+
+import { editTicket, fetchTicketDetails } from "ticket/data/services";
 import { getTicketListPage } from "utils/url.constants";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 function a11yProps(index) {
   return {
@@ -26,14 +29,50 @@ function a11yProps(index) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
-
 const TicketEditPage = () => {
   const { ticketId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   // get ticket data
   const { isLoading, data: ticketData } = useQuery(
     ["ticketDetails", ticketId],
     fetchTicketDetails
+  );
+
+  const { mutate: editTicketMutation, isLoading: isTicketEditing } =
+    useMutation(editTicket, {
+      onSuccess: (res) => {
+        navigate(getTicketListPage());
+        dispatch(
+          addNotification({
+            type: "success",
+            title: "Ticket update",
+            text: "Ticket updated successfully",
+          })
+        );
+        queryClient.invalidateQueries("ticketDetails");
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
+      },
+    });
+
+  const handleSubmit = useCallback(
+    (data) => {
+      editTicketMutation({
+        ticketId: ticketData.id,
+        data: { ...data, regionCoords: undefined },
+      });
+    },
+    [ticketData]
   );
 
   // show tabs handle tab change logic
@@ -95,9 +134,10 @@ const TicketEditPage = () => {
             overflow: "auto",
           }}
         >
-          <AddTicketForm
+          <TicketForm
             formData={ticketData}
             isEdit={true}
+            handleFormSubmit={handleSubmit}
             formCancelButton={
               <Button
                 variant="outlined"
@@ -119,6 +159,7 @@ const TicketEditPage = () => {
               endIcon: <ArrowForwardIosIcon />,
             }}
             formSubmitButtonText="Update"
+            isButtonLoading={isTicketEditing}
           />
         </TabPanel>
         <TabPanel
