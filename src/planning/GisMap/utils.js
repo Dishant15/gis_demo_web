@@ -1,9 +1,7 @@
 import orderBy from "lodash/orderBy";
 import { coordsToLatLongMap } from "utils/map.utils";
-import {
-  ViewLayer as RegionViewLayer,
-  LAYER_KEY as RegionKey,
-} from "./layers/region";
+
+import * as RegionLayer from "./layers/region";
 import * as TicketLayer from "./layers/ticket";
 import {
   ViewLayer as DPViewLayer,
@@ -78,8 +76,9 @@ export const PLANNING_EVENT = {
 };
 
 export const LayerKeyMappings = {
-  [RegionKey]: {
-    ViewLayer: RegionViewLayer,
+  [RegionLayer.LAYER_KEY]: {
+    ViewLayer: RegionLayer.ViewLayer,
+    Icon: RegionLayer.Icon,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElement]: <TicketLayer.AddMapLayer />,
@@ -89,6 +88,7 @@ export const LayerKeyMappings = {
     [PLANNING_EVENT.editElementDetails]: <TicketLayer.ElementForm />,
     ViewLayer: TicketLayer.ViewLayer,
     Geometry: TicketLayer.Geometry,
+    Icon: TicketLayer.Icon,
   },
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
@@ -182,7 +182,7 @@ export const convertLayerServerData = (layerKey, serverData) => {
     return resultData;
   }
   // Multi polygon - regions
-  else if (layerKey === RegionKey) {
+  else if (layerKey === RegionLayer.LAYER_KEY) {
     resultData.map((d) => {
       // [ [lat, lng], ...] -> [{lat, lng}, ...]
       d.coordinates = coordsToLatLongMap(d.coordinates, true);

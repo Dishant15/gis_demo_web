@@ -6,6 +6,7 @@ import { Polygon } from "@react-google-maps/api";
 import { getFillColor } from "utils/map.utils";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { zIndexMapping } from "./common/configuration";
+export { default as Icon } from "assets/markers/pentagon.svg";
 
 export const LAYER_KEY = "region";
 
