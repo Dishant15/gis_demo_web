@@ -78,26 +78,6 @@ export const AddMapLayer = () => {
         // init data
         data: INITIAL_ELEMENT_DATA,
       }}
-      validation={(featureCoords) => {
-        // const coordinates = latLongMapToCoords(featureCoords);
-        // // Note: map state is empty here
-        // // check if coordinates are valid
-        // const areaPoly = polygon([coordinates]);
-        // for (
-        //   let regPolyInd = 0;
-        //   regPolyInd < mapStateData.region.coordinates.length;
-        //   regPolyInd++
-        // ) {
-        //   const regionPoly = polygon([
-        //     mapStateData.region.coordinates[regPolyInd],
-        //   ]);
-
-        //   if (booleanContains(regionPoly, areaPoly)) {
-        //     return true;
-        //   }
-        // }
-        return true;
-      }}
     />
   );
 };

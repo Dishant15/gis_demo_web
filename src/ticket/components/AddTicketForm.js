@@ -108,13 +108,14 @@ const AddTicketForm = ({
       ticketSubmitData.network_type = data.network_type;
       ticketSubmitData.assigneeId = data.assignee.id;
       ticketSubmitData.regionId = data.region.id;
-      ticketSubmitData.regionCoords = coordsToLatLongMap(
-        data.region.coordinates,
-        true
-      );
       if (isEdit) {
         mutate({ ticketId: formData.id, data: ticketSubmitData });
       } else {
+        // for Ticket Map component
+        ticketSubmitData.regionCoords = coordsToLatLongMap(
+          data.region.coordinates,
+          true
+        );
         // navigate to next step
         onSubmit(ticketSubmitData);
       }
