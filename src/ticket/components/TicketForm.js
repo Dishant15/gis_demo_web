@@ -34,7 +34,7 @@ const TicketFormWrapper = ({
    *    TicketLayerForm
    */
   const { isLoading: regionListLoading, data: regionList = [] } = useQuery(
-    ["regionList", "detail"],
+    ["regionList", "data"],
     fetchRegionList
   );
 
