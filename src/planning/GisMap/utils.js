@@ -63,6 +63,7 @@ import {
   ElementDetails as SAreaDetails,
   Icon as SAreaIcon,
 } from "./layers/p_survey_area";
+import { FEATURE_TYPES } from "./layers/common/configuration";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -79,6 +80,7 @@ export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
     ViewLayer: RegionLayer.ViewLayer,
     Icon: RegionLayer.Icon,
+    featureType: FEATURE_TYPES.POLYGON,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElement]: <TicketLayer.AddMapLayer />,
@@ -89,6 +91,7 @@ export const LayerKeyMappings = {
     ViewLayer: TicketLayer.ViewLayer,
     Geometry: TicketLayer.Geometry,
     Icon: TicketLayer.Icon,
+    featureType: FEATURE_TYPES.POLYGON,
   },
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,
@@ -99,6 +102,7 @@ export const LayerKeyMappings = {
     ViewLayer: DPViewLayer,
     Geometry: DPGeometry,
     Icon: DpIcon,
+    featureType: FEATURE_TYPES.MARKER,
   },
   [SplitterKey]: {
     [PLANNING_EVENT.addElement]: <SplitterAddLayer />,
@@ -109,6 +113,7 @@ export const LayerKeyMappings = {
     ViewLayer: SplitterLayer,
     Geometry: SplitterGeometry,
     Icon: SplitterGetIcon,
+    featureType: FEATURE_TYPES.MARKER,
     ConfigFormTemplate: SplitterConfigFormTemplate,
     ConfigInitData: SplitterConfigInitData,
     TableColDefs: SplitterTableColDefs,
@@ -125,6 +130,7 @@ export const LayerKeyMappings = {
     ViewLayer: CableLayer,
     Geometry: CableGeometry,
     Icon: CableGetIcon,
+    featureType: FEATURE_TYPES.POLYLINE,
     ConfigFormTemplate: CableConfigFormTemplate,
     ConfigInitData: CableConfigInitData,
     TableColDefs: CableTableColDefs,
@@ -139,6 +145,7 @@ export const LayerKeyMappings = {
     ViewLayer: BuildingViewLayer,
     Geometry: BuildingGeometry,
     Icon: BuildingIcon,
+    featureType: FEATURE_TYPES.MARKER,
   },
   [SAreaKey]: {
     [PLANNING_EVENT.addElement]: <SAreaAddLayer />,
@@ -149,6 +156,7 @@ export const LayerKeyMappings = {
     ViewLayer: SAreaViewLayer,
     Geometry: SAreaGeometry,
     Icon: SAreaIcon,
+    featureType: FEATURE_TYPES.POLYGON,
   },
 };
 

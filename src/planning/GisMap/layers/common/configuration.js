@@ -16,3 +16,9 @@ export const LAYER_STATUS_OPTIONS = [
   { value: "P", label: "Planned" },
   { value: "V", label: "Verified" },
 ];
+
+export const FEATURE_TYPES = {
+  POLYLINE: "polyline",
+  POLYGON: "polygon",
+  MARKER: "marker",
+};

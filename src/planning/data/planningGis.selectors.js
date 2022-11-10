@@ -11,7 +11,7 @@ export const getLayerNetworkState = (layerKey) =>
   );
 
 export const getLayerViewData = (layerKey) =>
-  createSelector(getAllLayersData, (layerData) => get(layerData, layerKey, {}));
+  createSelector(getAllLayersData, (layerData) => get(layerData, layerKey, []));
 
 // Gis Map Event selectors
 export const getPlanningMapState = (store) => store.planningGis.mapState;
