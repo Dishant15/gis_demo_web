@@ -80,7 +80,7 @@ export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
     ViewLayer: RegionLayer.ViewLayer,
     Icon: RegionLayer.Icon,
-    featureType: FEATURE_TYPES.POLYGON,
+    featureType: RegionLayer.LAYER_FEATURE_TYPE,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElement]: <TicketLayer.AddMapLayer />,
@@ -88,10 +88,9 @@ export const LayerKeyMappings = {
     [PLANNING_EVENT.showElementForm]: <TicketLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <TicketLayer.ElementDetails />,
     [PLANNING_EVENT.editElementDetails]: <TicketLayer.ElementForm />,
-    ViewLayer: TicketLayer.ViewLayer,
     Geometry: TicketLayer.Geometry,
     Icon: TicketLayer.Icon,
-    featureType: FEATURE_TYPES.POLYGON,
+    featureType: TicketLayer.LAYER_FEATURE_TYPE,
   },
   [DpKey]: {
     [PLANNING_EVENT.addElement]: <DPAddLayer />,

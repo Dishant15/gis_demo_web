@@ -1,4 +1,7 @@
+import { FEATURE_TYPES } from "../common/configuration";
+
 export const LAYER_KEY = "p_survey_building";
+export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const BUILDING_CATEGORY_OPTIONS = [
   { value: "M", label: "MDU" },

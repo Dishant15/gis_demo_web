@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import isNull from "lodash/isNull";
 
 import Box from "@mui/material/Box";
@@ -8,8 +7,6 @@ import Map from "components/common/Map";
 import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 
-import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
-import { LayerKeyMappings } from "./utils";
 import GisMapViewLayer from "./components/GisMapViewLayer";
 
 const GisMap = React.memo(({ ticketId }) => {
@@ -19,8 +16,8 @@ const GisMap = React.memo(({ ticketId }) => {
     <Box width="100%" height="100%">
       <Map center={mapCenter}>
         <GisMapEventLayer />
-        {!isNull(ticketId) ? <TicketMapLayers /> : null}
         <GisMapViewLayer />
+        {!isNull(ticketId) ? <TicketMapLayers /> : null}
       </Map>
     </Box>
   );

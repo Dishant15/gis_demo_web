@@ -1,4 +1,7 @@
+import { FEATURE_TYPES } from "../common/configuration";
+
 export const LAYER_KEY = "ticket";
+export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",

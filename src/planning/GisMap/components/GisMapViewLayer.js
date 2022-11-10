@@ -1,19 +1,13 @@
 import React, { memo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
 
-import {
-  getLayerViewData,
-  getPlanningMapState,
-} from "planning/data/planningGis.selectors";
-import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import { getLayerViewData } from "planning/data/planningGis.selectors";
+import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
-import { get } from "lodash";
 import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 
 const GisMapViewLayer = () => {
-  const dispatch = useDispatch();
-
   // get list of selected layer-keys
   const mapLayers = useSelector(getSelectedLayerKeys);
 
@@ -27,12 +21,12 @@ const ViewLayer = ({ layerKey }) => {
 
   // marker | polyline | polygon
   const featureType = LayerKeyMappings[layerKey]["featureType"];
-  console.log("🚀 ~ file: layerData", layerKey, layerData, featureType);
 
   switch (featureType) {
     case FEATURE_TYPES.MARKER:
       return layerData.map((element) => {
         const { id, hidden, coordinates } = element;
+
         if (hidden) return null;
         return (
           <Marker

@@ -18,7 +18,8 @@ export const LAYER_STATUS_OPTIONS = [
 ];
 
 export const FEATURE_TYPES = {
-  POLYLINE: "polyline",
-  POLYGON: "polygon",
-  MARKER: "marker",
+  POLYLINE: "Polyline",
+  POINT: "Point",
+  POLYGON: "Polygon",
+  MULTI_POLYGON: "Multi Polygon",
 };

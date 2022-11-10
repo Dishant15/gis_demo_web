@@ -1,6 +1,7 @@
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
+import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 export const LAYER_KEY = "p_dp";
+export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",

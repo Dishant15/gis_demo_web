@@ -1,7 +1,8 @@
 import { FIELD_TYPES } from "components/common/DynamicForm";
-import { LAYER_STATUS_OPTIONS } from "../common/configuration";
+import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 export const LAYER_KEY = "p_survey_area";
+export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",
