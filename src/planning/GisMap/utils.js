@@ -3,67 +3,11 @@ import { coordsToLatLongMap } from "utils/map.utils";
 
 import * as RegionLayer from "./layers/region";
 import * as TicketLayer from "./layers/ticket";
-import {
-  ViewLayer as DPViewLayer,
-  AddMapLayer as DPAddLayer,
-  EditMapLayer as DpEditMapLayer,
-  Geometry as DPGeometry,
-  LAYER_KEY as DpKey,
-  ElementForm as DpForm,
-  ElementDetails as DpDetails,
-  Icon as DpIcon,
-} from "./layers/p_dp";
-import {
-  LAYER_KEY as SplitterKey,
-  ViewLayer as SplitterLayer,
-  Geometry as SplitterGeometry,
-  AddMapLayer as SplitterAddLayer,
-  EditMapLayer as SplitterEditMapLayer,
-  ElementForm as SplitterForm,
-  ElementDetails as SplitterDetails,
-  getIcon as SplitterGetIcon,
-  ELEMENT_CONFIG_TEMPLATE as SplitterConfigFormTemplate,
-  INITIAL_CONFIG_DATA as SplitterConfigInitData,
-  CONFIG_LIST_TABLE_COL_DEFS as SplitterTableColDefs,
-  transformAndValidateConfigData as spConfigTransformData,
-  ElementConnections as SpListElemConn,
-  LayerAddConnection as SpAddElemConn,
-} from "./layers/p_splitter";
-import {
-  LAYER_KEY as CableKey,
-  ViewLayer as CableLayer,
-  Geometry as CableGeometry,
-  AddMapLayer as CableAddLayer,
-  EditMapLayer as CableEditMapLayer,
-  ElementForm as CableForm,
-  ElementDetails as CableDetails,
-  getIcon as CableGetIcon,
-  ELEMENT_CONFIG_TEMPLATE as CableConfigFormTemplate,
-  INITIAL_CONFIG_DATA as CableConfigInitData,
-  CONFIG_LIST_TABLE_COL_DEFS as CableTableColDefs,
-  transformAndValidateConfigData as cblConfigTransformData,
-} from "./layers/p_cable";
-import {
-  ViewLayer as BuildingViewLayer,
-  AddMapLayer as BuildingAddLayer,
-  EditMapLayer as BuildingEditMapLayer,
-  Geometry as BuildingGeometry,
-  LAYER_KEY as BuildingKey,
-  ElementForm as BuildingForm,
-  ElementDetails as BuildingDetails,
-  Icon as BuildingIcon,
-} from "./layers/p_survey_building";
-import {
-  ViewLayer as SAreaViewLayer,
-  AddMapLayer as SAreaAddLayer,
-  EditMapLayer as SAreaEditMapLayer,
-  Geometry as SAreaGeometry,
-  LAYER_KEY as SAreaKey,
-  ElementForm as SAreaForm,
-  ElementDetails as SAreaDetails,
-  Icon as SAreaIcon,
-} from "./layers/p_survey_area";
-import { FEATURE_TYPES } from "./layers/common/configuration";
+import * as DPLayer from "./layers/p_dp";
+import * as SplitterLayer from "./layers/p_splitter";
+import * as CableLayer from "./layers/p_cable";
+import * as BuildingLayer from "./layers/p_survey_building";
+import * as SAreaLayer from "./layers/p_survey_area";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -78,7 +22,6 @@ export const PLANNING_EVENT = {
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
-    ViewLayer: RegionLayer.ViewLayer,
     Icon: RegionLayer.Icon,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
   },
@@ -92,70 +35,62 @@ export const LayerKeyMappings = {
     Icon: TicketLayer.Icon,
     featureType: TicketLayer.LAYER_FEATURE_TYPE,
   },
-  [DpKey]: {
-    [PLANNING_EVENT.addElement]: <DPAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <DpEditMapLayer />,
-    [PLANNING_EVENT.showElementForm]: <DpForm />,
-    [PLANNING_EVENT.showElementDetails]: <DpDetails />,
-    [PLANNING_EVENT.editElementDetails]: <DpForm />,
-    ViewLayer: DPViewLayer,
-    Geometry: DPGeometry,
-    Icon: DpIcon,
-    featureType: FEATURE_TYPES.MARKER,
+  [DPLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <DPLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <DPLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <DPLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <DPLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <DPLayer.ElementForm />,
+    Icon: DPLayer.Icon,
+    featureType: DPLayer.LAYER_FEATURE_TYPE,
   },
-  [SplitterKey]: {
-    [PLANNING_EVENT.addElement]: <SplitterAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <SplitterEditMapLayer />,
-    [PLANNING_EVENT.showElementForm]: <SplitterForm />,
-    [PLANNING_EVENT.showElementDetails]: <SplitterDetails />,
-    [PLANNING_EVENT.editElementDetails]: <SplitterForm />,
-    ViewLayer: SplitterLayer,
-    Geometry: SplitterGeometry,
-    Icon: SplitterGetIcon,
-    featureType: FEATURE_TYPES.MARKER,
-    ConfigFormTemplate: SplitterConfigFormTemplate,
-    ConfigInitData: SplitterConfigInitData,
-    TableColDefs: SplitterTableColDefs,
-    configTransformData: spConfigTransformData,
-    [PLANNING_EVENT.showElementConnections]: <SpListElemConn />,
-    [PLANNING_EVENT.addElementConnection]: <SpAddElemConn />,
+  [SplitterLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <SplitterLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <SplitterLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <SplitterLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <SplitterLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <SplitterLayer.ElementForm />,
+    Icon: SplitterLayer.getIcon,
+    featureType: SplitterLayer.LAYER_FEATURE_TYPE,
+    ConfigFormTemplate: SplitterLayer.ELEMENT_CONFIG_TEMPLATE,
+    ConfigInitData: SplitterLayer.INITIAL_CONFIG_DATA,
+    TableColDefs: SplitterLayer.CONFIG_LIST_TABLE_COL_DEFS,
+    configTransformData: SplitterLayer.transformAndValidateConfigData,
+    [PLANNING_EVENT.showElementConnections]: (
+      <SplitterLayer.ElementConnections />
+    ),
+    [PLANNING_EVENT.addElementConnection]: <SplitterLayer.LayerAddConnection />,
   },
-  [CableKey]: {
-    [PLANNING_EVENT.addElement]: <CableAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <CableEditMapLayer />,
-    [PLANNING_EVENT.showElementForm]: <CableForm />,
-    [PLANNING_EVENT.showElementDetails]: <CableDetails />,
-    [PLANNING_EVENT.editElementDetails]: <CableForm />,
-    ViewLayer: CableLayer,
-    Geometry: CableGeometry,
-    Icon: CableGetIcon,
-    featureType: FEATURE_TYPES.POLYLINE,
-    ConfigFormTemplate: CableConfigFormTemplate,
-    ConfigInitData: CableConfigInitData,
-    TableColDefs: CableTableColDefs,
-    configTransformData: cblConfigTransformData,
+  [CableLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <CableLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <CableLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <CableLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <CableLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <CableLayer.ElementForm />,
+    Icon: CableLayer.getIcon,
+    featureType: CableLayer.LAYER_FEATURE_TYPE,
+    ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
+    ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
+    TableColDefs: CableLayer.CONFIG_LIST_TABLE_COL_DEFS,
+    configTransformData: CableLayer.transformAndValidateConfigData,
   },
-  [BuildingKey]: {
-    [PLANNING_EVENT.addElement]: <BuildingAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <BuildingEditMapLayer />,
-    [PLANNING_EVENT.showElementForm]: <BuildingForm />,
-    [PLANNING_EVENT.showElementDetails]: <BuildingDetails />,
-    [PLANNING_EVENT.editElementDetails]: <BuildingForm />,
-    ViewLayer: BuildingViewLayer,
-    Geometry: BuildingGeometry,
-    Icon: BuildingIcon,
-    featureType: FEATURE_TYPES.MARKER,
+  [BuildingLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <BuildingLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <BuildingLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <BuildingLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <BuildingLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <BuildingLayer.ElementForm />,
+    Icon: BuildingLayer.Icon,
+    featureType: BuildingLayer.LAYER_FEATURE_TYPE,
   },
-  [SAreaKey]: {
-    [PLANNING_EVENT.addElement]: <SAreaAddLayer />,
-    [PLANNING_EVENT.editElementLocation]: <SAreaEditMapLayer />,
-    [PLANNING_EVENT.showElementForm]: <SAreaForm />,
-    [PLANNING_EVENT.showElementDetails]: <SAreaDetails />,
-    [PLANNING_EVENT.editElementDetails]: <SAreaForm />,
-    ViewLayer: SAreaViewLayer,
-    Geometry: SAreaGeometry,
-    Icon: SAreaIcon,
-    featureType: FEATURE_TYPES.POLYGON,
+  [SAreaLayer.LAYER_KEY]: {
+    [PLANNING_EVENT.addElement]: <SAreaLayer.AddMapLayer />,
+    [PLANNING_EVENT.editElementLocation]: <SAreaLayer.EditMapLayer />,
+    [PLANNING_EVENT.showElementForm]: <SAreaLayer.ElementForm />,
+    [PLANNING_EVENT.showElementDetails]: <SAreaLayer.ElementDetails />,
+    [PLANNING_EVENT.editElementDetails]: <SAreaLayer.ElementForm />,
+    Icon: SAreaLayer.Icon,
+    featureType: SAreaLayer.LAYER_FEATURE_TYPE,
   },
 };
 
@@ -164,8 +99,8 @@ export const convertLayerServerData = (layerKey, serverData) => {
 
   // PolyLine / Polygon
   if (
-    layerKey === CableKey ||
-    layerKey === SAreaKey ||
+    layerKey === CableLayer.LAYER_KEY ||
+    layerKey === SAreaLayer.LAYER_KEY ||
     layerKey === TicketLayer.LAYER_KEY
   ) {
     resultData.map((d) => {
@@ -178,9 +113,9 @@ export const convertLayerServerData = (layerKey, serverData) => {
   }
   // Point gis layer
   else if (
-    layerKey === DpKey ||
-    layerKey === SplitterKey ||
-    layerKey === BuildingKey
+    layerKey === DPLayer.LAYER_KEY ||
+    layerKey === SplitterLayer.LAYER_KEY ||
+    layerKey === BuildingLayer.LAYER_KEY
   ) {
     resultData.map((d) => {
       d.geometry = [...d.coordinates];

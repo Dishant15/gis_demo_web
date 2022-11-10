@@ -1,11 +1,13 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
+
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
+import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
+
 import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
-import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 
 const GisMapViewLayer = () => {
   // get list of selected layer-keys
@@ -23,7 +25,7 @@ const ViewLayer = ({ layerKey }) => {
   const featureType = LayerKeyMappings[layerKey]["featureType"];
 
   switch (featureType) {
-    case FEATURE_TYPES.MARKER:
+    case FEATURE_TYPES.POINT:
       return layerData.map((element) => {
         const { id, hidden, coordinates } = element;
 
@@ -63,6 +65,30 @@ const ViewLayer = ({ layerKey }) => {
         } else {
           return <Polygon key={id} path={coordinates} />;
         }
+      });
+    case FEATURE_TYPES.MULTI_POLYGON:
+      return layerData.map((element) => {
+        const { id, hidden, coordinates } = element;
+        if (hidden) return null;
+        return coordinates.map((polyCoord, ind) => {
+          return (
+            <Polygon
+              key={ind}
+              options={{
+                fillOpacity: 0,
+                // strokeColor: color,
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: false,
+                geodesic: false,
+                zIndex: zIndexMapping[layerKey],
+              }}
+              paths={polyCoord}
+            />
+          );
+        });
       });
     case FEATURE_TYPES.POLYLINE:
       return layerData.map((element) => {
