@@ -5,11 +5,26 @@ import { Polygon } from "@react-google-maps/api";
 
 import { getFillColor } from "utils/map.utils";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
-import { FEATURE_TYPES, zIndexMapping } from "./common/configuration";
+import { FEATURE_TYPES } from "../common/configuration";
 export { default as Icon } from "assets/markers/pentagon.svg";
 
 export const LAYER_KEY = "region";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.MULTI_POLYGON;
+
+export const getViewOptions = ({ layer }) => {
+  const color = getFillColor(layer);
+
+  return {
+    strokeColor: color,
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: color,
+    fillOpacity: 0.3,
+    clickable: false,
+    draggable: false,
+    editable: false,
+  };
+};
 
 export const ViewLayer = () => {
   /**
@@ -38,7 +53,6 @@ export const ViewLayer = () => {
                 draggable: false,
                 editable: false,
                 geodesic: false,
-                zIndex: zIndexMapping[LAYER_KEY],
               }}
               paths={polyCoord}
             />

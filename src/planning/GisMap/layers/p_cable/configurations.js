@@ -3,6 +3,20 @@ import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 export const LAYER_KEY = "p_cable";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYLINE;
 
+export const getViewOptions = ({ color_on_map }) => {
+  return {
+    strokeColor: color_on_map,
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: color_on_map,
+    fillOpacity: 1,
+    clickable: false,
+    draggable: false,
+    editable: false,
+    radius: 30000,
+  };
+};
+
 export const INITIAL_ELEMENT_DATA = {
   name: "",
   unique_id: "REG_CBL_",

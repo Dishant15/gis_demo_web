@@ -1,7 +1,15 @@
 import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 
+import { default as Icon } from "assets/markers/p_dp_view.svg";
+import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
+
 export const LAYER_KEY = "p_dp";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
+
+export const getViewOptions = () => ({
+  icon: Icon,
+  pin: EditIcon,
+});
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",

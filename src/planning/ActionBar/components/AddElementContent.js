@@ -94,7 +94,7 @@ const AddElementContent = () => {
       // start event if no other event running
       dispatch(
         setMapState({
-          event: PLANNING_EVENT.addElement,
+          event: PLANNING_EVENT.addElementGeometry,
           layerKey,
         })
       );

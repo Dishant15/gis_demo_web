@@ -59,7 +59,7 @@ const ElementDetailsTable = ({
   const handleEditDetails = useCallback(() => {
     dispatch(
       setMapState({
-        event: PLANNING_EVENT.editElementDetails,
+        event: PLANNING_EVENT.editElementForm,
         layerKey,
         data: onEditDataConverter(elemData),
       })
@@ -69,7 +69,7 @@ const ElementDetailsTable = ({
   const handleEditLocation = useCallback(() => {
     dispatch(
       setMapState({
-        event: PLANNING_EVENT.editElementLocation,
+        event: PLANNING_EVENT.editElementGeometry,
         layerKey,
         // pass elem data to update edit icon / style based on configs
         data: {

@@ -81,7 +81,7 @@ export const AddMapLayer = () => {
       icon={Icon}
       helpText="Click on map to add new Splitter"
       nextEvent={{
-        event: PLANNING_EVENT.showElementForm, // event for "layerForm"
+        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
         layerKey: LAYER_KEY,
         // init data
         data: INITIAL_ELEMENT_DATA,
@@ -108,7 +108,7 @@ export const EditMapLayer = () => {
 export const ElementForm = () => {
   const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
   const currEvent = useSelector(getPlanningMapStateEvent);
-  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
+  const isEdit = currEvent === PLANNING_EVENT.editElementForm;
 
   const transformAndValidateData = useCallback(
     (formData) => {

@@ -28,73 +28,88 @@ const ViewLayer = ({ layerKey }) => {
     case FEATURE_TYPES.POINT:
       return layerData.map((element) => {
         const { id, hidden, coordinates } = element;
+        const viewOptions =
+          LayerKeyMappings[layerKey]["getViewOptions"](element);
 
         if (hidden) return null;
+
         return (
           <Marker
             key={id}
+            icon={{
+              // add default icon here
+              url: viewOptions.icon,
+            }}
             zIndex={zIndexMapping[layerKey]}
             position={coordinates}
           />
         );
       });
-    case FEATURE_TYPES.POLYGON:
-      return layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
-        if (hidden) return null;
-        if (layerKey === "region") {
-          return coordinates.map((polyCoord, ind) => {
-            return (
-              <Polygon
-                key={ind}
-                options={{
-                  fillOpacity: 0,
-                  // strokeColor: color,
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                  clickable: false,
-                  draggable: false,
-                  editable: false,
-                  geodesic: false,
-                  zIndex: zIndexMapping[layerKey],
-                }}
-                paths={polyCoord}
-              />
-            );
-          });
-        } else {
-          return <Polygon key={id} path={coordinates} />;
-        }
-      });
+
     case FEATURE_TYPES.MULTI_POLYGON:
       return layerData.map((element) => {
         const { id, hidden, coordinates } = element;
+        const viewOptions =
+          LayerKeyMappings[layerKey]["getViewOptions"](element);
+
         if (hidden) return null;
-        return coordinates.map((polyCoord, ind) => {
-          return (
-            <Polygon
-              key={ind}
-              options={{
-                fillOpacity: 0,
-                // strokeColor: color,
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                clickable: false,
-                draggable: false,
-                editable: false,
-                geodesic: false,
-                zIndex: zIndexMapping[layerKey],
-              }}
-              paths={polyCoord}
-            />
-          );
-        });
+
+        return (
+          <React.Fragment key={id}>
+            {coordinates.map((polyCoord, ind) => {
+              return (
+                <Polygon
+                  key={ind}
+                  options={{
+                    ...viewOptions,
+                    zIndex: zIndexMapping[layerKey],
+                  }}
+                  paths={polyCoord}
+                />
+              );
+            })}
+          </React.Fragment>
+        );
       });
+
+    case FEATURE_TYPES.POLYGON:
+      return layerData.map((element) => {
+        const { id, hidden, coordinates } = element;
+        const viewOptions =
+          LayerKeyMappings[layerKey]["getViewOptions"](element);
+
+        if (hidden) return null;
+
+        return (
+          <Polygon
+            key={id}
+            options={{
+              ...viewOptions,
+              zIndex: zIndexMapping[layerKey],
+            }}
+            paths={coordinates}
+          />
+        );
+      });
+
     case FEATURE_TYPES.POLYLINE:
       return layerData.map((element) => {
         const { id, hidden, coordinates } = element;
+        const viewOptions =
+          LayerKeyMappings[layerKey]["getViewOptions"](element);
+
         if (hidden) return null;
-        return <Polyline key={id} path={coordinates} />;
+
+        return (
+          <Polyline
+            key={id}
+            options={{
+              ...viewOptions,
+              zIndex: zIndexMapping[layerKey],
+            }}
+            paths={coordinates}
+          />
+        );
       });
     default:
       return null;

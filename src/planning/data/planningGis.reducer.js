@@ -54,7 +54,7 @@ const planningGisSlice = createSlice({
       const currMapState = state.mapState;
       // if next event is editElement
       if (
-        payload.event === PLANNING_EVENT.editElementLocation &&
+        payload.event === PLANNING_EVENT.editElementGeometry &&
         currMapState.event !== payload.event
       ) {
         // hide current element from layerData
@@ -71,7 +71,7 @@ const planningGisSlice = createSlice({
       }
       // if current event is editElement
       if (
-        currMapState.event === PLANNING_EVENT.editElementLocation &&
+        currMapState.event === PLANNING_EVENT.editElementGeometry &&
         // next event is not same
         currMapState.event !== payload.event
       ) {

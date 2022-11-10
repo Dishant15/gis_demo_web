@@ -1,8 +1,9 @@
-import { get } from "lodash";
+import get from "lodash/get";
 
 // coordinates :- isMulti ? [ [ [lng, lat] ] ] : [ [lng, lat], ...]
 export const coordsToLatLongMap = (coordinates, isMulti = false) => {
-  const inputCoords = isMulti ? coordinates : [coordinates];
+  // coordinates : isMulti : [ [ [ [ ...list of coords ] ] ] ]
+  const inputCoords = isMulti ? get(coordinates, "0") : [coordinates];
   let resultPolyData = [];
 
   for (let mInd = 0; mInd < inputCoords.length; mInd++) {

@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import get from "lodash/get";
 
 export const getActiveTab = (store) => store.planningState.activeTab;
 

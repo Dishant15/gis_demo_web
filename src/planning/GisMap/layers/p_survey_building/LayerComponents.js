@@ -52,7 +52,7 @@ export const AddMapLayer = () => {
       icon={EditIcon}
       helpText="Click on map to add new Distribution Point location"
       nextEvent={{
-        event: PLANNING_EVENT.showElementForm, // event for "layerForm"
+        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
         layerKey: LAYER_KEY,
         // init data
         data: INITIAL_ELEMENT_DATA,
@@ -76,7 +76,7 @@ export const ElementForm = () => {
   // get map state event
   const currEvent = useSelector(getPlanningMapStateEvent);
   // check if add or edit event
-  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
+  const isEdit = currEvent === PLANNING_EVENT.editElementForm;
   // transform and validate data according to that
   const transformAndValidateData = useCallback(
     (formData) => {

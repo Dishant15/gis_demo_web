@@ -73,7 +73,7 @@ export const AddMapLayer = () => {
       featureType="polygon"
       helpText="Click on map to place area points on map. Complete polygon and adjust points."
       nextEvent={{
-        event: PLANNING_EVENT.showElementForm, // event for "layerForm"
+        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
         layerKey: LAYER_KEY,
         // init data
         data: INITIAL_ELEMENT_DATA,
@@ -144,7 +144,7 @@ export const ElementForm = () => {
   // get map state event
   const currEvent = useSelector(getPlanningMapStateEvent);
   // check if add or edit event
-  const isEdit = currEvent === PLANNING_EVENT.editElementDetails;
+  const isEdit = currEvent === PLANNING_EVENT.editElementForm;
 
   return <TicketLayerForm isEdit={isEdit} layerKey={LAYER_KEY} />;
 };

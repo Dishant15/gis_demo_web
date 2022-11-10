@@ -4,6 +4,18 @@ import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 export const LAYER_KEY = "p_survey_area";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
+const STROKE_COLOR = "#CE855A";
+export const getViewOptions = () => ({
+  strokeColor: STROKE_COLOR,
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: STROKE_COLOR,
+  fillOpacity: 0.3,
+  clickable: false,
+  draggable: false,
+  editable: false,
+});
+
 export const INITIAL_ELEMENT_DATA = {
   name: "",
   unique_id: "REG_SA_",
