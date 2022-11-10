@@ -107,7 +107,7 @@ const ViewLayer = ({ layerKey }) => {
               ...viewOptions,
               zIndex: zIndexMapping[layerKey],
             }}
-            paths={coordinates}
+            path={coordinates}
           />
         );
       });
