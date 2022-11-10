@@ -97,11 +97,6 @@ const TicketForm = ({
       ticketSubmitData.network_type = data.network_type;
       ticketSubmitData.assigneeId = data.assignee.id;
       ticketSubmitData.regionId = data.region.id;
-      // for Ticket Map component
-      ticketSubmitData.regionCoords = coordsToLatLongMap(
-        data.region.coordinates,
-        true
-      );
       handleFormSubmit(ticketSubmitData);
     },
     [handleFormSubmit]

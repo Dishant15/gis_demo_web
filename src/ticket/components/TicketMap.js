@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Skeleton } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,10 +13,46 @@ import { Polygon, DrawingManager } from "@react-google-maps/api";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Map from "components/common/Map";
 
+import { get } from "lodash";
+
 import { getTicketListPage } from "utils/url.constants";
-import { getCoordinatesFromFeature, latLongMapToCoords } from "utils/map.utils";
+import {
+  coordsToLatLongMap,
+  getCoordinatesFromFeature,
+  latLongMapToCoords,
+} from "utils/map.utils";
 import { addNewTicket } from "ticket/data/services";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { fetchRegionDetails } from "region/data/services";
+
+/**
+ * fetch region details based on formData.regionId before load map
+ *
+ * Parent
+ *  TicketAddForm
+ * Render
+ *  TicketMap
+ */
+
+const TicketMapWrapper = ({ formData }) => {
+  const { isLoading, data } = useQuery(
+    ["regionDetails", formData.regionId],
+    fetchRegionDetails
+  );
+
+  const coordinates = get(data, "coordinates") || [];
+
+  if (isLoading) return <Skeleton animation="wave" height="30rem" />;
+
+  return (
+    <TicketMap
+      formData={{
+        ...formData,
+        regionCoords: coordsToLatLongMap(coordinates, true),
+      }}
+    />
+  );
+};
 
 /**
  * Show map to draw AreaPocket for ticket
@@ -26,7 +62,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
  * formData shape :- Ticket Details field, regionCoords
  *
  * Parent
- *  TicketAddForm
+ *  TicketMapWrapper
  */
 const TicketMap = ({ formData }) => {
   const navigate = useNavigate();
@@ -179,4 +215,4 @@ const TicketMap = ({ formData }) => {
   );
 };
 
-export default TicketMap;
+export default TicketMapWrapper;
