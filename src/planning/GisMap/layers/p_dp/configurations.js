@@ -2,6 +2,7 @@ import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
 
 import { default as Icon } from "assets/markers/p_dp_view.svg";
 import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
+import { latLongMapToCoords } from "utils/map.utils";
 
 export const LAYER_KEY = "p_dp";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
@@ -59,3 +60,25 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Reff Code", field: "ref_code", type: "simple" },
   { label: "Status", field: "status", type: "status" },
 ];
+
+export const transformAndValidateData = (
+  formData,
+  setError,
+  isEdit,
+  configuration
+) => {
+  if (isEdit) {
+    return {
+      ...formData,
+      // remove geometry
+      geometry: undefined,
+    };
+  } else {
+    return {
+      ...formData,
+      // remove coordinates and add geometry
+      coordinates: undefined,
+      geometry: latLongMapToCoords([formData.coordinates])[0],
+    };
+  }
+};

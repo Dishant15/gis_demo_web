@@ -1,4 +1,5 @@
 import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
+import { latLongMapToCoords } from "utils/map.utils";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
@@ -124,3 +125,27 @@ export const ELEMENT_TABLE_FIELDS = [
 ];
 
 export const ELEMENT_TABLE_EXTRA_CONTROLS = ["connections"];
+
+export const transformAndValidateData = (
+  formData,
+  setError,
+  isEdit,
+  configuration
+) => {
+  if (isEdit) {
+    return {
+      ...formData,
+      // remove geometry
+      geometry: undefined,
+      configuration: configuration.id,
+    };
+  } else {
+    return {
+      ...formData,
+      // remove coordinates and add geometry
+      coordinates: undefined,
+      geometry: latLongMapToCoords([formData.coordinates])[0],
+      configuration: configuration.id,
+    };
+  }
+};

@@ -167,3 +167,27 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Vendor", field: "vendor", type: "simple" },
   { label: "Status", field: "status", type: "status" },
 ];
+
+export const transformAndValidateData = (
+  formData,
+  setError,
+  isEdit,
+  configuration
+) => {
+  if (isEdit) {
+    return {
+      ...formData,
+      // remove geometry
+      geometry: undefined,
+      // convert select fields to simple values
+      configuration: configuration.id,
+    };
+  } else {
+    return {
+      ...formData,
+      // AddGisMapLayer will give transformed coordinates in geometry field
+      // convert select fields to simple values
+      configuration: configuration.id,
+    };
+  }
+};

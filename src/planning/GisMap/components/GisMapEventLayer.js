@@ -6,9 +6,11 @@ import EditGisLayer from "./EditGisLayer";
 import ElementDetailsTable from "./ElementDetailsTable";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
-import { PLANNING_EVENT } from "../utils";
+import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import ListElementConnections from "../layers/common/ListElementConnections";
 import AddElementConnection from "../layers/common/AddElementConnection";
+import { GisLayerForm } from "./GisLayerForm";
+import { get } from "lodash";
 
 /**
  * Show add edit popups with submit / cancel handlers
@@ -33,6 +35,20 @@ const GisMapEventLayer = React.memo(() => {
       return <AddGisMapLayer layerKey={layerKey} />;
     case PLANNING_EVENT.editElementGeometry:
       return <EditGisLayer layerKey={layerKey} />;
+    case PLANNING_EVENT.addElementForm:
+      const OverrideAddForm = get(LayerKeyMappings, [
+        layerKey,
+        PLANNING_EVENT.addElementForm,
+      ]);
+      if (!!OverrideAddForm) return <OverrideAddForm />;
+      return <GisLayerForm layerKey={layerKey} />;
+    case PLANNING_EVENT.editElementForm:
+      const OverrideEditForm = get(LayerKeyMappings, [
+        layerKey,
+        PLANNING_EVENT.editElementForm,
+      ]);
+      if (!!OverrideEditForm) return <OverrideEditForm />;
+      return <GisLayerForm layerKey={layerKey} />;
     case PLANNING_EVENT.showElementDetails:
       // LookupError: App 'gis_layer' doesn't have a 'region' model.
       if (layerKey === "region") return null;

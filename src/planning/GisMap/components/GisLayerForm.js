@@ -14,20 +14,26 @@ import {
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
-import { getSelectedRegionIds } from "planning/data/planningState.selectors";
+import { getPlanningMapState } from "planning/data/planningGis.selectors";
+import {
+  getLayerSelectedConfiguration,
+  getSelectedRegionIds,
+} from "planning/data/planningState.selectors";
+import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 
-export const GisLayerForm = ({
-  formConfig,
-  layerKey,
-  transformAndValidateData,
-  isConfigurable,
-  isEdit,
-}) => {
+export const GisLayerForm = ({ layerKey }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
-  const data = useSelector(getPlanningMapStateData);
+
   const selectedRegionIds = useSelector(getSelectedRegionIds);
+  const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
+  const { event, data } = useSelector(getPlanningMapState);
+  const isEdit = event === PLANNING_EVENT.editElementForm;
+  const formConfig = get(LayerKeyMappings, [layerKey, "formConfig"]);
+  const transformAndValidateData = get(LayerKeyMappings, [
+    layerKey,
+    "transformAndValidateData",
+  ]);
 
   const onSuccessHandler = () => {
     dispatch(
@@ -97,7 +103,9 @@ export const GisLayerForm = ({
   const onSubmit = (data, setError, clearErrors) => {
     clearErrors();
     // convert data to server friendly form
-    const validatedData = transformAndValidateData(data, setError);
+    const validatedData = transformAndValidateData
+      ? transformAndValidateData(data, setError, isEdit, configuration)
+      : data;
     if (isEdit) {
       editElement(validatedData);
     } else {
@@ -108,6 +116,8 @@ export const GisLayerForm = ({
   const onClose = () => {
     dispatch(setMapState({}));
   };
+
+  if (!formConfig) throw new Error("form config is required");
 
   return (
     <GisMapPopups>
