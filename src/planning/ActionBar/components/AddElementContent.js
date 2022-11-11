@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { filter, get, size } from "lodash";
+import filter from "lodash/filter";
+import get from "lodash/get";
+import size from "lodash/size";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,16 +15,14 @@ import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import DummyListLoader from "./DummyListLoader";
 import ElementConfigPopup from "./ElementConfigPopup";
 
-import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
+import { LayerKeyMappings } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
-import { setMapState } from "planning/data/planningGis.reducer";
-import { addNotification } from "redux/reducers/notification.reducer";
 import {
   selectConfiguration,
   setLayerConfigurations,
 } from "planning/data/planningState.reducer";
-import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
+import { onAddElement } from "planning/data/planning.actions";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -69,7 +69,6 @@ const AddElementContent = () => {
   const dispatch = useDispatch();
   // if popup open : layerKey of selected configs, null if closed
   const [layerConfigPopup, setLayerConfigPopup] = useState(null);
-  const { event } = useSelector(getPlanningMapState);
   const selectedConfigurations = useSelector(getSelectedConfigurations);
 
   // shape: [ { layer_key, name, is_configurable, can_add, can_edit,
@@ -80,26 +79,9 @@ const AddElementContent = () => {
 
   const handleAddElementClick = useCallback(
     (layerKey) => () => {
-      // show error if one event already running
-      if (event) {
-        dispatch(
-          addNotification({
-            type: "warning",
-            title: "Operation can not start",
-            text: "Please complete current operation before starting new",
-          })
-        );
-        return;
-      }
-      // start event if no other event running
-      dispatch(
-        setMapState({
-          event: PLANNING_EVENT.addElementGeometry,
-          layerKey,
-        })
-      );
+      dispatch(onAddElement({ layerKey }));
     },
-    [event]
+    []
   );
 
   const handleLayerConfigPopupShow = useCallback(

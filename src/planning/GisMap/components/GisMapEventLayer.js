@@ -33,25 +33,34 @@ const GisMapEventLayer = React.memo(() => {
   switch (event) {
     case PLANNING_EVENT.addElementGeometry:
       return <AddGisMapLayer layerKey={layerKey} />;
+
     case PLANNING_EVENT.editElementGeometry:
       return <EditGisLayer layerKey={layerKey} />;
+
     case PLANNING_EVENT.addElementForm:
       const OverrideAddForm = get(LayerKeyMappings, [
         layerKey,
         PLANNING_EVENT.addElementForm,
       ]);
+
       if (!!OverrideAddForm) return <OverrideAddForm />;
+
       return <GisLayerForm layerKey={layerKey} />;
+
     case PLANNING_EVENT.editElementForm:
       const OverrideEditForm = get(LayerKeyMappings, [
         layerKey,
         PLANNING_EVENT.editElementForm,
       ]);
+
       if (!!OverrideEditForm) return <OverrideEditForm />;
+
       return <GisLayerForm layerKey={layerKey} />;
+
     case PLANNING_EVENT.showElementDetails:
       // LookupError: App 'gis_layer' doesn't have a 'region' model.
       if (layerKey === "region") return null;
+
       return <ElementDetailsTable layerKey={layerKey} />;
 
     case PLANNING_EVENT.showElementConnections:
@@ -59,6 +68,7 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.addElementConnection:
       return <AddElementConnection />;
+
     default:
       return null;
   }

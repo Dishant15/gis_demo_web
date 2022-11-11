@@ -5,16 +5,20 @@ import {
   booleanIntersects,
   distance,
 } from "@turf/turf";
+import get from "lodash/get";
 
 import { getSelectedLayerKeys } from "./planningState.selectors";
 import { handleLayerSelect, handleRegionSelect } from "./planningState.reducer";
 import { fetchLayerDataThunk } from "./actionBar.services";
-import { getLayerViewData } from "./planningGis.selectors";
+import {
+  getLayerViewData,
+  getPlanningMapStateEvent,
+} from "./planningGis.selectors";
 import {
   resetUnselectedLayerGisData,
   setMapState,
 } from "./planningGis.reducer";
-import { PLANNING_EVENT } from "planning/GisMap/utils";
+import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
 
 export const onRegionSelectionUpdate =
@@ -46,6 +50,32 @@ export const onRegionSelectionUpdate =
       );
     }
     dispatch(resetUnselectedLayerGisData(selectedLayerKeys));
+  };
+
+export const onAddElement =
+  ({ layerKey }) =>
+  (dispatch, getState) => {
+    const storeState = getState();
+    const event = getPlanningMapStateEvent(storeState);
+    // show error if one event already running
+    if (event) {
+      dispatch(
+        addNotification({
+          type: "warning",
+          title: "Operation can not start",
+          text: "Please complete current operation before starting new",
+        })
+      );
+      return;
+    } else {
+      // start event if no other event running
+      dispatch(
+        setMapState({
+          event: PLANNING_EVENT.addElementGeometry,
+          layerKey,
+        })
+      );
+    }
   };
 
 export const onElementAddConnectionEvent =
