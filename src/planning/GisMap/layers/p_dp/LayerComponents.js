@@ -18,23 +18,6 @@ import {
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { latLongMapToCoords } from "utils/map.utils";
 
-import { default as Icon } from "assets/markers/p_dp_view.svg";
-import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
-import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable";
-import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
-import { zIndexMapping } from "../common/configuration";
-
-export const EditMapLayer = () => {
-  return (
-    <EditMarkerLayer
-      icon={EditIcon}
-      helpText="Click or drag and drop marker to new location"
-      layerKey={LAYER_KEY}
-      featureType="marker"
-    />
-  );
-};
-
 export const ElementForm = () => {
   // get map state event
   const currEvent = useSelector(getPlanningMapStateEvent);

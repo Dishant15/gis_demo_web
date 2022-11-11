@@ -27,7 +27,6 @@ export const LayerKeyMappings = {
     getViewOptions: RegionLayer.getViewOptions,
   },
   [TicketLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <TicketLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <TicketLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <TicketLayer.ElementForm />,
     featureType: TicketLayer.LAYER_FEATURE_TYPE,
@@ -36,7 +35,6 @@ export const LayerKeyMappings = {
     elementTableFields: TicketLayer.ELEMENT_TABLE_FIELDS,
   },
   [DPLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <DPLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <DPLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <DPLayer.ElementForm />,
     featureType: DPLayer.LAYER_FEATURE_TYPE,
@@ -45,7 +43,6 @@ export const LayerKeyMappings = {
     elementTableFields: DPLayer.ELEMENT_TABLE_FIELDS,
   },
   [SplitterLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <SplitterLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <SplitterLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <SplitterLayer.ElementForm />,
     featureType: SplitterLayer.LAYER_FEATURE_TYPE,
@@ -56,15 +53,11 @@ export const LayerKeyMappings = {
     TableColDefs: SplitterLayer.CONFIG_LIST_TABLE_COL_DEFS,
     configTransformData: SplitterLayer.transformAndValidateConfigData,
     // extra events
-    [PLANNING_EVENT.showElementConnections]: (
-      <SplitterLayer.ElementConnections />
-    ),
-    [PLANNING_EVENT.addElementConnection]: <SplitterLayer.LayerAddConnection />,
     initialElementData: SplitterLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: SplitterLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: SplitterLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [CableLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <CableLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <CableLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <CableLayer.ElementForm />,
     featureType: CableLayer.LAYER_FEATURE_TYPE,
@@ -78,7 +71,6 @@ export const LayerKeyMappings = {
     configTransformData: CableLayer.transformAndValidateConfigData,
   },
   [BuildingLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <BuildingLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <BuildingLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <BuildingLayer.ElementForm />,
     featureType: BuildingLayer.LAYER_FEATURE_TYPE,
@@ -87,7 +79,6 @@ export const LayerKeyMappings = {
     elementTableFields: BuildingLayer.ELEMENT_TABLE_FIELDS,
   },
   [SAreaLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.editElementGeometry]: <SAreaLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <SAreaLayer.ElementForm />,
     [PLANNING_EVENT.editElementForm]: <SAreaLayer.ElementForm />,
     featureType: SAreaLayer.LAYER_FEATURE_TYPE,

@@ -7,6 +7,8 @@ import ElementDetailsTable from "./ElementDetailsTable";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { PLANNING_EVENT } from "../utils";
+import ListElementConnections from "../layers/common/ListElementConnections";
+import AddElementConnection from "../layers/common/AddElementConnection";
 
 /**
  * Show add edit popups with submit / cancel handlers
@@ -35,6 +37,12 @@ const GisMapEventLayer = React.memo(() => {
       // LookupError: App 'gis_layer' doesn't have a 'region' model.
       if (layerKey === "region") return null;
       return <ElementDetailsTable layerKey={layerKey} />;
+
+    case PLANNING_EVENT.showElementConnections:
+      return <ListElementConnections layerKey={layerKey} />;
+
+    case PLANNING_EVENT.addElementConnection:
+      return <AddElementConnection />;
     default:
       return null;
   }

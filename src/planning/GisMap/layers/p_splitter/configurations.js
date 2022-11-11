@@ -122,3 +122,5 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Vendor", field: "vendor", type: "simple" },
   { label: "Status", field: "status", type: "status" },
 ];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = ["connections"];

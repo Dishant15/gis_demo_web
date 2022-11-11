@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { size } from "lodash";
+import size from "lodash/size";
 
 import {
   Divider,
@@ -21,9 +21,12 @@ import { ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsT
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
 import { onElementAddConnectionEvent } from "planning/data/planning.actions";
+import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 
-const ListElementConnections = ({ layerKey, elementId, elementGeometry }) => {
+const ListElementConnections = ({ layerKey }) => {
   const dispatch = useDispatch();
+  const { elementId, elementGeometry } = useSelector(getPlanningMapStateData);
+
   const { data: elemConnectionData, isLoading } = useQuery(
     ["elementConnections", layerKey, elementId],
     fetchElementConnections

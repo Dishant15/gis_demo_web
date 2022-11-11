@@ -35,12 +35,7 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
  * handle loading
  * show data in table form
  */
-const ElementDetailsTable = ({
-  layerKey,
-  // connections | associations
-  extraControls = [],
-  onEditDataConverter,
-}) => {
+const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   const dispatch = useDispatch();
   const { elementId } = useSelector(getPlanningMapStateData);
 
@@ -50,7 +45,12 @@ const ElementDetailsTable = ({
   );
 
   const rowDefs = get(LayerKeyMappings, [layerKey, "elementTableFields"], []);
-
+  // connections | associations
+  const extraControls = get(
+    LayerKeyMappings,
+    [layerKey, "elementTableExtraControls"],
+    []
+  );
   const windowHeight = useSelector(getContentHeight);
   // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title + action btns)
   const contentHeight = windowHeight - windowHeight * 0.1 - (60 + 70);
