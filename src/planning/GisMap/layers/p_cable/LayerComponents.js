@@ -42,56 +42,6 @@ export const getOptions = ({ color_on_map }) => {
   };
 };
 
-export const Geometry = ({ coordinates, color_on_map }) => {
-  const options = getOptions({ color_on_map });
-
-  return <Polyline path={coordinates} options={options} />;
-};
-
-export const ViewLayer = () => {
-  /**
-   * Parent:
-   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
-   */
-  const layerData = useSelector(getLayerViewData(LAYER_KEY));
-
-  return (
-    <>
-      {layerData.map((element) => {
-        const { id, hidden, coordinates, color_on_map } = element;
-        if (hidden) return null;
-        return (
-          <Geometry
-            key={id}
-            color_on_map={color_on_map}
-            coordinates={coordinates}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-export const AddMapLayer = () => {
-  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
-  // get icon
-  const options = getOptions(configuration);
-
-  return (
-    <AddGisMapLayer
-      options={options}
-      featureType="polyline"
-      helpText="Click on map to create line on map. Double click to complete."
-      nextEvent={{
-        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
-        layerKey: LAYER_KEY,
-        // init data
-        data: INITIAL_ELEMENT_DATA,
-      }}
-    />
-  );
-};
-
 export const EditMapLayer = () => {
   const elemData = useSelector(getPlanningMapStateData);
   // get icon

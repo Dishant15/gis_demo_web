@@ -24,47 +24,6 @@ import ElementDetailsTable from "planning/GisMap/components/ElementDetailsTable"
 import EditMarkerLayer from "planning/GisMap/components/EditGisLayer";
 import { zIndexMapping } from "../common/configuration";
 
-export const Geometry = ({ coordinates }) => (
-  <Marker
-    icon={{ url: Icon }}
-    zIndex={zIndexMapping[LAYER_KEY]}
-    position={coordinates}
-  />
-);
-
-export const ViewLayer = () => {
-  /**
-   * Parent:
-   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
-   */
-  const layerData = useSelector(getLayerViewData(LAYER_KEY));
-
-  return (
-    <>
-      {layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
-        if (hidden) return null;
-        return <Geometry key={id} coordinates={coordinates} />;
-      })}
-    </>
-  );
-};
-
-export const AddMapLayer = () => {
-  return (
-    <AddMarkerLayer
-      icon={EditIcon}
-      helpText="Click on map to add new Distribution Point location"
-      nextEvent={{
-        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
-        layerKey: LAYER_KEY,
-        // init data
-        data: INITIAL_ELEMENT_DATA,
-      }}
-    />
-  );
-};
-
 export const EditMapLayer = () => {
   return (
     <EditMarkerLayer

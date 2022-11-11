@@ -6,12 +6,13 @@ import { Polygon } from "@react-google-maps/api";
 import { getFillColor } from "utils/map.utils";
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { FEATURE_TYPES } from "../common/configuration";
-export { default as Icon } from "assets/markers/pentagon.svg";
+import Icon from "assets/markers/pentagon.svg";
 
 export const LAYER_KEY = "region";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.MULTI_POLYGON;
 
-export const getViewOptions = ({ layer }) => {
+export const getViewOptions = (props = {}) => {
+  const { layer } = props;
   const color = getFillColor(layer);
 
   return {
@@ -23,6 +24,8 @@ export const getViewOptions = ({ layer }) => {
     clickable: false,
     draggable: false,
     editable: false,
+    icon: Icon,
+    pin: Icon,
   };
 };
 

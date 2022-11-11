@@ -18,8 +18,17 @@ export const LAYER_STATUS_OPTIONS = [
 ];
 
 export const FEATURE_TYPES = {
-  POLYLINE: "Polyline",
-  POINT: "Point",
-  POLYGON: "Polygon",
-  MULTI_POLYGON: "Multi Polygon",
+  POLYLINE: "polyline",
+  POINT: "point",
+  POLYGON: "polygon",
+  MULTI_POLYGON: "multi_polygon",
+};
+
+// mapping drawing mode from feature type values
+// for google map drawing mode string
+export const MAP_DRAWING_MODE = {
+  polyline: "polyline",
+  polygon: "polygon",
+  point: "marker",
+  multi_polygon: "polygon",
 };

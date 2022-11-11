@@ -35,61 +35,6 @@ export const getIcon = ({ splitter_type }) =>
 export const getEditIcon = ({ splitter_type }) =>
   splitter_type === "P" ? PrimarySpliterEditIcon : SecondarySpliterEditIcon;
 
-export const Geometry = ({ coordinates, splitter_type }) => {
-  return (
-    <Marker
-      icon={{
-        url: getIcon({ splitter_type }),
-      }}
-      zIndex={zIndexMapping[LAYER_KEY]}
-      position={coordinates}
-    />
-  );
-};
-
-export const ViewLayer = () => {
-  /**
-   * Parent:
-   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
-   */
-  const layerData = useSelector(getLayerViewData(LAYER_KEY));
-
-  return (
-    <>
-      {layerData.map((element) => {
-        const { id, coordinates, splitter_type, hidden } = element;
-        if (hidden) return null;
-        return (
-          <Geometry
-            key={id}
-            splitter_type={splitter_type}
-            coordinates={coordinates}
-          />
-        );
-      })}
-    </>
-  );
-};
-
-export const AddMapLayer = () => {
-  const configuration = useSelector(getLayerSelectedConfiguration(LAYER_KEY));
-  // get icon
-  const Icon = getEditIcon(configuration);
-
-  return (
-    <AddMarkerLayer
-      icon={Icon}
-      helpText="Click on map to add new Splitter"
-      nextEvent={{
-        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
-        layerKey: LAYER_KEY,
-        // init data
-        data: INITIAL_ELEMENT_DATA,
-      }}
-    />
-  );
-};
-
 export const EditMapLayer = () => {
   const elemData = useSelector(getPlanningMapStateData);
   // get icon

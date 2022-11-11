@@ -9,6 +9,10 @@ import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 
+/**
+ * Parent:
+ *    GisMap
+ */
 const GisMapViewLayer = () => {
   // get list of selected layer-keys
   const mapLayers = useSelector(getSelectedLayerKeys);

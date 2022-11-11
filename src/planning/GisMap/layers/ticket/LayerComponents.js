@@ -38,50 +38,6 @@ export const getOptions = ({ hidden = false }) => {
   };
 };
 
-export const Geometry = ({ coordinates, hidden }) => {
-  const options = getOptions({ hidden });
-
-  return <Polygon path={coordinates} options={options} />;
-};
-
-export const ViewLayer = () => {
-  /**
-   * Parent:
-   *  GisMap > utils > LayerKeyMaping.layerKey.ViewLayer
-   */
-  const layerData = useSelector(getLayerViewData(LAYER_KEY));
-
-  return (
-    <>
-      {layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
-
-        return <Geometry key={id} hidden={hidden} coordinates={coordinates} />;
-      })}
-    </>
-  );
-};
-
-export const AddMapLayer = () => {
-  // get icon
-  const options = getOptions({});
-  const mapStateData = useSelector(getPlanningMapStateData);
-
-  return (
-    <AddGisMapLayer
-      options={options}
-      featureType="polygon"
-      helpText="Click on map to place area points on map. Complete polygon and adjust points."
-      nextEvent={{
-        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
-        layerKey: LAYER_KEY,
-        // init data
-        data: INITIAL_ELEMENT_DATA,
-      }}
-    />
-  );
-};
-
 export const EditMapLayer = () => {
   const options = getOptions({});
 

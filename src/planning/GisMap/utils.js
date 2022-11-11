@@ -1,5 +1,6 @@
 import orderBy from "lodash/orderBy";
 import { coordsToLatLongMap } from "utils/map.utils";
+import { FEATURE_TYPES } from "./layers/common/configuration";
 
 import * as RegionLayer from "./layers/region";
 import * as TicketLayer from "./layers/ticket";
@@ -8,7 +9,6 @@ import * as SplitterLayer from "./layers/p_splitter";
 import * as CableLayer from "./layers/p_cable";
 import * as BuildingLayer from "./layers/p_survey_building";
 import * as SAreaLayer from "./layers/p_survey_area";
-import { FEATURE_TYPES } from "./layers/common/configuration";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -23,38 +23,32 @@ export const PLANNING_EVENT = {
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
-    Icon: RegionLayer.Icon,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,
   },
   [TicketLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <TicketLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <TicketLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <TicketLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <TicketLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <TicketLayer.ElementForm />,
-    Geometry: TicketLayer.Geometry,
-    Icon: TicketLayer.Icon,
     featureType: TicketLayer.LAYER_FEATURE_TYPE,
     getViewOptions: TicketLayer.getViewOptions,
+    initialElementData: TicketLayer.INITIAL_ELEMENT_DATA,
   },
   [DPLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <DPLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <DPLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <DPLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <DPLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <DPLayer.ElementForm />,
-    Icon: DPLayer.Icon,
     featureType: DPLayer.LAYER_FEATURE_TYPE,
     getViewOptions: DPLayer.getViewOptions,
+    initialElementData: DPLayer.INITIAL_ELEMENT_DATA,
   },
   [SplitterLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <SplitterLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <SplitterLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <SplitterLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <SplitterLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <SplitterLayer.ElementForm />,
-    Icon: SplitterLayer.getIcon,
     featureType: SplitterLayer.LAYER_FEATURE_TYPE,
     getViewOptions: SplitterLayer.getViewOptions,
     // config fields
@@ -67,16 +61,16 @@ export const LayerKeyMappings = {
       <SplitterLayer.ElementConnections />
     ),
     [PLANNING_EVENT.addElementConnection]: <SplitterLayer.LayerAddConnection />,
+    initialElementData: SplitterLayer.INITIAL_ELEMENT_DATA,
   },
   [CableLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <CableLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <CableLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <CableLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <CableLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <CableLayer.ElementForm />,
-    Icon: CableLayer.getIcon,
     featureType: CableLayer.LAYER_FEATURE_TYPE,
     getViewOptions: CableLayer.getViewOptions,
+    initialElementData: CableLayer.INITIAL_ELEMENT_DATA,
     // config fields
     ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
@@ -84,24 +78,22 @@ export const LayerKeyMappings = {
     configTransformData: CableLayer.transformAndValidateConfigData,
   },
   [BuildingLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <BuildingLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <BuildingLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <BuildingLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <BuildingLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <BuildingLayer.ElementForm />,
-    Icon: BuildingLayer.Icon,
     featureType: BuildingLayer.LAYER_FEATURE_TYPE,
     getViewOptions: BuildingLayer.getViewOptions,
+    initialElementData: BuildingLayer.INITIAL_ELEMENT_DATA,
   },
   [SAreaLayer.LAYER_KEY]: {
-    [PLANNING_EVENT.addElementGeometry]: <SAreaLayer.AddMapLayer />,
     [PLANNING_EVENT.editElementGeometry]: <SAreaLayer.EditMapLayer />,
     [PLANNING_EVENT.addElementForm]: <SAreaLayer.ElementForm />,
     [PLANNING_EVENT.showElementDetails]: <SAreaLayer.ElementDetails />,
     [PLANNING_EVENT.editElementForm]: <SAreaLayer.ElementForm />,
-    Icon: SAreaLayer.Icon,
     featureType: SAreaLayer.LAYER_FEATURE_TYPE,
     getViewOptions: SAreaLayer.getViewOptions,
+    initialElementData: SAreaLayer.INITIAL_ELEMENT_DATA,
   },
 };
 

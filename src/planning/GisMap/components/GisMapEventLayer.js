@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
+import get from "lodash/get";
+
+import AddGisMapLayer from "./AddGisMapLayer";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
-import { addNotification } from "redux/reducers/notification.reducer";
-import { setMapState } from "planning/data/planningGis.reducer";
-import { LayerKeyMappings } from "../utils";
+import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
 
 /**
  * Show add edit popups with submit / cancel handlers
@@ -22,34 +24,15 @@ import { LayerKeyMappings } from "../utils";
  *  {LayerKey} -> AddLayer (export from layers folder) -> AddMarkerLayer | AddPolygonLayer
  */
 const GisMapEventLayer = React.memo(() => {
-  const dispatch = useDispatch();
-  const mapState = useSelector(getPlanningMapState);
+  const { layerKey, event } = useSelector(getPlanningMapState);
 
-  useEffect(() => {
-    if (!!mapState.event) {
-      const MappedComponent =
-        LayerKeyMappings[mapState.layerKey][mapState.event];
-      if (!MappedComponent) {
-        // if no component found dispatch error and reset mapState
-        dispatch(
-          addNotification({
-            type: "error",
-            title: "Can not process requested operation",
-          })
-        );
-        dispatch(setMapState({}));
-      }
-    }
-  }, [mapState.event, mapState.layerKey]);
+  switch (event) {
+    case PLANNING_EVENT.addElementGeometry:
+      return <AddGisMapLayer layerKey={layerKey} />;
 
-  if (!!mapState.event) {
-    const MappedComponent = LayerKeyMappings[mapState.layerKey][mapState.event];
-    if (!!MappedComponent) {
-      return MappedComponent;
-    }
+    default:
+      return null;
   }
-
-  return null;
 });
 
 export default GisMapEventLayer;

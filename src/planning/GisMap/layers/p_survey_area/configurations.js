@@ -1,5 +1,6 @@
 import { FIELD_TYPES } from "components/common/DynamicForm";
 import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
+import Icon from "assets/markers/path.svg";
 
 export const LAYER_KEY = "p_survey_area";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
@@ -14,6 +15,8 @@ export const getViewOptions = () => ({
   clickable: false,
   draggable: false,
   editable: false,
+  icon: Icon,
+  pin: Icon,
 });
 
 export const INITIAL_ELEMENT_DATA = {

@@ -1,4 +1,5 @@
 import { FEATURE_TYPES } from "../common/configuration";
+import Icon from "assets/markers/ticket.svg";
 
 export const LAYER_KEY = "ticket";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
@@ -13,6 +14,8 @@ export const getViewOptions = () => ({
   clickable: false,
   draggable: false,
   editable: false,
+  icon: Icon,
+  pin: Icon,
 });
 
 export const INITIAL_ELEMENT_DATA = {
