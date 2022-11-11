@@ -26,8 +26,9 @@ import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { PLANNING_EVENT } from "../utils";
+import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
+import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 
 /**
  * fetch element details
@@ -35,18 +36,20 @@ import { getContentHeight } from "redux/selectors/appState.selectors";
  * show data in table form
  */
 const ElementDetailsTable = ({
-  rowDefs,
   layerKey,
-  elementId,
   // connections | associations
   extraControls = [],
   onEditDataConverter,
 }) => {
   const dispatch = useDispatch();
+  const { elementId } = useSelector(getPlanningMapStateData);
+
   const { data: elemData, isLoading } = useQuery(
     ["elementDetails", layerKey, elementId],
     fetchElementDetails
   );
+
+  const rowDefs = get(LayerKeyMappings, [layerKey, "elementTableFields"], []);
 
   const windowHeight = useSelector(getContentHeight);
   // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title + action btns)
@@ -61,7 +64,7 @@ const ElementDetailsTable = ({
       setMapState({
         event: PLANNING_EVENT.editElementForm,
         layerKey,
-        data: onEditDataConverter(elemData),
+        data: onEditDataConverter ? onEditDataConverter(elemData) : elemData,
       })
     );
   }, [dispatch, layerKey, elemData, onEditDataConverter]);

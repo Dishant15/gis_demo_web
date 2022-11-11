@@ -66,33 +66,3 @@ export const ElementForm = () => {
     />
   );
 };
-
-const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Address", field: "address", type: "simple" },
-  { label: "Tags", field: "tags", type: "simple" },
-  { label: "Categories", field: "category_display", type: "simple" },
-  { label: "Floors", field: "floors", type: "simple" },
-  { label: "House Per Floor", field: "house_per_floor", type: "simple" },
-  { label: "Total Home Pass", field: "total_home_pass", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Status", field: "status", type: "status" },
-];
-
-const convertDataBeforeForm = (data) => {
-  return data;
-};
-
-export const ElementDetails = () => {
-  const { elementId } = useSelector(getPlanningMapStateData);
-
-  return (
-    <ElementDetailsTable
-      rowDefs={ELEMENT_TABLE_FIELDS}
-      layerKey={LAYER_KEY}
-      elementId={elementId}
-      onEditDataConverter={convertDataBeforeForm}
-    />
-  );
-};

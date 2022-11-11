@@ -51,3 +51,11 @@ export const ELEMENT_FORM_TEMPLATE = {
     },
   ],
 };
+
+export const ELEMENT_TABLE_FIELDS = [
+  { label: "Name", field: "name", type: "simple" },
+  { label: "Address", field: "address", type: "simple" },
+  { label: "Unique Id", field: "unique_id", type: "simple" },
+  { label: "Reff Code", field: "ref_code", type: "simple" },
+  { label: "Status", field: "status", type: "status" },
+];

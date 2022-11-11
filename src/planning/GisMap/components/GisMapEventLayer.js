@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import get from "lodash/get";
-
 import AddGisMapLayer from "./AddGisMapLayer";
+import EditGisLayer from "./EditGisLayer";
+import ElementDetailsTable from "./ElementDetailsTable";
+
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
-import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
+import { PLANNING_EVENT } from "../utils";
 
 /**
  * Show add edit popups with submit / cancel handlers
@@ -29,7 +29,12 @@ const GisMapEventLayer = React.memo(() => {
   switch (event) {
     case PLANNING_EVENT.addElementGeometry:
       return <AddGisMapLayer layerKey={layerKey} />;
-
+    case PLANNING_EVENT.editElementGeometry:
+      return <EditGisLayer layerKey={layerKey} />;
+    case PLANNING_EVENT.showElementDetails:
+      // LookupError: App 'gis_layer' doesn't have a 'region' model.
+      if (layerKey === "region") return null;
+      return <ElementDetailsTable layerKey={layerKey} />;
     default:
       return null;
   }

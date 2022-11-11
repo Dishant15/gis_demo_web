@@ -23,9 +23,12 @@ import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
-import { getSelectedRegionIds } from "planning/data/planningState.selectors";
-import { PLANNING_EVENT } from "../utils";
-import { zIndexMapping } from "../layers/common/configuration";
+import {
+  getLayerSelectedConfiguration,
+  getSelectedRegionIds,
+} from "planning/data/planningState.selectors";
+import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 
 const GisEditOptions = {
   clickable: true,
@@ -35,19 +38,26 @@ const GisEditOptions = {
   zIndex: zIndexMapping.edit,
 };
 
-const EditGisLayer = ({
-  icon,
-  helpText,
-  layerKey,
-  featureType, // marker | polyline | polygon
-  editElementAction,
-  options = {},
-  nextEvent = {},
-}) => {
+const GisMarkerEditOptions = {
+  clickable: true,
+  draggable: true,
+  editable: true,
+  geodesic: false,
+  zIndex: zIndexMapping.edit,
+};
+
+const EditGisLayer = ({ layerKey, editElementAction }) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
   const { elementId, coordinates } = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
+
+  // layer key based data default data from utils -> LayerKeyMappings
+  const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+  const configuration = useSelector(getLayerSelectedConfiguration(featureType));
+  const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
+    configuration
+  );
 
   const onSuccessHandler = (res) => {
     // do not fire notification if response is undefined
@@ -74,7 +84,6 @@ const EditGisLayer = ({
         event: PLANNING_EVENT.showElementDetails,
         layerKey,
         data: { elementId },
-        ...nextEvent,
       })
     );
   };
@@ -123,16 +132,18 @@ const EditGisLayer = ({
   const handleSubmit = useCallback(() => {
     // convert markder coordinates
     let submitData = {};
-    if (featureType === "polyline") {
+    if (featureType === FEATURE_TYPES.POLYLINE) {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToLineCoords(featureCoords);
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
-    } else if (featureType === "polygon") {
+    } else if (featureType === FEATURE_TYPES.POLYGON) {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords(featureCoords);
-    } else {
+    } else if (featureType === FEATURE_TYPES.POINT) {
       const featureCoords = getMarkerCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
+    } else {
+      throw new Error("feature type is invalid");
     }
     editElement(submitData);
   }, []);
@@ -153,45 +164,62 @@ const EditGisLayer = ({
     featureRef.current.setMap(null);
   }, [layerKey]);
 
+  // helpText show in popup based on featureType
+  const helpText = useMemo(() => {
+    switch (featureType) {
+      case FEATURE_TYPES.POLYLINE:
+        return "Click on map to create line on map. Double click to complete.";
+      case FEATURE_TYPES.POLYGON:
+        return "Click on map to place area points on map. Complete polygon and adjust points.";
+      case FEATURE_TYPES.POINT:
+        return "Click or drag and drop marker to new location";
+      default:
+        return "";
+    }
+  }, [featureType]);
+
   const FeatureOnMap = useMemo(() => {
-    if (featureType === "polyline") {
+    if (featureType === FEATURE_TYPES.POLYLINE) {
       return (
         <Polyline
           path={coordsToLatLongMap(coordinates)}
           options={{
             ...options,
             ...GisEditOptions,
+            icon: undefined,
+            pin: undefined,
           }}
           onLoad={handleEditFeatureLoad}
         />
       );
-    } else if (featureType === "polygon") {
+    } else if (featureType === FEATURE_TYPES.POLYGON) {
       return (
         <Polygon
           path={coordsToLatLongMap(coordinates)}
           options={{
             ...options,
             ...GisEditOptions,
+            icon: undefined,
+            pin: undefined,
           }}
           onLoad={handleEditFeatureLoad}
         />
       );
-    } else {
+    } else if (featureType === FEATURE_TYPES.POINT) {
       return (
         <Marker
           options={{
-            icon,
-            clickable: true,
-            draggable: true,
-            editable: true,
-            geodesic: false,
-            zIndex: zIndexMapping.edit,
             ...options,
+            ...GisMarkerEditOptions,
+            icon: options.pin,
+            pin: undefined,
           }}
           onLoad={handleEditFeatureLoad}
           position={coordsToLatLongMap([coordinates])[0]}
         />
       );
+    } else {
+      return null;
     }
   }, [featureType, options]);
 

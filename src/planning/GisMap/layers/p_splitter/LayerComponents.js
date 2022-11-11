@@ -88,36 +88,6 @@ export const ElementForm = () => {
   );
 };
 
-const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Splitter Type", field: "splitter_type_display", type: "simple" },
-  { label: "Address", field: "address", type: "simple" },
-  { label: "Ratio", field: "ratio", type: "simple" },
-  { label: "Specification", field: "specification", type: "simple" },
-  { label: "Vendor", field: "vendor", type: "simple" },
-  { label: "Status", field: "status", type: "status" },
-];
-
-const convertDataBeforeForm = (data) => {
-  return data;
-};
-
-export const ElementDetails = () => {
-  const { elementId } = useSelector(getPlanningMapStateData);
-
-  return (
-    <ElementDetailsTable
-      rowDefs={ELEMENT_TABLE_FIELDS}
-      layerKey={LAYER_KEY}
-      elementId={elementId}
-      extraControls={["connections"]}
-      onEditDataConverter={convertDataBeforeForm}
-    />
-  );
-};
-
 export const ElementConnections = () => {
   const elemData = useSelector(getPlanningMapStateData);
   return <ListElementConnections layerKey={LAYER_KEY} {...elemData} />;

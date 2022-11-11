@@ -104,34 +104,3 @@ export const ElementForm = () => {
 
   return <TicketLayerForm isEdit={isEdit} layerKey={LAYER_KEY} />;
 };
-
-const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Ticket Type", field: "ticket_type_display", type: "simple" },
-  { label: "Network Type", field: "network_type_display", type: "simple" },
-  { label: "Due Date", field: "due_date", type: "date" },
-  { label: "Remarks", field: "remarks", type: "simple" },
-  // { label: "Assignee", field: "assignee.name", type: "simple" }, // need to update serializer, fix assignee in ticket edit after updating details serializer
-  { label: "Updated On", field: "updated_on", type: "date" },
-  { label: "Created On", field: "created_on", type: "date" },
-  { label: "Created By", field: "created_by.name", type: "simple" },
-  { label: "Ticket Status", field: "status_display", type: "simple" },
-];
-
-const convertDataBeforeForm = (data) => {
-  return data;
-};
-
-export const ElementDetails = () => {
-  const { elementId } = useSelector(getPlanningMapStateData);
-
-  return (
-    <ElementDetailsTable
-      rowDefs={ELEMENT_TABLE_FIELDS}
-      layerKey={LAYER_KEY}
-      elementId={elementId}
-      onEditDataConverter={convertDataBeforeForm}
-    />
-  );
-};

@@ -151,3 +151,19 @@ export const ELEMENT_CONFIG_TEMPLATE = {
 };
 
 export const transformAndValidateConfigData = (data) => data;
+
+export const ELEMENT_TABLE_FIELDS = [
+  { label: "Name", field: "name", type: "simple" },
+  { label: "Unique Id", field: "unique_id", type: "simple" },
+  { label: "Reff Code", field: "ref_code", type: "simple" },
+  { label: "Cable Type", field: "cable_type_display", type: "simple" },
+  { label: "Gis Length (Km)", field: "gis_len", type: "simple" },
+  { label: "Actual Length", field: "actual_len", type: "simple" },
+  { label: "Start Reading", field: "start_reading", type: "simple" },
+  { label: "End Reading", field: "end_reading", type: "simple" },
+  { label: "No of tubes", field: "no_of_tube", type: "simple" },
+  { label: "Core / Tube", field: "core_per_tube", type: "simple" },
+  { label: "Specification", field: "specification", type: "simple" },
+  { label: "Vendor", field: "vendor", type: "simple" },
+  { label: "Status", field: "status", type: "status" },
+];
