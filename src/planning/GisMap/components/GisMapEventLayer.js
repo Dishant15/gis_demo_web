@@ -13,19 +13,15 @@ import { GisLayerForm } from "./GisLayerForm";
 import { get } from "lodash";
 
 /**
- * Show add edit popups with submit / cancel handlers
- * Change map state with DrawingManager
- * handle refs to new created and Edited featurs of map
- *
- * Set coordinates in formData once complete is clicked
- * Update map state in reducer once current event ends
- * Reset mapState once cancel in clicked
+ * Intermediate component to handle what to render on which event
+ * check if LayerKeyMappings has a component for given even and layerKey
+ * Render default component if not
  *
  * Parent
  *  GisMap
  *
  * Renders
- *  {LayerKey} -> AddLayer (export from layers folder) -> AddMarkerLayer | AddPolygonLayer
+ *  Forms, Popup while map is in add / edit geom. mode, Table, ..etc
  */
 const GisMapEventLayer = React.memo(() => {
   const { layerKey, event } = useSelector(getPlanningMapState);

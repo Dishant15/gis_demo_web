@@ -17,6 +17,7 @@ export const LAYER_STATUS_OPTIONS = [
   { value: "V", label: "Verified" },
 ];
 
+// also required by backend at the time of validations
 export const FEATURE_TYPES = {
   POLYLINE: "polyline",
   POINT: "point",

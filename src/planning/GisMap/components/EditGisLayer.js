@@ -1,16 +1,18 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Marker, Polygon, Polyline } from "@react-google-maps/api";
 
 import get from "lodash/get";
 import round from "lodash/round";
+import size from "lodash/size";
 import { lineString, length } from "@turf/turf";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import GisMapPopups from "./GisMapPopups";
 
+import useValidateGeometry from "../hooks/useValidateGeometry";
 import {
   coordsToLatLongMap,
   getCoordinatesFromFeature,
@@ -49,15 +51,14 @@ const GisMarkerEditOptions = {
 const EditGisLayer = ({ layerKey, editElementAction }) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
+  const { errPolygons, validateElementMutation, isValidationLoading } =
+    useValidateGeometry();
+
   const { elementId, coordinates } = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
-
   // layer key based data default data from utils -> LayerKeyMappings
   const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
   const configuration = useSelector(getLayerSelectedConfiguration(featureType));
-  const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
-    configuration
-  );
 
   const onSuccessHandler = (res) => {
     // do not fire notification if response is undefined
@@ -89,10 +90,6 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
   };
 
   const onErrorHandler = (err) => {
-    console.log(
-      "🚀 ~ file: EditGisLayer.js ~ line 46 ~ onErrorHandler ~ err",
-      err
-    );
     const errStatus = get(err, "response.status");
     let notiText;
     if (errStatus === 400) {
@@ -129,7 +126,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     }
   );
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     // convert markder coordinates
     let submitData = {};
     if (featureType === FEATURE_TYPES.POLYLINE) {
@@ -145,8 +142,22 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     } else {
       throw new Error("feature type is invalid");
     }
-    editElement(submitData);
-  }, []);
+    // server side validate geometry
+    validateElementMutation(
+      {
+        layerKey,
+        element_id: elementId,
+        featureType,
+        geometry: submitData.geometry,
+        region_id_list: selectedRegionIds,
+      },
+      {
+        onSuccess: () => {
+          editElement(submitData);
+        },
+      }
+    );
+  }, [layerKey, selectedRegionIds, elementId]);
 
   const handleEditFeatureLoad = useCallback((feature) => {
     featureRef.current = feature;
@@ -179,6 +190,10 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
   }, [featureType]);
 
   const FeatureOnMap = useMemo(() => {
+    const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
+      configuration
+    );
+
     if (featureType === FEATURE_TYPES.POLYLINE) {
       return (
         <Polyline
@@ -221,11 +236,33 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     } else {
       return null;
     }
-  }, [featureType, options]);
+  }, [featureType]);
 
   return (
     <>
       {FeatureOnMap}
+      {!!size(errPolygons) ? (
+        <>
+          {errPolygons.map((ePoly, eInd) => {
+            return (
+              <Polygon
+                key={eInd}
+                path={ePoly}
+                options={{
+                  strokeColor: "red",
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: "red",
+                  fillOpacity: 0.5,
+                  clickable: false,
+                  draggable: false,
+                  editable: false,
+                }}
+              />
+            );
+          })}
+        </>
+      ) : null}
       <GisMapPopups>
         <Paper>
           <Box
@@ -244,7 +281,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
                 variant="contained"
                 color="success"
                 onClick={handleSubmit}
-                loading={isEditLoading}
+                loading={isEditLoading || isValidationLoading}
               >
                 Submit
               </LoadingButton>

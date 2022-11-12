@@ -94,6 +94,8 @@ export const apiGetPlanningConfigsDetails = () =>
   "/api/planning/configs/details/";
 export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 
+export const apiPostValidateElementGeometry = () =>
+  "/api/planning/layer/validate/geometry/";
 export const apiPostAddElement = (layerKey) =>
   `/api/planning/layer/${layerKey}/add/`;
 

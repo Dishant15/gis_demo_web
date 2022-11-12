@@ -48,7 +48,7 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
 
   // layer key based data default data from utils -> LayerKeyMappings
   const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
-  const configuration = useSelector(getLayerSelectedConfiguration(featureType));
+  const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
   const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
     configuration
   );

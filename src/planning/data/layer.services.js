@@ -4,6 +4,7 @@ import {
   apiGetElementDetails,
   apiGetTicketDetails,
   apiPostAddElement,
+  apiPostValidateElementGeometry,
   apiPutEditElement,
   apiUpdateElementConnections,
 } from "utils/url.constants";
@@ -17,6 +18,12 @@ export const fetchElementDetails = async ({ queryKey }) => {
     const res = await Api.get(apiGetElementDetails(layerKey, elementId));
     return res.data;
   }
+};
+
+// data : { layerKey, element_id*, featureType, geometry, region_id_list / ticket_id }
+export const validateElementGeometry = async (data) => {
+  const res = await Api.post(apiPostValidateElementGeometry(), data);
+  return res.data;
 };
 
 export const fetchElementConnections = async ({ queryKey }) => {
