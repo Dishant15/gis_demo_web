@@ -89,10 +89,6 @@ const planningGisSlice = createSlice({
       }
       state.mapState = { ...payload };
     },
-    updateMapStateData: (state, { payload }) => {
-      const mapStateData = get(state.mapState, "data", {});
-      state.mapState.data = { ...mapStateData, ...payload };
-    },
     // payload => list of selected layerKey
     // when region changes remove data for all inactive layers, so user can fetch fresh on click
     resetUnselectedLayerGisData: (state, { payload }) => {
@@ -201,10 +197,6 @@ const planningGisSlice = createSlice({
   },
 });
 
-export const {
-  setTicketId,
-  setMapState,
-  updateMapStateData,
-  resetUnselectedLayerGisData,
-} = planningGisSlice.actions;
+export const { setTicketId, setMapState, resetUnselectedLayerGisData } =
+  planningGisSlice.actions;
 export default planningGisSlice.reducer;
