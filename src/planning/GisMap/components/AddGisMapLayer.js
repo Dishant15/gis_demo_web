@@ -1,12 +1,15 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DrawingManager } from "@react-google-maps/api";
+import { DrawingManager, Polygon } from "@react-google-maps/api";
 
 import { lineString, length } from "@turf/turf";
 import round from "lodash/round";
 import get from "lodash/get";
+import size from "lodash/size";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+
 import GisMapPopups from "./GisMapPopups";
 
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -22,7 +25,12 @@ import {
   zIndexMapping,
 } from "../layers/common/configuration";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import { getLayerSelectedConfiguration } from "planning/data/planningState.selectors";
+import {
+  getLayerSelectedConfiguration,
+  getSelectedRegionIds,
+} from "planning/data/planningState.selectors";
+import useValidateGeometry from "../hooks/useValidateGeometry";
+import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 
 const GisEditOptions = {
   clickable: true,
@@ -43,8 +51,12 @@ const GisMarkerEditOptions = {
 const AddGisMapLayer = ({ validation = false, layerKey }) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
-  // once user adds marker go in edit mode
+  const { errPolygons, validateElementMutation, isValidationLoading } =
+    useValidateGeometry(); // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
+
+  const { elementId } = useSelector(getPlanningMapStateData);
+  const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   // layer key based data default data from utils -> LayerKeyMappings
   const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
@@ -87,17 +99,31 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     } else {
       throw new Error("feature type is invalid");
     }
-    // clear map refs
-    featureRef.current.setMap(null);
-    // complete current event -> fire next event
-    dispatch(
-      setMapState({
-        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
+    // server side validate geometry
+    validateElementMutation(
+      {
         layerKey,
-        data: { ...initialData, ...submitData }, // init data
-      })
+        element_id: elementId,
+        featureType,
+        geometry: submitData.geometry,
+        region_id_list: selectedRegionIds,
+      },
+      {
+        onSuccess: () => {
+          // clear map refs
+          featureRef.current.setMap(null);
+          // complete current event -> fire next event
+          dispatch(
+            setMapState({
+              event: PLANNING_EVENT.addElementForm, // event for "layerForm"
+              layerKey,
+              data: { ...initialData, ...submitData }, // init data
+            })
+          );
+        },
+      }
     );
-  }, [featureType]);
+  }, [featureType, layerKey, selectedRegionIds, elementId]);
 
   const handleCancel = useCallback(() => {
     dispatch(setMapState({}));
@@ -120,6 +146,29 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
 
   return (
     <>
+      {!!size(errPolygons) ? (
+        <>
+          {errPolygons.map((ePoly, eInd) => {
+            return (
+              <Polygon
+                key={eInd}
+                path={ePoly}
+                options={{
+                  strokeColor: "red",
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: "red",
+                  fillOpacity: 0.5,
+                  clickable: false,
+                  draggable: false,
+                  editable: false,
+                  zIndex: zIndexMapping.errorGeometry,
+                }}
+              />
+            );
+          })}
+        </>
+      ) : null}
       <DrawingManager
         options={{
           drawingControl: false,
@@ -148,15 +197,16 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
               {helpText}
             </Typography>
             <Stack spacing={2} direction="row">
-              <Button
+              <LoadingButton
                 sx={{ minWidth: "10em" }}
                 disableElevation
                 variant="contained"
                 disabled={isAdd}
                 onClick={handleAddComplete}
+                loading={isValidationLoading}
               >
                 Submit
-              </Button>
+              </LoadingButton>
               <Button
                 color="error"
                 sx={{ minWidth: "10em" }}
