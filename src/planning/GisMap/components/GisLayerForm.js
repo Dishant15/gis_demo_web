@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { get } from "lodash";
@@ -102,8 +102,9 @@ export const GisLayerForm = ({ layerKey }) => {
 
   const onSubmit = (data, setError, clearErrors) => {
     clearErrors();
+    let validatedData = prepareServerData(data, isEdit, formConfig);
     // convert data to server friendly form
-    const validatedData = transformAndValidateData
+    validatedData = transformAndValidateData
       ? transformAndValidateData(data, setError, isEdit, configuration)
       : data;
     if (isEdit) {
@@ -112,6 +113,21 @@ export const GisLayerForm = ({ layerKey }) => {
       addElement(validatedData);
     }
   };
+
+  const prepareServerData = useCallback((data, isEdit, formConfig) => {
+    let serverData = {};
+    for (let index = 0; index < formConfig.sections.length; index++) {
+      const { fieldConfigs } = formConfig.sections[index];
+      for (let fInd = 0; fInd < fieldConfigs.length; fInd++) {
+        const { field_key } = fieldConfigs[fInd];
+        serverData[field_key] = data[field_key];
+      }
+    }
+    if (isEdit) {
+      serverData["id"] = data?.id;
+    }
+    return serverData;
+  }, []);
 
   const onClose = () => {
     dispatch(setMapState({}));
