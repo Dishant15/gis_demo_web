@@ -1,9 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
+import { Polyline, Marker, Polygon } from "@react-google-maps/api";
+
 import { getPlanningTicketData } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings } from "planning/GisMap/utils";
-import { Polygon } from "@react-google-maps/api";
+import {
+  FEATURE_TYPES,
+  zIndexMapping,
+} from "planning/GisMap/layers/common/configuration";
 
 const TicketMapLayers = React.memo(() => {
   const { work_orders = [], area_pocket } = useSelector(getPlanningTicketData);
@@ -28,9 +33,49 @@ const TicketMapLayers = React.memo(() => {
       ) : null}
       {work_orders.map((workOrder) => {
         const { id, layer_key, element } = workOrder;
-        if (element.id) {
-          const GeometryComponent = LayerKeyMappings[layer_key]["Geometry"];
-          return <GeometryComponent key={id} {...element} />;
+        if (id) {
+          const featureType = LayerKeyMappings[layer_key]["featureType"];
+          const viewOptions =
+            LayerKeyMappings[layer_key]["getViewOptions"](element);
+
+          switch (featureType) {
+            case FEATURE_TYPES.POINT:
+              return (
+                <Marker
+                  key={id}
+                  icon={{
+                    // add default icon here
+                    url: viewOptions.icon,
+                  }}
+                  zIndex={zIndexMapping[layer_key]}
+                  position={element.coordinates}
+                />
+              );
+            case FEATURE_TYPES.POLYLINE:
+              return (
+                <Polygon
+                  key={id}
+                  options={{
+                    ...viewOptions,
+                    zIndex: zIndexMapping[layer_key],
+                  }}
+                  paths={element.coordinates}
+                />
+              );
+            case FEATURE_TYPES.POLYGON:
+              return (
+                <Polyline
+                  key={id}
+                  options={{
+                    ...viewOptions,
+                    zIndex: zIndexMapping[layer_key],
+                  }}
+                  path={element.coordinates}
+                />
+              );
+            default:
+              return null;
+          }
         }
       })}
     </>
