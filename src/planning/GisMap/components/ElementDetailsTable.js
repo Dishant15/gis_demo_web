@@ -29,6 +29,7 @@ import { setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 /**
  * fetch element details
@@ -38,6 +39,10 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   const dispatch = useDispatch();
   const { elementId } = useSelector(getPlanningMapStateData);
+  const hasLayerEditPermission = useSelector(
+    checkUserPermission(`${layerKey}_edit`)
+  );
+  const hasEditPermission = layerKey !== "region" && hasLayerEditPermission;
 
   const { data: elemData, isLoading } = useQuery(
     ["elementDetails", layerKey, elementId],
@@ -131,30 +136,32 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
           </IconButton>
         </Stack>
         {/* Button container */}
-        <Stack
-          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
-          p={2}
-          direction="row"
-          spacing={2}
-        >
-          <Button
-            onClick={handleEditDetails}
-            startIcon={<EditIcon />}
-            variant="outlined"
-            color="secondary"
+        {hasEditPermission ? (
+          <Stack
+            sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
+            p={2}
+            direction="row"
+            spacing={2}
           >
-            Details
-          </Button>
-          <Button
-            onClick={handleEditLocation}
-            startIcon={<EditLocationAltIcon />}
-            variant="outlined"
-            color="secondary"
-          >
-            Location
-          </Button>
-          {ExtraControls}
-        </Stack>
+            <Button
+              onClick={handleEditDetails}
+              startIcon={<EditIcon />}
+              variant="outlined"
+              color="secondary"
+            >
+              Details
+            </Button>
+            <Button
+              onClick={handleEditLocation}
+              startIcon={<EditLocationAltIcon />}
+              variant="outlined"
+              color="secondary"
+            >
+              Location
+            </Button>
+            {ExtraControls}
+          </Stack>
+        ) : null}
         {/* Table Content */}
         <Stack
           sx={{

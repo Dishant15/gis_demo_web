@@ -13,6 +13,7 @@ import { LoadingButton } from "@mui/lab";
 import GisMapPopups from "./GisMapPopups";
 
 import useValidateGeometry from "../hooks/useValidateGeometry";
+import useEditTicketArea from "ticket/hook/useEditTicketArea";
 import {
   coordsToLatLongMap,
   getCoordinatesFromFeature,
@@ -24,6 +25,7 @@ import { editElementDetails } from "planning/data/layer.services";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
+import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import {
   getLayerSelectedConfiguration,
@@ -70,6 +72,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
         })
       );
     }
+    dispatch(handleLayerSelect(layerKey));
     // refetch layer
     dispatch(
       fetchLayerDataThunk({
@@ -115,6 +118,11 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     );
   };
 
+  const { editTicketAreaMutation, isTicketAreaEditing } = useEditTicketArea({
+    onSuccess: onSuccessHandler,
+    onError: onErrorHandler,
+  });
+
   const { mutate: editElement, isLoading: isEditLoading } = useMutation(
     (mutationData) =>
       !!editElementAction
@@ -153,7 +161,14 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
       },
       {
         onSuccess: () => {
-          editElement(submitData);
+          if (layerKey === "ticket") {
+            editTicketAreaMutation({
+              ticketId: elementId,
+              data: { coordinates: submitData.geometry },
+            });
+          } else {
+            editElement(submitData);
+          }
         },
       }
     );
@@ -238,6 +253,8 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     }
   }, [featureType]);
 
+  const loading = isEditLoading || isValidationLoading || isTicketAreaEditing;
+
   return (
     <>
       {FeatureOnMap}
@@ -281,7 +298,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
                 variant="contained"
                 color="success"
                 onClick={handleSubmit}
-                loading={isEditLoading || isValidationLoading}
+                loading={loading}
               >
                 Submit
               </LoadingButton>

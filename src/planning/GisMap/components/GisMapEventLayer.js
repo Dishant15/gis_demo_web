@@ -54,9 +54,6 @@ const GisMapEventLayer = React.memo(() => {
       return <GisLayerForm layerKey={layerKey} />;
 
     case PLANNING_EVENT.showElementDetails:
-      // LookupError: App 'gis_layer' doesn't have a 'region' model.
-      if (layerKey === "region") return null;
-
       return <ElementDetailsTable layerKey={layerKey} />;
 
     case PLANNING_EVENT.showElementConnections:

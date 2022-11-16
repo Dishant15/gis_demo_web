@@ -22,6 +22,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
+import { handleLayerSelect } from "planning/data/planningState.reducer";
 
 const TicketLayerForm = ({ isEdit, layerKey }) => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
           })
         );
         handleClose();
+        dispatch(handleLayerSelect(layerKey));
         dispatch(
           fetchLayerDataThunk({
             regionIdList: selectedRegionIds,
@@ -62,6 +64,7 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
     useMutation(editTicket, {
       onSuccess: (res) => {
         handleClose();
+        dispatch(handleLayerSelect(layerKey));
         dispatch(
           fetchLayerDataThunk({
             regionIdList: selectedRegionIds,
