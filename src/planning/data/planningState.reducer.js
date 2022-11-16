@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import get from "lodash/get";
 
 import { logout } from "redux/reducers/auth.reducer";
 

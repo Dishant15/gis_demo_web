@@ -14,7 +14,6 @@ import {
 } from "utils/constant";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
-import { coordsToLatLongMap } from "utils/map.utils";
 import { generateTicketUid } from "ticket/data/utils";
 
 const TicketFormWrapper = ({

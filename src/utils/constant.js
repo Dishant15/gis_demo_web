@@ -1,6 +1,6 @@
 export const TicketTypeList = [
   { label: "Survey", value: "S" },
-  { label: "Planning", value: "P" },
+  { label: "Network", value: "P" },
   { label: "Client", value: "C" },
 ];
 export const NetworkTypeList = [

@@ -25,6 +25,7 @@ export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,
+    elementTableFields: RegionLayer.ELEMENT_TABLE_FIELDS,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElementForm]: TicketLayer.ElementForm,
