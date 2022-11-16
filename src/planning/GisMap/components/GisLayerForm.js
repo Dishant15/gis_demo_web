@@ -11,9 +11,10 @@ import {
   addNewElement,
   editElementDetails,
 } from "planning/data/layer.services";
-import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { fetchLayerDataThunk } from "planning/data/actionBar.services";
+import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import {
   getLayerSelectedConfiguration,
@@ -44,6 +45,7 @@ export const GisLayerForm = ({ layerKey }) => {
     );
     // close form
     dispatch(setMapState({}));
+    dispatch(handleLayerSelect(layerKey));
     // refetch layer
     dispatch(
       fetchLayerDataThunk({
