@@ -25,6 +25,9 @@ export const getElementConfigPage = () => "/element/config";
 export const getPrivacyPolicy = () => "/privacy-policy/";
 export const get404 = () => "/404";
 
+export const getFeedbackLink = () =>
+  "https://drive.google.com/drive/folders/1HgHi4fqTuRau8eEKiiC6lgnlVN1FJ2YV?usp=sharing";
+
 /* External server apis **/
 export const apiGetDashboard = () => "/api/dashboard/";
 

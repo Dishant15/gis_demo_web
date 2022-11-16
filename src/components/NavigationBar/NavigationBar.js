@@ -25,6 +25,7 @@ import {
   getTicketListPage,
   getUserListPage,
   getUserRolePage,
+  getFeedbackLink,
 } from "utils/url.constants";
 
 import {
@@ -189,6 +190,14 @@ const NavigationBar = () => {
               Element Configuration
             </MenuItem>
           ) : null}
+          <MenuItem
+            onClick={handleClose}
+            component="a"
+            href={getFeedbackLink()}
+            target="__blank"
+          >
+            Feedback
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
