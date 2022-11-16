@@ -78,7 +78,6 @@ export const transformAndValidateData = (
       ...formData,
       // remove coordinates and add geometry
       coordinates: undefined,
-      geometry: latLongMapToCoords([formData.coordinates])[0],
     };
   }
 };

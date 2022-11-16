@@ -67,10 +67,11 @@ export const GisLayerForm = ({ layerKey }) => {
       notiText = "Please correct input errors and submit again";
     } else {
       // maybe Internal server or network error
-      formRef.current.onError(
-        "__all__",
-        "Something went wrong. Can not perform operation"
-      );
+      // --- can not set error as not possible to clear this ---
+      // formRef.current.onError(
+      //   "__all__",
+      //   "Something went wrong. Can not perform operation"
+      // );
       notiText =
         "Something went wrong at our side. Please try again after refreshing the page.";
     }
@@ -107,6 +108,7 @@ export const GisLayerForm = ({ layerKey }) => {
     validatedData = transformAndValidateData
       ? transformAndValidateData(data, setError, isEdit, configuration)
       : data;
+
     if (isEdit) {
       editElement(validatedData);
     } else {
