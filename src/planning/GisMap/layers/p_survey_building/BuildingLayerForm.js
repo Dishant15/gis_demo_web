@@ -19,12 +19,9 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import UnitEditForm from "ticket/components/UnitEditForm";
 import { SURVEY_TAG_LIST } from "utils/constant";
+import { handleLayerSelect } from "planning/data/planningState.reducer";
 
-export const BuildingLayerForm = ({
-  layerKey,
-  transformAndValidateData,
-  isEdit,
-}) => {
+export const BuildingLayerForm = ({ layerKey, isEdit }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
   const data = useSelector(getPlanningMapStateData);
@@ -39,6 +36,7 @@ export const BuildingLayerForm = ({
     );
     // close form
     dispatch(setMapState({}));
+    dispatch(handleLayerSelect(layerKey));
     // refetch layer
     dispatch(
       fetchLayerDataThunk({
@@ -62,10 +60,11 @@ export const BuildingLayerForm = ({
       notiText = "Please correct input errors and submit again";
     } else {
       // maybe Internal server or network error
-      formRef.current.onError(
-        "__all__",
-        "Something went wrong. Can not perform operation"
-      );
+      // --- can not set error as not possible to clear this ---
+      // formRef.current.onError(
+      //   "__all__",
+      //   "Something went wrong. Can not perform operation"
+      // );
       notiText =
         "Something went wrong at our side. Please try again after refreshing the page.";
     }
@@ -96,15 +95,10 @@ export const BuildingLayerForm = ({
   );
 
   const onSubmit = (submitData, setError, clearErrors) => {
-    // convert data to server friendly form
-    const validatedData = transformAndValidateData(
-      { ...submitData, coordinates: data.coordinates },
-      setError
-    );
     if (isEdit) {
-      editElement(validatedData);
+      editElement({ ...submitData, geometry: undefined, address: "" });
     } else {
-      addElement(validatedData);
+      addElement({ ...submitData, geometry: data.geometry, address: "" });
     }
   };
 

@@ -112,7 +112,7 @@ export const GisLayerForm = ({ layerKey }) => {
       : data;
 
     if (isEdit) {
-      editElement(validatedData);
+      editElement({ ...validatedData, geometry: undefined });
     } else {
       addElement(validatedData);
     }

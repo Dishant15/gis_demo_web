@@ -60,7 +60,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
   const selectedRegionIds = useSelector(getSelectedRegionIds);
   // layer key based data default data from utils -> LayerKeyMappings
   const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
-  const configuration = useSelector(getLayerSelectedConfiguration(featureType));
+  const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
 
   const onSuccessHandler = (res) => {
     // do not fire notification if response is undefined
@@ -251,7 +251,7 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
     } else {
       return null;
     }
-  }, [featureType]);
+  }, [featureType, layerKey, configuration, coordinates]);
 
   const loading = isEditLoading || isValidationLoading || isTicketAreaEditing;
 
