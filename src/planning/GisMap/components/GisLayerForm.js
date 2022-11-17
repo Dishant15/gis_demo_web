@@ -28,7 +28,7 @@ export const GisLayerForm = ({ layerKey }) => {
 
   const selectedRegionIds = useSelector(getSelectedRegionIds);
   const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
-  const { event, data } = useSelector(getPlanningMapState);
+  const { event, data: mapStateData } = useSelector(getPlanningMapState);
   const isEdit = event === PLANNING_EVENT.editElementForm;
   const formConfig = get(LayerKeyMappings, [layerKey, "formConfig"]);
   const transformAndValidateData = get(LayerKeyMappings, [
@@ -96,7 +96,11 @@ export const GisLayerForm = ({ layerKey }) => {
 
   const { mutate: editElement, isLoading: isEditLoading } = useMutation(
     (mutationData) =>
-      editElementDetails({ data: mutationData, layerKey, elementId: data.id }),
+      editElementDetails({
+        data: mutationData,
+        layerKey,
+        elementId: mapStateData?.id,
+      }),
     {
       onSuccess: onSuccessHandler,
       onError: onErrorHandler,
@@ -105,10 +109,14 @@ export const GisLayerForm = ({ layerKey }) => {
 
   const onSubmit = (data, setError, clearErrors) => {
     clearErrors();
+    // if form is edit get configuration if from data otherwise get from redux;
+    const configId = isEdit
+      ? get(mapStateData, "configuration")
+      : get(configuration, "id");
     let validatedData = prepareServerData(data, isEdit, formConfig);
     // convert data to server friendly form
     validatedData = transformAndValidateData
-      ? transformAndValidateData(data, setError, isEdit, configuration)
+      ? transformAndValidateData(data, setError, isEdit, configId)
       : data;
 
     if (isEdit) {
@@ -145,7 +153,7 @@ export const GisLayerForm = ({ layerKey }) => {
         <DynamicForm
           ref={formRef}
           formConfigs={formConfig}
-          data={data}
+          data={mapStateData}
           onSubmit={onSubmit}
           onCancel={onClose}
           isLoading={isEdit ? isEditLoading : isAddLoading}

@@ -27,10 +27,7 @@ import { addNotification } from "redux/reducers/notification.reducer";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
-import {
-  getLayerSelectedConfiguration,
-  getSelectedRegionIds,
-} from "planning/data/planningState.selectors";
+import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 
@@ -56,11 +53,11 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
   const { errPolygons, validateElementMutation, isValidationLoading } =
     useValidateGeometry();
 
-  const { elementId, coordinates } = useSelector(getPlanningMapStateData);
+  const mapStateData = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
+  const { elementId, coordinates } = mapStateData;
   // layer key based data default data from utils -> LayerKeyMappings
   const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
-  const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
 
   const onSuccessHandler = (res) => {
     // do not fire notification if response is undefined
@@ -206,7 +203,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
 
   const FeatureOnMap = useMemo(() => {
     const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
-      configuration
+      mapStateData
     );
 
     if (featureType === FEATURE_TYPES.POLYLINE) {
@@ -251,7 +248,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
     } else {
       return null;
     }
-  }, [featureType, layerKey, configuration, coordinates]);
+  }, [featureType, layerKey, mapStateData, coordinates]);
 
   const loading = isEditLoading || isValidationLoading || isTicketAreaEditing;
 

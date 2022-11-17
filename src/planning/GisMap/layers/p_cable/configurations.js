@@ -172,22 +172,20 @@ export const transformAndValidateData = (
   formData,
   setError,
   isEdit,
-  configuration
+  configurationId
 ) => {
   if (isEdit) {
     return {
       ...formData,
       // remove geometry
       geometry: undefined,
-      // convert select fields to simple values
-      configuration: configuration.id,
     };
   } else {
     return {
       ...formData,
       // AddGisMapLayer will give transformed coordinates in geometry field
       // convert select fields to simple values
-      configuration: configuration.id,
+      configuration: configurationId,
     };
   }
 };
