@@ -50,7 +50,7 @@ const GisMarkerEditOptions = {
   zIndex: zIndexMapping.edit,
 };
 
-const EditGisLayer = ({ layerKey, editElementAction }) => {
+const EditGisMapLayer = ({ layerKey, editElementAction }) => {
   const dispatch = useDispatch();
   const featureRef = useRef();
   const { errPolygons, validateElementMutation, isValidationLoading } =
@@ -317,4 +317,4 @@ const EditGisLayer = ({ layerKey, editElementAction }) => {
   );
 };
 
-export default EditGisLayer;
+export default EditGisMapLayer;

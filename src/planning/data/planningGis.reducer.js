@@ -37,8 +37,6 @@ const initialState = {
     isFetched: false,
     isError: false,
   },
-  // list of elements that can be shown on map with converted data
-  ticketGisData: [],
 };
 
 const planningGisSlice = createSlice({

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import AddGisMapLayer from "./AddGisMapLayer";
-import EditGisLayer from "./EditGisLayer";
+import EditGisMapLayer from "./EditGisMapLayer";
 import ElementDetailsTable from "./ElementDetailsTable";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
@@ -31,7 +31,7 @@ const GisMapEventLayer = React.memo(() => {
       return <AddGisMapLayer layerKey={layerKey} />;
 
     case PLANNING_EVENT.editElementGeometry:
-      return <EditGisLayer layerKey={layerKey} />;
+      return <EditGisMapLayer layerKey={layerKey} />;
 
     case PLANNING_EVENT.addElementForm:
       const OverrideAddForm = get(LayerKeyMappings, [
