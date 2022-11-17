@@ -19,6 +19,7 @@ export const PLANNING_EVENT = {
   showElementDetails: "D",
   showElementConnections: "EC",
   addElementConnection: "AC",
+  showTicketWorkOrders: "SWo",
 };
 
 export const LayerKeyMappings = {
@@ -34,6 +35,7 @@ export const LayerKeyMappings = {
     getViewOptions: TicketLayer.getViewOptions,
     initialElementData: TicketLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: TicketLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: TicketLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [DPLayer.LAYER_KEY]: {
     featureType: DPLayer.LAYER_FEATURE_TYPE,

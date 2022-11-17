@@ -1,16 +1,18 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
+import get from "lodash/get";
+
 import AddGisMapLayer from "./AddGisMapLayer";
 import EditGisMapLayer from "./EditGisMapLayer";
 import ElementDetailsTable from "./ElementDetailsTable";
+import ListElementConnections from "../layers/common/ListElementConnections";
+import AddElementConnection from "../layers/common/AddElementConnection";
+import { TicketWorkOrders } from "../layers/ticket";
+import { GisLayerForm } from "./GisLayerForm";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import ListElementConnections from "../layers/common/ListElementConnections";
-import AddElementConnection from "../layers/common/AddElementConnection";
-import { GisLayerForm } from "./GisLayerForm";
-import { get } from "lodash";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -61,6 +63,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.addElementConnection:
       return <AddElementConnection />;
+
+    case PLANNING_EVENT.showTicketWorkOrders:
+      return <TicketWorkOrders />;
 
     default:
       return null;

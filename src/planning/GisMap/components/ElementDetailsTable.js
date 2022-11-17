@@ -90,29 +90,54 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   }, [dispatch, layerKey, elemData]);
 
   const ExtraControls = extraControls.map((ctrl) => {
-    if (ctrl === "connections") {
-      return (
-        <Button
-          key={ctrl}
-          onClick={() =>
-            dispatch(
-              setMapState({
-                event: PLANNING_EVENT.showElementConnections,
-                layerKey,
-                data: {
-                  elementId: elemData.id,
-                  elementGeometry: elemData.coordinates,
-                },
-              })
-            )
-          }
-          startIcon={<CableIcon />}
-          variant="outlined"
-          color="secondary"
-        >
-          Connections
-        </Button>
-      );
+    switch (ctrl) {
+      case "connections":
+        return (
+          <Button
+            key={ctrl}
+            onClick={() =>
+              dispatch(
+                setMapState({
+                  event: PLANNING_EVENT.showElementConnections,
+                  layerKey,
+                  data: {
+                    elementId: elemData.id,
+                    elementGeometry: elemData.coordinates,
+                  },
+                })
+              )
+            }
+            startIcon={<CableIcon />}
+            variant="outlined"
+            color="secondary"
+          >
+            Connections
+          </Button>
+        );
+      case "workorders":
+        return (
+          <Button
+            key={ctrl}
+            onClick={() =>
+              dispatch(
+                setMapState({
+                  event: PLANNING_EVENT.showTicketWorkOrders,
+                  layerKey,
+                  data: {
+                    elementId: elemData.id,
+                  },
+                })
+              )
+            }
+            startIcon={<CableIcon />}
+            variant="outlined"
+            color="secondary"
+          >
+            Show Workorders
+          </Button>
+        );
+      default:
+        return null;
     }
   });
 

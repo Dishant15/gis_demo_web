@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import TicketLayerForm from "./TicketLayerForm";
+import WorkOrderList from "../common/WorkOrderList";
 
 import { getPlanningMapStateEvent } from "planning/data/planningGis.selectors";
 import { LAYER_KEY } from "./configurations";
@@ -14,4 +15,8 @@ export const ElementForm = () => {
   const isEdit = currEvent === PLANNING_EVENT.editElementForm;
 
   return <TicketLayerForm isEdit={isEdit} layerKey={LAYER_KEY} />;
+};
+
+export const TicketWorkOrders = () => {
+  return <WorkOrderList />;
 };

@@ -43,3 +43,5 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Created By", field: "created_by.name", type: "simple" },
   { label: "Ticket Status", field: "status_display", type: "simple" },
 ];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = ["workorders"];
