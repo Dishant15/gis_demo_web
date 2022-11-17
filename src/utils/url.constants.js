@@ -46,8 +46,8 @@ export const apiGetRegionList = (query_type = "detail") =>
 export const apiPostRegionAdd = () => "/api/region/add/";
 export const apiGetRegionDetails = (regionId, queryType) =>
   queryType
-    ? `/api/region/${regionId}/details/`
-    : `/api/region/${regionId}/details/?query_type=${queryType}`;
+    ? `/api/region/${regionId}/details/?query_type=${queryType}`
+    : `/api/region/${regionId}/details/`;
 export const apiPutRegionEdit = (regionId) => `/api/region/${regionId}/edit/`;
 export const apiRegionDelete = (regionId) => `/api/region/${regionId}/delete/`;
 export const apiKmlToCoordinates = () => `/api/region/kml-to-coordinates/`;
