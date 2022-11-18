@@ -13,7 +13,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
-import AddTicketForm from "ticket/components/TicketForm";
+import TicketForm from "ticket/components/TicketForm";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 
@@ -131,7 +131,7 @@ const TicketLayerForm = ({ isEdit, layerKey }) => {
             </IconButton>
           </Stack>
           <Divider flexItem />
-          <AddTicketForm
+          <TicketForm
             formData={data}
             isEdit={isEdit}
             handleFormSubmit={handleSubmit}

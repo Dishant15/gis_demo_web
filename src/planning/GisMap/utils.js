@@ -135,7 +135,7 @@ export const convertLayerServerData = (layerKey, serverData) => {
 
 const alphabet =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const nanoid = customAlphabet(alphabet, 6);
+export const nanoid = customAlphabet(alphabet, 6);
 
 export const generateElementUid = (layerKey) => {
   return `${LayerKeyMappings[layerKey]["preUid"]}.${nanoid()}`;

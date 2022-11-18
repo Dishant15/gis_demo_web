@@ -15,6 +15,7 @@ import {
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { generateTicketUid } from "ticket/data/utils";
+import { nanoid } from "planning/GisMap/utils";
 
 const TicketFormWrapper = ({
   formData,
@@ -63,6 +64,7 @@ const TicketFormWrapper = ({
       formActionProps={formActionProps}
       formSubmitButtonProps={formSubmitButtonProps}
       formSubmitButtonText={formSubmitButtonText}
+      randomTicketId={nanoid()}
     />
   );
 };
@@ -73,6 +75,7 @@ const TicketForm = ({
   userList,
   handleFormSubmit,
   isEdit,
+  randomTicketId,
   formCancelButton = null,
   isButtonLoading = false,
   formActionProps = {},
@@ -112,8 +115,8 @@ const TicketForm = ({
     defaultValues: {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
-      unique_id: get(formData, "unique_id", "TKT.000001"),
-      network_id: get(formData, "network_id", "RGN-TKT.000001"),
+      unique_id: get(formData, "unique_id", `TKT.${randomTicketId}`),
+      network_id: get(formData, "network_id", `RGN-TKT.${randomTicketId}`),
       status: get(formData, "status") || "A",
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: get(formData, "ticket_type"),
@@ -125,11 +128,13 @@ const TicketForm = ({
 
   const handleUniqueIdOnClose = useCallback(() => {
     const [region, ticket_type] = getValues(["region", "ticket_type"]);
+    const unique_id = generateTicketUid(get(region, "unique_id"), ticket_type);
+    setValue("unique_id", `${unique_id}.${randomTicketId}`);
     setValue(
-      "unique_id",
-      generateTicketUid(get(region, "unique_id"), ticket_type)
+      "network_id",
+      `${get(region, "unique_id")}-${unique_id}.${randomTicketId}`
     );
-  }, []);
+  }, [randomTicketId]);
 
   return (
     <Box
@@ -231,7 +236,7 @@ const TicketForm = ({
             }}
             error={!!errors.unique_id}
             label="Unique Id"
-            disabled={isEdit}
+            disabled={true}
             {...register("unique_id", { required: "This fields is required." })}
             helperText={errors.unique_id?.message}
           />
@@ -248,7 +253,7 @@ const TicketForm = ({
             }}
             error={!!errors.network_id}
             label="Network Id"
-            disabled={isEdit}
+            disabled={true}
             {...register("network_id", {
               required: "This fields is required.",
             })}
