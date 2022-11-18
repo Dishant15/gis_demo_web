@@ -19,7 +19,6 @@ export const PLANNING_EVENT = {
   showElementDetails: "D",
   showElementConnections: "EC",
   addElementConnection: "AC",
-  showTicketWorkOrders: "SWo",
 };
 
 export const LayerKeyMappings = {
