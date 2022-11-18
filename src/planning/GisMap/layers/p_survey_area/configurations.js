@@ -1,5 +1,8 @@
 import { FIELD_TYPES } from "components/common/DynamicForm";
-import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
+import {
+  ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  FEATURE_TYPES,
+} from "../common/configuration";
 import Icon from "assets/markers/path.svg";
 
 export const LAYER_KEY = "p_survey_area";
@@ -91,11 +94,7 @@ export const ELEMENT_FORM_TEMPLATE = {
     {
       title: "Survey Area Form",
       fieldConfigs: [
-        {
-          field_key: "name",
-          label: "Name",
-          field_type: FIELD_TYPES.Input,
-        },
+        ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
           field_key: "address",
           label: "Address",
@@ -120,22 +119,6 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "pincode",
           label: "Pincode",
           field_type: FIELD_TYPES.Input,
-        },
-        {
-          field_key: "unique_id",
-          label: "Unique Id",
-          field_type: FIELD_TYPES.Input,
-        },
-        {
-          field_key: "ref_code",
-          label: "Reff Code",
-          field_type: FIELD_TYPES.Input,
-        },
-        {
-          field_key: "status",
-          label: "Status",
-          field_type: FIELD_TYPES.Select,
-          options: LAYER_STATUS_OPTIONS,
         },
         {
           field_key: "tags",

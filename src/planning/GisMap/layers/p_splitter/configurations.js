@@ -1,5 +1,7 @@
-import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
-import { latLongMapToCoords } from "utils/map.utils";
+import {
+  ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  FEATURE_TYPES,
+} from "../common/configuration";
 
 import PrimarySpliterIcon from "assets/markers/spliter_view_primary.svg";
 import PrimarySpliterEditIcon from "assets/markers/spliter_edit_primary.svg";
@@ -30,26 +32,11 @@ export const ELEMENT_FORM_TEMPLATE = {
     {
       title: "Splitter Form",
       fieldConfigs: [
-        {
-          field_key: "name",
-          label: "Name",
-          field_type: "input",
-        },
+        ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
           field_key: "address",
           label: "Address",
           field_type: "textArea",
-        },
-        {
-          field_key: "unique_id",
-          label: "Unique Id",
-          field_type: "input",
-        },
-        {
-          field_key: "status",
-          label: "Status",
-          field_type: "select",
-          options: LAYER_STATUS_OPTIONS,
         },
       ],
     },

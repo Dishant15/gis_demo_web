@@ -1,8 +1,10 @@
-import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
+import {
+  ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  FEATURE_TYPES,
+} from "../common/configuration";
 
 import { default as Icon } from "assets/markers/p_dp_view.svg";
 import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
-import { latLongMapToCoords } from "utils/map.utils";
 
 export const LAYER_KEY = "p_dp";
 export const PRE_UID = "DP";
@@ -28,33 +30,11 @@ export const ELEMENT_FORM_TEMPLATE = {
     {
       title: "Distribution Point Form",
       fieldConfigs: [
-        {
-          field_key: "name",
-          label: "Name",
-          field_type: "input",
-        },
+        ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
           field_key: "address",
           label: "Address",
           field_type: "textArea",
-        },
-        {
-          field_key: "unique_id",
-          label: "Unique Id",
-          field_type: "input",
-          disabled: true,
-        },
-        {
-          field_key: "network_id",
-          label: "Network Id",
-          field_type: "input",
-          disabled: true,
-        },
-        {
-          field_key: "status",
-          label: "Status",
-          field_type: "select",
-          options: LAYER_STATUS_OPTIONS,
         },
       ],
     },
