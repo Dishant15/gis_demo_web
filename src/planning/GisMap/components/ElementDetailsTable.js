@@ -207,6 +207,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
             switch (type) {
               case "status":
                 const elemStatus = get(elemData, field);
+                if (!elemStatus) return null;
                 const color =
                   elemStatus === "V"
                     ? "success"

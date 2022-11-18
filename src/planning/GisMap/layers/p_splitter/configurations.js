@@ -1,5 +1,6 @@
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
 
@@ -101,15 +102,12 @@ export const CONFIG_LIST_TABLE_COL_DEFS = [
 export const transformAndValidateConfigData = (data) => data;
 
 export const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
+  ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Splitter Type", field: "splitter_type_display", type: "simple" },
   { label: "Address", field: "address", type: "simple" },
   { label: "Ratio", field: "ratio", type: "simple" },
   { label: "Specification", field: "specification", type: "simple" },
   { label: "Vendor", field: "vendor", type: "simple" },
-  { label: "Status", field: "status", type: "status" },
 ];
 
 export const ELEMENT_TABLE_EXTRA_CONTROLS = ["connections"];

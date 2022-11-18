@@ -64,3 +64,11 @@ export const ELEMENT_FORM_ABSTRACT_TEMPLATE = [
     options: LAYER_STATUS_OPTIONS,
   },
 ];
+
+export const ELEMENT_TABLE_ABSTRACT_FIELDS = [
+  { label: "Name", field: "name", type: "simple" },
+  { label: "Unique Id", field: "unique_id", type: "simple" },
+  { label: "Network Id", field: "network_id", type: "simple" },
+  { label: "Reff Code", field: "ref_code", type: "simple" },
+  { label: "Status", field: "status", type: "status" },
+];

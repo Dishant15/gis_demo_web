@@ -92,6 +92,7 @@ const TicketForm = ({
         "name",
         "remarks",
         "unique_id",
+        "network_id",
       ]);
       // transform ticket data into server acceptable data
       ticketSubmitData.status = data.status;

@@ -1,5 +1,6 @@
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
 
@@ -42,11 +43,8 @@ export const ELEMENT_FORM_TEMPLATE = {
 };
 
 export const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
+  ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Address", field: "address", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Status", field: "status", type: "status" },
 ];
 
 export const transformAndValidateData = (formData, setError, isEdit) => {

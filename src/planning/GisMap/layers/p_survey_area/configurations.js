@@ -1,6 +1,7 @@
 import { FIELD_TYPES } from "components/common/DynamicForm";
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
 import Icon from "assets/markers/path.svg";
@@ -170,9 +171,7 @@ export const ELEMENT_FORM_TEMPLATE = {
 };
 
 export const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
+  ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Address", field: "address", type: "simple" },
   { label: "Area", field: "area", type: "simple" },
   { label: "City", field: "city", type: "simple" },
@@ -203,7 +202,6 @@ export const ELEMENT_TABLE_FIELDS = [
     field: "cable_tv_availability",
     type: "simple",
   },
-  { label: "Status", field: "status", type: "status" },
 ];
 
 export const transformAndValidateData = (formData, setError, isEdit) => {

@@ -1,4 +1,7 @@
-import { FEATURE_TYPES } from "../common/configuration";
+import {
+  ELEMENT_TABLE_ABSTRACT_FIELDS,
+  FEATURE_TYPES,
+} from "../common/configuration";
 import Icon from "assets/markers/ticket.svg";
 
 export const LAYER_KEY = "ticket";
@@ -31,8 +34,7 @@ export const INITIAL_ELEMENT_DATA = {
 };
 
 export const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
+  ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Ticket Type", field: "ticket_type_display", type: "simple" },
   { label: "Network Type", field: "network_type_display", type: "simple" },
   { label: "Due Date", field: "due_date", type: "date" },

@@ -1,4 +1,7 @@
-import { FEATURE_TYPES } from "../common/configuration";
+import {
+  ELEMENT_TABLE_ABSTRACT_FIELDS,
+  FEATURE_TYPES,
+} from "../common/configuration";
 
 import { default as Icon } from "assets/markers/building_view.svg";
 import { default as EditIcon } from "assets/markers/building_pin.svg";
@@ -35,14 +38,11 @@ export const INITIAL_ELEMENT_DATA = {
 export const ELEMENT_FORM_TEMPLATE = {};
 
 export const ELEMENT_TABLE_FIELDS = [
-  { label: "Name", field: "name", type: "simple" },
+  ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Address", field: "address", type: "simple" },
   { label: "Tags", field: "tags", type: "simple" },
   { label: "Categories", field: "category_display", type: "simple" },
   { label: "Floors", field: "floors", type: "simple" },
   { label: "House Per Floor", field: "house_per_floor", type: "simple" },
   { label: "Total Home Pass", field: "total_home_pass", type: "simple" },
-  { label: "Unique Id", field: "unique_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
-  { label: "Status", field: "status", type: "status" },
 ];
