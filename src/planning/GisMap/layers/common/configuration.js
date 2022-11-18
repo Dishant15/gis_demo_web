@@ -33,3 +33,34 @@ export const MAP_DRAWING_MODE = {
   point: "marker",
   multi_polygon: "polygon",
 };
+
+export const ELEMENT_FORM_ABSTRACT_TEMPLATE = [
+  {
+    field_key: "name",
+    label: "Name",
+    field_type: "input",
+  },
+  {
+    field_key: "unique_id",
+    label: "Unique Id",
+    field_type: "input",
+    disabled: true,
+  },
+  {
+    field_key: "network_id",
+    label: "Network Id",
+    field_type: "input",
+    disabled: true,
+  },
+  {
+    field_key: "ref_code",
+    label: "Reff Code",
+    field_type: "input",
+  },
+  {
+    field_key: "status",
+    label: "Status",
+    field_type: "select",
+    options: LAYER_STATUS_OPTIONS,
+  },
+];

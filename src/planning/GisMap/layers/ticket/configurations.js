@@ -2,6 +2,7 @@ import { FEATURE_TYPES } from "../common/configuration";
 import Icon from "assets/markers/ticket.svg";
 
 export const LAYER_KEY = "ticket";
+export const PRE_UID = "TKT";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
 const STROKE_COLOR = "#88B14B";
@@ -20,7 +21,6 @@ export const getViewOptions = () => ({
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",
-  unique_id: "REG_TKT_",
   status: "A",
   ticket_type: "S",
   network_type: "B",

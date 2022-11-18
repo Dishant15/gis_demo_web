@@ -112,7 +112,8 @@ const TicketForm = ({
     defaultValues: {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
-      unique_id: get(formData, "unique_id", "REG_TKTS_"),
+      unique_id: get(formData, "unique_id", "TKT.000001"),
+      network_id: get(formData, "network_id", "RGN-TKT.000001"),
       status: get(formData, "status") || "A",
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: get(formData, "ticket_type"),
@@ -235,6 +236,28 @@ const TicketForm = ({
             helperText={errors.unique_id?.message}
           />
         </Stack>
+        <Stack
+          spacing={2}
+          sx={{
+            width: "100%",
+          }}
+        >
+          <TextField
+            InputLabelProps={{
+              required: true,
+            }}
+            error={!!errors.network_id}
+            label="Network Id"
+            disabled={isEdit}
+            {...register("network_id", {
+              required: "This fields is required.",
+            })}
+            helperText={errors.network_id?.message}
+          />
+        </Stack>
+      </Stack>
+
+      <Stack my={2} spacing={2} direction={{ md: "row", xs: "column" }}>
         <Stack
           spacing={2}
           sx={{

@@ -22,7 +22,7 @@ import {
   setLayerConfigurations,
 } from "planning/data/planningState.reducer";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
-import { onAddElement } from "planning/data/planning.actions";
+import { onAddElementGeometry } from "planning/data/planning.actions";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -79,7 +79,7 @@ const AddElementContent = () => {
 
   const handleAddElementClick = useCallback(
     (layerKey) => () => {
-      dispatch(onAddElement({ layerKey }));
+      dispatch(onAddElementGeometry({ layerKey }));
     },
     []
   );

@@ -18,8 +18,13 @@ import {
   resetUnselectedLayerGisData,
   setMapState,
 } from "./planningGis.reducer";
-import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
+import {
+  generateElementUid,
+  LayerKeyMappings,
+  PLANNING_EVENT,
+} from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { last, size } from "lodash";
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {
@@ -50,32 +55,6 @@ export const onRegionSelectionUpdate =
       );
     }
     dispatch(resetUnselectedLayerGisData(selectedLayerKeys));
-  };
-
-export const onAddElement =
-  ({ layerKey }) =>
-  (dispatch, getState) => {
-    const storeState = getState();
-    const event = getPlanningMapStateEvent(storeState);
-    // show error if one event already running
-    if (event) {
-      dispatch(
-        addNotification({
-          type: "warning",
-          title: "Operation can not start",
-          text: "Please complete current operation before starting new",
-        })
-      );
-      return;
-    } else {
-      // start event if no other event running
-      dispatch(
-        setMapState({
-          event: PLANNING_EVENT.addElementGeometry,
-          layerKey,
-        })
-      );
-    }
   };
 
 export const onElementAddConnectionEvent =
@@ -133,6 +112,58 @@ export const onElementAddConnectionEvent =
           elementId,
           layerKey,
           existingConnections,
+        },
+      })
+    );
+  };
+
+export const onAddElementGeometry =
+  ({ layerKey }) =>
+  (dispatch, getState) => {
+    const storeState = getState();
+    const event = getPlanningMapStateEvent(storeState);
+    // show error if one event already running
+    if (event) {
+      dispatch(
+        addNotification({
+          type: "warning",
+          title: "Operation can not start",
+          text: "Please complete current operation before starting new",
+        })
+      );
+      return;
+    } else {
+      // start event if no other event running
+      dispatch(
+        setMapState({
+          event: PLANNING_EVENT.addElementGeometry,
+          layerKey,
+        })
+      );
+    }
+  };
+
+// called when user goes AddGisMapLayer ->
+export const onAddElementDetails =
+  ({ layerKey, submitData, validationRes }) =>
+  (dispatch) => {
+    const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
+    const region_list = get(validationRes, "data.region_list");
+    // get region uid
+    const reg_uid = !!size(region_list) ? last(region_list).unique_id : "RGN";
+    const element_uid = generateElementUid(layerKey);
+
+    // complete current event -> fire next event
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.addElementForm, // event for "layerForm"
+        layerKey,
+        data: {
+          ...initialData,
+          // submit data will have all geometry related fields submitted by AddGisMapLayer
+          ...submitData,
+          unique_id: element_uid,
+          network_id: `${reg_uid}-${element_uid}`,
         },
       })
     );

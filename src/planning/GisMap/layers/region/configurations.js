@@ -6,6 +6,8 @@ import { FEATURE_TYPES } from "../common/configuration";
 import Icon from "assets/markers/pentagon.svg";
 
 export const LAYER_KEY = "region";
+// never use this to generate region, this will be given by user
+export const PRE_UID = "RGN";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.MULTI_POLYGON;
 
 export const getViewOptions = (props = {}) => {

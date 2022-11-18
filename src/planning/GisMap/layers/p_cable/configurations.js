@@ -1,7 +1,11 @@
-import { FEATURE_TYPES, LAYER_STATUS_OPTIONS } from "../common/configuration";
+import {
+  ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  FEATURE_TYPES,
+} from "../common/configuration";
 import CableIcon from "assets/markers/line_pin.svg";
 
 export const LAYER_KEY = "p_cable";
+export const PRE_UID = "CBL";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYLINE;
 
 export const getViewOptions = ({ color_on_map }) => {
@@ -42,27 +46,7 @@ export const ELEMENT_FORM_TEMPLATE = {
     {
       title: "Cable Form",
       fieldConfigs: [
-        {
-          field_key: "name",
-          label: "Name",
-          field_type: "input",
-        },
-        {
-          field_key: "unique_id",
-          label: "Unique Id",
-          field_type: "input",
-        },
-        {
-          field_key: "ref_code",
-          label: "Reff Code",
-          field_type: "input",
-        },
-        {
-          field_key: "status",
-          label: "Status",
-          field_type: "select",
-          options: LAYER_STATUS_OPTIONS,
-        },
+        ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
           field_key: "cable_type",
           label: "Cable Type",

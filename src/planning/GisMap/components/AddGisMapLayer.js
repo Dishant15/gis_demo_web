@@ -24,13 +24,14 @@ import {
   MAP_DRAWING_MODE,
   zIndexMapping,
 } from "../layers/common/configuration";
-import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import { LayerKeyMappings } from "../utils";
 import {
   getLayerSelectedConfiguration,
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
 import useValidateGeometry from "../hooks/useValidateGeometry";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import { onAddElementDetails } from "planning/data/planning.actions";
 
 const GisEditOptions = {
   clickable: true,
@@ -64,7 +65,6 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
   const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
     configuration
   );
-  const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
 
   /**************************** */
   //        Handlers            //
@@ -109,16 +109,11 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
         region_id_list: selectedRegionIds,
       },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
           // clear map refs
           featureRef.current.setMap(null);
-          // complete current event -> fire next event
           dispatch(
-            setMapState({
-              event: PLANNING_EVENT.addElementForm, // event for "layerForm"
-              layerKey,
-              data: { ...initialData, ...submitData }, // init data
-            })
+            onAddElementDetails({ layerKey, validationRes: res, submitData })
           );
         },
       }

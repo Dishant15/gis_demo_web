@@ -1,6 +1,7 @@
 import orderBy from "lodash/orderBy";
 import { coordsToLatLongMap } from "utils/map.utils";
 import { FEATURE_TYPES } from "./layers/common/configuration";
+import { customAlphabet } from "nanoid";
 
 import * as RegionLayer from "./layers/region";
 import * as TicketLayer from "./layers/ticket";
@@ -23,6 +24,7 @@ export const PLANNING_EVENT = {
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
+    preUid: TicketLayer.PRE_UID,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,
     elementTableFields: RegionLayer.ELEMENT_TABLE_FIELDS,
@@ -30,6 +32,7 @@ export const LayerKeyMappings = {
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElementForm]: TicketLayer.ElementForm,
     [PLANNING_EVENT.editElementForm]: TicketLayer.ElementForm,
+    preUid: TicketLayer.PRE_UID,
     featureType: TicketLayer.LAYER_FEATURE_TYPE,
     getViewOptions: TicketLayer.getViewOptions,
     initialElementData: TicketLayer.INITIAL_ELEMENT_DATA,
@@ -37,6 +40,7 @@ export const LayerKeyMappings = {
     elementTableExtraControls: TicketLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [DPLayer.LAYER_KEY]: {
+    preUid: DPLayer.PRE_UID,
     featureType: DPLayer.LAYER_FEATURE_TYPE,
     getViewOptions: DPLayer.getViewOptions,
     initialElementData: DPLayer.INITIAL_ELEMENT_DATA,
@@ -45,6 +49,7 @@ export const LayerKeyMappings = {
     transformAndValidateData: DPLayer.transformAndValidateData,
   },
   [SplitterLayer.LAYER_KEY]: {
+    preUid: SplitterLayer.PRE_UID,
     featureType: SplitterLayer.LAYER_FEATURE_TYPE,
     getViewOptions: SplitterLayer.getViewOptions,
     initialElementData: SplitterLayer.INITIAL_ELEMENT_DATA,
@@ -59,6 +64,7 @@ export const LayerKeyMappings = {
     configTransformData: SplitterLayer.transformAndValidateConfigData,
   },
   [CableLayer.LAYER_KEY]: {
+    preUid: CableLayer.PRE_UID,
     featureType: CableLayer.LAYER_FEATURE_TYPE,
     getViewOptions: CableLayer.getViewOptions,
     initialElementData: CableLayer.INITIAL_ELEMENT_DATA,
@@ -72,6 +78,7 @@ export const LayerKeyMappings = {
     configTransformData: CableLayer.transformAndValidateConfigData,
   },
   [BuildingLayer.LAYER_KEY]: {
+    preUid: BuildingLayer.PRE_UID,
     [PLANNING_EVENT.addElementForm]: BuildingLayer.ElementForm,
     [PLANNING_EVENT.editElementForm]: BuildingLayer.ElementForm,
     featureType: BuildingLayer.LAYER_FEATURE_TYPE,
@@ -80,6 +87,7 @@ export const LayerKeyMappings = {
     elementTableFields: BuildingLayer.ELEMENT_TABLE_FIELDS,
   },
   [SAreaLayer.LAYER_KEY]: {
+    preUid: SAreaLayer.PRE_UID,
     featureType: SAreaLayer.LAYER_FEATURE_TYPE,
     getViewOptions: SAreaLayer.getViewOptions,
     initialElementData: SAreaLayer.INITIAL_ELEMENT_DATA,
@@ -123,4 +131,12 @@ export const convertLayerServerData = (layerKey, serverData) => {
     });
     return resultData;
   }
+};
+
+const alphabet =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const nanoid = customAlphabet(alphabet, 6);
+
+export const generateElementUid = (layerKey) => {
+  return `${LayerKeyMappings[layerKey]["preUid"]}.${nanoid()}`;
 };

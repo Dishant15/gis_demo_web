@@ -7,6 +7,7 @@ import SecondarySpliterIcon from "assets/markers/spliter_view.svg";
 import SecondarySpliterEditIcon from "assets/markers/spliter_edit.svg";
 
 export const LAYER_KEY = "p_splitter";
+export const PRE_UID = "SP";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const getViewOptions = ({ splitter_type }) => ({
