@@ -1,7 +1,9 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { format } from "date-fns";
+
 import get from "lodash/get";
 import range from "lodash/range";
 
@@ -30,6 +32,10 @@ import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
+import {
+  getPlanningTicketPage,
+  getTicketWorkorderPage,
+} from "utils/url.constants";
 
 /**
  * fetch element details
@@ -37,6 +43,7 @@ import { checkUserPermission } from "redux/selectors/auth.selectors";
  * show data in table form
  */
 const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { elementId } = useSelector(getPlanningMapStateData);
   const hasLayerEditPermission = useSelector(
@@ -89,6 +96,14 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     );
   }, [dispatch, layerKey, elemData]);
 
+  const handleShowWorkorder = useCallback(() => {
+    if (elemData.ticket_type === "P") {
+      navigate(getPlanningTicketPage(elemData.id));
+    } else {
+      navigate(getTicketWorkorderPage(elemData.id));
+    }
+  }, [navigate, elemData]);
+
   const ExtraControls = extraControls.map((ctrl) => {
     switch (ctrl) {
       case "connections":
@@ -118,17 +133,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
         return (
           <Button
             key={ctrl}
-            onClick={() =>
-              dispatch(
-                setMapState({
-                  event: PLANNING_EVENT.showTicketWorkOrders,
-                  layerKey,
-                  data: {
-                    elementId: elemData.id,
-                  },
-                })
-              )
-            }
+            onClick={handleShowWorkorder}
             startIcon={<CableIcon />}
             variant="outlined"
             color="secondary"
