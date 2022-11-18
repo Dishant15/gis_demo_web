@@ -21,6 +21,7 @@ import { BUILDING_CATEGORY_OPTIONS } from "planning/GisMap/layers/p_survey_build
 /**
  * Parent:
  *    WorkOrderPage
+ *    BuildingLayerForm
  */
 const UnitEditForm = forwardRef((props, ref) => {
   const {
@@ -42,6 +43,7 @@ const UnitEditForm = forwardRef((props, ref) => {
   } = useForm({
     defaultValues: {
       unique_id: formData.unique_id || undefined,
+      network_id: formData.network_id || undefined,
       name: formData.name,
       category: formData.category,
       tags: formData.tags,
@@ -69,7 +71,7 @@ const UnitEditForm = forwardRef((props, ref) => {
           className="dtl-title"
           variant="h5"
         >
-          Edit Unit
+          {isEdit ? "Edit" : "Add"} Unit
         </Typography>
         <IconButton aria-label="close" onClick={handleUnitDetailsCancel}>
           <CloseIcon />
@@ -101,7 +103,24 @@ const UnitEditForm = forwardRef((props, ref) => {
                   required: "This fields is required.",
                 })}
                 helperText={errors.unique_id?.message}
-                disabled={isEdit}
+                disabled={true}
+              />
+            </Stack>
+            <Stack
+              spacing={2}
+              sx={{
+                width: "100%",
+              }}
+            >
+              <TextField
+                required
+                error={!!errors.network_id}
+                label="Network Id"
+                {...register("network_id", {
+                  required: "This fields is required.",
+                })}
+                helperText={errors.network_id?.message}
+                disabled={true}
               />
             </Stack>
           </Stack>
