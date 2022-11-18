@@ -3,17 +3,18 @@ import { useMutation, useQuery } from "react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
+import { Polygon, DrawingManager } from "@react-google-maps/api";
+
+import get from "lodash/get";
 
 import { Box, Button, Typography, Skeleton } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Done } from "@mui/icons-material";
-import { Polygon, DrawingManager } from "@react-google-maps/api";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Map from "components/common/Map";
 
-import { get } from "lodash";
+import Map from "components/common/Map";
 
 import { getTicketListPage } from "utils/url.constants";
 import {
@@ -41,6 +42,7 @@ const TicketMapWrapper = ({ formData }) => {
   );
 
   const coordinates = get(data, "coordinates") || [];
+  const center = get(data, "center") || [0, 0];
 
   if (isLoading) return <Skeleton animation="wave" height="30rem" />;
 
@@ -49,6 +51,7 @@ const TicketMapWrapper = ({ formData }) => {
       formData={{
         ...formData,
         regionCoords: coordsToLatLongMap(coordinates, true),
+        regionCenter: coordsToLatLongMap([center])[0],
       }}
     />
   );
@@ -71,7 +74,7 @@ const TicketMap = ({ formData }) => {
   const polyRef = useRef();
   const [isDrawing, setIsDrawing] = useState(true);
 
-  const { regionCoords } = formData;
+  const { regionCoords, regionCenter } = formData;
 
   const { mutate, isLoading: isTicketAdding } = useMutation(addNewTicket, {
     onSuccess: (res) => {
@@ -170,7 +173,7 @@ const TicketMap = ({ formData }) => {
           </CardActions>
         </Card>
       </div>
-      <Map>
+      <Map center={regionCenter}>
         <DrawingManager
           options={{
             drawingControl: false,
