@@ -23,11 +23,12 @@ import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import CableIcon from "@mui/icons-material/Cable";
+import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 
 import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
-import { setMapState } from "planning/data/planningGis.reducer";
+import { setMapProps, setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
@@ -36,6 +37,8 @@ import {
   getPlanningTicketPage,
   getTicketWorkorderPage,
 } from "utils/url.constants";
+import { FEATURE_TYPES } from "../layers/common/configuration";
+import { pointCoordsToLatLongMap } from "utils/map.utils";
 
 /**
  * fetch element details
@@ -104,6 +107,32 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     }
   }, [navigate, elemData]);
 
+  const handleShowOnMap = useCallback(() => {
+    const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+    switch (featureType) {
+      case FEATURE_TYPES.POINT:
+        dispatch(
+          setMapProps({
+            center: pointCoordsToLatLongMap(elemData.coordinates),
+            zoom: 16,
+          })
+        );
+        break;
+      case FEATURE_TYPES.POLYGON:
+      case FEATURE_TYPES.POLYLINE:
+      case FEATURE_TYPES.MULTI_POLYGON:
+        dispatch(
+          setMapProps({
+            center: pointCoordsToLatLongMap(elemData.center),
+            zoom: 16,
+          })
+        );
+        break;
+      default:
+        break;
+    }
+  }, [dispatch, layerKey, elemData]);
+
   const ExtraControls = extraControls.map((ctrl) => {
     switch (ctrl) {
       case "connections":
@@ -166,32 +195,42 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
           </IconButton>
         </Stack>
         {/* Button container */}
-        {hasEditPermission ? (
-          <Stack
-            sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
-            p={2}
-            direction="row"
-            spacing={2}
+        <Stack
+          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
+          p={2}
+          direction="row"
+          spacing={2}
+        >
+          {hasEditPermission ? (
+            <>
+              <Button
+                onClick={handleEditDetails}
+                startIcon={<EditIcon />}
+                variant="outlined"
+                color="secondary"
+              >
+                Details
+              </Button>
+              <Button
+                onClick={handleEditLocation}
+                startIcon={<EditLocationAltIcon />}
+                variant="outlined"
+                color="secondary"
+              >
+                Location
+              </Button>
+            </>
+          ) : null}
+          <Button
+            onClick={handleShowOnMap}
+            startIcon={<LocationSearchingIcon />}
+            variant="outlined"
+            color="secondary"
           >
-            <Button
-              onClick={handleEditDetails}
-              startIcon={<EditIcon />}
-              variant="outlined"
-              color="secondary"
-            >
-              Details
-            </Button>
-            <Button
-              onClick={handleEditLocation}
-              startIcon={<EditLocationAltIcon />}
-              variant="outlined"
-              color="secondary"
-            >
-              Location
-            </Button>
-            {ExtraControls}
-          </Stack>
-        ) : null}
+            Show on map
+          </Button>
+          {ExtraControls}
+        </Stack>
         {/* Table Content */}
         <Stack
           sx={{

@@ -66,6 +66,19 @@ export const getMarkerCoordinatesFromFeature = (marker) => {
   return marker.getPosition().toJSON();
 };
 
+// latLongObj :- { lng, lat }
+export const pointLatLongMapToCoords = (latLongObj) => {
+  return [latLongObj.lng, latLongObj.lat];
+};
+
+// [lng, lat] :- { lng, lat }
+export const pointCoordsToLatLongMap = (coordinates) => {
+  return {
+    lng: coordinates[0],
+    lat: coordinates[1],
+  };
+};
+
 export const getFillColor = (layer_index) => {
   return get(uniq_colors, layer_index - 1, "#59666C");
 };

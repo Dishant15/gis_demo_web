@@ -13,6 +13,11 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
 import { coordsToLatLongMap } from "utils/map.utils";
 
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+} from "components/common/Map/GoogleMapWrapper";
+
 const defaultLayerNetworkState = {
   isLoading: false,
   isFetched: false,
@@ -28,6 +33,11 @@ const initialState = {
   layerData: {},
   // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey }
   mapState: {},
+  // props use for GisMap, like center, zoom
+  mapProps: {
+    center: DEFAULT_MAP_CENTER,
+    zoom: DEFAULT_MAP_ZOOM,
+  },
   // ticket related fields
   ticketId: null,
   // shape : { **Network state, **ticket fields, area_pocket: {},
@@ -104,6 +114,10 @@ const planningGisSlice = createSlice({
           state.layerData[currNsKey] = [];
         }
       }
+    },
+    setMapProps: (state, { payload }) => {
+      // can be partial update
+      state.mapProps = { ...state.mapProps, ...payload };
     },
   },
   extraReducers: {
@@ -195,6 +209,10 @@ const planningGisSlice = createSlice({
   },
 });
 
-export const { setTicketId, setMapState, resetUnselectedLayerGisData } =
-  planningGisSlice.actions;
+export const {
+  setTicketId,
+  setMapState,
+  setMapProps,
+  resetUnselectedLayerGisData,
+} = planningGisSlice.actions;
 export default planningGisSlice.reducer;

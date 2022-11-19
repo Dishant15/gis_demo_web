@@ -46,6 +46,7 @@ const ViewLayer = ({ layerKey }) => {
             }}
             zIndex={zIndexMapping[layerKey]}
             position={coordinates}
+            // animation={1}
           />
         );
       });
