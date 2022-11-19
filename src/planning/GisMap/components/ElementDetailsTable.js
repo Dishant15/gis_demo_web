@@ -295,11 +295,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
 
               default:
                 ValueCell = (
-                  <Typography
-                    sx={{ whiteSpace: "pre" }}
-                    textAlign="center"
-                    width={"50%"}
-                  >
+                  <Typography textAlign="center" width={"50%"}>
                     {get(elemData, field, "--") || "--"}
                   </Typography>
                 );
