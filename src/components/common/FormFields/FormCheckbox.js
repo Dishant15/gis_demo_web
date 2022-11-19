@@ -16,12 +16,17 @@ export const FormCheckbox = ({
   error,
   helperText,
   disabled,
+  required,
 }) => {
   return (
     <Controller
       render={({ field }) => {
         return (
-          <FormControl error={error} disabled={!!disabled}>
+          <FormControl
+            error={error}
+            disabled={!!disabled}
+            required={!!required}
+          >
             <FormControlLabel
               control={
                 <Checkbox

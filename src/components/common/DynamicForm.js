@@ -89,8 +89,14 @@ const DynamicForm = forwardRef(
 
                 <Grid container pr={2} spacing={2} width="100%">
                   {fieldConfigs.map((config) => {
-                    const { field_key, label, field_type } = config;
-
+                    const {
+                      field_key,
+                      label,
+                      field_type,
+                      validationProps,
+                      disabled,
+                    } = config;
+                    const required = !!get(validationProps, "required");
                     switch (field_type) {
                       case FIELD_TYPES.Input:
                         return (
@@ -98,13 +104,17 @@ const DynamicForm = forwardRef(
                             <TextField
                               className="full-width"
                               label={label}
-                              {...register(field_key)}
+                              {...register(field_key, validationProps)}
+                              disabled={!!disabled}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
                                 [field_key, "message"],
                                 ""
                               )}
+                              InputLabelProps={{
+                                required,
+                              }}
                             />
                           </Grid>
                         );
@@ -117,13 +127,17 @@ const DynamicForm = forwardRef(
                               multiline
                               rows={3}
                               label={label}
-                              {...register(field_key)}
+                              {...register(field_key, validationProps)}
+                              disabled={!!disabled}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
                                 [field_key, "message"],
                                 ""
                               )}
+                              InputLabelProps={{
+                                required,
+                              }}
                             />
                           </Grid>
                         );
@@ -135,6 +149,9 @@ const DynamicForm = forwardRef(
                               label={label}
                               name={field_key}
                               control={control}
+                              rules={validationProps}
+                              disabled={!!disabled}
+                              required={required}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
@@ -152,6 +169,9 @@ const DynamicForm = forwardRef(
                               label={label}
                               name={field_key}
                               control={control}
+                              rules={validationProps}
+                              isDisabled={!!disabled}
+                              required={required}
                               options={config.options || []}
                               error={!!get(errors, [field_key])}
                               helperText={get(
@@ -171,6 +191,9 @@ const DynamicForm = forwardRef(
                               label={label}
                               name={field_key}
                               control={control}
+                              rules={validationProps}
+                              isDisabled={!!disabled}
+                              required={required}
                               options={config.options || []}
                               error={!!get(errors, [field_key])}
                               helperText={get(
@@ -193,6 +216,9 @@ const DynamicForm = forwardRef(
                                 labelKey={config.labelKey}
                                 valueKey={config.valueKey}
                                 control={control}
+                                rules={validationProps}
+                                isDisabled={!!disabled}
+                                required={required}
                                 options={config.options || []}
                                 error={!!get(errors, [field_key])}
                                 helperText={get(

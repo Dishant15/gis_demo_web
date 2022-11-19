@@ -1,3 +1,5 @@
+import { FIELD_TYPES } from "components/common/DynamicForm";
+
 export const zIndexMapping = {
   region: 1,
   p_survey_area: 2,
@@ -38,29 +40,29 @@ export const ELEMENT_FORM_ABSTRACT_TEMPLATE = [
   {
     field_key: "name",
     label: "Name",
-    field_type: "input",
+    field_type: FIELD_TYPES.Input,
   },
   {
     field_key: "unique_id",
     label: "Unique Id",
-    field_type: "input",
+    field_type: FIELD_TYPES.Input,
     disabled: true,
   },
   {
     field_key: "network_id",
     label: "Network Id",
-    field_type: "input",
+    field_type: FIELD_TYPES.Input,
     disabled: true,
   },
   {
     field_key: "ref_code",
     label: "Reff Code",
-    field_type: "input",
+    field_type: FIELD_TYPES.Input,
   },
   {
     field_key: "status",
     label: "Status",
-    field_type: "select",
+    field_type: FIELD_TYPES.Select,
     options: LAYER_STATUS_OPTIONS,
   },
 ];
