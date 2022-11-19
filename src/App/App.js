@@ -181,6 +181,12 @@ const App = () => {
                 </Route>
                 <Route path={getLoginPath()} element={<LoginPage />} />
                 {/* testing routes */}
+                {process.env.NODE_ENV !== "production" ? (
+                  <Route
+                    path={"/dynamicform"}
+                    element={require("components/test/TestDynamicForm").default()}
+                  />
+                ) : null}
               </Routes>
             </BrowserRouter>
           </ThemeProvider>
