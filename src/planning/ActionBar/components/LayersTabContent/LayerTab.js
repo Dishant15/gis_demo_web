@@ -22,8 +22,7 @@ import {
   setActiveTab,
 } from "planning/data/planningState.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { setMapState } from "planning/data/planningGis.reducer";
-import { PLANNING_EVENT } from "planning/GisMap/utils";
+import { openElementDetails } from "planning/data/planning.actions";
 
 const LayerTab = ({ layerConfig, regionIdList }) => {
   /**
@@ -124,13 +123,7 @@ const ElementList = ({ layerKey }) => {
 
   const handleElementClick = useCallback(
     (elementId) => () => {
-      dispatch(
-        setMapState({
-          event: PLANNING_EVENT.showElementDetails,
-          layerKey,
-          data: { elementId },
-        })
-      );
+      dispatch(openElementDetails({ layerKey, elementId }));
     },
     [layerKey]
   );

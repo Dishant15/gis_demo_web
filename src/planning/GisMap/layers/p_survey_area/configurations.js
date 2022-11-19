@@ -26,7 +26,8 @@ export const getViewOptions = () => ({
 
 export const INITIAL_ELEMENT_DATA = {
   name: "",
-  unique_id: "REG_SA_",
+  unique_id: "",
+  network_id: "",
   ref_code: "",
   status: "P",
   address: "",
