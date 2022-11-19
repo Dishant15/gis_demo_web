@@ -22,7 +22,8 @@ export const getViewOptions = ({ splitter_type }) => ({
 export const INITIAL_ELEMENT_DATA = {
   name: "",
   address: "",
-  unique_id: "REG_SP_P_",
+  unique_id: "",
+  network_id: "",
   ref_code: "",
   status: "P",
   coordinates: {},

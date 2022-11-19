@@ -117,6 +117,18 @@ export const onElementAddConnectionEvent =
     );
   };
 
+export const openElementDetails =
+  ({ layerKey, elementId }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.showElementDetails,
+        layerKey,
+        data: { elementId },
+      })
+    );
+  };
+
 export const onAddElementGeometry =
   ({ layerKey }) =>
   (dispatch, getState) => {

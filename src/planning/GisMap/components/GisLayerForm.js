@@ -21,6 +21,7 @@ import {
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import { openElementDetails } from "planning/data/planning.actions";
 
 export const GisLayerForm = ({ layerKey }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ export const GisLayerForm = ({ layerKey }) => {
     "transformAndValidateData",
   ]);
 
-  const onSuccessHandler = () => {
+  const onSuccessHandler = ({ id }) => {
     dispatch(
       addNotification({
         type: "success",
@@ -53,6 +54,8 @@ export const GisLayerForm = ({ layerKey }) => {
         layerKey,
       })
     );
+
+    dispatch(openElementDetails({ layerKey, elementId: id }));
   };
 
   const onErrorHandler = (err) => {
