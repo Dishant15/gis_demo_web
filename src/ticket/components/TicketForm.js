@@ -14,8 +14,7 @@ import {
 } from "utils/constant";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
-import { generateTicketUid } from "ticket/data/utils";
-import { nanoid } from "planning/GisMap/utils";
+import { generateElementUid } from "planning/GisMap/utils";
 
 const TicketFormWrapper = ({
   formData,
@@ -52,9 +51,19 @@ const TicketFormWrapper = ({
     );
   }
 
+  const ticketUid = generateElementUid("ticket");
+
   return (
     <TicketForm
-      formData={formData}
+      formData={
+        isEdit
+          ? formData
+          : {
+              unique_id: ticketUid,
+              network_id: `RGN-${ticketUid}`,
+              ...formData,
+            }
+      }
       regionList={regionList}
       userList={userList}
       isEdit={isEdit}
@@ -64,7 +73,6 @@ const TicketFormWrapper = ({
       formActionProps={formActionProps}
       formSubmitButtonProps={formSubmitButtonProps}
       formSubmitButtonText={formSubmitButtonText}
-      randomTicketId={nanoid()}
     />
   );
 };
@@ -75,7 +83,6 @@ const TicketForm = ({
   userList,
   handleFormSubmit,
   isEdit,
-  randomTicketId,
   formCancelButton = null,
   isButtonLoading = false,
   formActionProps = {},
@@ -116,8 +123,8 @@ const TicketForm = ({
     defaultValues: {
       name: get(formData, "name", ""),
       remarks: get(formData, "remarks", ""),
-      unique_id: get(formData, "unique_id", `TKT.${randomTicketId}`),
-      network_id: get(formData, "network_id", `RGN-TKT.${randomTicketId}`),
+      unique_id: get(formData, "unique_id", ""),
+      network_id: get(formData, "network_id", ""),
       status: get(formData, "status") || "A",
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: get(formData, "ticket_type"),
@@ -128,14 +135,11 @@ const TicketForm = ({
   });
 
   const handleUniqueIdOnClose = useCallback(() => {
-    const [region, ticket_type] = getValues(["region", "ticket_type"]);
-    const unique_id = generateTicketUid(get(region, "unique_id"), ticket_type);
-    setValue("unique_id", `${unique_id}.${randomTicketId}`);
-    setValue(
-      "network_id",
-      `${get(region, "unique_id")}-${unique_id}.${randomTicketId}`
-    );
-  }, [randomTicketId]);
+    const [region, unique_id] = getValues(["region", "unique_id"]);
+    const regionUid = get(region, "unique_id");
+
+    setValue("network_id", `${regionUid}-${unique_id}`);
+  }, []);
 
   return (
     <Box
@@ -193,7 +197,6 @@ const TicketForm = ({
             options={TicketTypeList}
             error={!!errors.ticket_type}
             helperText={errors.ticket_type?.message}
-            onBlur={handleUniqueIdOnClose}
             rules={{
               required: "This fields is required.",
             }}
