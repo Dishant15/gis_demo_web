@@ -1,6 +1,10 @@
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { MAP_LIBRARIES } from "./map.constants";
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+  MAP_LIBRARIES,
+} from "./map.constants";
 import { PIN_P } from "./MarkerPaths";
 
 import SPinIcon from "assets/s_pin.svg";
@@ -9,11 +13,6 @@ const DEFAULT_CONTAINER_STYLE = {
   width: "100%",
   height: "100%",
 };
-
-// Ahmedabad city center
-export const DEFAULT_MAP_CENTER = { lat: 23.033863, lng: 72.585022 };
-// supported zoom levels 0 to 18
-export const DEFAULT_MAP_ZOOM = 12;
 
 /**
  *

@@ -6,6 +6,8 @@ import {
   distance,
 } from "@turf/turf";
 import get from "lodash/get";
+import last from "lodash/last";
+import size from "lodash/size";
 
 import { getSelectedLayerKeys } from "./planningState.selectors";
 import { handleLayerSelect, handleRegionSelect } from "./planningState.reducer";
@@ -24,7 +26,6 @@ import {
   PLANNING_EVENT,
 } from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { last, size } from "lodash";
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {

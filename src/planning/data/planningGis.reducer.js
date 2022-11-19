@@ -12,11 +12,10 @@ import { convertLayerServerData, PLANNING_EVENT } from "../GisMap/utils";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
 import { coordsToLatLongMap } from "utils/map.utils";
-
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
-} from "components/common/Map/GoogleMapWrapper";
+} from "components/common/Map/map.constants";
 
 const defaultLayerNetworkState = {
   isLoading: false,
