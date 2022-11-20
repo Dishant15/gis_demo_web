@@ -39,6 +39,7 @@ export const INITIAL_ELEMENT_DATA = {
 export const ELEMENT_FORM_TEMPLATE = {};
 
 export const ELEMENT_TABLE_FIELDS = [
+  { label: "Boundary Name", field: "boundary_name", type: "simple" },
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Address", field: "address", type: "simple" },
   { label: "Tags", field: "tags", type: "simple" },
