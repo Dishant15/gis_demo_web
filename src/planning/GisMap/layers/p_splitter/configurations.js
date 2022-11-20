@@ -75,8 +75,13 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           options: SPLITTER_TYPE_OPTIONS,
         },
         {
-          field_key: "ratio",
-          label: "Ratio",
+          field_key: "input_ports",
+          label: "Input Ports",
+          field_type: "input",
+        },
+        {
+          field_key: "output_ports",
+          label: "Output Ports",
           field_type: "input",
         },
         {
@@ -96,7 +101,8 @@ export const ELEMENT_CONFIG_TEMPLATE = {
 
 export const CONFIG_LIST_TABLE_COL_DEFS = [
   { headerName: "Name", field: "config_name" },
-  { headerName: "Ratio", field: "ratio" },
+  { headerName: "Input Ports", field: "input_ports" },
+  { headerName: "Output Ports", field: "output_ports" },
   { headerName: "Splitter Type", field: "splitter_type_display" },
 ];
 
@@ -106,7 +112,8 @@ export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Splitter Type", field: "splitter_type_display", type: "simple" },
   { label: "Address", field: "address", type: "simple" },
-  { label: "Ratio", field: "ratio", type: "simple" },
+  { label: "Input Ports", field: "input_ports", type: "simple" },
+  { label: "Output Ports", field: "output_ports", type: "simple" },
   { label: "Specification", field: "specification", type: "simple" },
   { label: "Vendor", field: "vendor", type: "simple" },
 ];
