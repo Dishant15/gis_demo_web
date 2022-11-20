@@ -118,6 +118,7 @@ export const FormSelect = ({
             components={{ Control: MuiSelectOverride }}
             getOptionLabel={(o) => o[labelKey]}
             getOptionValue={(o) => o[valueKey]}
+            menuPortalTarget={document.body}
           />
         );
       }}
@@ -187,6 +188,7 @@ export const FormCreatableSelect = ({
                 __isNew__: true,
               };
             }}
+            menuPortalTarget={document.body}
           />
         );
       }}
