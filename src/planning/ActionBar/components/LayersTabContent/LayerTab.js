@@ -23,6 +23,7 @@ import {
 } from "planning/data/planningState.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { openElementDetails } from "planning/data/planning.actions";
+import { LayerKeyMappings } from "planning/GisMap/utils";
 
 const LayerTab = ({ layerConfig, regionIdList }) => {
   /**
@@ -41,6 +42,9 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const isSelected = get(layerNetState, "isSelected", false);
   const isFetched = get(layerNetState, "isFetched", false);
   const count = get(layerNetState, "count", 0);
+
+  // get icon
+  const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
 
   const handleExpandToggle = useCallback(() => {
     setExpanded((expanded) => !expanded);
@@ -79,6 +83,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
         <Box
           sx={{ opacity: isFetched ? 1 : 0.3 }}
           onClick={isFetched ? handleExpandToggle : noop}
+          display="flex"
         >
           <ExpandMore
             expand={isExpanded}
@@ -87,6 +92,11 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
           >
             <ExpandMoreIcon />
           </ExpandMore>
+        </Box>
+        <Box className="icon-block">
+          <Box className="icon-wrapper">
+            <img src={Icon} alt={name} />
+          </Box>
         </Box>
         <Stack
           direction="row"

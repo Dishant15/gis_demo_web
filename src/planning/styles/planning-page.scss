@@ -34,6 +34,23 @@
 
         .pl-list-tab-content {
           flex: 1;
+
+          .icon-block {
+            padding: 6px;
+            margin-left: 4px !important;
+            // layer tab icon
+            .icon-wrapper {
+              width: 36px;
+              height: 36px;
+              text-align: center;
+              border: 1px solid rgba(0, 0, 0, 0.24);
+              padding: 2px;
+              img {
+                width: auto;
+                height: 100%;
+              }
+            }
+          }
         }
 
         .pl-list-pill {
