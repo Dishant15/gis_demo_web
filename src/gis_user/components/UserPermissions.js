@@ -32,6 +32,7 @@ export const USER_LAYER_PERMS_CONFIG = [
   { name: "Cable", layerKey: "p_cable" },
   { name: "Survey building", layerKey: "p_survey_building" },
   { name: "Survey area", layerKey: "p_survey_area" },
+  { name: "Pop Location", layerKey: "p_pop" },
 ];
 
 /**

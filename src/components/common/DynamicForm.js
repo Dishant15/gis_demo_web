@@ -22,6 +22,7 @@ export const FIELD_TYPES = {
   Input: "input",
   TextArea: "textArea",
   CheckBox: "checkBox",
+  DateTime: "datetime",
   // single select
   Select: "select",
   SelectMulti: "selectMulti",

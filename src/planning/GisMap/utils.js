@@ -10,6 +10,7 @@ import * as SplitterLayer from "./layers/p_splitter";
 import * as CableLayer from "./layers/p_cable";
 import * as BuildingLayer from "./layers/p_survey_building";
 import * as SAreaLayer from "./layers/p_survey_area";
+import * as PPopLayer from "./layers/p_pop";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -94,6 +95,14 @@ export const LayerKeyMappings = {
     elementTableFields: SAreaLayer.ELEMENT_TABLE_FIELDS,
     formConfig: SAreaLayer.ELEMENT_FORM_TEMPLATE,
     transformAndValidateData: SAreaLayer.transformAndValidateData,
+  },
+  [PPopLayer.LAYER_KEY]: {
+    preUid: PPopLayer.PRE_UID,
+    featureType: PPopLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: PPopLayer.getViewOptions,
+    initialElementData: PPopLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: PPopLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: PPopLayer.ELEMENT_FORM_TEMPLATE,
   },
 };
 
