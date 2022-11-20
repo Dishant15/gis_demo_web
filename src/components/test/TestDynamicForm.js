@@ -133,6 +133,15 @@ const ELEMENT_FORM_TEMPLATE = {
             required: "Cable TV Service is required",
           },
         },
+        {
+          field_key: "start_time",
+          label: "Start time",
+          field_type: FIELD_TYPES.DateTime,
+          // disabled: true,
+          validationProps: {
+            required: "Start time is required",
+          },
+        },
       ],
     },
   ],

@@ -16,7 +16,12 @@ import {
 import Grid from "@mui/material/Grid";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { FormSelect, FormCheckbox, FormCreatableSelect } from "./FormFields";
+import {
+  FormSelect,
+  FormCheckbox,
+  FormCreatableSelect,
+  FormDateTimePicker,
+} from "./FormFields";
 
 export const FIELD_TYPES = {
   Input: "input",
@@ -221,6 +226,27 @@ const DynamicForm = forwardRef(
                                 isDisabled={!!disabled}
                                 required={required}
                                 options={config.options || []}
+                                error={!!get(errors, [field_key])}
+                                helperText={get(
+                                  errors,
+                                  [field_key, "message"],
+                                  ""
+                                )}
+                              />
+                            </Stack>
+                          </Grid>
+                        );
+
+                      case FIELD_TYPES.DateTime:
+                        return (
+                          <Grid item xs={12} sm={6} key={field_key}>
+                            <Stack width="100%">
+                              <FormDateTimePicker
+                                label={label}
+                                name={field_key}
+                                control={control}
+                                rules={validationProps}
+                                isDisabled={!!disabled}
                                 error={!!get(errors, [field_key])}
                                 helperText={get(
                                   errors,
