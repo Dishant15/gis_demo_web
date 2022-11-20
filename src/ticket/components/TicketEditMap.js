@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { polygon, booleanContains } from "@turf/turf";
 
+import get from "lodash/get";
+
 import { Box, Button, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -39,6 +41,7 @@ const TicketEditMap = ({ ticketData }) => {
 
   const { region, area_pocket } = ticketData;
   const regionCoordinates = coordsToLatLongMap(region.coordinates, true);
+  const regionCenter = coordsToLatLongMap([get(region, "center", [0, 0])])[0];
 
   const { mutate: editTicket, isLoading: isTicketAdding } = useMutation(
     editTicketArea,
@@ -146,7 +149,7 @@ const TicketEditMap = ({ ticketData }) => {
           </CardActions>
         </Card>
       </div>
-      <Map>
+      <Map center={regionCenter}>
         {regionCoordinates.map((currRegion, regInd) => {
           return (
             <Polygon
