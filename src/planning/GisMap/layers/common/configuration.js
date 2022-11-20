@@ -14,9 +14,10 @@ export const zIndexMapping = {
 };
 
 export const LAYER_STATUS_OPTIONS = [
-  { value: "T", label: "Ticket Open" },
-  { value: "P", label: "Planned" },
-  { value: "V", label: "Verified" },
+  { value: "L1", label: "L1 Design" },
+  { value: "L2", label: "L2 Design" },
+  { value: "RFS", label: "Ready For Service" },
+  { value: "IA", label: "In Active" },
 ];
 
 // also required by backend at the time of validations

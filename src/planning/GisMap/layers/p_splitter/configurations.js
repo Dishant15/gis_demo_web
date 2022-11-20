@@ -25,7 +25,7 @@ export const INITIAL_ELEMENT_DATA = {
   unique_id: "",
   network_id: "",
   ref_code: "",
-  status: "P",
+  status: "RFS",
   coordinates: {},
 };
 

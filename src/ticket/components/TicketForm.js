@@ -7,14 +7,11 @@ import { Box, TextField, Stack, Divider, Chip, Skeleton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
-import {
-  NetworkTypeList,
-  TicketTypeList,
-  TicketStatusList,
-} from "utils/constant";
+import { TicketTypeList, TicketStatusList } from "utils/constant";
 import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { generateElementUid } from "planning/GisMap/utils";
+import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuration";
 
 const TicketFormWrapper = ({
   formData,
@@ -125,7 +122,7 @@ const TicketForm = ({
       remarks: get(formData, "remarks", ""),
       unique_id: get(formData, "unique_id", ""),
       network_id: get(formData, "network_id", ""),
-      status: get(formData, "status") || "A",
+      status: get(formData, "status") || "RFS",
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: get(formData, "ticket_type"),
       network_type: get(formData, "network_type"),
@@ -214,7 +211,7 @@ const TicketForm = ({
             required
             name="network_type"
             control={control}
-            options={NetworkTypeList}
+            options={LAYER_STATUS_OPTIONS}
             error={!!errors.network_type}
             helperText={errors.network_type?.message}
             rules={{

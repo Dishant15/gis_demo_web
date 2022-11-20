@@ -248,11 +248,11 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
                 const elemStatus = get(elemData, field);
                 if (!elemStatus) return null;
                 const color =
-                  elemStatus === "V"
+                  elemStatus === "RFS"
                     ? "success"
-                    : elemStatus === "P"
+                    : elemStatus === "L1" || elemStatus === "L2"
                     ? "warning"
-                    : "error";
+                    : "error"; // IA: In active
 
                 ValueCell = (
                   <Box textAlign="center" width={"50%"}>

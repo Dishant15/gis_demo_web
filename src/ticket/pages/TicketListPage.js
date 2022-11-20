@@ -103,12 +103,14 @@ const TicketListPage = () => {
                 headerName: "Network Type",
                 width: 180,
                 valueFormatter: (params) => {
-                  if (params.value === "B") {
-                    return "As Build";
-                  } else if (params.value === "P") {
-                    return "As Planned";
+                  if (params.value === "L1") {
+                    return "L1 Design";
+                  } else if (params.value === "L2") {
+                    return "L2 Design";
+                  } else if (params.value === "RFS") {
+                    return "Ready For Service";
                   } else {
-                    return "";
+                    return "In Active";
                   }
                 },
               },
