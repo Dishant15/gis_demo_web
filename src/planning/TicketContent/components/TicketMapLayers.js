@@ -51,6 +51,7 @@ const TicketMapLayers = React.memo(() => {
                   position={element.coordinates}
                 />
               );
+
             case FEATURE_TYPES.POLYGON:
               return (
                 <Polygon
@@ -62,6 +63,7 @@ const TicketMapLayers = React.memo(() => {
                   paths={element.coordinates}
                 />
               );
+
             case FEATURE_TYPES.POLYLINE:
               return (
                 <Polyline
@@ -73,6 +75,7 @@ const TicketMapLayers = React.memo(() => {
                   path={element.coordinates}
                 />
               );
+
             default:
               return null;
           }
