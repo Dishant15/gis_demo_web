@@ -1,10 +1,5 @@
-import React from "react";
-
 import { getFillColor } from "utils/map.utils";
-import {
-  ELEMENT_TABLE_ABSTRACT_FIELDS,
-  FEATURE_TYPES,
-} from "../common/configuration";
+import { FEATURE_TYPES } from "../common/configuration";
 
 import Icon from "assets/markers/pentagon.svg";
 
@@ -31,4 +26,8 @@ export const getViewOptions = (props = {}) => {
   };
 };
 
-export const ELEMENT_TABLE_FIELDS = [...ELEMENT_TABLE_ABSTRACT_FIELDS];
+export const ELEMENT_TABLE_FIELDS = [
+  { label: "Name", field: "name", type: "simple" },
+  { label: "Unique Id", field: "unique_id", type: "simple" },
+  { label: "Layer", field: "layer", type: "simple" },
+];

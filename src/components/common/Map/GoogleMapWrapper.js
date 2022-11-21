@@ -36,7 +36,6 @@ const GoogleMapWrapper = ({
         options={(maps) => {
           return {
             zoomControl: true,
-            mapTypeControl: false,
             scaleControl: true,
             streetViewControl: false,
             rotateControl: false,
@@ -44,7 +43,7 @@ const GoogleMapWrapper = ({
             mapTypeControl: true,
             mapTypeId: maps.MapTypeId.SATELLITE,
             mapTypeControlOptions: {
-              style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+              style: maps.MapTypeControlStyle.DEFAULT,
               position: maps.ControlPosition.BOTTOM_CENTER,
               mapTypeIds: [
                 maps.MapTypeId.ROADMAP,
