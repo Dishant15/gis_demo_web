@@ -43,6 +43,7 @@ const ViewLayer = ({ layerKey }) => {
             icon={{
               // add default icon here
               url: viewOptions.icon,
+              anchor: { x: 14, y: 24 },
             }}
             zIndex={zIndexMapping[layerKey]}
             position={coordinates}
