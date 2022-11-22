@@ -39,6 +39,7 @@ import {
 } from "utils/url.constants";
 import { FEATURE_TYPES } from "../layers/common/configuration";
 import { pointCoordsToLatLongMap } from "utils/map.utils";
+import { DRAG_ICON_WIDTH } from "utils/constant";
 
 /**
  * fetch element details
@@ -179,7 +180,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   if (isLoading) return <ElemTableDummyLoader />;
 
   return (
-    <GisMapPopups>
+    <GisMapPopups dragId="element-table">
       <Box minWidth="350px" maxWidth="550px">
         {/* Table header */}
         <Stack
@@ -188,7 +189,9 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
             color: "background.default",
           }}
           direction="row"
+          alignItems="center"
           p={1}
+          pl={`${DRAG_ICON_WIDTH}px`}
         >
           <Typography variant="h6" textAlign="left" flex={1}>
             Element Details

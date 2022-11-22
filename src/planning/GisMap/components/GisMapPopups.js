@@ -1,8 +1,13 @@
 import React from "react";
 
 import { Box, Paper, Portal } from "@mui/material";
+
 import Draggable from "react-draggable";
 
+import { ReactComponent as DragIcon } from "assets/drag.svg";
+
+import { DRAG_ICON_WIDTH } from "utils/constant";
+import "planning/styles/gis-map-popup.scss";
 /**
  * Wrapper around any popup shown on PlanningPage over GisMap
  * handles positioning
@@ -13,10 +18,14 @@ import Draggable from "react-draggable";
  *  DynamicForm
  *  Paper popups on map add / edit events
  */
-const GisMapPopups = ({ children }) => {
+const GisMapPopups = ({ children, dragId }) => {
   return (
     <Portal>
-      <Draggable>
+      <Draggable
+        handle={`#${dragId}`}
+        disabled={!Boolean(dragId)}
+        // bounds="body" // do not overflow out of body
+      >
         <Box
           sx={{
             position: "fixed",
@@ -24,7 +33,16 @@ const GisMapPopups = ({ children }) => {
             right: "10%",
           }}
         >
-          <Paper elevation={3}>{children}</Paper>
+          <Paper elevation={3} className="g-relative">
+            {dragId ? (
+              <DragIcon
+                id={dragId}
+                className="drag-icon"
+                width={DRAG_ICON_WIDTH}
+              />
+            ) : null}
+            {children}
+          </Paper>
         </Box>
       </Draggable>
     </Portal>

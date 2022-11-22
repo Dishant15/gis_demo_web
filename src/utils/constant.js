@@ -95,3 +95,5 @@ export const LOCALITY_OPTS = [
  */
 
 export const getRequiredFieldMessage = (field) => `${field} is required.`;
+
+export const DRAG_ICON_WIDTH = 36;

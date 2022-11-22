@@ -32,6 +32,7 @@ import {
 import useValidateGeometry from "../hooks/useValidateGeometry";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { onAddElementDetails } from "planning/data/planning.actions";
+import { DRAG_ICON_WIDTH } from "utils/constant";
 
 const GisEditOptions = {
   clickable: true,
@@ -180,7 +181,7 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
         onPolygonComplete={handleFeatureCreate}
         onMarkerComplete={handleFeatureCreate}
       />
-      <GisMapPopups>
+      <GisMapPopups dragId="add-gis-map-layer">
         <Paper>
           <Box
             minWidth="350px"
@@ -188,7 +189,12 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
             backgroundColor="secondary.light"
             p={2}
           >
-            <Typography color="background.paper" mb={2} variant="h6">
+            <Typography
+              color="background.paper"
+              mb={2}
+              variant="h6"
+              pl={`${DRAG_ICON_WIDTH - 16}px`}
+            >
               {helpText}
             </Typography>
             <Stack spacing={2} direction="row">

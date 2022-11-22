@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Marker, Polygon, Polyline } from "@react-google-maps/api";
@@ -30,6 +30,7 @@ import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
+import { DRAG_ICON_WIDTH } from "utils/constant";
 
 const GisEditOptions = {
   clickable: true,
@@ -277,7 +278,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
           })}
         </>
       ) : null}
-      <GisMapPopups>
+      <GisMapPopups dragId="edit-gis-map-layer">
         <Paper>
           <Box
             minWidth="350px"
@@ -285,7 +286,12 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
             sx={{ backgroundColor: "secondary.light" }}
             p={2}
           >
-            <Typography color="background.default" mb={2} variant="h6">
+            <Typography
+              color="background.default"
+              mb={2}
+              variant="h6"
+              pl={`${DRAG_ICON_WIDTH - 16}px`}
+            >
               {helpText}
             </Typography>
             <Stack spacing={2} direction="row">
