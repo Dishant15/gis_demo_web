@@ -33,7 +33,7 @@ const initialState = {
   // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey, minimized }
   mapState: {},
   // props use for GisMap, like center, zoom
-  mapProps: {
+  mapPosition: {
     center: DEFAULT_MAP_CENTER,
     zoom: DEFAULT_MAP_ZOOM,
   },
@@ -114,9 +114,9 @@ const planningGisSlice = createSlice({
         }
       }
     },
-    setMapProps: (state, { payload }) => {
+    setMapPosition: (state, { payload }) => {
       // can be partial update
-      state.mapProps = { ...state.mapProps, ...payload };
+      state.mapPosition = { ...state.mapPosition, ...payload };
     },
     toggleMapPopupMinimize: (state) => {
       state.mapState.minimized = !state.mapState.minimized;
@@ -214,7 +214,7 @@ const planningGisSlice = createSlice({
 export const {
   setTicketId,
   setMapState,
-  setMapProps,
+  setMapPosition,
   resetUnselectedLayerGisData,
   toggleMapPopupMinimize,
 } = planningGisSlice.actions;

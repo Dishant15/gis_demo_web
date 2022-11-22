@@ -31,7 +31,7 @@ import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
 import {
-  setMapProps,
+  setMapPosition,
   setMapState,
   toggleMapPopupMinimize,
 } from "planning/data/planningGis.reducer";
@@ -124,7 +124,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     switch (featureType) {
       case FEATURE_TYPES.POINT:
         dispatch(
-          setMapProps({
+          setMapPosition({
             center: pointCoordsToLatLongMap(elemData.coordinates),
             zoom: 16,
           })
@@ -134,7 +134,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
       case FEATURE_TYPES.POLYLINE:
       case FEATURE_TYPES.MULTI_POLYGON:
         dispatch(
-          setMapProps({
+          setMapPosition({
             center: pointCoordsToLatLongMap(elemData.center),
             zoom: 16,
           })

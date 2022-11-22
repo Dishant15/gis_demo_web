@@ -19,7 +19,7 @@ export const getPlanningMapStateData = (store) =>
   store.planningGis.mapState.data || {};
 export const getPlanningMapStateEvent = (store) =>
   store.planningGis.mapState.event || "";
-export const getPlanningMapProps = (store) => store.planningGis.mapProps;
+export const getPlanningMapPosition = (store) => store.planningGis.mapPosition;
 
 // ticket selectors
 export const getPlanningTicketId = (store) => store.planningGis.ticketId;

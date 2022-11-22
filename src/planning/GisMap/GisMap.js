@@ -10,10 +10,10 @@ import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 import GisMapViewLayer from "./components/GisMapViewLayer";
 
-import { getPlanningMapProps } from "planning/data/planningGis.selectors";
+import { getPlanningMapPosition } from "planning/data/planningGis.selectors";
 
 const GisMap = React.memo(({ ticketId }) => {
-  const { center, zoom } = useSelector(getPlanningMapProps);
+  const { center, zoom } = useSelector(getPlanningMapPosition);
 
   return (
     <Box width="100%" height="100%">
