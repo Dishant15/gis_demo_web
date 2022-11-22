@@ -183,7 +183,10 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
       <Box minWidth="350px" maxWidth="550px">
         {/* Table header */}
         <Stack
-          sx={{ backgroundColor: "primary.main", color: "background.default" }}
+          sx={{
+            backgroundColor: "primary.main",
+            color: "background.default",
+          }}
           direction="row"
           p={1}
         >
