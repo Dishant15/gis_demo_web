@@ -30,7 +30,7 @@ const initialState = {
   layerNetworkState: {},
   // shape : { layer-key: [ {...Gis data, ...}, ...] }
   layerData: {},
-  // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey }
+  // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey, minimized }
   mapState: {},
   // props use for GisMap, like center, zoom
   mapProps: {
@@ -117,6 +117,9 @@ const planningGisSlice = createSlice({
     setMapProps: (state, { payload }) => {
       // can be partial update
       state.mapProps = { ...state.mapProps, ...payload };
+    },
+    toggleMapPopupMinimize: (state) => {
+      state.mapState.minimized = !state.mapState.minimized;
     },
   },
   extraReducers: {
@@ -213,5 +216,6 @@ export const {
   setMapState,
   setMapProps,
   resetUnselectedLayerGisData,
+  toggleMapPopupMinimize,
 } = planningGisSlice.actions;
 export default planningGisSlice.reducer;

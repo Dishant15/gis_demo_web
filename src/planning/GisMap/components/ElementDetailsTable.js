@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
@@ -24,14 +24,20 @@ import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import CableIcon from "@mui/icons-material/Cable";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
-import { setMapProps, setMapState } from "planning/data/planningGis.reducer";
+import {
+  setMapProps,
+  setMapState,
+  toggleMapPopupMinimize,
+} from "planning/data/planningGis.reducer";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { getContentHeight } from "redux/selectors/appState.selectors";
-import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
 import {
   getPlanningTicketPage,
@@ -49,7 +55,8 @@ import { DRAG_ICON_WIDTH } from "utils/constant";
 const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { elementId } = useSelector(getPlanningMapStateData);
+  const { minimized, data } = useSelector(getPlanningMapState);
+  const { elementId } = data;
   const hasLayerEditPermission = useSelector(
     checkUserPermission(`${layerKey}_edit`)
   );
@@ -73,6 +80,10 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
+  }, [dispatch]);
+
+  const handlePopupMinimize = useCallback(() => {
+    dispatch(toggleMapPopupMinimize());
   }, [dispatch]);
 
   const handleEditDetails = useCallback(() => {
@@ -176,68 +187,9 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     }
   });
 
-  // show dummy loader for loading
-  if (isLoading) return <ElemTableDummyLoader />;
-
-  return (
-    <GisMapPopups dragId="element-table">
-      <Box minWidth="350px" maxWidth="550px">
-        {/* Table header */}
-        <Stack
-          sx={{
-            backgroundColor: "primary.main",
-            color: "background.default",
-          }}
-          direction="row"
-          alignItems="center"
-          p={1}
-          pl={`${DRAG_ICON_WIDTH}px`}
-        >
-          <Typography variant="h6" textAlign="left" flex={1}>
-            Element Details
-          </Typography>
-          <IconButton onClick={handleCloseDetails}>
-            <CloseIcon />
-          </IconButton>
-        </Stack>
-        {/* Button container */}
-        <Stack
-          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
-          p={2}
-          direction="row"
-          spacing={2}
-        >
-          {hasEditPermission ? (
-            <>
-              <Button
-                onClick={handleEditDetails}
-                startIcon={<EditIcon />}
-                variant="outlined"
-                color="secondary"
-              >
-                Details
-              </Button>
-              <Button
-                onClick={handleEditLocation}
-                startIcon={<EditLocationAltIcon />}
-                variant="outlined"
-                color="secondary"
-              >
-                Location
-              </Button>
-            </>
-          ) : null}
-          <Button
-            onClick={handleShowOnMap}
-            startIcon={<LocationSearchingIcon />}
-            variant="outlined"
-            color="secondary"
-          >
-            Show on map
-          </Button>
-          {ExtraControls}
-        </Stack>
-        {/* Table Content */}
+  const tableElementContent = useMemo(() => {
+    return (
+      <>
         <Stack
           sx={{
             maxHeight: `${contentHeight}px`,
@@ -318,6 +270,80 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
             );
           })}
         </Stack>
+      </>
+    );
+  }, [contentHeight, rowDefs, elemData]);
+
+  // show dummy loader for loading
+  if (isLoading) return <ElemTableDummyLoader />;
+
+  return (
+    <GisMapPopups dragId="element-table">
+      <Box minWidth="350px" maxWidth="550px">
+        {/* Table header */}
+        <Stack
+          sx={{
+            backgroundColor: "primary.main",
+            color: "background.default",
+          }}
+          direction="row"
+          alignItems="center"
+          p={1}
+          pl={`${DRAG_ICON_WIDTH}px`}
+        >
+          <Typography variant="h6" textAlign="left" flex={1}>
+            Element Details
+          </Typography>
+          <IconButton onClick={handlePopupMinimize}>
+            {minimized ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </IconButton>
+          <IconButton onClick={handleCloseDetails}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
+        {minimized ? null : (
+          <>
+            {/* Button container */}
+            <Stack
+              sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
+              p={2}
+              direction="row"
+              spacing={2}
+            >
+              {hasEditPermission ? (
+                <>
+                  <Button
+                    onClick={handleEditDetails}
+                    startIcon={<EditIcon />}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Details
+                  </Button>
+                  <Button
+                    onClick={handleEditLocation}
+                    startIcon={<EditLocationAltIcon />}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Location
+                  </Button>
+                </>
+              ) : null}
+              <Button
+                onClick={handleShowOnMap}
+                startIcon={<LocationSearchingIcon />}
+                variant="outlined"
+                color="secondary"
+              >
+                Show on map
+              </Button>
+              {ExtraControls}
+            </Stack>
+            {/* Table Content */}
+            {tableElementContent}
+          </>
+        )}
       </Box>
     </GisMapPopups>
   );
