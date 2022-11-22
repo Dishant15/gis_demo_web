@@ -11,6 +11,7 @@ export const zIndexMapping = {
   p_splitter: 11,
 
   edit: 50,
+  highlighted: 60,
 };
 
 export const LAYER_STATUS_OPTIONS = [

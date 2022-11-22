@@ -30,3 +30,5 @@ export const getPlanningTicketNetworkStatus = (store) => ({
 });
 
 export const getPlanningTicketData = (store) => store.planningGis.ticketData;
+
+export const getMapHighlighted = (store) => store.planningGis.mapHighlight;

@@ -22,6 +22,7 @@ const GoogleMapWrapper = ({
   center = DEFAULT_MAP_CENTER,
   zoom = DEFAULT_MAP_ZOOM,
   containerStyle = DEFAULT_CONTAINER_STYLE,
+  ...restMapProps
 }) => {
   return (
     <LoadScript
@@ -29,6 +30,7 @@ const GoogleMapWrapper = ({
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
     >
       <GoogleMap
+        {...restMapProps}
         clickableIcons={false}
         mapContainerStyle={containerStyle}
         center={center}

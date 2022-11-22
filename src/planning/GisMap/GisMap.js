@@ -9,6 +9,7 @@ import Map from "components/common/Map";
 import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 import GisMapViewLayer from "./components/GisMapViewLayer";
+import MapActionBar from "./components/MapActionBar";
 
 import { getPlanningMapPosition } from "planning/data/planningGis.selectors";
 
@@ -22,6 +23,7 @@ const GisMap = React.memo(({ ticketId }) => {
         <GisMapViewLayer />
         {!isNull(ticketId) ? <TicketMapLayers /> : null}
       </Map>
+      <MapActionBar />
     </Box>
   );
 });

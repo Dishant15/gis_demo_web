@@ -44,8 +44,11 @@ import {
   getTicketWorkorderPage,
 } from "utils/url.constants";
 import { FEATURE_TYPES } from "../layers/common/configuration";
-import { pointCoordsToLatLongMap } from "utils/map.utils";
 import { DRAG_ICON_WIDTH } from "utils/constant";
+import {
+  onPointShowOnMap,
+  onPolygonShowOnMap,
+} from "planning/data/planning.actions";
 
 /**
  * fetch element details
@@ -123,22 +126,12 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
     switch (featureType) {
       case FEATURE_TYPES.POINT:
-        dispatch(
-          setMapPosition({
-            center: pointCoordsToLatLongMap(elemData.coordinates),
-            zoom: 16,
-          })
-        );
+        dispatch(onPointShowOnMap(elemData.coordinates, elemData.id, layerKey));
         break;
       case FEATURE_TYPES.POLYGON:
       case FEATURE_TYPES.POLYLINE:
       case FEATURE_TYPES.MULTI_POLYGON:
-        dispatch(
-          setMapPosition({
-            center: pointCoordsToLatLongMap(elemData.center),
-            zoom: 16,
-          })
-        );
+        dispatch(onPolygonShowOnMap(elemData.center, elemData.id, layerKey));
         break;
       default:
         break;
@@ -235,10 +228,11 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
                 break;
 
               case "date":
-                const formattedDate = format(
-                  new Date(get(elemData, field)),
-                  "dd/MM/YYY"
-                );
+                const dateVal = get(elemData, field);
+                let formattedDate = "--";
+                if (dateVal) {
+                  formattedDate = format(new Date(dateVal), "dd/MM/YYY");
+                }
 
                 ValueCell = (
                   <Typography

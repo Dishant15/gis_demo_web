@@ -9,6 +9,8 @@ import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 
+const HIGHLIGHT_COLOR = "#446eca";
+
 /**
  * Parent:
  *    GisMap
@@ -31,7 +33,7 @@ const ViewLayer = ({ layerKey }) => {
   switch (featureType) {
     case FEATURE_TYPES.POINT:
       return layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
+        const { id, hidden, coordinates, highlighted } = element;
         const viewOptions =
           LayerKeyMappings[layerKey]["getViewOptions"](element);
 
@@ -45,16 +47,18 @@ const ViewLayer = ({ layerKey }) => {
               url: viewOptions.icon,
               anchor: { x: 14, y: 24 },
             }}
-            zIndex={zIndexMapping[layerKey]}
+            zIndex={
+              highlighted ? zIndexMapping.highlighted : zIndexMapping[layerKey]
+            }
             position={coordinates}
-            // animation={1}
+            animation={highlighted ? 1 : null}
           />
         );
       });
 
     case FEATURE_TYPES.MULTI_POLYGON:
       return layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
+        const { id, hidden, coordinates, highlighted } = element;
         const viewOptions =
           LayerKeyMappings[layerKey]["getViewOptions"](element);
 
@@ -68,7 +72,16 @@ const ViewLayer = ({ layerKey }) => {
                   key={ind}
                   options={{
                     ...viewOptions,
-                    zIndex: zIndexMapping[layerKey],
+                    ...(highlighted
+                      ? {
+                          strokeColor: HIGHLIGHT_COLOR,
+                          strokeOpacity: 1,
+                          strokeWeight: 4,
+                        }
+                      : {}),
+                    zIndex: highlighted
+                      ? zIndexMapping.highlighted
+                      : zIndexMapping[layerKey],
                   }}
                   paths={polyCoord}
                 />
@@ -80,7 +93,7 @@ const ViewLayer = ({ layerKey }) => {
 
     case FEATURE_TYPES.POLYGON:
       return layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
+        const { id, hidden, coordinates, highlighted } = element;
         const viewOptions =
           LayerKeyMappings[layerKey]["getViewOptions"](element);
 
@@ -91,7 +104,16 @@ const ViewLayer = ({ layerKey }) => {
             key={id}
             options={{
               ...viewOptions,
-              zIndex: zIndexMapping[layerKey],
+              ...(highlighted
+                ? {
+                    strokeColor: HIGHLIGHT_COLOR,
+                    strokeOpacity: 1,
+                    strokeWeight: 4,
+                  }
+                : {}),
+              zIndex: highlighted
+                ? zIndexMapping.highlighted
+                : zIndexMapping[layerKey],
             }}
             paths={coordinates}
           />
@@ -100,7 +122,7 @@ const ViewLayer = ({ layerKey }) => {
 
     case FEATURE_TYPES.POLYLINE:
       return layerData.map((element) => {
-        const { id, hidden, coordinates } = element;
+        const { id, hidden, coordinates, highlighted } = element;
         const viewOptions =
           LayerKeyMappings[layerKey]["getViewOptions"](element);
 
@@ -111,7 +133,16 @@ const ViewLayer = ({ layerKey }) => {
             key={id}
             options={{
               ...viewOptions,
-              zIndex: zIndexMapping[layerKey],
+              ...(highlighted
+                ? {
+                    strokeColor: HIGHLIGHT_COLOR,
+                    strokeOpacity: 1,
+                    strokeWeight: 4,
+                  }
+                : {}),
+              zIndex: highlighted
+                ? zIndexMapping.highlighted
+                : zIndexMapping[layerKey],
             }}
             path={coordinates}
           />

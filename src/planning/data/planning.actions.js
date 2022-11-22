@@ -18,7 +18,10 @@ import {
 } from "./planningGis.selectors";
 import {
   resetUnselectedLayerGisData,
+  setMapHighlight,
+  setMapPosition,
   setMapState,
+  toggleMapPopupMinimize,
 } from "./planningGis.reducer";
 import {
   generateElementUid,
@@ -26,6 +29,7 @@ import {
   PLANNING_EVENT,
 } from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
+import { pointCoordsToLatLongMap } from "utils/map.utils";
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {
@@ -180,4 +184,38 @@ export const onAddElementDetails =
         },
       })
     );
+  };
+
+export const onPointShowOnMap =
+  (coordinates, elementId, layerKey) => (dispatch) => {
+    dispatch(
+      setMapPosition({
+        center: pointCoordsToLatLongMap(coordinates),
+        zoom: 18,
+      })
+    );
+    dispatch(
+      setMapHighlight({
+        layerKey,
+        elementId,
+      })
+    );
+    dispatch(toggleMapPopupMinimize(false));
+  };
+
+export const onPolygonShowOnMap =
+  (center, elementId, layerKey) => (dispatch) => {
+    dispatch(
+      setMapPosition({
+        center: pointCoordsToLatLongMap(center),
+        zoom: 16,
+      })
+    );
+    dispatch(
+      setMapHighlight({
+        layerKey,
+        elementId,
+      })
+    );
+    dispatch(toggleMapPopupMinimize(false));
   };
