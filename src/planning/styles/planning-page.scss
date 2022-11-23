@@ -57,32 +57,7 @@
           font-size: 1em;
         }
 
-        .pl-add-element-item {
-          position: relative;
-          height: 100%;
-          justify-content: center;
-          text-align: center;
-          cursor: pointer;
-          padding: 0.4em;
-          border: 1px solid rgba(0, 0, 0, 0.12);
-          z-index: 2;
-
-          &:hover {
-            background-color: rgba(0, 0, 0, 0.04);
-          }
-
-          .pl-add-element-config-btn-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            height: 1.5em;
-            width: 1.5em;
-            z-index: 3;
-          }
-        }
+        // moved css to below so can access from another component
       }
     }
 
@@ -132,5 +107,32 @@
     .MuiButton-root {
       min-width: 9em;
     }
+  }
+}
+
+.pl-add-element-item {
+  position: relative;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.4em;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  z-index: 2;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  .pl-add-element-config-btn-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 1.5em;
+    width: 1.5em;
+    z-index: 3;
   }
 }
