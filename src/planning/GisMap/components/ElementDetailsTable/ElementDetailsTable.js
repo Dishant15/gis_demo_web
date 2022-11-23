@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CableIcon from "@mui/icons-material/Cable";
+import AddIcon from "@mui/icons-material/Add";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 
 import GisMapPopups from "../GisMapPopups";
@@ -24,7 +25,6 @@ import {
 } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
 
-import { getContentHeight } from "redux/selectors/appState.selectors";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
 import {
@@ -37,6 +37,7 @@ import {
   onPointShowOnMap,
   onPolygonShowOnMap,
 } from "planning/data/planning.actions";
+import { showPossibleAddAssociatiation } from "planning/data/event.actions";
 
 /**
  * fetch element details
@@ -64,16 +65,12 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     fetchElementDetails
   );
 
-  const rowDefs = get(LayerKeyMappings, [layerKey, "elementTableFields"], []);
   // connections | associations
   const extraControls = get(
     LayerKeyMappings,
     [layerKey, "elementTableExtraControls"],
     []
   );
-  const windowHeight = useSelector(getContentHeight);
-  // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title + action btns)
-  const contentHeight = windowHeight - windowHeight * 0.1 - (60 + 70);
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -132,6 +129,20 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
     }
   }, [dispatch, layerKey, elemData]);
 
+  const handleAddConnections = useCallback(
+    (layerKeys) => {
+      dispatch(
+        showPossibleAddAssociatiation({
+          layerKey,
+          elementId: elemData.id,
+          elementName: elemData.name,
+          listOfLayers: layerKeys,
+        })
+      );
+    },
+    [dispatch, layerKey, elemData]
+  );
+
   const { baseActionsList } = useMemo(() => {
     const baseActionsList = [];
     if (hasEditPermission) {
@@ -140,12 +151,14 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
         Icon: EditIcon,
         onClick: handleEditDetails,
       });
+
       baseActionsList.push({
         name: "Location",
         Icon: EditLocationAltIcon,
         onClick: handleEditLocation,
       });
     }
+
     baseActionsList.push({
       name: "Show on map",
       Icon: LocationSearchingIcon,
@@ -154,8 +167,10 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
 
     if (extraControls?.length) {
       for (let index = 0; index < extraControls.length; index++) {
-        const ctrl = extraControls[index];
-        if (ctrl === "connections") {
+        const currControl = extraControls[index];
+        const { control, data } = currControl;
+
+        if (control === "connections") {
           baseActionsList.push({
             name: "Connections",
             Icon: CableIcon,
@@ -171,11 +186,22 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
                 })
               ),
           });
-        } else if (ctrl === "workorders") {
+        }
+        //
+        else if (control === "workorders") {
           baseActionsList.push({
             name: "Show Workorders",
             Icon: CableIcon,
             onClick: handleShowWorkorder,
+          });
+        }
+        //
+        else if (control === "associations") {
+          baseActionsList.push({
+            name: "Add Associated Elements",
+            Icon: AddIcon,
+            // data = [ layerKeys, ...]
+            onClick: () => handleAddConnections(data),
           });
         }
       }

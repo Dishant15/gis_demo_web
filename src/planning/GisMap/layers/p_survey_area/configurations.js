@@ -216,3 +216,10 @@ export const transformAndValidateData = (formData, setError, isEdit) => {
     return formData;
   }
 };
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "associations",
+    data: ["p_survey_building"],
+  },
+];

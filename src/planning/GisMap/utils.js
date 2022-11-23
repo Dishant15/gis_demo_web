@@ -14,13 +14,15 @@ import * as PPopLayer from "./layers/p_pop";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
-  addElementGeometry: "A",
-  editElementGeometry: "E",
-  addElementForm: "F",
-  editElementForm: "EF",
-  showElementDetails: "D",
-  showElementConnections: "EC",
-  addElementConnection: "AC",
+  addElementGeometry: 1,
+  editElementGeometry: 2,
+  addElementForm: 3,
+  editElementForm: 4,
+  showElementDetails: 5,
+  // special events
+  showElementConnections: 6,
+  addElementConnection: 7,
+  showPossibleAddAssociatiation: 8,
 };
 
 export const LayerKeyMappings = {
@@ -93,6 +95,7 @@ export const LayerKeyMappings = {
     getViewOptions: SAreaLayer.getViewOptions,
     initialElementData: SAreaLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: SAreaLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: SAreaLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: SAreaLayer.ELEMENT_FORM_TEMPLATE,
     transformAndValidateData: SAreaLayer.transformAndValidateData,
   },
