@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import size from "lodash/size";
 
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 
 import { getMapHighlighted } from "planning/data/planningGis.selectors";
-import { setMapHighlight } from "planning/data/planningGis.reducer";
+import { resetMapHighlight } from "planning/data/planningGis.reducer";
 
 import "planning/styles/map-actionbar.scss";
 
@@ -17,15 +17,17 @@ const MapActionBar = () => {
 
   const handleResetHighlight = useCallback((e) => {
     e.preventDefault();
-    dispatch(setMapHighlight({}));
+    dispatch(resetMapHighlight());
   }, []);
 
   if (!!size(mapHighlight)) {
     return (
       <Box position="absolute" top={60} left={10} className="map-actionbar">
-        <div className="icon-button" onClick={handleResetHighlight}>
-          <StopCircleIcon />
-        </div>
+        <Tooltip title="Stop Highlight">
+          <Box className="icon-button" onClick={handleResetHighlight}>
+            <StopCircleIcon />
+          </Box>
+        </Tooltip>
       </Box>
     );
   }

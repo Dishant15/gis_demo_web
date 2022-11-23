@@ -126,44 +126,46 @@ const planningGisSlice = createSlice({
       state.mapState.minimized = payload || !state.mapState.minimized;
     },
     setMapHighlight: (state, { payload }) => {
-      if (size(payload)) {
-        // check previously any element is highlighted or not, based on elementIndex
-        if (isNumber(state.mapHighlight.elementIndex)) {
-          // revert highlight and reset mapHighlight
-          state.layerData[state.mapHighlight.layerKey][
-            state.mapHighlight.elementIndex
-          ] = {
+      // check previously any element is highlighted or not
+      if (state.mapHighlight.layerKey) {
+        // revert highlight current element from layerData
+        const prevElemLayerDataInd = findIndex(
+          state.layerData[state.mapHighlight.layerKey],
+          ["id", state.mapHighlight.elementId]
+        );
+        if (prevElemLayerDataInd !== -1) {
+          state.layerData[state.mapHighlight.layerKey][prevElemLayerDataInd] = {
             ...state.layerData[state.mapHighlight.layerKey][
-              state.mapHighlight.elementIndex
+              prevElemLayerDataInd
             ],
             highlighted: false,
           };
         }
-        // highlight current element from layerData
-        const elemLayerDataInd = findIndex(state.layerData[payload.layerKey], [
-          "id",
-          payload.elementId,
-        ]);
-        if (elemLayerDataInd !== -1) {
-          state.layerData[payload.layerKey][elemLayerDataInd] = {
-            ...state.layerData[payload.layerKey][elemLayerDataInd],
-            highlighted: true,
-          };
-        }
-
-        state.mapHighlight = { ...payload, elementIndex: elemLayerDataInd };
-      } else {
-        // revert highlight and reset mapHighlight
-        state.layerData[state.mapHighlight.layerKey][
-          state.mapHighlight.elementIndex
-        ] = {
-          ...state.layerData[state.mapHighlight.layerKey][
-            state.mapHighlight.elementIndex
-          ],
-          highlighted: false,
-        };
-        state.mapHighlight = {};
       }
+      // highlight current element from layerData
+      const elemLayerDataInd = findIndex(state.layerData[payload.layerKey], [
+        "id",
+        payload.elementId,
+      ]);
+      if (elemLayerDataInd !== -1) {
+        state.layerData[payload.layerKey][elemLayerDataInd] = {
+          ...state.layerData[payload.layerKey][elemLayerDataInd],
+          highlighted: true,
+        };
+      }
+      state.mapHighlight = { ...payload };
+    },
+    resetMapHighlight: (state) => {
+      // revert highlight and reset mapHighlight
+      const elemLayerDataInd = findIndex(
+        state.layerData[state.mapHighlight.layerKey],
+        ["id", state.mapHighlight.elementId]
+      );
+      state.layerData[state.mapHighlight.layerKey][elemLayerDataInd] = {
+        ...state.layerData[state.mapHighlight.layerKey][elemLayerDataInd],
+        highlighted: false,
+      };
+      state.mapHighlight = {};
     },
   },
   extraReducers: {
@@ -262,5 +264,6 @@ export const {
   resetUnselectedLayerGisData,
   toggleMapPopupMinimize,
   setMapHighlight,
+  resetMapHighlight,
 } = planningGisSlice.actions;
 export default planningGisSlice.reducer;

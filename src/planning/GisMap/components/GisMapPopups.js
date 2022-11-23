@@ -24,7 +24,7 @@ const GisMapPopups = ({ children, dragId }) => {
       <Draggable
         handle={`#${dragId}`}
         disabled={!Boolean(dragId)}
-        // bounds="body" // do not overflow out of body
+        bounds="body" // do not overflow out of body
       >
         <Box
           sx={{

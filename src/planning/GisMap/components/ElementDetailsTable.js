@@ -17,6 +17,7 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
@@ -24,14 +25,13 @@ import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import CableIcon from "@mui/icons-material/Cable";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 
 import GisMapPopups from "./GisMapPopups";
 
 import { fetchElementDetails } from "planning/data/layer.services";
 import {
-  setMapPosition,
   setMapState,
   toggleMapPopupMinimize,
 } from "planning/data/planningGis.reducer";
@@ -289,11 +289,21 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
             Element Details
           </Typography>
           <IconButton onClick={handlePopupMinimize}>
-            {minimized ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+            {minimized ? (
+              <Tooltip title="Maximize">
+                <OpenInFullIcon />
+              </Tooltip>
+            ) : (
+              <Tooltip title="Minimize">
+                <CloseFullscreenIcon />
+              </Tooltip>
+            )}
           </IconButton>
-          <IconButton onClick={handleCloseDetails}>
-            <CloseIcon />
-          </IconButton>
+          <Tooltip title="Close">
+            <IconButton onClick={handleCloseDetails}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
         </Stack>
         {minimized ? null : (
           <>
