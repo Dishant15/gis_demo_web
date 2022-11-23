@@ -78,7 +78,7 @@ export const ELEMENT_TABLE_FIELDS = [
   {
     label: "Agreement start date",
     field: "agreement_start_date",
-    type: "simple",
+    type: "date",
   },
-  { label: "Agreement end date", field: "agreement_end_date", type: "simple" },
+  { label: "Agreement end date", field: "agreement_end_date", type: "date" },
 ];

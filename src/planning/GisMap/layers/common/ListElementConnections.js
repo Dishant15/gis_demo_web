@@ -16,7 +16,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import AddIcon from "@mui/icons-material/Add";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
-import { ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsTable";
+import { default as ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsTable/DummyLoader";
 
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";

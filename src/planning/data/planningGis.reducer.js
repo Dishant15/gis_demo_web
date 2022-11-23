@@ -5,7 +5,6 @@ import size from "lodash/size";
 import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
 import findIndex from "lodash/findIndex";
-import isNumber from "lodash/isNumber";
 
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { logout } from "redux/reducers/auth.reducer";
