@@ -6,7 +6,7 @@ import isNull from "lodash/isNull";
 import Box from "@mui/material/Box";
 
 import Map from "components/common/Map";
-import TicketMapLayers from "planning/TicketContent/components/TicketMapLayers";
+import TicketMapViewLayers from "planning/TicketContent/components/TicketMapViewLayers";
 import GisMapEventLayer from "./components/GisMapEventLayer";
 import GisMapViewLayer from "./components/GisMapViewLayer";
 import MapActionBar from "./components/MapActionBar";
@@ -21,7 +21,7 @@ const GisMap = React.memo(({ ticketId }) => {
       <Map center={center} zoom={zoom}>
         <GisMapEventLayer />
         <GisMapViewLayer />
-        {!isNull(ticketId) ? <TicketMapLayers /> : null}
+        {!isNull(ticketId) ? <TicketMapViewLayers /> : null}
       </Map>
       <MapActionBar />
     </Box>

@@ -10,7 +10,7 @@ import {
   zIndexMapping,
 } from "planning/GisMap/layers/common/configuration";
 
-const TicketMapLayers = React.memo(() => {
+const TicketMapViewLayers = React.memo(() => {
   const { work_orders = [], area_pocket } = useSelector(getPlanningTicketData);
 
   return (
@@ -85,4 +85,4 @@ const TicketMapLayers = React.memo(() => {
   );
 });
 
-export default TicketMapLayers;
+export default TicketMapViewLayers;

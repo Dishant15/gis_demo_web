@@ -17,10 +17,12 @@ import {
   getPlanningMapStateEvent,
 } from "./planningGis.selectors";
 import {
+  resetMapHighlight,
   resetUnselectedLayerGisData,
   setMapHighlight,
   setMapPosition,
   setMapState,
+  setTicketMapHighlight,
   toggleMapPopupMinimize,
 } from "./planningGis.reducer";
 import {
@@ -30,6 +32,7 @@ import {
 } from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { pointCoordsToLatLongMap } from "utils/map.utils";
+import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {
@@ -219,3 +222,41 @@ export const onPolygonShowOnMap =
     );
     dispatch(toggleMapPopupMinimize(false));
   };
+
+export const onTicketPointShowOnMap = (coordinates, woId) => (dispatch) => {
+  dispatch(
+    setMapPosition({
+      center: coordinates,
+      zoom: 18,
+    })
+  );
+  dispatch(setTicketMapHighlight(woId));
+  dispatch(resetMapHighlight());
+};
+
+export const onTicketPolygonShowOnMap = (center, woId) => (dispatch) => {
+  dispatch(
+    setMapPosition({
+      center: center,
+      zoom: 16,
+    })
+  );
+  dispatch(setTicketMapHighlight(woId));
+  dispatch(resetMapHighlight());
+};
+
+export const onTicketWoShowOnMapClick = (woData) => (dispatch) => {
+  const featureType = get(LayerKeyMappings, [woData.layer_key, "featureType"]);
+  switch (featureType) {
+    case FEATURE_TYPES.POINT:
+      dispatch(onTicketPointShowOnMap(woData.element.coordinates, woData.id));
+      break;
+    case FEATURE_TYPES.POLYGON:
+    case FEATURE_TYPES.POLYLINE:
+    case FEATURE_TYPES.MULTI_POLYGON:
+      dispatch(onTicketPolygonShowOnMap(woData.element.center, woData.id));
+      break;
+    default:
+      break;
+  }
+};

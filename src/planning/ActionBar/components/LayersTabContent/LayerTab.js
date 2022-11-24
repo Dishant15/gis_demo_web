@@ -165,8 +165,9 @@ const ElementList = ({ layerKey }) => {
                 className="text-underline"
                 color="secondary.dark"
                 variant="subtitle2"
-                textAlign="center"
+                textAlign="right"
                 flex={1}
+                pr={3}
                 fontWeight={400}
               >
                 {name}

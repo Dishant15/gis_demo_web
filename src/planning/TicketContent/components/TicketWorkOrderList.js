@@ -14,6 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Popover from "@mui/material/Popover";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 
 import ChangeForm from "ticket/components/StatusChangeForm";
 
@@ -25,6 +26,8 @@ import {
 } from "planning/data/ticket.services";
 
 import { LayerKeyMappings } from "planning/GisMap/utils";
+import { Paper } from "@mui/material";
+import { onTicketWoShowOnMapClick } from "planning/data/planning.actions";
 
 /**
  * Parent
@@ -90,6 +93,13 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
     [statusData]
   );
 
+  const handleShowOnMap = useCallback(
+    (workOrder) => () => {
+      dispatch(onTicketWoShowOnMapClick(workOrder));
+    },
+    []
+  );
+
   if (!size(workOrderList)) {
     return (
       <Box px={2} py="20%">
@@ -103,43 +113,52 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
   return (
     <Stack spacing={1} divider={<Divider />} my={1}>
       {workOrderList.map((workOrder) => {
-        const { status, layer_key, element, work_order_type } = workOrder;
+        const { id, status, layer_key, element, work_order_type } = workOrder;
         const showStatusChangeIcon = status !== "V";
         const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
 
         return (
           <Stack
+            key={id}
             direction="row"
             spacing={1}
             alignItems="center"
             sx={{
               borderLeft: "5px solid",
               borderLeftColor:
-                work_order_type === "A" ? "success.main" : "error.main",
+                work_order_type === "A" ? "success.main" : "warning.main",
             }}
           >
-            <Box className="pl-layer-icon-block">
-              <Box className="icon-wrapper">
-                <img src={Icon} alt={layer_key} />
-              </Box>
-            </Box>
+            <Paper
+              sx={{
+                width: "42px",
+                height: "42px",
+                lineHeight: "42px",
+                textAlign: "center",
+                marginLeft: "8px",
+              }}
+            >
+              <img className="responsive-img" src={Icon} alt={layer_key} />
+            </Paper>
             <Stack flex={1} flexDirection="row">
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  lineHeight={1.1}
-                  fontWeight={500}
-                  fontSize="1.1rem"
-                >
-                  {get(element, "name", "")} {get(element, "name", "")}{" "}
+              <Box flex={1}>
+                <Typography variant="subtitle1" lineHeight={1.1}>
                   {get(element, "name", "")}
                 </Typography>
-                <Typography variant="body2">
-                  {get(element, "network_id", "")}
+                <Typography variant="caption">
+                  #{get(element, "network_id", "")}
                 </Typography>
               </Box>
+              <Tooltip title="Show on map">
+                <IconButton
+                  aria-label="show-location"
+                  onClick={handleShowOnMap(workOrder)}
+                >
+                  <LocationSearchingIcon />
+                </IconButton>
+              </Tooltip>
               {showStatusChangeIcon ? (
-                <Tooltip title="Change Status" placement="top">
+                <Tooltip title="Change Status">
                   <IconButton
                     aria-label="settings"
                     onClick={handleStatusEdit(workOrder)}

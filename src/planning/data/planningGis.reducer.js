@@ -16,6 +16,7 @@ import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
 } from "components/common/Map/map.constants";
+import { isNumber } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -160,11 +161,45 @@ const planningGisSlice = createSlice({
         state.layerData[state.mapHighlight.layerKey],
         ["id", state.mapHighlight.elementId]
       );
-      state.layerData[state.mapHighlight.layerKey][elemLayerDataInd] = {
-        ...state.layerData[state.mapHighlight.layerKey][elemLayerDataInd],
-        highlighted: false,
-      };
+      if (elemLayerDataInd !== -1) {
+        state.layerData[state.mapHighlight.layerKey][elemLayerDataInd] = {
+          ...state.layerData[state.mapHighlight.layerKey][elemLayerDataInd],
+          highlighted: false,
+        };
+      }
       state.mapHighlight = {};
+    },
+    setTicketMapHighlight: (state, { payload }) => {
+      // payload: ticket-wo id
+      // check previous ticket element is highlighted or not
+      if (isNumber(state.ticketData.ticketHighlightedWo)) {
+        const workorderInd = findIndex(state.ticketData.work_orders, [
+          "id",
+          state.ticketData.ticketHighlightedWo,
+        ]);
+        if (workorderInd !== -1) {
+          state.ticketData.work_orders[workorderInd].highlighted = false;
+        }
+      }
+      // highlight current ticket wo
+      const workorderInd = findIndex(state.ticketData.work_orders, [
+        "id",
+        payload,
+      ]);
+      if (workorderInd !== -1) {
+        state.ticketData.work_orders[workorderInd].highlighted = true;
+        state.ticketData.ticketHighlightedWo = payload;
+      }
+    },
+    resetTicketMapHighlight: (state) => {
+      const workorderInd = findIndex(state.ticketData.work_orders, [
+        "id",
+        state.ticketData.ticketHighlightedWo,
+      ]);
+      if (workorderInd !== -1) {
+        state.ticketData.work_orders[workorderInd].highlighted = false;
+        state.ticketData.ticketHighlightedWo = undefined;
+      }
     },
   },
   extraReducers: {
@@ -264,5 +299,7 @@ export const {
   toggleMapPopupMinimize,
   setMapHighlight,
   resetMapHighlight,
+  setTicketMapHighlight,
+  resetTicketMapHighlight,
 } = planningGisSlice.actions;
 export default planningGisSlice.reducer;
