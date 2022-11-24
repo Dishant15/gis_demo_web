@@ -18,6 +18,7 @@ import {
 } from "./planningGis.selectors";
 import {
   resetMapHighlight,
+  resetTicketMapHighlight,
   resetUnselectedLayerGisData,
   setMapHighlight,
   setMapPosition,
@@ -204,6 +205,7 @@ export const onPointShowOnMap =
       })
     );
     dispatch(toggleMapPopupMinimize(false));
+    dispatch(resetTicketMapHighlight());
   };
 
 export const onPolygonShowOnMap =
@@ -221,6 +223,7 @@ export const onPolygonShowOnMap =
       })
     );
     dispatch(toggleMapPopupMinimize(false));
+    dispatch(resetTicketMapHighlight());
   };
 
 export const onTicketPointShowOnMap = (coordinates, woId) => (dispatch) => {
