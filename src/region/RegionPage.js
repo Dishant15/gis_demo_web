@@ -91,7 +91,11 @@ const RegionPage = () => {
       baseRegionList = baseRegionList.concat(resultGroupData[String(rId)]);
     }
     // order by layer
-    baseRegionList = orderBy(baseRegionList, ["layer"], ["asc"]);
+    baseRegionList = orderBy(
+      baseRegionList,
+      [(region) => region.name.toLowerCase()],
+      ["asc"]
+    );
     // return cancat list as first base list to render
     return [resultGroupData, baseRegionList];
   }, [regionListData]);

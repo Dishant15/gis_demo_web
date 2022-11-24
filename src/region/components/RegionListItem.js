@@ -1,5 +1,9 @@
-import React from "react";
-import { get, noop, size } from "lodash";
+import React, { useMemo } from "react";
+
+import get from "lodash/get";
+import noop from "lodash/noop";
+import size from "lodash/size";
+import orderBy from "lodash/orderBy";
 
 import { Box, Collapse, Divider, IconButton, Stack } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -23,7 +27,13 @@ const RegionListItem = ({
   const color = getFillColor(layer);
   const isActive = selectedRegion.has(id);
   // check if childs are open
-  const regionChilds = get(regionGroupData, id, []);
+  const regionChilds = useMemo(() => {
+    return orderBy(
+      get(regionGroupData, id, []),
+      [(region) => region.name.toLowerCase()],
+      ["asc"]
+    );
+  }, [regionGroupData, id]);
   const hasChildren = !!size(regionChilds);
   const isExpanded = hasChildren && expandedRegions.has(id);
   const borderLeft = isExpanded ? `1px solid ${color}` : null;
