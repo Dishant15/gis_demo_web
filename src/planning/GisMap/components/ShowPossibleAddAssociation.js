@@ -61,7 +61,7 @@ const ShowPossibleAddAssociation = () => {
           pl={`${DRAG_ICON_WIDTH}px`}
         >
           <Typography variant="h6" textAlign="left" flex={1}>
-            {elementData.name} - Add Associated
+            {elementData.name}
           </Typography>
           <IconButton onClick={handleCloseDetails}>
             <CloseIcon />
@@ -218,48 +218,59 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
 
   if (!!size(layerCofigs)) {
     return (
-      <Grid container spacing={2} p={2}>
-        {layerCofigs.map((config) => {
-          const { layer_key, name, is_configurable, configuration } = config;
-          // get icon
-          let Icon;
-          if (is_configurable) {
-            let currConfig = get(selectedConfigurations, layer_key, false);
-            if (!currConfig) currConfig = configuration[0];
-            // configurable layers will have getIcon function
-            Icon =
-              LayerKeyMappings[layer_key]["getViewOptions"](currConfig).icon;
-          } else {
-            Icon = LayerKeyMappings[layer_key]["getViewOptions"]().icon;
-          }
+      <Box p={2} pt={0}>
+        <Typography
+          variant="subtitle1"
+          textTransform="uppercase"
+          color="text.secondary"
+          fontWeight={500}
+          py={1}
+        >
+          Add Element
+        </Typography>
+        <Grid container spacing={2}>
+          {layerCofigs.map((config) => {
+            const { layer_key, name, is_configurable, configuration } = config;
+            // get icon
+            let Icon;
+            if (is_configurable) {
+              let currConfig = get(selectedConfigurations, layer_key, false);
+              if (!currConfig) currConfig = configuration[0];
+              // configurable layers will have getIcon function
+              Icon =
+                LayerKeyMappings[layer_key]["getViewOptions"](currConfig).icon;
+            } else {
+              Icon = LayerKeyMappings[layer_key]["getViewOptions"]().icon;
+            }
 
-          return (
-            <Grid item xs={4} key={layer_key} alignSelf="stretch">
-              <Box
-                onClick={handleAddElementClick(layer_key)}
-                className="pl-add-element-item"
-                id={getElementIdName(layer_key)}
-              >
-                <img src={Icon} alt="" />
-                <Typography variant="body2">{name}</Typography>
+            return (
+              <Grid item xs={4} key={layer_key} alignSelf="stretch">
+                <Box
+                  onClick={handleAddElementClick(layer_key)}
+                  className="pl-add-element-item"
+                  id={getElementIdName(layer_key)}
+                >
+                  <img src={Icon} alt="" />
+                  <Typography variant="body2">{name}</Typography>
 
-                {is_configurable ? (
-                  <Box
-                    onClick={handleLayerConfigPopupShow(layer_key)}
-                    className="pl-add-element-config-btn-wrapper"
-                  >
-                    <IconButton>
-                      <SettingsApplicationsIcon />
-                    </IconButton>
-                  </Box>
-                ) : null}
-              </Box>
-            </Grid>
-          );
-        })}
+                  {is_configurable ? (
+                    <Box
+                      onClick={handleLayerConfigPopupShow(layer_key)}
+                      className="pl-add-element-config-btn-wrapper"
+                    >
+                      <IconButton>
+                        <SettingsApplicationsIcon />
+                      </IconButton>
+                    </Box>
+                  ) : null}
+                </Box>
+              </Grid>
+            );
+          })}
 
-        {mayRenderElementConfigPopup}
-      </Grid>
+          {mayRenderElementConfigPopup}
+        </Grid>
+      </Box>
     );
   } else {
     return (

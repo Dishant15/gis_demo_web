@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
@@ -32,7 +32,7 @@ const TicketMapViewLayers = React.memo(() => {
         />
       ) : null}
       {work_orders.map((workOrder) => {
-        const { id, layer_key, element } = workOrder;
+        const { id, layer_key, element, highlighted } = workOrder;
         if (id) {
           const featureType = LayerKeyMappings[layer_key]["featureType"];
           const viewOptions =
@@ -49,32 +49,43 @@ const TicketMapViewLayers = React.memo(() => {
                   }}
                   zIndex={zIndexMapping[layer_key]}
                   position={element.coordinates}
+                  animation={highlighted ? 1 : null}
                 />
               );
 
             case FEATURE_TYPES.POLYGON:
               return (
-                <Polygon
-                  key={id}
-                  options={{
-                    ...viewOptions,
-                    zIndex: zIndexMapping[layer_key],
-                  }}
-                  paths={element.coordinates}
-                />
+                <Fragment key={id}>
+                  <Polygon
+                    options={{
+                      ...viewOptions,
+                      zIndex: zIndexMapping[layer_key],
+                    }}
+                    paths={element.coordinates}
+                  />
+                  <AnimatedPolyline coordinates={element.coordinates} />
+                </Fragment>
               );
 
             case FEATURE_TYPES.POLYLINE:
-              return (
-                <Polyline
-                  key={id}
-                  options={{
-                    ...viewOptions,
-                    zIndex: zIndexMapping[layer_key],
-                  }}
-                  path={element.coordinates}
-                />
-              );
+              if (highlighted) {
+                return (
+                  <AnimatedPolyline
+                    key={id}
+                    coordinates={element.coordinates}
+                  />
+                );
+              } else {
+                return (
+                  <Polyline
+                    options={{
+                      ...viewOptions,
+                      zIndex: zIndexMapping[layer_key],
+                    }}
+                    path={element.coordinates}
+                  />
+                );
+              }
 
             default:
               return null;
@@ -84,5 +95,47 @@ const TicketMapViewLayers = React.memo(() => {
     </>
   );
 });
+
+const HIGHLIGHT_COLOR = "#446eca";
+const lineSymbol = {
+  path: "M 0,-1 0,1",
+  strokeOpacity: 1,
+  // scale: 4, // default scale is handle from polyline strokeWeight
+};
+
+const AnimatedPolyline = ({ coordinates }) => {
+  const [offset, setOffset] = useState("0px");
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (offset === "0px") {
+  //       setOffset("20px");
+  //     } else {
+  //       setOffset("0px");
+  //     }
+  //   }, 1000); // in milliseconds
+  //   return () => clearInterval(intervalId);
+  // }, [offset]);
+  const options = {
+    strokeColor: HIGHLIGHT_COLOR,
+    strokeOpacity: 0,
+    strokeWeight: 4,
+    geodesic: true,
+    icons: [
+      {
+        icon: lineSymbol,
+        offset: offset,
+        repeat: "20px",
+      },
+    ],
+  };
+  return (
+    <Polyline
+      key={offset}
+      path={coordinates}
+      zIndex={zIndexMapping.highlighted + 1}
+      options={options}
+    />
+  );
+};
 
 export default TicketMapViewLayers;
