@@ -57,7 +57,9 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     useValidateGeometry(); // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
 
-  const { elementId } = useSelector(getPlanningMapStateData);
+  const { association = null, checks_list = null } = useSelector(
+    getPlanningMapStateData
+  );
   const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   // layer key based data default data from utils -> LayerKeyMappings
@@ -75,7 +77,7 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     setIsAdd(false);
   }, []);
 
-  const handleAddComplete = useCallback(() => {
+  const handleAddComplete = () => {
     const featureCoords =
       featureType === FEATURE_TYPES.POINT
         ? getMarkerCoordinatesFromFeature(featureRef.current)
@@ -100,26 +102,36 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     } else {
       throw new Error("feature type is invalid");
     }
-    // server side validate geometry
-    validateElementMutation(
-      {
+    let mutationData;
+    if (!!association) {
+      // validate with parent geometry contains check
+      mutationData = {
         layerKey,
-        element_id: elementId,
+        featureType,
+        geometry: submitData.geometry,
+        checks_list,
+      };
+      // add association data to submitData
+      submitData.association = association;
+    } else {
+      mutationData = {
+        layerKey,
         featureType,
         geometry: submitData.geometry,
         region_id_list: selectedRegionIds,
+      };
+    }
+    // server side validate geometry
+    validateElementMutation(mutationData, {
+      onSuccess: (res) => {
+        // clear map refs
+        featureRef.current.setMap(null);
+        dispatch(
+          onAddElementDetails({ layerKey, validationRes: res, submitData })
+        );
       },
-      {
-        onSuccess: (res) => {
-          // clear map refs
-          featureRef.current.setMap(null);
-          dispatch(
-            onAddElementDetails({ layerKey, validationRes: res, submitData })
-          );
-        },
-      }
-    );
-  }, [featureType, layerKey, selectedRegionIds, elementId]);
+    });
+  };
 
   const handleCancel = useCallback(() => {
     dispatch(setMapState({}));

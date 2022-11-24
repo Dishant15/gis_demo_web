@@ -55,7 +55,12 @@ const UnitEditForm = forwardRef((props, ref) => {
 
   const onSubmit = (data) => {
     onEditComplete(
-      { ...data, id: formData.id, parentId: formData.parentId },
+      {
+        ...data,
+        id: formData.id,
+        parentId: formData.parentId,
+        association: formData?.association,
+      },
       isDirty
     );
   };

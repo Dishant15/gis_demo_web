@@ -148,7 +148,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
           });
         }
         //
-        else if (control === "associations") {
+        else if (control === "add_associations") {
           baseActionsList.push({
             name: "Add Associated Elements",
             Icon: AddIcon,
@@ -157,8 +157,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
               dispatch(
                 showPossibleAddAssociatiation({
                   layerKey,
-                  elementId: elemData.id,
-                  elementName: elemData.name,
+                  elementData: elemData,
                   listOfLayers: data,
                 })
               );

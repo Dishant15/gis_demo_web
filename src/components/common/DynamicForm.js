@@ -54,6 +54,7 @@ const DynamicForm = forwardRef(
     } = useForm({
       defaultValues: data,
     });
+    console.log("🚀 ~ file: DynamicForm.js ~ line 57 ~ data", data);
 
     useImperativeHandle(ref, () => ({
       onError: (fieldKey, errorMsg) => {

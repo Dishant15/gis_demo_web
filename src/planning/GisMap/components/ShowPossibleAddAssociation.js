@@ -28,6 +28,10 @@ import {
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
+import {
+  onAddElementGeometry,
+  onAddElementDetails,
+} from "planning/data/planning.actions";
 import { DRAG_ICON_WIDTH } from "utils/constant";
 import { LayerKeyMappings } from "../utils";
 
@@ -39,11 +43,7 @@ const ShowPossibleAddAssociation = () => {
   const dispatch = useDispatch();
 
   const { layerKey, data } = useSelector(getPlanningMapState);
-  const { elementId, elementName, listOfLayers } = data;
-  console.log(
-    "🚀 ~ file: ShowPossibleAddAssociation.js ~ line 17 ~ ShowPossibleAddAssociation ~ listOfLayers",
-    listOfLayers
-  );
+  const { elementData, listOfLayers } = data;
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -61,20 +61,24 @@ const ShowPossibleAddAssociation = () => {
           pl={`${DRAG_ICON_WIDTH}px`}
         >
           <Typography variant="h6" textAlign="left" flex={1}>
-            {elementName} - Add Associated
+            {elementData.name} - Add Associated
           </Typography>
           <IconButton onClick={handleCloseDetails}>
             <CloseIcon />
           </IconButton>
         </Stack>
         {/* content */}
-        <AddContent listOfLayers={listOfLayers} />
+        <AddContent
+          parentData={elementData}
+          parentLayerKey={layerKey}
+          listOfLayers={listOfLayers}
+        />
       </Box>
     </GisMapPopups>
   );
 };
 
-const AddContent = ({ listOfLayers }) => {
+const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
   const { isLoading, data } = useQuery(
     "planningLayerConfigsDetails",
     fetchLayerListDetails,
@@ -136,6 +140,48 @@ const AddContent = ({ listOfLayers }) => {
     setLayerConfigPopup(null);
   }, []);
 
+  const handleAddElementClick = useCallback(
+    (layerKey) => () => {
+      const childFeatureType = LayerKeyMappings[layerKey]["featureType"];
+      const parentFeatureType = LayerKeyMappings[parentLayerKey]["featureType"];
+
+      const association = {
+        parent_id: parentData.id,
+        parent_layer_key: parentLayerKey,
+        child_layer_key: layerKey,
+      };
+
+      if (childFeatureType === parentFeatureType) {
+        // if both layer has same geometry copy geometry of parent to child and go to form directly
+        dispatch(
+          onAddElementDetails({
+            layerKey,
+            parentNetId: parentData.network_id,
+            submitData: { geometry: parentData.coordinates, association },
+          })
+        );
+      } else {
+        // else go to map with extra contains by id check
+        dispatch(
+          onAddElementGeometry({
+            layerKey,
+            association,
+            // check if new geometry will be inside parent
+            checks_list: [
+              {
+                validation: "contains",
+                target_layer_key: parentLayerKey,
+                container_id: parentData.id,
+                is_target_self: false,
+              },
+            ],
+          })
+        );
+      }
+    },
+    [parentData]
+  );
+
   const mayRenderElementConfigPopup = useMemo(() => {
     const showPopover = !!layerConfigPopup;
     // anchorEl required node element, so not saving full element in state
@@ -190,7 +236,7 @@ const AddContent = ({ listOfLayers }) => {
           return (
             <Grid item xs={4} key={layer_key} alignSelf="stretch">
               <Box
-                // onClick={handleAddElementClick(layer_key)}
+                onClick={handleAddElementClick(layer_key)}
                 className="pl-add-element-item"
                 id={getElementIdName(layer_key)}
               >
