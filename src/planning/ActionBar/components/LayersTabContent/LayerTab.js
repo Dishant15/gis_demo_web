@@ -93,7 +93,7 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
             <ExpandMoreIcon />
           </ExpandMore>
         </Box>
-        <Box className="icon-block">
+        <Box className="pl-layer-icon-block">
           <Box className="icon-wrapper">
             <img src={Icon} alt={name} />
           </Box>

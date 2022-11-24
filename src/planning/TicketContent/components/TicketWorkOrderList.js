@@ -1,25 +1,19 @@
 import React, { useCallback, useRef, useState } from "react";
-import { noop, pick, isEqual, size } from "lodash";
-import { format } from "date-fns";
+import { pick, isEqual, size } from "lodash";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+
+import get from "lodash/get";
 
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Popover from "@mui/material/Popover";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
 
 import ChangeForm from "ticket/components/StatusChangeForm";
 
@@ -30,9 +24,7 @@ import {
   updateTicketWorkOrder,
 } from "planning/data/ticket.services";
 
-import AcceptImg from "assets/accept.png";
-import CancelImg from "assets/cancel.png";
-import InprogressImg from "assets/inprogress.png";
+import { LayerKeyMappings } from "planning/GisMap/utils";
 
 /**
  * Parent
@@ -109,59 +101,57 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
   }
 
   return (
-    <Stack spacing={2} divider={<Divider />}>
+    <Stack spacing={1} divider={<Divider />} my={1}>
       {workOrderList.map((workOrder) => {
-        const {
-          id,
-          status,
-          layer_key,
-          work_order_type_display,
-          remark,
-          updated_on,
-        } = workOrder;
-
+        const { status, layer_key, element, work_order_type } = workOrder;
         const showStatusChangeIcon = status !== "V";
-
-        const formatedUpdatedOn = format(
-          new Date(updated_on),
-          "do MMM, hh:mm aaa"
-        );
+        const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
 
         return (
-          <Card elevation={0} key={id}>
-            <CardHeader
-              avatar={<StatusAvatar status={status} />}
-              action={
-                showStatusChangeIcon ? (
-                  <Tooltip title="Change Status" placement="top">
-                    <IconButton
-                      aria-label="settings"
-                      onClick={handleStatusEdit(workOrder)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Tooltip>
-                ) : null
-              }
-              title={layer_key}
-              subheader={formatedUpdatedOn}
-            />
-            <CardContent>
-              <Typography mb={1} variant="body2" color="text.secondary">
-                WorkOrder Type : {work_order_type_display}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Remarks : {remark}
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <Tooltip title="View on map" placement="top">
-                <IconButton aria-label="add to favorites" onClick={noop}>
-                  {false ? <MyLocationIcon /> : <LocationSearchingIcon />}
-                </IconButton>
-              </Tooltip>
-            </CardActions>
-          </Card>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{
+              borderLeft: "5px solid",
+              borderLeftColor:
+                work_order_type === "A" ? "success.main" : "error.main",
+            }}
+          >
+            <Box className="pl-layer-icon-block">
+              <Box className="icon-wrapper">
+                <img src={Icon} alt={layer_key} />
+              </Box>
+            </Box>
+            <Stack flex={1} flexDirection="row">
+              <Box>
+                <Typography
+                  variant="subtitle1"
+                  lineHeight={1.1}
+                  fontWeight={500}
+                  fontSize="1.1rem"
+                >
+                  {get(element, "name", "")} {get(element, "name", "")}{" "}
+                  {get(element, "name", "")}
+                </Typography>
+                <Typography variant="body2">
+                  {get(element, "network_id", "")}
+                </Typography>
+              </Box>
+              {showStatusChangeIcon ? (
+                <Tooltip title="Change Status" placement="top">
+                  <IconButton
+                    aria-label="settings"
+                    onClick={handleStatusEdit(workOrder)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Box width="40px" />
+              )}
+            </Stack>
+          </Stack>
         );
       })}
 
@@ -183,17 +173,6 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
       </Popover>
     </Stack>
   );
-};
-
-const StatusAvatar = ({ status }) => {
-  if (status === "V") {
-    return <Avatar alt={status} src={AcceptImg} />;
-  } else if (status === "R") {
-    return <Avatar alt={status} src={CancelImg} />;
-  } else if (status === "S") {
-    return <Avatar alt={status} src={InprogressImg} />;
-  }
-  return null;
 };
 
 export default TicketWorkOrderList;
