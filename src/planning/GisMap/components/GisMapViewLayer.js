@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, Fragment, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
@@ -8,8 +8,6 @@ import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 
 import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
-
-const HIGHLIGHT_COLOR = "#446eca";
 
 /**
  * Parent:
@@ -100,23 +98,26 @@ const ViewLayer = ({ layerKey }) => {
         if (hidden) return null;
 
         return (
-          <Polygon
-            key={id}
-            options={{
-              ...viewOptions,
-              ...(highlighted
-                ? {
-                    strokeColor: HIGHLIGHT_COLOR,
-                    strokeOpacity: 1,
-                    strokeWeight: 4,
-                  }
-                : {}),
-              zIndex: highlighted
-                ? zIndexMapping.highlighted
-                : zIndexMapping[layerKey],
-            }}
-            paths={coordinates}
-          />
+          <Fragment key={id}>
+            <Polygon
+              options={{
+                ...viewOptions,
+                ...(highlighted
+                  ? {
+                      strokeOpacity: 0,
+                      strokeWeight: 0,
+                    }
+                  : {}),
+                zIndex: highlighted
+                  ? zIndexMapping.highlighted
+                  : zIndexMapping[layerKey],
+              }}
+              paths={coordinates}
+            />
+            {highlighted ? (
+              <AnimatedPolyline coordinates={coordinates} />
+            ) : null}
+          </Fragment>
         );
       });
 
@@ -128,7 +129,9 @@ const ViewLayer = ({ layerKey }) => {
 
         if (hidden) return null;
 
-        return (
+        if (highlighted) {
+          return <AnimatedPolyline coordinates={coordinates} />;
+        } else {
           <Polyline
             key={id}
             options={{
@@ -145,8 +148,8 @@ const ViewLayer = ({ layerKey }) => {
                 : zIndexMapping[layerKey],
             }}
             path={coordinates}
-          />
-        );
+          />;
+        }
       });
     default:
       return null;
@@ -154,3 +157,45 @@ const ViewLayer = ({ layerKey }) => {
 };
 
 export default memo(GisMapViewLayer);
+
+const HIGHLIGHT_COLOR = "#446eca";
+const lineSymbol = {
+  path: "M 0,-1 0,1",
+  strokeOpacity: 1,
+  // scale: 4, // default scale is handle from polyline strokeWeight
+};
+
+const AnimatedPolyline = ({ coordinates }) => {
+  const [offset, setOffset] = useState("0px");
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (offset === "0px") {
+  //       setOffset("20px");
+  //     } else {
+  //       setOffset("0px");
+  //     }
+  //   }, 1000); // in milliseconds
+  //   return () => clearInterval(intervalId);
+  // }, [offset]);
+  const options = {
+    strokeColor: HIGHLIGHT_COLOR,
+    strokeOpacity: 0,
+    strokeWeight: 4,
+    geodesic: true,
+    icons: [
+      {
+        icon: lineSymbol,
+        offset: offset,
+        repeat: "20px",
+      },
+    ],
+  };
+  return (
+    <Polyline
+      key={offset}
+      path={coordinates}
+      zIndex={zIndexMapping.highlighted + 1}
+      options={options}
+    />
+  );
+};
