@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import noop from "lodash/noop";
 import size from "lodash/size";
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -147,19 +147,30 @@ const ElementList = ({ layerKey }) => {
             <Stack
               onClick={handleElementClick(id)}
               direction="row"
+              alignItems="center"
               flex={1}
               p={1}
-              pl={3}
               sx={{
                 cursor: "pointer",
-                alignItems: "center",
-                justifyContent: "space-between",
               }}
             >
-              <Typography color="secondary.dark" variant="span">
+              <Tooltip title="Show Details">
+                <FormatListBulletedIcon
+                  sx={{
+                    color: "action.active",
+                  }}
+                />
+              </Tooltip>
+              <Typography
+                className="text-underline"
+                color="secondary.dark"
+                variant="subtitle2"
+                textAlign="center"
+                flex={1}
+                fontWeight={400}
+              >
                 {name}
               </Typography>
-              <FormatListBulletedIcon />
             </Stack>
 
             <Divider flexItem />
