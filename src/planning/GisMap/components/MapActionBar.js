@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import size from "lodash/size";
 import isNumber from "lodash/isNumber";
+import map from "lodash/map";
 
 import { Box, Tooltip } from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
@@ -15,6 +16,7 @@ import {
   resetMapHighlight,
   resetTicketMapHighlight,
 } from "planning/data/planningGis.reducer";
+import { LAYER_STATUS_OPTIONS } from "../layers/common/configuration";
 
 import "planning/styles/map-actionbar.scss";
 
@@ -37,18 +39,25 @@ const MapActionBar = () => {
     <Box position="absolute" top={60} left={10} className="map-actionbar">
       {!!size(mapHighlight) ? (
         <Tooltip title="Stop Highlight">
-          <Box className="icon-button" onClick={handleResetHighlight}>
+          <Box className="icon-button" onClick={handleResetHighlight} mb={1}>
             <StopCircleIcon />
           </Box>
         </Tooltip>
       ) : null}
       {isNumber(ticketMapHighlight) ? (
-        <Tooltip title="Stop Highlight">
+        <Tooltip title="Stop Highlight" mb={1}>
           <Box className="icon-button" onClick={handleResetTicketHighlight}>
             <StopCircleIcon />
           </Box>
         </Tooltip>
       ) : null}
+      {map(LAYER_STATUS_OPTIONS, ({ value, label }) => {
+        return (
+          <Tooltip title={label} key={value} mb={1}>
+            <Box className="icon-button">{value}</Box>
+          </Tooltip>
+        );
+      })}
     </Box>
   );
 };
