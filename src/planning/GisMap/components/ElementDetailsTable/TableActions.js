@@ -14,6 +14,7 @@ import CableIcon from "@mui/icons-material/Cable";
 import AddIcon from "@mui/icons-material/Add";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import LanIcon from "@mui/icons-material/Lan";
+import PanToolIcon from "@mui/icons-material/PanTool";
 
 import { checkUserPermission } from "redux/selectors/auth.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -113,6 +114,12 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
             break;
         }
       },
+    });
+
+    baseActionsList.push({
+      name: "Near by elements",
+      Icon: PanToolIcon,
+      onClick: () => {},
     });
 
     if (extraControls?.length) {
