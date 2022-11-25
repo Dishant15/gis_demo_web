@@ -35,3 +35,5 @@ export const getMapHighlighted = (store) => store.planningGis.mapHighlight;
 
 export const getTicketMapHighlighted = (store) =>
   store.planningGis.ticketData.ticketHighlightedWo;
+
+export const getPlanningMapFilters = (store) => store.planningGis.filters;

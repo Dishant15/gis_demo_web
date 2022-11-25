@@ -69,15 +69,15 @@ const planningGisSlice = createSlice({
       // filter elements by status
       if (filterKey === "status") {
         // get keys of layerData
-        const layerKeyList = Object.keys(state.layerData);
+        const layerKeyList = Object.keys(state.masterGisData);
         // loop over layerKeys
         for (let lkInd = 0; lkInd < layerKeyList.length; lkInd++) {
           const currLayerKey = layerKeyList[lkInd];
           // filter list of elements of each layer key
-          filteredGisLayerData[currLayerKey] = filter(state.layerData, [
-            "status",
-            filterValue,
-          ]);
+          filteredGisLayerData[currLayerKey] = filter(
+            state.masterGisData[currLayerKey],
+            ["status", filterValue]
+          );
         }
       }
       // update states
@@ -259,12 +259,11 @@ const planningGisSlice = createSlice({
       state.layerNetworkState[layerKey].isFetched = true;
       state.layerNetworkState[layerKey].count = size(action.payload);
       // convert payload coordinates into google coordinates data
-      const convertedLayerGisData = convertLayerServerData(
-        layerKey,
-        action.payload
+      const convertedLayerGisData = cloneDeep(
+        convertLayerServerData(layerKey, action.payload)
       );
       state.masterGisData[layerKey] = convertedLayerGisData;
-      state.layerData[layerKey] = cloneDeep(convertedLayerGisData);
+      state.layerData[layerKey] = convertedLayerGisData;
     },
     // handle error
     [fetchLayerDataThunk.rejected]: (state, action) => {

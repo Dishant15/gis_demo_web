@@ -178,3 +178,7 @@ video.responsive-video {
   height: 100%;
   width: auto;
 }
+
+.no-click {
+  pointer-events: none;
+}
