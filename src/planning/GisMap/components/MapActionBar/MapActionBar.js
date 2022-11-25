@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import PanToolIcon from "@mui/icons-material/PanTool";
 
 import {
   getMapHighlighted,
@@ -54,15 +55,20 @@ const MapActionBar = () => {
 
   return (
     <Box position="absolute" top={60} left={10} className="map-actionbar">
+      <Tooltip title="Near by elements" placement="right">
+        <Box className="icon-button" onClick={() => {}} mb={1}>
+          <PanToolIcon />
+        </Box>
+      </Tooltip>
       {!!size(mapHighlight) ? (
-        <Tooltip title="Stop Highlight">
+        <Tooltip title="Stop Highlight" placement="right">
           <Box className="icon-button" onClick={handleResetHighlight} mb={1}>
             <StopCircleIcon />
           </Box>
         </Tooltip>
       ) : null}
       {isNumber(ticketMapHighlight) ? (
-        <Tooltip title="Stop Highlight" mb={1}>
+        <Tooltip title="Stop Highlight" mb={1} placement="right">
           <Box className="icon-button" onClick={handleResetTicketHighlight}>
             <StopCircleIcon />
           </Box>
@@ -101,7 +107,7 @@ const LayerStatusFilter = () => {
       >
         <FilterBlock onClose={handleClose} />
       </Popover>
-      <Tooltip title="Filter" mb={1}>
+      <Tooltip title="Filter" mb={1} placement="right">
         <Box className="icon-button" onClick={handleShow}>
           <FilterAltIcon className="no-click" />
         </Box>
