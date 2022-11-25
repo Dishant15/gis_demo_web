@@ -24,7 +24,7 @@ import {
 import { editElementDetails } from "planning/data/layer.services";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { setMapState } from "planning/data/planningGis.reducer";
+import { setMapState, unHideElement } from "planning/data/planningGis.reducer";
 import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
@@ -80,6 +80,8 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
     );
     // clear map refs
     featureRef.current.setMap(null);
+    // unhide element from layerData
+    dispatch(unHideElement({ layerKey, elementId }));
     // complete current event -> fire next event OR go to details by default
     dispatch(
       setMapState({
@@ -177,6 +179,8 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
   }, []);
 
   const handleCancel = useCallback(() => {
+    // unhide element from layerData
+    dispatch(unHideElement({ layerKey, elementId }));
     // go back to details
     dispatch(
       setMapState({
@@ -186,7 +190,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
       })
     );
     featureRef.current.setMap(null);
-  }, [layerKey]);
+  }, [layerKey, elementId]);
 
   // helpText show in popup based on featureType
   const helpText = useMemo(() => {

@@ -92,44 +92,32 @@ const planningGisSlice = createSlice({
     setTicketId: (state, { payload }) => {
       state.ticketId = payload;
     },
+    // payload: { layerKey, elementId }
+    hideElement: (state, { payload }) => {
+      const { layerKey, elementId } = payload;
+      // hide current element from layerData
+      const elemLayerDataInd = findIndex(state.layerData[layerKey], [
+        "id",
+        elementId,
+      ]);
+      if (elemLayerDataInd !== -1) {
+        state.layerData[layerKey][elemLayerDataInd].hidden = true;
+      }
+    },
+    // payload: { layerKey, elementId }
+    unHideElement: (state, { payload }) => {
+      const { layerKey, elementId } = payload;
+      // hide current element from layerData
+      const elemLayerDataInd = findIndex(state.layerData[layerKey], [
+        "id",
+        elementId,
+      ]);
+      if (elemLayerDataInd !== -1) {
+        state.layerData[layerKey][elemLayerDataInd].hidden = false;
+      }
+    },
     // payload : { event, layerKey, data }
     setMapState: (state, { payload }) => {
-      const currMapState = state.mapState;
-      // if next event is editElement
-      if (
-        payload.event === PLANNING_EVENT.editElementGeometry &&
-        currMapState.event !== payload.event
-      ) {
-        // hide current element from layerData
-        const elemLayerDataInd = findIndex(state.layerData[payload.layerKey], [
-          "id",
-          payload.data.elementId,
-        ]);
-        if (elemLayerDataInd !== -1) {
-          state.layerData[payload.layerKey][elemLayerDataInd] = {
-            ...state.layerData[payload.layerKey][elemLayerDataInd],
-            hidden: true,
-          };
-        }
-      }
-      // if current event is editElement
-      if (
-        currMapState.event === PLANNING_EVENT.editElementGeometry &&
-        // next event is not same
-        currMapState.event !== payload.event
-      ) {
-        // show current element from layerData
-        const elemLayerDataInd = findIndex(
-          state.layerData[currMapState.layerKey],
-          ["id", currMapState.data.elementId]
-        );
-        if (elemLayerDataInd !== -1) {
-          state.layerData[currMapState.layerKey][elemLayerDataInd] = {
-            ...state.layerData[currMapState.layerKey][elemLayerDataInd],
-            hidden: false,
-          };
-        }
-      }
       state.mapState = { ...payload };
     },
     // payload => list of selected layerKey
@@ -331,6 +319,8 @@ export const {
   setFilter,
   resetFilters,
   setTicketId,
+  hideElement,
+  unHideElement,
   setMapState,
   setMapPosition,
   resetUnselectedLayerGisData,

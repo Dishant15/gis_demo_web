@@ -24,6 +24,7 @@ import {
 } from "planning/data/planning.actions";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import {
+  editElementGeometry,
   showAssociatiationList,
   showPossibleAddAssociatiation,
 } from "planning/data/event.actions";
@@ -75,18 +76,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
         name: "Location",
         Icon: EditLocationAltIcon,
         onClick: () => {
-          dispatch(
-            setMapState({
-              event: PLANNING_EVENT.editElementGeometry,
-              layerKey,
-              // pass elem data to update edit icon / style based on configs
-              data: {
-                ...elemData,
-                elementId: elemData.id,
-                coordinates: elemData.coordinates,
-              },
-            })
-          );
+          dispatch(editElementGeometry({ layerKey, elementData: elemData }));
         },
       });
     }
