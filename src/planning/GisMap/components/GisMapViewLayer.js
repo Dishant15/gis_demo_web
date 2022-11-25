@@ -130,25 +130,18 @@ const ViewLayer = ({ layerKey }) => {
         if (hidden) return null;
 
         if (highlighted) {
-          return <AnimatedPolyline coordinates={coordinates} />;
+          return <AnimatedPolyline key={id} coordinates={coordinates} />;
         } else {
-          <Polyline
-            key={id}
-            options={{
-              ...viewOptions,
-              ...(highlighted
-                ? {
-                    strokeColor: HIGHLIGHT_COLOR,
-                    strokeOpacity: 1,
-                    strokeWeight: 4,
-                  }
-                : {}),
-              zIndex: highlighted
-                ? zIndexMapping.highlighted
-                : zIndexMapping[layerKey],
-            }}
-            path={coordinates}
-          />;
+          return (
+            <Polyline
+              key={id}
+              options={{
+                ...viewOptions,
+                zIndex: zIndexMapping[layerKey],
+              }}
+              path={coordinates}
+            />
+          );
         }
       });
     default:

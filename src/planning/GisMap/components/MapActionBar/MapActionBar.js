@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import size from "lodash/size";
 import isNumber from "lodash/isNumber";
-import map from "lodash/map";
 
 import { Box, Tooltip } from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
@@ -16,10 +15,13 @@ import {
   resetMapHighlight,
   resetTicketMapHighlight,
 } from "planning/data/planningGis.reducer";
-import { LAYER_STATUS_OPTIONS } from "../layers/common/configuration";
 
 import "planning/styles/map-actionbar.scss";
 
+/**
+ * Parent:
+ *    GisMap
+ */
 const MapActionBar = () => {
   const dispatch = useDispatch();
   const mapHighlight = useSelector(getMapHighlighted);

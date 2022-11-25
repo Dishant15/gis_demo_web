@@ -78,6 +78,7 @@ const TicketMapViewLayers = React.memo(() => {
               } else {
                 return (
                   <Polyline
+                    key={id}
                     options={{
                       ...viewOptions,
                       zIndex: zIndexMapping[layer_key],

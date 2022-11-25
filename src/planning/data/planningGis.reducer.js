@@ -65,9 +65,9 @@ const planningGisSlice = createSlice({
     setFilter: (state, { payload }) => {
       const { filterKey, filterValue } = payload;
       // filter layerData based on filter value
+      let filteredGisLayerData = {};
+      // filter elements by status
       if (filterKey === "status") {
-        // filter elements by status
-        let filteredGisLayerData = {};
         // get keys of layerData
         const layerKeyList = Object.keys(state.layerData);
         // loop over layerKeys
@@ -86,7 +86,7 @@ const planningGisSlice = createSlice({
     },
     resetFilters: (state) => {
       state.layerData = cloneDeep(state.masterGisData);
-      state.filters[payload] = null;
+      state.filters = initialState.filters;
     },
     // payload: ticketId ( Number ) | null
     setTicketId: (state, { payload }) => {
