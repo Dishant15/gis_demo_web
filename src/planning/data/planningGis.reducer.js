@@ -5,6 +5,8 @@ import size from "lodash/size";
 import cloneDeep from "lodash/cloneDeep";
 import difference from "lodash/difference";
 import findIndex from "lodash/findIndex";
+import isNumber from "lodash/isNumber";
+import filter from "lodash/filter";
 
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { logout } from "redux/reducers/auth.reducer";
@@ -16,7 +18,6 @@ import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
 } from "components/common/Map/map.constants";
-import { isNumber } from "lodash";
 
 const defaultLayerNetworkState = {
   isLoading: false,
@@ -27,9 +28,14 @@ const defaultLayerNetworkState = {
 };
 
 const initialState = {
+  filters: {
+    status: null,
+  },
   // shape : { layer-key: { ...defaultLayerNetworkState } }
   layerNetworkState: {},
   // shape : { layer-key: [ {...Gis data, ...}, ...] }
+  masterGisData: {},
+  // filtered gis data, same as masterGisData
   layerData: {},
   // shape: { event: PLANNING_EVENT, data: { **Edit / init form data }, layerKey, minimized }
   mapState: {},
@@ -55,6 +61,33 @@ const planningGisSlice = createSlice({
   name: "planningGis",
   initialState,
   reducers: {
+    // payload : { filterKey, filterValue }
+    setFilter: (state, { payload }) => {
+      const { filterKey, filterValue } = payload;
+      // filter layerData based on filter value
+      if (filterKey === "status") {
+        // filter elements by status
+        let filteredGisLayerData = {};
+        // get keys of layerData
+        const layerKeyList = Object.keys(state.layerData);
+        // loop over layerKeys
+        for (let lkInd = 0; lkInd < layerKeyList.length; lkInd++) {
+          const currLayerKey = layerKeyList[lkInd];
+          // filter list of elements of each layer key
+          filteredGisLayerData[currLayerKey] = filter(state.layerData, [
+            "status",
+            filterValue,
+          ]);
+        }
+      }
+      // update states
+      state.layerData = filteredGisLayerData;
+      state.filters[filterKey] = filterValue;
+    },
+    resetFilters: (state) => {
+      state.layerData = cloneDeep(state.masterGisData);
+      state.filters[payload] = null;
+    },
     // payload: ticketId ( Number ) | null
     setTicketId: (state, { payload }) => {
       state.ticketId = payload;
@@ -227,6 +260,7 @@ const planningGisSlice = createSlice({
           isLoading: true,
           isSelected: true,
         };
+        state.masterGisData[layerKey] = [];
         state.layerData[layerKey] = [];
       }
     },
@@ -237,10 +271,12 @@ const planningGisSlice = createSlice({
       state.layerNetworkState[layerKey].isFetched = true;
       state.layerNetworkState[layerKey].count = size(action.payload);
       // convert payload coordinates into google coordinates data
-      state.layerData[layerKey] = convertLayerServerData(
+      const convertedLayerGisData = convertLayerServerData(
         layerKey,
         action.payload
       );
+      state.masterGisData[layerKey] = convertedLayerGisData;
+      state.layerData[layerKey] = cloneDeep(convertedLayerGisData);
     },
     // handle error
     [fetchLayerDataThunk.rejected]: (state, action) => {
@@ -292,6 +328,8 @@ const planningGisSlice = createSlice({
 });
 
 export const {
+  setFilter,
+  resetFilters,
   setTicketId,
   setMapState,
   setMapPosition,
