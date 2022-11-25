@@ -13,6 +13,7 @@ import { GisLayerForm } from "./GisLayerForm";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import ShowAssociatedElements from "./ShowAssociatedElements";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -66,6 +67,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.showPossibleAddAssociatiation:
       return <ShowPossibleAddAssociation />;
+
+    case PLANNING_EVENT.showAssociatedElements:
+      return <ShowAssociatedElements />;
 
     default:
       return null;

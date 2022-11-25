@@ -12,3 +12,15 @@ export const showPossibleAddAssociatiation =
       })
     );
   };
+
+export const showAssociatiationList =
+  ({ layerKey, elementId }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.showAssociatedElements,
+        layerKey,
+        data: { elementId },
+      })
+    );
+  };

@@ -1,5 +1,6 @@
 import Api from "utils/api.utils";
 import {
+  apiGetElementAssociations,
   apiGetElementConnections,
   apiGetElementDetails,
   apiGetRegionDetails,
@@ -48,5 +49,11 @@ export const editElementDetails = async ({ data, layerKey, elementId }) => {
 
 export const addElementConnection = async ({ data, cableId }) => {
   const res = await Api.put(apiUpdateElementConnections(cableId), data);
+  return res.data;
+};
+
+export const fetchElementAssociations = async ({ queryKey }) => {
+  const [_key, layerKey, elementId] = queryKey;
+  const res = await Api.get(apiGetElementAssociations(layerKey, elementId));
   return res.data;
 };

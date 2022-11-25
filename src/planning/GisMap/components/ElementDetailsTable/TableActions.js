@@ -13,6 +13,7 @@ import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CableIcon from "@mui/icons-material/Cable";
 import AddIcon from "@mui/icons-material/Add";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import LanIcon from "@mui/icons-material/Lan";
 
 import { checkUserPermission } from "redux/selectors/auth.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -22,7 +23,10 @@ import {
   onPolygonShowOnMap,
 } from "planning/data/planning.actions";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
-import { showPossibleAddAssociatiation } from "planning/data/event.actions";
+import {
+  showAssociatiationList,
+  showPossibleAddAssociatiation,
+} from "planning/data/event.actions";
 import {
   getPlanningTicketPage,
   getTicketWorkorderPage,
@@ -159,6 +163,21 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
                   layerKey,
                   elementData: elemData,
                   listOfLayers: data,
+                })
+              );
+            },
+          });
+        }
+        //
+        else if (control === "association_list") {
+          baseActionsList.push({
+            name: "Show Associations",
+            Icon: LanIcon,
+            onClick: () => {
+              dispatch(
+                showAssociatiationList({
+                  layerKey,
+                  elementId: elemData.id,
                 })
               );
             },

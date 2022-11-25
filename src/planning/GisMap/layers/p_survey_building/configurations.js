@@ -54,4 +54,7 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
     control: "add_associations",
     data: ["p_splitter"],
   },
+  {
+    control: "association_list",
+  },
 ];

@@ -51,13 +51,13 @@ const MapActionBar = () => {
           </Box>
         </Tooltip>
       ) : null}
-      {map(LAYER_STATUS_OPTIONS, ({ value, label }) => {
+      {/* {map(LAYER_STATUS_OPTIONS, ({ value, label }) => {
         return (
           <Tooltip title={label} key={value} mb={1}>
             <Box className="icon-button">{value}</Box>
           </Tooltip>
         );
-      })}
+      })} */}
     </Box>
   );
 };

@@ -23,6 +23,7 @@ export const PLANNING_EVENT = {
   showElementConnections: 6,
   addElementConnection: 7,
   showPossibleAddAssociatiation: 8,
+  showAssociatedElements: 9,
 };
 
 export const LayerKeyMappings = {

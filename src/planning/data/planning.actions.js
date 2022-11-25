@@ -285,3 +285,20 @@ export const onTicketWoShowOnMapClick = (woData) => (dispatch) => {
       break;
   }
 };
+
+export const onAssociatedElementShowOnMapClick =
+  (element, layerKey) => (dispatch) => {
+    const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+    switch (featureType) {
+      case FEATURE_TYPES.POINT:
+        dispatch(onPointShowOnMap(element.coordinates, element.id, layerKey));
+        break;
+      case FEATURE_TYPES.POLYGON:
+      case FEATURE_TYPES.POLYLINE:
+      case FEATURE_TYPES.MULTI_POLYGON:
+        dispatch(onPolygonShowOnMap(element.center, element.id, layerKey));
+        break;
+      default:
+        break;
+    }
+  };
