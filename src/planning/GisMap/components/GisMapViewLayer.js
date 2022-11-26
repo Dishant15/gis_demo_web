@@ -40,6 +40,7 @@ const ViewLayer = ({ layerKey }) => {
         return (
           <Marker
             key={id}
+            clickable={false}
             icon={{
               // add default icon here
               url: viewOptions.icon,

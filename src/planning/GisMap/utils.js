@@ -24,6 +24,9 @@ export const PLANNING_EVENT = {
   addElementConnection: 7,
   showPossibleAddAssociatiation: 8,
   showAssociatedElements: 9,
+  // map select elements on location
+  selectElementsOnMapClick: 10,
+  listElementsOnMap: 11,
 };
 
 export const LayerKeyMappings = {

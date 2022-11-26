@@ -17,11 +17,12 @@ import Button from "@mui/material/Button";
 
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import PanToolIcon from "@mui/icons-material/PanTool";
+import TouchAppIcon from "@mui/icons-material/TouchApp";
 
 import {
   getMapHighlighted,
   getPlanningMapFilters,
+  getPlanningMapStateEvent,
   getTicketMapHighlighted,
 } from "planning/data/planningGis.selectors";
 import {
@@ -30,9 +31,11 @@ import {
   resetTicketMapHighlight,
   setFilter,
 } from "planning/data/planningGis.reducer";
+import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuration";
 
 import "planning/styles/map-actionbar.scss";
-import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuration";
+import { PLANNING_EVENT } from "planning/GisMap/utils";
+import { selectElementsOnMapClick } from "planning/data/event.actions";
 
 /**
  * Parent:
@@ -40,6 +43,8 @@ import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuratio
  */
 const MapActionBar = () => {
   const dispatch = useDispatch();
+
+  const mapStateEvent = useSelector(getPlanningMapStateEvent);
   const mapHighlight = useSelector(getMapHighlighted);
   const ticketMapHighlight = useSelector(getTicketMapHighlighted);
 
@@ -55,9 +60,17 @@ const MapActionBar = () => {
 
   return (
     <Box position="absolute" top={60} left={10} className="map-actionbar">
-      <Tooltip title="Near by elements" placement="right">
-        <Box className="icon-button" onClick={() => {}} mb={1}>
-          <PanToolIcon />
+      <Tooltip title="select elements on map" placement="right">
+        <Box
+          className={`${
+            mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick
+              ? "active"
+              : ""
+          } icon-button`}
+          onClick={() => dispatch(selectElementsOnMapClick)}
+          mb={1}
+        >
+          <TouchAppIcon />
         </Box>
       </Tooltip>
       {!!size(mapHighlight) ? (
@@ -81,6 +94,8 @@ const MapActionBar = () => {
 
 const LayerStatusFilter = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const { status } = useSelector(getPlanningMapFilters);
 
   const handleShow = useCallback((e) => {
     setAnchorEl(e.target);
@@ -108,7 +123,10 @@ const LayerStatusFilter = () => {
         <FilterBlock onClose={handleClose} />
       </Popover>
       <Tooltip title="Filter" mb={1} placement="right">
-        <Box className="icon-button" onClick={handleShow}>
+        <Box
+          className={`${!!status ? "active" : ""} icon-button`}
+          onClick={handleShow}
+        >
           <FilterAltIcon className="no-click" />
         </Box>
       </Tooltip>

@@ -9,6 +9,7 @@ import ElementDetailsTable from "./ElementDetailsTable";
 import ListElementConnections from "../layers/common/ListElementConnections";
 import AddElementConnection from "../layers/common/AddElementConnection";
 import ShowPossibleAddAssociation from "./ShowPossibleAddAssociation";
+import ElementList from "./ElementList";
 import { GisLayerForm } from "./GisLayerForm";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
@@ -70,6 +71,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.showAssociatedElements:
       return <ShowAssociatedElements />;
+
+    case PLANNING_EVENT.listElementsOnMap:
+      return <ElementList />;
 
     default:
       return null;

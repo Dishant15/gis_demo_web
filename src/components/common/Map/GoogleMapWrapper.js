@@ -1,5 +1,8 @@
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+
+import noop from "lodash/noop";
+
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
@@ -22,6 +25,7 @@ const GoogleMapWrapper = ({
   center = DEFAULT_MAP_CENTER,
   zoom = DEFAULT_MAP_ZOOM,
   containerStyle = DEFAULT_CONTAINER_STYLE,
+  onClick = noop,
   ...restMapProps
 }) => {
   return (
@@ -35,6 +39,7 @@ const GoogleMapWrapper = ({
         mapContainerStyle={containerStyle}
         center={center}
         zoom={zoom}
+        onClick={onClick}
         options={(maps) => {
           return {
             zoomControl: true,

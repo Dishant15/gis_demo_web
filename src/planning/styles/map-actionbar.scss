@@ -1,3 +1,5 @@
+@import "../../App/global";
+
 .map-actionbar {
   .icon-button {
     height: 40px;
@@ -6,8 +8,19 @@
     align-items: center;
     justify-content: center;
     background-color: white;
+    color: $secondary-main-color;
     box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
     border-radius: 2px;
     cursor: pointer;
+    transition: 0.2s all;
+
+    &:hover {
+      background-color: darken($color: white, $amount: 7);
+    }
+
+    &.active {
+      background-color: $secondary-main-color;
+      color: $background-default-color;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { PLANNING_EVENT } from "planning/GisMap/utils";
 import { hideElement, setMapState } from "./planningGis.reducer";
+import { getPlanningMapStateEvent } from "./planningGis.selectors";
 
 export const editElementGeometry =
   ({ layerKey, elementData }) =>
@@ -41,6 +42,33 @@ export const showAssociatiationList =
         event: PLANNING_EVENT.showAssociatedElements,
         layerKey,
         data: { elementId },
+      })
+    );
+  };
+
+export const selectElementsOnMapClick = (dispatch, getState) => {
+  const event = getPlanningMapStateEvent(getState());
+
+  if (event === PLANNING_EVENT.selectElementsOnMapClick) {
+    // reset event
+    dispatch(setMapState({}));
+  } else {
+    // start event
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.selectElementsOnMapClick,
+      })
+    );
+  }
+};
+
+export const listElementsOnMap =
+  ({ elementList, filterCoords }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.listElementsOnMap,
+        data: { elementList, filterCoords },
       })
     );
   };

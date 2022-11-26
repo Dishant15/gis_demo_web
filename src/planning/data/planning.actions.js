@@ -2,6 +2,8 @@ import {
   circle,
   point,
   lineString,
+  polygon,
+  multiPolygon,
   booleanIntersects,
   distance,
 } from "@turf/turf";
@@ -14,6 +16,7 @@ import { getSelectedLayerKeys } from "./planningState.selectors";
 import { handleLayerSelect, handleRegionSelect } from "./planningState.reducer";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import {
+  getAllLayersData,
   getLayerViewData,
   getPlanningMapStateEvent,
 } from "./planningGis.selectors";
@@ -33,8 +36,72 @@ import {
   PLANNING_EVENT,
 } from "planning/GisMap/utils";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { pointCoordsToLatLongMap } from "utils/map.utils";
+import {
+  coordsToLatLongMap,
+  pointCoordsToLatLongMap,
+  pointLatLongMapToCoords,
+} from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
+import { listElementsOnMap } from "./event.actions";
+
+export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
+  const clickLatLong = mapMouseEvent.latLng.toJSON();
+
+  const storeState = getState();
+  const mapStateEvent = getPlanningMapStateEvent(storeState);
+  const layerData = getAllLayersData(storeState);
+
+  if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
+    // if ths is select elements event get list of elements around user click
+    const clickPoint = pointLatLongMapToCoords(clickLatLong);
+    // create a circle at user click location
+    const circPoly = circle(clickPoint, 0.01, {
+      steps: 10,
+      units: "kilometers",
+    });
+    const elementResultList = [];
+    // loop over layerData
+    const layerKeyList = Object.keys(layerData);
+    // check intersects
+    for (let lkInd = 0; lkInd < layerKeyList.length; lkInd++) {
+      const currLayerKey = layerKeyList[lkInd];
+
+      if (currLayerKey === "region") continue;
+      const currLayerData = layerData[currLayerKey];
+      const featureType = LayerKeyMappings[currLayerKey]["featureType"];
+
+      for (let elemInd = 0; elemInd < currLayerData.length; elemInd++) {
+        const element = currLayerData[elemInd];
+        // create turf geom for each element
+        let turfGeom;
+        if (featureType === FEATURE_TYPES.POINT) {
+          turfGeom = point(element.geometry);
+        } else if (featureType === FEATURE_TYPES.POLYLINE) {
+          turfGeom = lineString(element.geometry);
+        } else if (featureType === FEATURE_TYPES.POLYGON) {
+          turfGeom = polygon([element.geometry]);
+        } else {
+          // multi polygon
+          turfGeom = multiPolygon(element.geometry);
+        }
+        // check intersects
+        const isIntersecting = booleanIntersects(circPoly, turfGeom);
+        // add to list if intersect true
+        if (isIntersecting) {
+          elementResultList.push({
+            ...element,
+            layerKey: currLayerKey,
+          });
+        }
+      }
+    }
+    const filterCoords = coordsToLatLongMap(circPoly.geometry.coordinates[0]);
+    // fire next event : listElementsOnMap, with new list data
+    dispatch(
+      listElementsOnMap({ elementList: elementResultList, filterCoords })
+    );
+  }
+};
 
 export const onRegionSelectionUpdate =
   (updatedRegionIdList) => (dispatch, getState) => {
