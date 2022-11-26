@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="43" viewBox="0 0 438 512">
    <path id="Selection #1"
       fill="white"
-      stroke="#FF0000"
+      stroke="#ffc005"
       stroke-width="20"
       d="M 0.00,0.00
          C 0.00,0.00 0.00,440.00 0.00,440.00
@@ -19,5 +19,5 @@
          301.00,440.00 438.00,440.00 438.00,440.00
          438.00,440.00 438.00,0.00 438.00,0.00
          438.00,0.00 0.00,0.00 0.00,0.00 Z" />
-   <polygon id="triangle" points="218,40 38,380 400,380" fill="#FF0000"/>
+   <polygon id="triangle" points="218,40 38,380 400,380" fill="#ffc005"/>
 </svg>

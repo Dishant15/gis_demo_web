@@ -3,13 +3,13 @@ import {
   ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
+
+import { default as Icon } from "assets/markers/spop_box.svg";
+import { default as EditIcon } from "assets/markers/spop_pin.svg";
 import { FIELD_TYPES } from "components/common/DynamicForm";
 
-import { default as Icon } from "assets/markers/pop_box.svg";
-import { default as EditIcon } from "assets/markers/pop_pin.svg";
-
-export const LAYER_KEY = "p_pop";
-export const PRE_UID = "POP";
+export const LAYER_KEY = "p_spop";
+export const PRE_UID = "SPOP";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const getViewOptions = () => ({
@@ -31,7 +31,7 @@ export const INITIAL_ELEMENT_DATA = {
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
-      title: "Pop Location Form",
+      title: "SPop Location Form",
       fieldConfigs: [
         ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
