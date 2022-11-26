@@ -135,6 +135,7 @@ export const LayerKeyMappings = {
     initialElementData: FSALayer.INITIAL_ELEMENT_DATA,
     elementTableFields: FSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: FSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: FSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [DSALayer.LAYER_KEY]: {
     preUid: DSALayer.PRE_UID,
@@ -143,6 +144,7 @@ export const LayerKeyMappings = {
     initialElementData: DSALayer.INITIAL_ELEMENT_DATA,
     elementTableFields: DSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: DSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: DSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [CSALayer.LAYER_KEY]: {
     preUid: CSALayer.PRE_UID,
@@ -151,6 +153,7 @@ export const LayerKeyMappings = {
     initialElementData: CSALayer.INITIAL_ELEMENT_DATA,
     elementTableFields: CSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: CSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: CSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [PoleLayer.LAYER_KEY]: {
     preUid: PoleLayer.PRE_UID,
@@ -159,6 +162,7 @@ export const LayerKeyMappings = {
     initialElementData: PoleLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: PoleLayer.ELEMENT_TABLE_FIELDS,
     formConfig: PoleLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: PoleLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [ManholeLayer.LAYER_KEY]: {
     preUid: ManholeLayer.PRE_UID,
@@ -167,6 +171,7 @@ export const LayerKeyMappings = {
     initialElementData: ManholeLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: ManholeLayer.ELEMENT_TABLE_FIELDS,
     formConfig: ManholeLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: ManholeLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [JointCloserLayer.LAYER_KEY]: {
     preUid: JointCloserLayer.PRE_UID,

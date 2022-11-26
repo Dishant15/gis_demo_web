@@ -48,3 +48,13 @@ export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Compass Box", field: "has_compass_box", type: "boolean" },
 ];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add_associations",
+    data: ["p_joint_closer"],
+  },
+  {
+    control: "association_list",
+  },
+];

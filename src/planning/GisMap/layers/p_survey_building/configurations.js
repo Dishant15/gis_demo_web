@@ -52,7 +52,7 @@ export const ELEMENT_TABLE_FIELDS = [
 export const ELEMENT_TABLE_EXTRA_CONTROLS = [
   {
     control: "add_associations",
-    data: ["p_splitter"],
+    data: ["p_splitter", "p_pop", "p_spop", "p_dp"],
   },
   {
     control: "association_list",

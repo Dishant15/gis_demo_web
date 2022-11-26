@@ -37,3 +37,13 @@ export const ELEMENT_FORM_TEMPLATE = {
 };
 
 export const ELEMENT_TABLE_FIELDS = [...ELEMENT_TABLE_ABSTRACT_FIELDS];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add_associations",
+    data: ["p_splitter", "p_dp"],
+  },
+  {
+    control: "association_list",
+  },
+];

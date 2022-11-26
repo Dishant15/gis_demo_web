@@ -64,3 +64,13 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Home Pass", field: "home_pass", type: "simple" },
   { label: "Area", field: "area", type: "simple" },
 ];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add_associations",
+    data: ["p_splitter"],
+  },
+  {
+    control: "association_list",
+  },
+];
