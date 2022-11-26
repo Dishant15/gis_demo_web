@@ -369,3 +369,13 @@ export const onAssociatedElementShowOnMapClick =
         break;
     }
   };
+
+export const onElementListItemClick = (element) => (dispatch) => {
+  dispatch(
+    setMapHighlight({
+      layerKey: element.layerKey,
+      elementId: element.id,
+    })
+  );
+  dispatch(resetTicketMapHighlight());
+};
