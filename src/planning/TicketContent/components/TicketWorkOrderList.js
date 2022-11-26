@@ -15,7 +15,7 @@ import Popover from "@mui/material/Popover";
 import Badge from "@mui/material/Badge";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import LanguageIcon from "@mui/icons-material/Language";
 
 import ChangeForm from "ticket/components/StatusChangeForm";
 
@@ -161,7 +161,7 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
                   aria-label="show-location"
                   onClick={handleShowOnMap(workOrder)}
                 >
-                  <LocationSearchingIcon />
+                  <LanguageIcon />
                 </IconButton>
               </Tooltip>
               {showStatusChangeIcon ? (

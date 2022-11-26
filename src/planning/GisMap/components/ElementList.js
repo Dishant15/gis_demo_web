@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Divider from "@mui/material/Divider";
 
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import LanguageIcon from "@mui/icons-material/Language";
 
 import GisMapPopups from "./GisMapPopups";
 import TableHeader from "./ElementDetailsTable/TableHeader";
@@ -97,6 +97,8 @@ const ElementListTable = ({ elementList }) => {
             direction="row"
             spacing={1}
             alignItems="center"
+            py={0.5}
+            className="change-bg-on-hover"
           >
             <Paper
               sx={{
@@ -135,7 +137,7 @@ const ElementListTable = ({ elementList }) => {
                   aria-label="show-location"
                   onClick={handleShowOnMap(element)}
                 >
-                  <LocationSearchingIcon />
+                  <LanguageIcon />
                 </IconButton>
               </Tooltip>
             </Stack>
