@@ -44,7 +44,8 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const count = get(layerNetState, "count", 0);
 
   // get icon
-  const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
+  const getViewOptions = get(LayerKeyMappings, [layer_key, "getViewOptions"]);
+  const Icon = getViewOptions ? getViewOptions({}).icon : "";
 
   const handleExpandToggle = useCallback(() => {
     setExpanded((expanded) => !expanded);

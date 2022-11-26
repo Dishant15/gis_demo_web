@@ -137,14 +137,17 @@ const AddElementContent = () => {
           const { layer_key, name, is_configurable, configuration } = config;
           // get icon
           let Icon;
+          const getViewOptions = get(LayerKeyMappings, [
+            layer_key,
+            "getViewOptions",
+          ]);
           if (is_configurable) {
             let currConfig = get(selectedConfigurations, layer_key, false);
             if (!currConfig) currConfig = configuration[0];
             // configurable layers will have getIcon function
-            Icon =
-              LayerKeyMappings[layer_key]["getViewOptions"](currConfig).icon;
+            Icon = getViewOptions ? getViewOptions(currConfig).icon : "";
           } else {
-            Icon = LayerKeyMappings[layer_key]["getViewOptions"]().icon;
+            Icon = getViewOptions ? getViewOptions().icon : "";
           }
 
           return (
