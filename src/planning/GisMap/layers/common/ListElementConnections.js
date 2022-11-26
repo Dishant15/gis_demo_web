@@ -1,7 +1,9 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
+
 import size from "lodash/size";
+import get from "lodash/get";
 
 import {
   Divider,
@@ -10,10 +12,13 @@ import {
   Box,
   IconButton,
   Button,
+  Tooltip,
 } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import CloseIcon from "@mui/icons-material/Close";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
+import SwipeLeftAltIcon from "@mui/icons-material/SwipeLeftAlt";
+import SwipeRightAltIcon from "@mui/icons-material/SwipeRightAlt";
+
 import AddIcon from "@mui/icons-material/Add";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import { default as ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsTable/DummyLoader";
@@ -22,6 +27,8 @@ import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
 import { onElementAddConnectionEvent } from "planning/data/planning.actions";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import { LayerKeyMappings } from "planning/GisMap/utils";
+import { DRAG_ICON_WIDTH } from "utils/constant";
 
 const ListElementConnections = ({ layerKey }) => {
   const dispatch = useDispatch();
@@ -49,13 +56,15 @@ const ListElementConnections = ({ layerKey }) => {
 
   if (isLoading) return <ElemTableDummyLoader />;
   return (
-    <GisMapPopups>
+    <GisMapPopups dragId="ElementConnections">
       <Box minWidth="350px" maxWidth="550px">
         {/* header */}
         <Stack
           sx={{ backgroundColor: "primary.main", color: "background.default" }}
           direction="row"
+          alignItems="center"
           p={1}
+          pl={`${DRAG_ICON_WIDTH}px`}
         >
           <Typography variant="h6" textAlign="left" flex={1}>
             Element Connections
@@ -65,52 +74,82 @@ const ListElementConnections = ({ layerKey }) => {
           </IconButton>
         </Stack>
 
-        <Stack
-          sx={{ boxShadow: "0px 5px 7px -3px rgba(122,122,122,0.51)" }}
-          p={2}
-          direction="row"
-          spacing={2}
-        >
-          <Button
-            onClick={handleAddConnection}
-            variant="outlined"
-            color="success"
-            startIcon={<AddIcon />}
-          >
-            Add Connection
-          </Button>
+        <Stack p={1} direction="row" spacing={2}>
+          <Tooltip title="Add Connection">
+            <IconButton
+              sx={{
+                border: "1px solid",
+                borderRadius: 1,
+              }}
+              onClick={handleAddConnection}
+              variant="outlined"
+              color="secondary"
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
         </Stack>
-
+        <Divider />
         {!!size(elemConnectionData) ? (
-          <Stack
-            sx={{
-              overflowY: "auto",
-            }}
-            divider={<Divider />}
-          >
+          <Stack spacing={1} py={1} divider={<Divider />}>
             {elemConnectionData.map((connection) => {
               const { element, layer_info } = connection;
               const EndIcon =
                 element.cable_end === "A" ? (
-                  <LastPageIcon />
+                  <SwipeLeftAltIcon
+                    fontSize="small"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  />
                 ) : (
-                  <FirstPageIcon />
+                  <SwipeRightAltIcon
+                    fontSize="small"
+                    sx={{
+                      color: "text.secondary",
+                    }}
+                  />
                 );
-
+              const Icon = LayerKeyMappings[layer_info.layer_key][
+                "getViewOptions"
+              ]({}).icon;
               return (
-                <Stack p={1} key={element.id}>
-                  <Box>
-                    <Typography component="b">#{element.unique_id}</Typography>
-                    <Typography color="#757575" component="i">
-                      {" "}
-                      Cable
-                    </Typography>
-                  </Box>
-                  <Stack spacing={2} direction="row">
-                    {EndIcon}
-                    <Typography component="span">
-                      {element.name} ( {element.cable_end} End )
-                    </Typography>
+                <Stack
+                  key={element.id}
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                >
+                  <Paper
+                    sx={{
+                      width: "42px",
+                      height: "42px",
+                      lineHeight: "42px",
+                      textAlign: "center",
+                      marginLeft: "8px",
+                    }}
+                  >
+                    <img
+                      className="responsive-img"
+                      src={Icon}
+                      alt={layer_info.layer_key}
+                    />
+                  </Paper>
+                  <Stack flex={1} flexDirection="row">
+                    <Box flex={1}>
+                      <Typography variant="subtitle1" lineHeight={1.1}>
+                        {get(element, "name", "")}
+                      </Typography>
+                      <Typography variant="caption">
+                        #{get(element, "network_id", "")}
+                      </Typography>
+                    </Box>
+                    <Stack alignItems="center" pr={1} maxWidth="52px">
+                      <Typography variant="caption">
+                        {element.cable_end} End
+                      </Typography>
+                      {EndIcon}
+                    </Stack>
                   </Stack>
                 </Stack>
               );
