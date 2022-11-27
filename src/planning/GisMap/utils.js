@@ -105,6 +105,7 @@ export const LayerKeyMappings = {
     elementTableFields: SAreaLayer.ELEMENT_TABLE_FIELDS,
     elementTableExtraControls: SAreaLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: SAreaLayer.ELEMENT_FORM_TEMPLATE,
+    getDependantFields: SAreaLayer.getDependantFields,
   },
   [PopLayer.LAYER_KEY]: {
     preUid: PopLayer.PRE_UID,
@@ -132,7 +133,7 @@ export const LayerKeyMappings = {
     elementTableFields: FSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: FSALayer.ELEMENT_FORM_TEMPLATE,
     elementTableExtraControls: FSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
-    mergeDependantFields: FSALayer.mergeDependantFields,
+    getDependantFields: FSALayer.getDependantFields,
   },
   [DSALayer.LAYER_KEY]: {
     preUid: DSALayer.PRE_UID,
@@ -142,6 +143,7 @@ export const LayerKeyMappings = {
     elementTableFields: DSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: DSALayer.ELEMENT_FORM_TEMPLATE,
     elementTableExtraControls: DSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+    getDependantFields: DSALayer.getDependantFields,
   },
   [CSALayer.LAYER_KEY]: {
     preUid: CSALayer.PRE_UID,
@@ -151,6 +153,7 @@ export const LayerKeyMappings = {
     elementTableFields: CSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: CSALayer.ELEMENT_FORM_TEMPLATE,
     elementTableExtraControls: CSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+    getDependantFields: CSALayer.getDependantFields,
   },
   [PoleLayer.LAYER_KEY]: {
     preUid: PoleLayer.PRE_UID,

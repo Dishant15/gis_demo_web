@@ -18,7 +18,7 @@ import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "./GisMapPopups";
-import DummyListLoader from "planning/ActionBar/components/DummyListLoader";
+import DummyLoader from "./ElementDetailsTable/DummyLoader";
 
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import {
@@ -34,6 +34,7 @@ import {
 } from "planning/data/planning.actions";
 import { DRAG_ICON_WIDTH } from "utils/constant";
 import { LayerKeyMappings } from "../utils";
+import useValidateGeometry from "../hooks/useValidateGeometry";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -113,6 +114,8 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
   );
 
   const dispatch = useDispatch();
+  const { validateElementMutation, isValidationLoading } =
+    useValidateGeometry();
   // if popup open : layerKey of selected configs, null if closed
   const [layerConfigPopup, setLayerConfigPopup] = useState(null);
   const selectedConfigurations = useSelector(getSelectedConfigurations);
@@ -147,12 +150,28 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
 
       if (childFeatureType === parentFeatureType) {
         // if both layer has same geometry copy geometry of parent to child and go to form directly
-        dispatch(
-          onAddElementDetails({
+        const extraParent = {
+          [parentLayerKey]: [{ ...parentData }],
+        };
+        // call validate geometry to get relations for new element
+        validateElementMutation(
+          {
             layerKey,
-            parentNetId: parentData.network_id,
-            submitData: { geometry: parentData.coordinates },
-          })
+            featureType: childFeatureType,
+            geometry: parentData.coordinates,
+          },
+          {
+            onSuccess: (res) => {
+              dispatch(
+                onAddElementDetails({
+                  layerKey,
+                  validationRes: res,
+                  submitData: { geometry: parentData.coordinates },
+                  extraParent,
+                })
+              );
+            },
+          }
         );
       } else {
         // else go to map with extra contains by id check
@@ -167,7 +186,7 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
         );
       }
     },
-    [parentData]
+    [parentLayerKey, parentData]
   );
 
   const mayRenderElementConfigPopup = useMemo(() => {
@@ -200,8 +219,8 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
     );
   }, [layerConfigPopup]);
 
-  if (isLoading) {
-    return <DummyListLoader />;
+  if (isLoading || isValidationLoading) {
+    return <DummyLoader />;
   }
 
   if (!!size(layerCofigs)) {

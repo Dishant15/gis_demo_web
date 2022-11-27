@@ -85,6 +85,28 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
   },
 ];
 
-export const mergeDependantFields = (data) => {
-  return data;
+// submitData : { ...elemPartialData }
+// children : { layerKey: [child1, child2]}
+export const getDependantFields = ({ submitData, children }) => {
+  let survey_area_count = 0;
+  let building_count = 0;
+  let home_pass = 0;
+
+  for (const childLayerKey in children) {
+    if (Object.hasOwnProperty.call(children, childLayerKey)) {
+      const currChildList = children[childLayerKey];
+      for (let chInd = 0; chInd < currChildList.length; chInd++) {
+        const currChild = currChildList[chInd];
+
+        if (childLayerKey === "p_survey_area") {
+          survey_area_count += 1;
+        } else if (childLayerKey === "p_survey_building") {
+          building_count += 1;
+          home_pass += currChild.total_home_pass;
+        }
+      }
+    }
+  }
+
+  return { ...submitData, survey_area_count, building_count, home_pass };
 };

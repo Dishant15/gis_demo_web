@@ -51,6 +51,7 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
+import { merge } from "lodash";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const clickLatLong = mapMouseEvent.latLng.toJSON();
@@ -229,7 +230,7 @@ export const onAddElementGeometry =
 
 // called when user going to AddGisLayerFORM
 export const onAddElementDetails =
-  ({ layerKey, submitData, validationRes }) =>
+  ({ layerKey, submitData, validationRes, extraParent }) =>
   (dispatch, getState) => {
     const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
     const storeState = getState();
@@ -261,12 +262,12 @@ export const onAddElementDetails =
     // generate children association data from children res
     const children = get(validationRes, "data.children", {});
 
-    const mergeDependantFields = get(
+    const getDependantFields = get(
       LayerKeyMappings,
-      [layerKey, "mergeDependantFields"],
+      [layerKey, "getDependantFields"],
       ({ submitData }) => submitData
     );
-    submitData = mergeDependantFields({ submitData, children });
+    submitData = getDependantFields({ submitData, children });
 
     // add config id if layer is configurable
     const configuration = selectedConfig?.id;
@@ -282,7 +283,7 @@ export const onAddElementDetails =
           ...submitData,
           unique_id,
           network_id,
-          association: { parents, children },
+          association: { parents: merge(parents, extraParent), children },
           configuration,
         },
       })

@@ -83,11 +83,11 @@ const ElementList = ({ data }) => {
   );
 
   const handleShowDetails = useCallback(
-    (element) => () => {
+    (elementId, layerKey) => () => {
       dispatch(
         openElementDetails({
-          layerKey: element.layerKey,
-          elementId: element.id,
+          layerKey,
+          elementId,
         })
       );
     },
@@ -106,9 +106,8 @@ const ElementList = ({ data }) => {
   return (
     <Stack spacing={1} divider={<Divider />} py={1}>
       {data.map(({ element, layer_info }) => {
-        const Icon = LayerKeyMappings[layer_info.layer_key]["getViewOptions"](
-          {}
-        ).icon;
+        const { layer_key } = layer_info;
+        const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
         const networkId = get(element, "network_id", "");
         return (
           <Stack
@@ -136,7 +135,7 @@ const ElementList = ({ data }) => {
               <Box
                 flex={1}
                 className="clickable"
-                onClick={handleShowDetails(element)}
+                onClick={handleShowDetails(element.id, layer_key)}
               >
                 <Typography variant="subtitle1" lineHeight={1.1}>
                   {get(element, "name", "")}
