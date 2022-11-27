@@ -44,11 +44,19 @@ export const CABLE_TYPE_OPTIONS = [
   { value: "W", label: "Wall Clamped" },
 ];
 
+export const CONFIG_LIST_TABLE_COL_DEFS = [
+  { headerName: "Name", field: "config_name" },
+  { headerName: "Tubes", field: "no_of_tube" },
+  { headerName: "Core / Tube", field: "core_per_tube" },
+  { headerName: "Color", field: "color_on_map" },
+];
+
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
       ...ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
       title: "Cable Configuration",
+      table_fields: CONFIG_LIST_TABLE_COL_DEFS,
     },
     {
       title: "Cable Form",
@@ -94,13 +102,6 @@ export const INITIAL_CONFIG_DATA = {
   color_on_map: "#FF0000",
   vendor: "",
 };
-
-export const CONFIG_LIST_TABLE_COL_DEFS = [
-  { headerName: "Name", field: "config_name" },
-  { headerName: "Tubes", field: "no_of_tube" },
-  { headerName: "Core / Tube", field: "core_per_tube" },
-  { headerName: "Color", field: "color_on_map" },
-];
 
 export const ELEMENT_CONFIG_TEMPLATE = {
   sections: [

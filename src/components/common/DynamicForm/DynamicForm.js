@@ -180,24 +180,32 @@ const DynamicForm = forwardRef(
                         );
                       case FIELD_TYPES.ConfigSelect:
                         return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <FormSelect
-                              label={label}
-                              name={field_key}
-                              control={control}
-                              rules={validationProps}
-                              isDisabled={!!disabled}
-                              required={required}
-                              options={configurationOptions}
-                              error={!!get(errors, [field_key])}
-                              helperText={get(
-                                errors,
-                                [field_key, "message"],
-                                ""
-                              )}
-                              labelKey="config_name"
-                              valueKey="id"
-                            />
+                          <Grid item xs={12} sm={12} key={field_key}>
+                            <Box
+                              sx={{
+                                margin: "0 auto",
+                                width: "50%",
+                                paddingBottom: "24px",
+                              }}
+                            >
+                              <FormSelect
+                                label={label}
+                                name={field_key}
+                                control={control}
+                                rules={validationProps}
+                                isDisabled={!!disabled}
+                                required={required}
+                                options={configurationOptions}
+                                error={!!get(errors, [field_key])}
+                                helperText={get(
+                                  errors,
+                                  [field_key, "message"],
+                                  ""
+                                )}
+                                labelKey="config_name"
+                                valueKey="id"
+                              />
+                            </Box>
                           </Grid>
                         );
                       case FIELD_TYPES.Select:
@@ -300,6 +308,10 @@ const DynamicForm = forwardRef(
                     }
                   })}
                 </Grid>
+
+                {/* {section_type === "configuration" ? (
+                  <ConfigTable data={configurationOptions} section={section} />
+                ) : null} */}
               </Stack>
             );
           })}
