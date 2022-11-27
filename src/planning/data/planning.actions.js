@@ -10,7 +10,7 @@ import {
 import get from "lodash/get";
 import last from "lodash/last";
 import size from "lodash/size";
-import has from "lodash/has";
+import isEmpty from "lodash/isEmpty";
 
 import {
   getLayerSelectedConfiguration,
@@ -51,7 +51,6 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
-import { isEmpty } from "lodash";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const clickLatLong = mapMouseEvent.latLng.toJSON();
@@ -245,8 +244,11 @@ export const onAddElementGeometry =
 // called when user going to AddGisLayerFORM
 export const onAddElementDetails =
   ({ layerKey, submitData, validationRes }) =>
-  (dispatch) => {
+  (dispatch, getState) => {
     const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
+    const storeState = getState();
+    const selectedConfig = getLayerSelectedConfiguration(layerKey)(storeState);
+
     // generate ids
     let unique_id = generateElementUid(layerKey);
     let network_id = "";
@@ -274,7 +276,7 @@ export const onAddElementDetails =
     const children = get(validationRes, "data.children", {});
 
     // add config id if layer is configurable
-    // const configuration = selectedConfig?.id;
+    const configuration = selectedConfig?.id;
 
     // complete current event -> fire next event
     dispatch(
@@ -288,6 +290,7 @@ export const onAddElementDetails =
           unique_id,
           network_id,
           association: { parents, children },
+          configuration,
         },
       })
     );
