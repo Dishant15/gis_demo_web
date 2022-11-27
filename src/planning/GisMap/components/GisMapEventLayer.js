@@ -11,10 +11,11 @@ import AddElementConnection from "../layers/common/AddElementConnection";
 import ShowPossibleAddAssociation from "./ShowPossibleAddAssociation";
 import ElementList from "./ElementList";
 import { GisLayerForm } from "./GisLayerForm";
+import ShowAssociatedElements from "./ShowAssociatedElements";
+import MapEventInfoCard from "./MapEventInfoCard";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import ShowAssociatedElements from "./ShowAssociatedElements";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -74,6 +75,11 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.listElementsOnMap:
       return <ElementList />;
+
+    case PLANNING_EVENT.selectElementsOnMapClick:
+      return (
+        <MapEventInfoCard helpText="Click on map to get list of elements at that location" />
+      );
 
     default:
       return null;
