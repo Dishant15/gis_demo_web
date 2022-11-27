@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DrawingManager, Polygon } from "@react-google-maps/api";
 
-import { lineString, length } from "@turf/turf";
+import { lineString, length, area, polygon, convertArea } from "@turf/turf";
 import round from "lodash/round";
 import get from "lodash/get";
 import size from "lodash/size";
@@ -95,6 +95,8 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
     } else if (featureType === FEATURE_TYPES.POLYGON) {
       submitData.geometry = latLongMapToCoords(featureCoords);
+      const areaInMeters = area(polygon(submitData.geometry));
+      submitData.area = convertArea(areaInMeters, "meters", "kilometers");
     } else if (featureType === FEATURE_TYPES.POINT) {
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
     } else {

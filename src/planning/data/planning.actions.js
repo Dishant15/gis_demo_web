@@ -217,21 +217,7 @@ export const openElementDetails =
 // add geometry with optinal associations
 export const onAddElementGeometry =
   ({ layerKey, restriction_ids = null }) =>
-  (dispatch, getState) => {
-    // const storeState = getState();
-    // const event = getPlanningMapStateEvent(storeState);
-    // // show error if one event already running
-    // if (event) {
-    //   dispatch(
-    //     addNotification({
-    //       type: "warning",
-    //       title: "Operation can not start",
-    //       text: "Please complete current operation before starting new",
-    //     })
-    //   );
-    //   return;
-    // }
-    // start event if no other event running
+  (dispatch) => {
     dispatch(
       setMapState({
         event: PLANNING_EVENT.addElementGeometry,
