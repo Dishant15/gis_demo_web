@@ -99,7 +99,10 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       submitData.geometry = latLongMapToCoords(featureCoords);
       // get area of polygon
       const areaInMeters = area(polygon([submitData.geometry]));
-      submitData.gis_area = convertArea(areaInMeters, "meters", "kilometers");
+      submitData.gis_area = round(
+        convertArea(areaInMeters, "meters", "kilometers"),
+        4
+      );
     }
     //
     else if (featureType === FEATURE_TYPES.POINT) {
