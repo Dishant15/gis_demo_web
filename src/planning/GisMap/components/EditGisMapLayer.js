@@ -172,7 +172,17 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
         region_id_list: selectedRegionIds,
       },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          // update submit data based on validation res
+          const children = get(res, "data.children", {});
+          const getDependantFields = get(
+            LayerKeyMappings,
+            [layerKey, "getDependantFields"],
+            ({ submitData }) => submitData
+          );
+          submitData = getDependantFields({ submitData, children });
+          submitData.association = get(res, "data", {});
+
           if (layerKey === "ticket") {
             editTicketAreaMutation({
               ticketId: elementId,
