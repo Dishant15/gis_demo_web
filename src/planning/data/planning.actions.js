@@ -261,6 +261,13 @@ export const onAddElementDetails =
     // generate children association data from children res
     const children = get(validationRes, "data.children", {});
 
+    const mergeDependantFields = get(
+      LayerKeyMappings,
+      [layerKey, "mergeDependantFields"],
+      ({ submitData }) => submitData
+    );
+    submitData = mergeDependantFields({ submitData, children });
+
     // add config id if layer is configurable
     const configuration = selectedConfig?.id;
 

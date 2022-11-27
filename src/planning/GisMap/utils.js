@@ -132,6 +132,7 @@ export const LayerKeyMappings = {
     elementTableFields: FSALayer.ELEMENT_TABLE_FIELDS,
     formConfig: FSALayer.ELEMENT_FORM_TEMPLATE,
     elementTableExtraControls: FSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+    mergeDependantFields: FSALayer.mergeDependantFields,
   },
   [DSALayer.LAYER_KEY]: {
     preUid: DSALayer.PRE_UID,

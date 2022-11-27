@@ -84,3 +84,7 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
     control: "association_list",
   },
 ];
+
+export const mergeDependantFields = (data) => {
+  return data;
+};
