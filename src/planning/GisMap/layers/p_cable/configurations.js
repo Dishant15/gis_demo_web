@@ -141,8 +141,6 @@ export const ELEMENT_CONFIG_TEMPLATE = {
   ],
 };
 
-export const transformAndValidateConfigData = (data) => data;
-
 export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Cable Type", field: "cable_type_display", type: "simple" },

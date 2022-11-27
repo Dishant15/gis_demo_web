@@ -74,7 +74,6 @@ export const LayerKeyMappings = {
     ConfigFormTemplate: SplitterLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: SplitterLayer.INITIAL_CONFIG_DATA,
     TableColDefs: SplitterLayer.CONFIG_LIST_TABLE_COL_DEFS,
-    configTransformData: SplitterLayer.transformAndValidateConfigData,
   },
   [CableLayer.LAYER_KEY]: {
     preUid: CableLayer.PRE_UID,
@@ -87,7 +86,6 @@ export const LayerKeyMappings = {
     ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
     TableColDefs: CableLayer.CONFIG_LIST_TABLE_COL_DEFS,
-    configTransformData: CableLayer.transformAndValidateConfigData,
   },
   [BuildingLayer.LAYER_KEY]: {
     preUid: BuildingLayer.PRE_UID,

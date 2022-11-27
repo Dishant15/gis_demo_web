@@ -33,11 +33,6 @@ export const ELEMENT_FORM_TEMPLATE = {
       fieldConfigs: [
         ...ELEMENT_FORM_ABSTRACT_TEMPLATE,
         {
-          field_key: "survey_area_count",
-          label: "Survey Area Count",
-          field_type: FIELD_TYPES.Input,
-        },
-        {
           field_key: "building_count",
           label: "Building Count",
           field_type: FIELD_TYPES.Input,
@@ -60,7 +55,6 @@ export const ELEMENT_FORM_TEMPLATE = {
 
 export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
-  { label: "Survey Area Count", field: "survey_area_count", type: "simple" },
   { label: "Building Count", field: "building_count", type: "simple" },
   { label: "Home Pass", field: "home_pass", type: "simple" },
   { label: "Gis Area", field: "gis_area", type: "simple" },

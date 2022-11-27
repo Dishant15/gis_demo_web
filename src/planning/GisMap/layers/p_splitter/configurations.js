@@ -111,8 +111,6 @@ export const CONFIG_LIST_TABLE_COL_DEFS = [
   { headerName: "Splitter Type", field: "splitter_type_display" },
 ];
 
-export const transformAndValidateConfigData = (data) => data;
-
 export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Splitter Type", field: "splitter_type_display", type: "simple" },
