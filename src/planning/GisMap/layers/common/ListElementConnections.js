@@ -156,8 +156,10 @@ const ListElementConnections = ({ layerKey }) => {
             })}
           </Stack>
         ) : (
-          <Box>
-            <Typography variant="h6">No Connections</Typography>
+          <Box p={2}>
+            <Typography variant="h6" color="text.secondary" textAlign="center">
+              No Connections
+            </Typography>
           </Box>
         )}
       </Box>
