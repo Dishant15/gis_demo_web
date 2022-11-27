@@ -90,10 +90,11 @@ const ElementListTable = ({ elementList }) => {
         const Icon = LayerKeyMappings[element.layerKey]["getViewOptions"](
           {}
         ).icon;
+        const networkId = get(element, "network_id", "");
 
         return (
           <Stack
-            key={element.id}
+            key={networkId}
             direction="row"
             spacing={1}
             alignItems="center"
@@ -124,9 +125,7 @@ const ElementListTable = ({ elementList }) => {
                 <Typography variant="subtitle1" lineHeight={1.1}>
                   {get(element, "name", "")}
                 </Typography>
-                <Typography variant="caption">
-                  #{get(element, "network_id", "")}
-                </Typography>
+                <Typography variant="caption">#{networkId}</Typography>
               </Box>
               <Tooltip title="Show on map">
                 <IconButton

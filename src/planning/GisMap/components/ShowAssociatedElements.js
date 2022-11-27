@@ -23,7 +23,10 @@ import { setMapState } from "planning/data/planningGis.reducer";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { fetchElementAssociations } from "planning/data/layer.services";
 import { LayerKeyMappings } from "../utils";
-import { onAssociatedElementShowOnMapClick } from "planning/data/planning.actions";
+import {
+  onAssociatedElementShowOnMapClick,
+  openElementDetails,
+} from "planning/data/planning.actions";
 
 /**
  * Parent:
@@ -79,6 +82,18 @@ const ElementList = ({ data }) => {
     []
   );
 
+  const handleShowDetails = useCallback(
+    (element) => () => {
+      dispatch(
+        openElementDetails({
+          layerKey: element.layerKey,
+          elementId: element.id,
+        })
+      );
+    },
+    []
+  );
+
   if (!size(data))
     return (
       <Box p={2}>
@@ -94,10 +109,10 @@ const ElementList = ({ data }) => {
         const Icon = LayerKeyMappings[layer_info.layer_key]["getViewOptions"](
           {}
         ).icon;
-
+        const networkId = get(element, "network_id", "");
         return (
           <Stack
-            key={element.id}
+            key={networkId}
             direction="row"
             spacing={1}
             alignItems="center"
@@ -118,13 +133,15 @@ const ElementList = ({ data }) => {
               />
             </Paper>
             <Stack flex={1} flexDirection="row">
-              <Box flex={1}>
+              <Box
+                flex={1}
+                className="clickable"
+                onClick={handleShowDetails(element)}
+              >
                 <Typography variant="subtitle1" lineHeight={1.1}>
                   {get(element, "name", "")}
                 </Typography>
-                <Typography variant="caption">
-                  #{get(element, "network_id", "")}
-                </Typography>
+                <Typography variant="caption">#{networkId}</Typography>
               </Box>
               <Tooltip title="Show on map">
                 <IconButton
