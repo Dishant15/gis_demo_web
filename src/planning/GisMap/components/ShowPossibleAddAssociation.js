@@ -19,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "./GisMapPopups";
 import DummyLoader from "./ElementDetailsTable/DummyLoader";
+import ElementConfigPopup from "planning/ActionBar/components/ElementConfigPopup";
 
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import {
@@ -209,11 +210,10 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
         transitionDuration={0}
       >
         {showPopover ? (
-          // <ElementConfigPopup
-          //   onClose={handleLayerConfigPopupHide}
-          //   layerKey={layerConfigPopup}
-          // />
-          <Typography>ElementConfigPopup</Typography>
+          <ElementConfigPopup
+            onClose={handleLayerConfigPopupHide}
+            layerKey={layerConfigPopup}
+          />
         ) : null}
       </Popover>
     );
