@@ -10,7 +10,15 @@ import * as SplitterLayer from "./layers/p_splitter";
 import * as CableLayer from "./layers/p_cable";
 import * as BuildingLayer from "./layers/p_survey_building";
 import * as SAreaLayer from "./layers/p_survey_area";
-import * as PPopLayer from "./layers/p_pop";
+import * as PopLayer from "./layers/p_pop";
+import * as SPopLayer from "./layers/p_spop";
+import * as FSALayer from "./layers/p_fsa";
+import * as DSALayer from "./layers/p_dsa";
+import * as CSALayer from "./layers/p_csa";
+import * as PoleLayer from "./layers/p_pole";
+import * as ManholeLayer from "./layers/p_manhole";
+import * as JointCloserLayer from "./layers/p_joint_closer";
+import * as OltLayer from "./layers/p_olt";
 
 // possible events that can happen on map
 export const PLANNING_EVENT = {
@@ -104,13 +112,86 @@ export const LayerKeyMappings = {
     formConfig: SAreaLayer.ELEMENT_FORM_TEMPLATE,
     transformAndValidateData: SAreaLayer.transformAndValidateData,
   },
-  [PPopLayer.LAYER_KEY]: {
-    preUid: PPopLayer.PRE_UID,
-    featureType: PPopLayer.LAYER_FEATURE_TYPE,
-    getViewOptions: PPopLayer.getViewOptions,
-    initialElementData: PPopLayer.INITIAL_ELEMENT_DATA,
-    elementTableFields: PPopLayer.ELEMENT_TABLE_FIELDS,
-    formConfig: PPopLayer.ELEMENT_FORM_TEMPLATE,
+  [PopLayer.LAYER_KEY]: {
+    preUid: PopLayer.PRE_UID,
+    featureType: PopLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: PopLayer.getViewOptions,
+    initialElementData: PopLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: PopLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: PopLayer.ELEMENT_FORM_TEMPLATE,
+  },
+  [SPopLayer.LAYER_KEY]: {
+    preUid: SPopLayer.PRE_UID,
+    featureType: SPopLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: SPopLayer.getViewOptions,
+    initialElementData: SPopLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: SPopLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: SPopLayer.ELEMENT_FORM_TEMPLATE,
+  },
+  [FSALayer.LAYER_KEY]: {
+    preUid: FSALayer.PRE_UID,
+    featureType: FSALayer.LAYER_FEATURE_TYPE,
+    getViewOptions: FSALayer.getViewOptions,
+    initialElementData: FSALayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: FSALayer.ELEMENT_TABLE_FIELDS,
+    formConfig: FSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: FSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+  },
+  [DSALayer.LAYER_KEY]: {
+    preUid: DSALayer.PRE_UID,
+    featureType: DSALayer.LAYER_FEATURE_TYPE,
+    getViewOptions: DSALayer.getViewOptions,
+    initialElementData: DSALayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: DSALayer.ELEMENT_TABLE_FIELDS,
+    formConfig: DSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: DSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+  },
+  [CSALayer.LAYER_KEY]: {
+    preUid: CSALayer.PRE_UID,
+    featureType: CSALayer.LAYER_FEATURE_TYPE,
+    getViewOptions: CSALayer.getViewOptions,
+    initialElementData: CSALayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: CSALayer.ELEMENT_TABLE_FIELDS,
+    formConfig: CSALayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: CSALayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+  },
+  [PoleLayer.LAYER_KEY]: {
+    preUid: PoleLayer.PRE_UID,
+    featureType: PoleLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: PoleLayer.getViewOptions,
+    initialElementData: PoleLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: PoleLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: PoleLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: PoleLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+  },
+  [ManholeLayer.LAYER_KEY]: {
+    preUid: ManholeLayer.PRE_UID,
+    featureType: ManholeLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: ManholeLayer.getViewOptions,
+    initialElementData: ManholeLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: ManholeLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: ManholeLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: ManholeLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+  },
+  [JointCloserLayer.LAYER_KEY]: {
+    preUid: JointCloserLayer.PRE_UID,
+    featureType: JointCloserLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: JointCloserLayer.getViewOptions,
+    initialElementData: JointCloserLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: JointCloserLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: JointCloserLayer.ELEMENT_FORM_TEMPLATE,
+  },
+  [OltLayer.LAYER_KEY]: {
+    preUid: OltLayer.PRE_UID,
+    featureType: OltLayer.LAYER_FEATURE_TYPE,
+    getViewOptions: OltLayer.getViewOptions,
+    initialElementData: OltLayer.INITIAL_ELEMENT_DATA,
+    elementTableFields: OltLayer.ELEMENT_TABLE_FIELDS,
+    formConfig: OltLayer.ELEMENT_FORM_TEMPLATE,
+    // config fields
+    ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
+    ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
+    TableColDefs: CableLayer.CONFIG_LIST_TABLE_COL_DEFS,
   },
 };
 

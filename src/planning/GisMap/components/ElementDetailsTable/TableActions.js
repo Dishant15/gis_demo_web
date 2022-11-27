@@ -12,7 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CableIcon from "@mui/icons-material/Cable";
 import AddIcon from "@mui/icons-material/Add";
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import LanguageIcon from "@mui/icons-material/Language";
 import LanIcon from "@mui/icons-material/Lan";
 
 import { checkUserPermission } from "redux/selectors/auth.selectors";
@@ -83,7 +83,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
 
     baseActionsList.push({
       name: "Show on map",
-      Icon: LocationSearchingIcon,
+      Icon: LanguageIcon,
       onClick: () => {
         const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
         switch (featureType) {

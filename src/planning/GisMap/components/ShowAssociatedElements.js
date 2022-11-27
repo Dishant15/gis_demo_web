@@ -13,7 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Divider from "@mui/material/Divider";
 
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import LanguageIcon from "@mui/icons-material/Language";
 
 import DummyLoader from "./ElementDetailsTable/DummyLoader";
 import GisMapPopups from "./GisMapPopups";
@@ -127,7 +127,7 @@ const ElementList = ({ data }) => {
                   aria-label="show-location"
                   onClick={handleShowOnMap(element, layer_info.layer_key)}
                 >
-                  <LocationSearchingIcon />
+                  <LanguageIcon />
                 </IconButton>
               </Tooltip>
             </Stack>
