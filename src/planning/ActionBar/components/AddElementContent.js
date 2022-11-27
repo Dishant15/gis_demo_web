@@ -17,12 +17,11 @@ import ElementConfigPopup from "./ElementConfigPopup";
 
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
-import {
-  selectConfiguration,
-  setLayerConfigurations,
-} from "planning/data/planningState.reducer";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
-import { onAddElementGeometry } from "planning/data/planning.actions";
+import {
+  onAddElementGeometry,
+  onFetchLayerListDetailsSuccess,
+} from "planning/data/planning.actions";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -39,29 +38,7 @@ const AddElementContent = () => {
     {
       staleTime: Infinity,
       onSuccess: (layerConfData) => {
-        // res shape same as layerConfigs bellow
-        if (!!size(layerConfData)) {
-          for (let lc_ind = 0; lc_ind < layerConfData.length; lc_ind++) {
-            const { layer_key, is_configurable, configuration } =
-              layerConfData[lc_ind];
-            if (is_configurable) {
-              // if layerConfData is there set layer configs in redux
-              dispatch(
-                setLayerConfigurations({
-                  layerKey: layer_key,
-                  configurationList: configuration,
-                })
-              );
-              // select default configs to show first
-              dispatch(
-                selectConfiguration({
-                  layerKey: layer_key,
-                  configuration: configuration[0],
-                })
-              );
-            }
-          }
-        }
+        dispatch(onFetchLayerListDetailsSuccess(layerConfData));
       },
     }
   );

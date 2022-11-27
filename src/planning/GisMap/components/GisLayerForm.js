@@ -1,7 +1,8 @@
 import React, { useCallback, useRef } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { get } from "lodash";
+
+import get from "lodash/get";
 
 import Box from "@mui/material/Box";
 import DynamicForm from "components/common/DynamicForm";
@@ -13,29 +14,49 @@ import {
 } from "planning/data/layer.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { fetchLayerDataThunk } from "planning/data/actionBar.services";
+import {
+  fetchLayerDataThunk,
+  fetchLayerListDetails,
+} from "planning/data/actionBar.services";
 import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import {
-  getLayerSelectedConfiguration,
   getSelectedRegionIds,
+  getSingleLayerConfigurationList,
 } from "planning/data/planningState.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import { openElementDetails } from "planning/data/planning.actions";
+import {
+  onFetchLayerListDetailsSuccess,
+  openElementDetails,
+} from "planning/data/planning.actions";
 
 export const GisLayerForm = ({ layerKey }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
 
   const selectedRegionIds = useSelector(getSelectedRegionIds);
-  const configuration = useSelector(getLayerSelectedConfiguration(layerKey));
+  const configList = useSelector(getSingleLayerConfigurationList(layerKey));
   const { event, data: mapStateData } = useSelector(getPlanningMapState);
+
   const isEdit = event === PLANNING_EVENT.editElementForm;
   const formConfig = get(LayerKeyMappings, [layerKey, "formConfig"]);
   const transformAndValidateData = get(LayerKeyMappings, [
     layerKey,
     "transformAndValidateData",
   ]);
+  const isConfigurable = !!get(mapStateData, "configuration");
+
+  const queryRes = useQuery(
+    "planningLayerConfigsDetails",
+    fetchLayerListDetails,
+    {
+      staleTime: Infinity,
+      enabled: isConfigurable,
+      onSuccess: (layerConfData) => {
+        dispatch(onFetchLayerListDetailsSuccess(layerConfData));
+      },
+    }
+  );
 
   const onSuccessHandler = ({ id }) => {
     dispatch(
@@ -112,18 +133,14 @@ export const GisLayerForm = ({ layerKey }) => {
 
   const onSubmit = (data, setError, clearErrors) => {
     clearErrors();
-    // if form is edit get configuration if from data otherwise get from redux;
-    const configId = isEdit
-      ? get(mapStateData, "configuration")
-      : get(configuration, "id");
     let validatedData = prepareServerData(data, isEdit, formConfig);
     // convert data to server friendly form
     validatedData = transformAndValidateData
-      ? transformAndValidateData(data, setError, isEdit, configId)
-      : data;
+      ? transformAndValidateData(validatedData, setError, isEdit)
+      : validatedData;
 
     if (isEdit) {
-      editElement({ ...validatedData, geometry: undefined });
+      editElement(validatedData);
     } else {
       addElement(validatedData);
     }
@@ -138,9 +155,21 @@ export const GisLayerForm = ({ layerKey }) => {
         serverData[field_key] = data[field_key];
       }
     }
+    // update add edit related fields
     if (isEdit) {
       serverData["id"] = data?.id;
+      delete serverData["geometry"];
+    } else {
+      delete serverData["coordinates"];
+      // add geometry data bcoz, formConfig dont have that field
+      serverData["geometry"] = data?.geometry;
     }
+
+    // add configuration id if have
+    if (data?.configuration) {
+      serverData["configuration"] = data?.configuration;
+    }
+
     return serverData;
   }, []);
 
@@ -157,6 +186,7 @@ export const GisLayerForm = ({ layerKey }) => {
           ref={formRef}
           formConfigs={formConfig}
           data={mapStateData}
+          configurationOptions={configList}
           onSubmit={onSubmit}
           onCancel={onClose}
           isLoading={isEdit ? isEditLoading : isAddLoading}

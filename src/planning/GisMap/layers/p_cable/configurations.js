@@ -1,6 +1,7 @@
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
   ELEMENT_TABLE_ABSTRACT_FIELDS,
+  ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
   FEATURE_TYPES,
 } from "../common/configuration";
 import CableIcon from "assets/markers/line_pin.svg";
@@ -45,6 +46,10 @@ export const CABLE_TYPE_OPTIONS = [
 
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
+    {
+      ...ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
+      title: "Cable Configuration",
+    },
     {
       title: "Cable Form",
       fieldConfigs: [
@@ -150,25 +155,3 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Specification", field: "specification", type: "simple" },
   { label: "Vendor", field: "vendor", type: "simple" },
 ];
-
-export const transformAndValidateData = (
-  formData,
-  setError,
-  isEdit,
-  configurationId
-) => {
-  if (isEdit) {
-    return {
-      ...formData,
-      // remove geometry
-      geometry: undefined,
-    };
-  } else {
-    return {
-      ...formData,
-      // AddGisMapLayer will give transformed coordinates in geometry field
-      // convert select fields to simple values
-      configuration: configurationId,
-    };
-  }
-};

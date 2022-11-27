@@ -1,7 +1,8 @@
 import React, { forwardRef, useCallback, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
-import { get } from "lodash";
+import get from "lodash/get";
 
 import { LoadingButton } from "@mui/lab";
 import {
@@ -21,7 +22,10 @@ import {
   FormCheckbox,
   FormCreatableSelect,
   FormDateTimePicker,
-} from "./FormFields";
+} from "../FormFields";
+
+import { getSingleLayerConfigurationList } from "planning/data/planningState.selectors";
+import { fetchLayerListDetails } from "planning/data/actionBar.services";
 
 export const FIELD_TYPES = {
   Input: "input",
@@ -32,6 +36,8 @@ export const FIELD_TYPES = {
   Select: "select",
   SelectMulti: "selectMulti",
   SelectCreatable: "selectCreatable",
+  // custom fields
+  ConfigSelect: "configSelect",
 };
 
 /**
@@ -41,7 +47,17 @@ export const FIELD_TYPES = {
  * @data initial data for edit forms
  */
 const DynamicForm = forwardRef(
-  ({ formConfigs, data, onSubmit, onCancel, isLoading }, ref) => {
+  (
+    {
+      formConfigs,
+      data,
+      onSubmit,
+      onCancel,
+      isLoading,
+      configurationOptions = [],
+    },
+    ref
+  ) => {
     const { sections } = formConfigs;
 
     const {
@@ -51,9 +67,7 @@ const DynamicForm = forwardRef(
       setError,
       clearErrors,
       handleSubmit,
-    } = useForm({
-      defaultValues: data,
-    });
+    } = useForm({ defaultValues: data });
 
     useImperativeHandle(ref, () => ({
       onError: (fieldKey, errorMsg) => {
@@ -81,7 +95,7 @@ const DynamicForm = forwardRef(
         </IconButton>
         <Stack p={2}>
           {sections.map((section, s_id) => {
-            const { title, fieldConfigs } = section;
+            const { title, fieldConfigs, section_type } = section;
 
             return (
               <Stack key={s_id} spacing={2}>
@@ -168,7 +182,28 @@ const DynamicForm = forwardRef(
                             />
                           </Grid>
                         );
-
+                      case FIELD_TYPES.ConfigSelect:
+                        return (
+                          <Grid item xs={12} sm={6} key={field_key}>
+                            <FormSelect
+                              label={label}
+                              name={field_key}
+                              control={control}
+                              rules={validationProps}
+                              isDisabled={!!disabled}
+                              required={required}
+                              options={configurationOptions}
+                              error={!!get(errors, [field_key])}
+                              helperText={get(
+                                errors,
+                                [field_key, "message"],
+                                ""
+                              )}
+                              labelKey="config_name"
+                              valueKey="id"
+                            />
+                          </Grid>
+                        );
                       case FIELD_TYPES.Select:
                         return (
                           <Grid item xs={12} sm={6} key={field_key}>

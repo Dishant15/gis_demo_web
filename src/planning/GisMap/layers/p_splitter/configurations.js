@@ -1,5 +1,6 @@
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
   ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
@@ -31,6 +32,10 @@ export const INITIAL_ELEMENT_DATA = {
 
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
+    {
+      ...ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
+      title: "Spliter Configuration",
+    },
     {
       title: "Splitter Form",
       fieldConfigs: [
@@ -123,20 +128,3 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
     control: "connections",
   },
 ];
-
-export const transformAndValidateData = (
-  formData,
-  setError,
-  isEdit,
-  configurationId
-) => {
-  if (isEdit) {
-    return formData;
-  } else {
-    return {
-      ...formData,
-      // convert select fields to simple values
-      configuration: configurationId,
-    };
-  }
-};

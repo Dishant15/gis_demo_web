@@ -12,8 +12,16 @@ import last from "lodash/last";
 import size from "lodash/size";
 import has from "lodash/has";
 
-import { getSelectedLayerKeys } from "./planningState.selectors";
-import { handleLayerSelect, handleRegionSelect } from "./planningState.reducer";
+import {
+  getLayerSelectedConfiguration,
+  getSelectedLayerKeys,
+} from "./planningState.selectors";
+import {
+  handleLayerSelect,
+  handleRegionSelect,
+  selectConfiguration,
+  setLayerConfigurations,
+} from "./planningState.reducer";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import {
   getAllLayersData,
@@ -239,7 +247,9 @@ export const onAddElementGeometry =
 // called when user goes AddGisMapLayer ->
 export const onAddElementDetails =
   ({ layerKey, submitData, validationRes, parentNetId = null }) =>
-  (dispatch) => {
+  (dispatch, getState) => {
+    const storeState = getState();
+    const selectedConfig = getLayerSelectedConfiguration(layerKey)(storeState);
     const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
     // generate ids
     // if validationRes has association data than generate net id from parent
@@ -263,6 +273,9 @@ export const onAddElementDetails =
       network_id = `${reg_uid}-${unique_id}`;
     }
 
+    // add config id if layer is configurable
+    const configuration = selectedConfig?.id;
+
     // complete current event -> fire next event
     dispatch(
       setMapState({
@@ -274,6 +287,7 @@ export const onAddElementDetails =
           ...submitData,
           unique_id,
           network_id,
+          configuration,
         },
       })
     );
@@ -378,4 +392,30 @@ export const onElementListItemClick = (element) => (dispatch) => {
     })
   );
   dispatch(resetTicketMapHighlight());
+};
+
+export const onFetchLayerListDetailsSuccess = (layerConfData) => (dispatch) => {
+  // res shape same as layerConfigs bellow
+  if (!!size(layerConfData)) {
+    for (let lc_ind = 0; lc_ind < layerConfData.length; lc_ind++) {
+      const { layer_key, is_configurable, configuration } =
+        layerConfData[lc_ind];
+      if (is_configurable) {
+        // if layerConfData is there set layer configs in redux
+        dispatch(
+          setLayerConfigurations({
+            layerKey: layer_key,
+            configurationList: configuration,
+          })
+        );
+        // select default configs to show first
+        dispatch(
+          selectConfiguration({
+            layerKey: layer_key,
+            configuration: configuration[0],
+          })
+        );
+      }
+    }
+  }
 };

@@ -47,19 +47,3 @@ export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Address", field: "address", type: "simple" },
 ];
-
-export const transformAndValidateData = (formData, setError, isEdit) => {
-  if (isEdit) {
-    return {
-      ...formData,
-      // remove geometry
-      geometry: undefined,
-    };
-  } else {
-    return {
-      ...formData,
-      // remove coordinates and add geometry
-      coordinates: undefined,
-    };
-  }
-};

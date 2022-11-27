@@ -38,6 +38,18 @@ export const MAP_DRAWING_MODE = {
   multi_polygon: "polygon",
 };
 
+export const ELEMENT_FORM_CONFIG_ABSTRACT_SECTION = {
+  title: "Configuration",
+  section_type: "configuration",
+  fieldConfigs: [
+    {
+      field_key: "configuration",
+      label: "Configuration",
+      field_type: FIELD_TYPES.ConfigSelect,
+    },
+  ],
+};
+
 export const ELEMENT_FORM_ABSTRACT_TEMPLATE = [
   {
     field_key: "name",

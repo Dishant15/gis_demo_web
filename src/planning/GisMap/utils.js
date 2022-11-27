@@ -61,7 +61,6 @@ export const LayerKeyMappings = {
     initialElementData: DPLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: DPLayer.ELEMENT_TABLE_FIELDS,
     formConfig: DPLayer.ELEMENT_FORM_TEMPLATE,
-    transformAndValidateData: DPLayer.transformAndValidateData,
   },
   [SplitterLayer.LAYER_KEY]: {
     preUid: SplitterLayer.PRE_UID,
@@ -71,7 +70,6 @@ export const LayerKeyMappings = {
     elementTableFields: SplitterLayer.ELEMENT_TABLE_FIELDS,
     elementTableExtraControls: SplitterLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: SplitterLayer.ELEMENT_FORM_TEMPLATE,
-    transformAndValidateData: SplitterLayer.transformAndValidateData,
     // config fields
     ConfigFormTemplate: SplitterLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: SplitterLayer.INITIAL_CONFIG_DATA,
@@ -85,7 +83,6 @@ export const LayerKeyMappings = {
     initialElementData: CableLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: CableLayer.ELEMENT_TABLE_FIELDS,
     formConfig: CableLayer.ELEMENT_FORM_TEMPLATE,
-    transformAndValidateData: CableLayer.transformAndValidateData,
     // config fields
     ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
@@ -110,7 +107,6 @@ export const LayerKeyMappings = {
     elementTableFields: SAreaLayer.ELEMENT_TABLE_FIELDS,
     elementTableExtraControls: SAreaLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: SAreaLayer.ELEMENT_FORM_TEMPLATE,
-    transformAndValidateData: SAreaLayer.transformAndValidateData,
   },
   [PopLayer.LAYER_KEY]: {
     preUid: PopLayer.PRE_UID,

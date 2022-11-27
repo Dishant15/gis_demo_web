@@ -205,18 +205,6 @@ export const ELEMENT_TABLE_FIELDS = [
   },
 ];
 
-export const transformAndValidateData = (formData, setError, isEdit) => {
-  if (isEdit) {
-    return {
-      ...formData,
-      // remove geometry
-      geometry: undefined,
-    };
-  } else {
-    return formData;
-  }
-};
-
 export const ELEMENT_TABLE_EXTRA_CONTROLS = [
   {
     control: "add_associations",

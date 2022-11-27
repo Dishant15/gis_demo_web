@@ -3,10 +3,10 @@ import {
   ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
+import { FIELD_TYPES } from "components/common/DynamicForm";
 
 import { default as Icon } from "assets/markers/spop_box.svg";
 import { default as EditIcon } from "assets/markers/spop_pin.svg";
-import { FIELD_TYPES } from "components/common/DynamicForm";
 
 export const LAYER_KEY = "p_spop";
 export const PRE_UID = "SPOP";
