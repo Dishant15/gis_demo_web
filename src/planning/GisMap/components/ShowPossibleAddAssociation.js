@@ -38,7 +38,7 @@ import { LayerKeyMappings } from "../utils";
 import useValidateGeometry from "../hooks/useValidateGeometry";
 
 const getElementIdName = (layerKey) => {
-  return `pl-add-element-${layerKey}`;
+  return `association-add-element-${layerKey}`;
 };
 
 const ShowPossibleAddAssociation = () => {

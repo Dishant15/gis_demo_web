@@ -1,6 +1,5 @@
 import React, { forwardRef, useCallback, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
 
 import get from "lodash/get";
 
@@ -23,9 +22,6 @@ import {
   FormCreatableSelect,
   FormDateTimePicker,
 } from "../FormFields";
-
-import { getSingleLayerConfigurationList } from "planning/data/planningState.selectors";
-import { fetchLayerListDetails } from "planning/data/actionBar.services";
 
 export const FIELD_TYPES = {
   Input: "input",

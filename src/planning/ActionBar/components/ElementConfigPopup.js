@@ -30,29 +30,8 @@ const ElementConfigPopup = ({ layerKey, onClose }) => {
   };
 
   return (
-    <Box
-      p={3}
-      component="form"
-      sx={{
-        paddingTop: "10px",
-      }}
-    >
-      <Stack direction="row" spacing={2} width="100%" alignItems="center">
-        <Typography variant="h6" color="primary.main" flex={1}>
-          Select Configuration
-        </Typography>
-        <IconButton onClick={onClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
-      </Stack>
-      <Divider
-        flexItem
-        sx={{
-          marginTop: "4px",
-          marginBottom: "16px",
-        }}
-      />
-      <Stack spacing={2}>
+    <Box>
+      <Stack divider={<Divider />}>
         {configList.map((config) => {
           const { id, config_name } = config;
 
@@ -61,6 +40,9 @@ const ElementConfigPopup = ({ layerKey, onClose }) => {
               onClick={handleConfigChange(config)}
               key={id}
               direction="row"
+              justifyContent="space-between"
+              className="clickable change-bg-on-hover"
+              p={1}
             >
               <Box flex={1}>{config_name}</Box>
               <IconButton size="small">
