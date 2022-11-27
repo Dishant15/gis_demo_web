@@ -164,7 +164,7 @@ export const onElementAddConnectionEvent =
     // if point element
     const elementPoint = point(elementGeometry);
     // create a circle around element
-    const circPoly = circle(elementGeometry, 0.1, {
+    const circPoly = circle(elementGeometry, 0.01, {
       steps: 10,
       units: "kilometers",
     });

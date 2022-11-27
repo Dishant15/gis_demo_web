@@ -97,3 +97,9 @@ export const ELEMENT_CONFIG_TEMPLATE = {
     },
   ],
 };
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "connections",
+  },
+];

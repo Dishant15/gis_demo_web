@@ -96,14 +96,14 @@ const ListElementConnections = ({ layerKey }) => {
               const { element, layer_info } = connection;
               const EndIcon =
                 element.cable_end === "A" ? (
-                  <SwipeLeftAltIcon
+                  <SwipeRightAltIcon
                     fontSize="small"
                     sx={{
                       color: "text.secondary",
                     }}
                   />
                 ) : (
-                  <SwipeRightAltIcon
+                  <SwipeLeftAltIcon
                     fontSize="small"
                     sx={{
                       color: "text.secondary",

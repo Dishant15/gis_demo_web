@@ -60,6 +60,7 @@ export const LayerKeyMappings = {
     getViewOptions: DPLayer.getViewOptions,
     initialElementData: DPLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: DPLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: DPLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: DPLayer.ELEMENT_FORM_TEMPLATE,
   },
   [SplitterLayer.LAYER_KEY]: {
@@ -179,6 +180,7 @@ export const LayerKeyMappings = {
     getViewOptions: JointCloserLayer.getViewOptions,
     initialElementData: JointCloserLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: JointCloserLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: JointCloserLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: JointCloserLayer.ELEMENT_FORM_TEMPLATE,
   },
   [OltLayer.LAYER_KEY]: {
@@ -187,6 +189,7 @@ export const LayerKeyMappings = {
     getViewOptions: OltLayer.getViewOptions,
     initialElementData: OltLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: OltLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: OltLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     formConfig: OltLayer.ELEMENT_FORM_TEMPLATE,
     // config fields
     ConfigFormTemplate: OltLayer.ELEMENT_CONFIG_TEMPLATE,
