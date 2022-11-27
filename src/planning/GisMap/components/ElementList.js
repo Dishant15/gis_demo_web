@@ -87,9 +87,8 @@ const ElementListTable = ({ elementList }) => {
   return (
     <Stack spacing={1} divider={<Divider />} py={1}>
       {elementList.map((element) => {
-        const Icon = LayerKeyMappings[element.layerKey]["getViewOptions"](
-          {}
-        ).icon;
+        const Icon =
+          LayerKeyMappings[element.layerKey]["getViewOptions"](element).icon;
         const networkId = get(element, "network_id", "");
 
         return (

@@ -117,7 +117,8 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
       {workOrderList.map((workOrder) => {
         const { id, status, layer_key, element, work_order_type } = workOrder;
         const showStatusChangeIcon = status !== "V";
-        const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
+        const Icon =
+          LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
 
         return (
           <Stack

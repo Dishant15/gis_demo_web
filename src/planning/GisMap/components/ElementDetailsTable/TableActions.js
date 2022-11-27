@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
 import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
 import CableIcon from "@mui/icons-material/Cable";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import LanguageIcon from "@mui/icons-material/Language";
 import LanIcon from "@mui/icons-material/Lan";
@@ -131,7 +132,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
         else if (control === "workorders") {
           baseActionsList.push({
             name: "Show Workorders",
-            Icon: CableIcon,
+            Icon: VisibilityIcon,
             onClick: () => {
               if (elemData.ticket_type === "P") {
                 navigate(getPlanningTicketPage(elemData.id));

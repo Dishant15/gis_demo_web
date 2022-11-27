@@ -107,7 +107,8 @@ const ElementList = ({ data }) => {
     <Stack spacing={1} divider={<Divider />} py={1}>
       {data.map(({ element, layer_info }) => {
         const { layer_key } = layer_info;
-        const Icon = LayerKeyMappings[layer_key]["getViewOptions"]({}).icon;
+        const Icon =
+          LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
         const networkId = get(element, "network_id", "");
         return (
           <Stack

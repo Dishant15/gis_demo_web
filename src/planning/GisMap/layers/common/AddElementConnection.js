@@ -144,7 +144,7 @@ const AddElementConnection = () => {
       // if user just connected one of the cable, get that from state
       indexOf(newConnection, id) !== -1;
     // if true than disable connect btn
-    const Icon = LayerKeyMappings[layerKey]["getViewOptions"]({}).icon;
+    const Icon = LayerKeyMappings[layerKey]["getViewOptions"](element).icon;
     return (
       <Stack
         key={network_id}
