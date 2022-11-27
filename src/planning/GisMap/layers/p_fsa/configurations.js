@@ -11,15 +11,10 @@ export const LAYER_KEY = "p_fsa";
 export const PRE_UID = "FSA";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
+const STROKE_COLOR = "#EFAA33";
 export const getViewOptions = () => ({
-  strokeColor: "yellow",
-  strokeOpacity: 0.8,
-  strokeWeight: 2,
-  fillColor: "yellow",
-  fillOpacity: 0.3,
-  clickable: false,
-  draggable: false,
-  editable: false,
+  strokeColor: STROKE_COLOR,
+  fillColor: STROKE_COLOR,
   icon: Icon,
   pin: Icon,
 });

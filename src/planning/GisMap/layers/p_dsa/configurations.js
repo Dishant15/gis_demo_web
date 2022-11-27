@@ -11,8 +11,12 @@ export const LAYER_KEY = "p_dsa";
 export const PRE_UID = "DSA";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
+const STROKE_COLOR = "#4488AB";
 export const getViewOptions = () => ({
+  strokeColor: STROKE_COLOR,
+  fillColor: STROKE_COLOR,
   icon: Icon,
+  pin: Icon,
 });
 
 export const INITIAL_ELEMENT_DATA = {

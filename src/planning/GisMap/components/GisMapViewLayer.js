@@ -9,6 +9,14 @@ import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
 import { LayerKeyMappings } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 
+const COMMON_POLYGON_OPTIONS = {
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillOpacity: 0.3,
+  clickable: true,
+  draggable: false,
+  editable: false,
+};
 /**
  * Parent:
  *    GisMap
@@ -102,6 +110,7 @@ const ViewLayer = ({ layerKey }) => {
           <Fragment key={id}>
             <Polygon
               options={{
+                ...COMMON_POLYGON_OPTIONS,
                 ...viewOptions,
                 ...(highlighted
                   ? {

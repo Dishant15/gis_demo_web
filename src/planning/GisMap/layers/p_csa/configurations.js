@@ -11,8 +11,12 @@ export const LAYER_KEY = "p_csa";
 export const PRE_UID = "CSA";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
+const STROKE_COLOR = "#65AA33";
 export const getViewOptions = () => ({
+  strokeColor: STROKE_COLOR,
+  fillColor: STROKE_COLOR,
   icon: Icon,
+  pin: Icon,
 });
 
 export const INITIAL_ELEMENT_DATA = {

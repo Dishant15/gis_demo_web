@@ -11,13 +11,7 @@ export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 const STROKE_COLOR = "#88B14B";
 export const getViewOptions = () => ({
   strokeColor: STROKE_COLOR,
-  strokeOpacity: 0.8,
-  strokeWeight: 2,
   fillColor: STROKE_COLOR,
-  fillOpacity: 0.3,
-  clickable: false,
-  draggable: false,
-  editable: false,
   icon: Icon,
   pin: Icon,
 });
