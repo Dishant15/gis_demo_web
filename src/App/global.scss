@@ -37,6 +37,12 @@ code {
   height: 100%;
 }
 
+// react select overrided style
+#rc-menu-portal,
+.form-select__menu-portal {
+  z-index: 1400 !important;
+}
+
 .form-select {
   .form-select__control {
     border-color: transparent !important;
