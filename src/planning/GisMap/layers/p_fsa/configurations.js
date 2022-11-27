@@ -12,7 +12,16 @@ export const PRE_UID = "FSA";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
 export const getViewOptions = () => ({
+  strokeColor: "yellow",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: "yellow",
+  fillOpacity: 0.3,
+  clickable: false,
+  draggable: false,
+  editable: false,
   icon: Icon,
+  pin: Icon,
 });
 
 export const INITIAL_ELEMENT_DATA = {

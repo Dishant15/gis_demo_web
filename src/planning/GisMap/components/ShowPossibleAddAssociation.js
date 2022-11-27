@@ -145,19 +145,13 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
       const childFeatureType = LayerKeyMappings[layerKey]["featureType"];
       const parentFeatureType = LayerKeyMappings[parentLayerKey]["featureType"];
 
-      const association = {
-        parent_id: parentData.id,
-        parent_layer_key: parentLayerKey,
-        child_layer_key: layerKey,
-      };
-
       if (childFeatureType === parentFeatureType) {
         // if both layer has same geometry copy geometry of parent to child and go to form directly
         dispatch(
           onAddElementDetails({
             layerKey,
             parentNetId: parentData.network_id,
-            submitData: { geometry: parentData.coordinates, association },
+            submitData: { geometry: parentData.coordinates },
           })
         );
       } else {
@@ -165,16 +159,10 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
         dispatch(
           onAddElementGeometry({
             layerKey,
-            association,
             // check if new geometry will be inside parent
-            checks_list: [
-              {
-                validation: "contains",
-                target_layer_key: parentLayerKey,
-                container_id: parentData.id,
-                is_target_self: false,
-              },
-            ],
+            restriction_ids: {
+              [parentLayerKey]: parentData.id,
+            },
           })
         );
       }

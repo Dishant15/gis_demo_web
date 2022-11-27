@@ -51,6 +51,7 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
+import { isEmpty } from "lodash";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const clickLatLong = mapMouseEvent.latLng.toJSON();
@@ -216,7 +217,7 @@ export const openElementDetails =
 
 // add geometry with optinal associations
 export const onAddElementGeometry =
-  ({ layerKey, association = null, checks_list = null }) =>
+  ({ layerKey, restriction_ids = null }) =>
   (dispatch, getState) => {
     // const storeState = getState();
     // const event = getPlanningMapStateEvent(storeState);
@@ -232,49 +233,48 @@ export const onAddElementGeometry =
     //   return;
     // }
     // start event if no other event running
-    let data = {};
-    if (!!association) data.association = association;
-    if (!!checks_list) data.checks_list = checks_list;
     dispatch(
       setMapState({
         event: PLANNING_EVENT.addElementGeometry,
         layerKey,
-        data,
+        data: { restriction_ids },
       })
     );
   };
 
-// called when user goes AddGisMapLayer ->
+// called when user going to AddGisLayerFORM
 export const onAddElementDetails =
-  ({ layerKey, submitData, validationRes, parentNetId = null }) =>
-  (dispatch, getState) => {
-    const storeState = getState();
-    const selectedConfig = getLayerSelectedConfiguration(layerKey)(storeState);
+  ({ layerKey, submitData, validationRes }) =>
+  (dispatch) => {
     const initialData = get(LayerKeyMappings, [layerKey, "initialElementData"]);
     // generate ids
-    // if validationRes has association data than generate net id from parent
-    const isAssociationRes = has(submitData, "association");
     let unique_id = generateElementUid(layerKey);
     let network_id = "";
 
-    if (isAssociationRes) {
-      // generate network id from parent if association add
-      const parent_layer_key = get(submitData, "association.parent_layer_key");
-      // if parent id passed use that directly else get from validationRes
-      const parent_id = !!parentNetId
-        ? parentNetId
-        : get(validationRes, ["data", parent_layer_key, "0", "network_id"]);
-      network_id = `${parent_id}-${unique_id}`;
-    } else {
-      // generate from region if simple add
+    // generate parent association data from parents res
+    // shape: { layerKey : [{id, name, uid, netid}, ... ], ...]
+    const parents = get(validationRes, "data.parents", {});
+    if (isEmpty(parents)) {
+      // generate from region
       const region_list = get(validationRes, "data.region_list");
       // get region uid
       const reg_uid = !!size(region_list) ? last(region_list).unique_id : "RGN";
       network_id = `${reg_uid}-${unique_id}`;
+    } else {
+      // generate network id from parent list, get first key
+      const firstLayerKey = Object.keys(parents)[0];
+      const parentNetId = get(
+        parents,
+        [firstLayerKey, "0", "network_id"],
+        "PNI"
+      );
+      network_id = `${parentNetId}-${unique_id}`;
     }
+    // generate children association data from children res
+    const children = get(validationRes, "data.children", {});
 
     // add config id if layer is configurable
-    const configuration = selectedConfig?.id;
+    // const configuration = selectedConfig?.id;
 
     // complete current event -> fire next event
     dispatch(
@@ -287,7 +287,7 @@ export const onAddElementDetails =
           ...submitData,
           unique_id,
           network_id,
-          configuration,
+          association: { parents, children },
         },
       })
     );

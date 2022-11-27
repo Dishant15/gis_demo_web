@@ -57,9 +57,7 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     useValidateGeometry(); // once user adds marker go in edit mode
   const [isAdd, setIsAdd] = useState(true);
 
-  const { association = null, checks_list = null } = useSelector(
-    getPlanningMapStateData
-  );
+  const { restriction_ids = null } = useSelector(getPlanningMapStateData);
   const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   // layer key based data default data from utils -> LayerKeyMappings
@@ -103,16 +101,14 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       throw new Error("feature type is invalid");
     }
     let mutationData;
-    if (!!association) {
+    if (!!restriction_ids) {
       // validate with parent geometry contains check
       mutationData = {
         layerKey,
         featureType,
         geometry: submitData.geometry,
-        checks_list,
+        restriction_ids,
       };
-      // add association data to submitData
-      submitData.association = association;
     } else {
       mutationData = {
         layerKey,
@@ -124,6 +120,10 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     // server side validate geometry
     validateElementMutation(mutationData, {
       onSuccess: (res) => {
+        console.log(
+          "🚀 ~ file: AddGisMapLayer.js ~ line 127 ~ handleAddComplete ~ res",
+          res
+        );
         // clear map refs
         featureRef.current.setMap(null);
         dispatch(

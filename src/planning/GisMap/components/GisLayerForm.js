@@ -146,6 +146,7 @@ export const GisLayerForm = ({ layerKey }) => {
     }
   };
 
+  // remove un required fields from input data
   const prepareServerData = useCallback((data, isEdit, formConfig) => {
     let serverData = {};
     for (let index = 0; index < formConfig.sections.length; index++) {
