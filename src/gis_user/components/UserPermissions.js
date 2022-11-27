@@ -40,7 +40,7 @@ export const USER_LAYER_PERMS_CONFIG = [
   { name: "Customer Service Area", layerKey: "p_csa" },
   { name: "Pole", layerKey: "p_pole" },
   { name: "Manhole", layerKey: "p_manhole" },
-  { name: "Joint Closer", layerKey: "p_joint_closer" },
+  { name: "Joint Closer", layerKey: "p_jointcloser" },
 ];
 
 /**

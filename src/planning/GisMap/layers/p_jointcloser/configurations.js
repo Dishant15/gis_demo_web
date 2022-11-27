@@ -7,7 +7,7 @@ import {
 import { default as Icon } from "assets/markers/joincloser_box.svg";
 import { default as EditIcon } from "assets/markers/joincloser_pin.svg";
 
-export const LAYER_KEY = "p_joint_closer";
+export const LAYER_KEY = "p_jointcloser";
 export const PRE_UID = "JNCLSR";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 

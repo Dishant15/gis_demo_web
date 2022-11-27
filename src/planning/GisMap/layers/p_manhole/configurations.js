@@ -52,7 +52,7 @@ export const ELEMENT_TABLE_FIELDS = [
 export const ELEMENT_TABLE_EXTRA_CONTROLS = [
   {
     control: "add_associations",
-    data: ["p_joint_closer"],
+    data: ["p_jointcloser"],
   },
   {
     control: "association_list",

@@ -17,7 +17,7 @@ import * as DSALayer from "./layers/p_dsa";
 import * as CSALayer from "./layers/p_csa";
 import * as PoleLayer from "./layers/p_pole";
 import * as ManholeLayer from "./layers/p_manhole";
-import * as JointCloserLayer from "./layers/p_joint_closer";
+import * as JointCloserLayer from "./layers/p_jointcloser";
 import * as OltLayer from "./layers/p_olt";
 
 // possible events that can happen on map
