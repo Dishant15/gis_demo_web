@@ -54,7 +54,6 @@ const DynamicForm = forwardRef(
     } = useForm({
       defaultValues: data,
     });
-    console.log("🚀 ~ file: DynamicForm.js ~ line 57 ~ data", data);
 
     useImperativeHandle(ref, () => ({
       onError: (fieldKey, errorMsg) => {
@@ -100,6 +99,7 @@ const DynamicForm = forwardRef(
                       field_key,
                       label,
                       field_type,
+                      options = [],
                       validationProps,
                       disabled,
                     } = config;
@@ -179,7 +179,7 @@ const DynamicForm = forwardRef(
                               rules={validationProps}
                               isDisabled={!!disabled}
                               required={required}
-                              options={config.options || []}
+                              options={options || []}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
