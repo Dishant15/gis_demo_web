@@ -79,7 +79,15 @@ const ElementList = ({ data }) => {
     []
   );
 
-  if (!size(data)) return null;
+  if (!size(data))
+    return (
+      <Box p={2}>
+        <Typography variant="h6" color="text.secondary">
+          No associations
+        </Typography>
+      </Box>
+    );
+
   return (
     <Stack spacing={1} divider={<Divider />} py={1}>
       {data.map(({ element, layer_info }) => {
