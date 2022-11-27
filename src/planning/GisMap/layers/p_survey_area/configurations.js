@@ -132,6 +132,7 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "home_pass",
           label: "Home Pass",
           field_type: FIELD_TYPES.Input,
+          disabled: true,
         },
         {
           field_key: "over_head_cable",
