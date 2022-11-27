@@ -47,7 +47,7 @@ export const ELEMENT_FORM_TEMPLATE = {
 
 export const INITIAL_CONFIG_DATA = {
   config_name: "",
-  splitter_type: "",
+  splitter_type: "P",
   ratio: "",
   specification: "",
   vendor: "",
