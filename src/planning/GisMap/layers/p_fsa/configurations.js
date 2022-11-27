@@ -58,8 +58,8 @@ export const ELEMENT_FORM_TEMPLATE = {
           disabled: true,
         },
         {
-          field_key: "area",
-          label: "Area",
+          field_key: "gis_area",
+          label: "Gis Area",
           field_type: FIELD_TYPES.Input,
         },
       ],
@@ -72,7 +72,7 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Survey Area Count", field: "survey_area_count", type: "simple" },
   { label: "Building Count", field: "building_count", type: "simple" },
   { label: "Home Pass", field: "home_pass", type: "simple" },
-  { label: "Area", field: "area", type: "simple" },
+  { label: "Gis Area", field: "gis_area", type: "simple" },
 ];
 
 export const ELEMENT_TABLE_EXTRA_CONTROLS = [

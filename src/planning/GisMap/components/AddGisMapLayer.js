@@ -93,13 +93,20 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       submitData.geometry = latLongMapToLineCoords(featureCoords);
       // get length and round to 4 decimals
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
-    } else if (featureType === FEATURE_TYPES.POLYGON) {
+    }
+    //
+    else if (featureType === FEATURE_TYPES.POLYGON) {
       submitData.geometry = latLongMapToCoords(featureCoords);
-      const areaInMeters = area(polygon(submitData.geometry));
-      submitData.area = convertArea(areaInMeters, "meters", "kilometers");
-    } else if (featureType === FEATURE_TYPES.POINT) {
+      // get area of polygon
+      const areaInMeters = area(polygon([submitData.geometry]));
+      submitData.gis_area = convertArea(areaInMeters, "meters", "kilometers");
+    }
+    //
+    else if (featureType === FEATURE_TYPES.POINT) {
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
-    } else {
+    }
+    //
+    else {
       throw new Error("feature type is invalid");
     }
     let mutationData;
@@ -122,10 +129,6 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     // server side validate geometry
     validateElementMutation(mutationData, {
       onSuccess: (res) => {
-        console.log(
-          "🚀 ~ file: AddGisMapLayer.js ~ line 127 ~ handleAddComplete ~ res",
-          res
-        );
         // clear map refs
         featureRef.current.setMap(null);
         dispatch(

@@ -44,16 +44,6 @@ export const ELEMENT_FORM_TEMPLATE = {
           label: "NMS Reference Name",
           field_type: FIELD_TYPES.Input,
         },
-        {
-          field_key: "uplink_port_count",
-          label: "Uplink Port Count",
-          field_type: FIELD_TYPES.Input,
-        },
-        {
-          field_key: "downlink_port_count",
-          label: "Downlink Port Count",
-          field_type: FIELD_TYPES.Input,
-        },
       ],
     },
   ],

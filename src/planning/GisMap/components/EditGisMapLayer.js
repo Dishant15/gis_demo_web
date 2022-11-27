@@ -6,7 +6,7 @@ import { Marker, Polygon, Polyline } from "@react-google-maps/api";
 import get from "lodash/get";
 import round from "lodash/round";
 import size from "lodash/size";
-import { lineString, length } from "@turf/turf";
+import { lineString, length, area, polygon, convertArea } from "@turf/turf";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -141,13 +141,22 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToLineCoords(featureCoords);
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
-    } else if (featureType === FEATURE_TYPES.POLYGON) {
+    }
+    //
+    else if (featureType === FEATURE_TYPES.POLYGON) {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords(featureCoords);
-    } else if (featureType === FEATURE_TYPES.POINT) {
+      // get area of polygon
+      const areaInMeters = area(polygon([submitData.geometry]));
+      submitData.gis_area = convertArea(areaInMeters, "meters", "kilometers");
+    }
+    //
+    else if (featureType === FEATURE_TYPES.POINT) {
       const featureCoords = getMarkerCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
-    } else {
+    }
+    //
+    else {
       throw new Error("feature type is invalid");
     }
     // server side validate geometry

@@ -115,6 +115,7 @@ export const LayerKeyMappings = {
     initialElementData: PopLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: PopLayer.ELEMENT_TABLE_FIELDS,
     formConfig: PopLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: PopLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [SPopLayer.LAYER_KEY]: {
     preUid: SPopLayer.PRE_UID,
@@ -123,6 +124,7 @@ export const LayerKeyMappings = {
     initialElementData: SPopLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: SPopLayer.ELEMENT_TABLE_FIELDS,
     formConfig: SPopLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: SPopLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [FSALayer.LAYER_KEY]: {
     preUid: FSALayer.PRE_UID,
@@ -185,9 +187,9 @@ export const LayerKeyMappings = {
     elementTableFields: OltLayer.ELEMENT_TABLE_FIELDS,
     formConfig: OltLayer.ELEMENT_FORM_TEMPLATE,
     // config fields
-    ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
-    ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
-    TableColDefs: CableLayer.CONFIG_LIST_TABLE_COL_DEFS,
+    ConfigFormTemplate: OltLayer.ELEMENT_CONFIG_TEMPLATE,
+    ConfigInitData: OltLayer.INITIAL_CONFIG_DATA,
+    TableColDefs: OltLayer.CONFIG_LIST_TABLE_COL_DEFS,
   },
 };
 

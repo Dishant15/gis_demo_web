@@ -82,3 +82,13 @@ export const ELEMENT_TABLE_FIELDS = [
   // },
   // { label: "Agreement end date", field: "agreement_end_date", type: "date" },
 ];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add_associations",
+    data: ["p_olt"],
+  },
+  {
+    control: "association_list",
+  },
+];
