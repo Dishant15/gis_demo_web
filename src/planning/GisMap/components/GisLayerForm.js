@@ -170,6 +170,9 @@ export const GisLayerForm = ({ layerKey }) => {
     if (data?.configuration) {
       serverData["configuration"] = data?.configuration;
     }
+    if (data?.association) {
+      serverData["association"] = data.association;
+    }
 
     return serverData;
   }, []);
