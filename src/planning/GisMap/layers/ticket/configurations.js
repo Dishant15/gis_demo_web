@@ -4,11 +4,14 @@ import {
 } from "../common/configuration";
 import Icon from "assets/markers/ticket.svg";
 
+import get from "lodash/get";
+import pick from "lodash/pick";
+
 export const LAYER_KEY = "ticket";
 export const PRE_UID = "TKT";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYGON;
 
-const STROKE_COLOR = "#88B14B";
+const STROKE_COLOR = "#e55e5d";
 export const getViewOptions = () => ({
   strokeColor: STROKE_COLOR,
   fillColor: STROKE_COLOR,
@@ -45,3 +48,12 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
     control: "workorders",
   },
 ];
+
+// submitData : { ...elemPartialData }
+// children : { layerKey: [child1, child2]}
+export const getDependantFields = ({ submitData, children, region_list }) => {
+  return {
+    ...submitData,
+    region: pick(get(region_list, "0", {}), ["id", "name"]),
+  };
+};

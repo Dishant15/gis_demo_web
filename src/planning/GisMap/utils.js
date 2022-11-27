@@ -53,6 +53,7 @@ export const LayerKeyMappings = {
     initialElementData: TicketLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: TicketLayer.ELEMENT_TABLE_FIELDS,
     elementTableExtraControls: TicketLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+    getDependantFields: TicketLayer.getDependantFields,
   },
   [DPLayer.LAYER_KEY]: {
     preUid: DPLayer.PRE_UID,

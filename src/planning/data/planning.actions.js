@@ -240,12 +240,13 @@ export const onAddElementDetails =
     let unique_id = generateElementUid(layerKey);
     let network_id = "";
 
+    let region_list;
     // generate parent association data from parents res
     // shape: { layerKey : [{id, name, uid, netid}, ... ], ...]
     const parents = get(validationRes, "data.parents", {});
     if (isEmpty(parents)) {
       // generate from region
-      const region_list = get(validationRes, "data.region_list");
+      region_list = get(validationRes, "data.region_list");
       // get region uid
       const reg_uid = !!size(region_list) ? last(region_list).unique_id : "RGN";
       network_id = `${reg_uid}-${unique_id}`;
@@ -267,7 +268,7 @@ export const onAddElementDetails =
       [layerKey, "getDependantFields"],
       ({ submitData }) => submitData
     );
-    submitData = getDependantFields({ submitData, children });
+    submitData = getDependantFields({ submitData, children, region_list });
 
     // add config id if layer is configurable
     const configuration = selectedConfig?.id;
