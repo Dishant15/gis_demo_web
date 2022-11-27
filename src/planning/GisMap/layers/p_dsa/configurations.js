@@ -36,11 +36,13 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "survey_area_count",
           label: "Survey Area Count",
           field_type: FIELD_TYPES.Input,
+          disabled: true,
         },
         {
           field_key: "building_count",
           label: "Building Count",
           field_type: FIELD_TYPES.Input,
+          disabled: true,
         },
         {
           field_key: "home_pass",
