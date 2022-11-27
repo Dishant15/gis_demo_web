@@ -56,7 +56,9 @@ const ActionBarWrapper = () => {
         <Tab icon={<AddLocationIcon />} label="Add Element" />
       </Tabs>
       <Divider flexItem orientation="horizontal" />
-      <Box className="pl-list-tab-content">{tabContent}</Box>
+      <Box className="pl-list-tab-content" pb={8}>
+        {tabContent}
+      </Box>
     </div>
   );
 };
