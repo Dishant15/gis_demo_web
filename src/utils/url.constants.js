@@ -30,6 +30,8 @@ export const getFeedbackLink = () =>
 
 /* External server apis **/
 export const apiGetDashboard = () => "/api/dashboard/";
+export const apiGetDashboardSurveyTicketSummery = () =>
+  "/api/survey-ticket-summery/";
 
 export const apiPostLogin = () => "/api/token/";
 // area pocket apis
