@@ -36,6 +36,8 @@ export const INITIAL_ELEMENT_DATA = {
   // editable
   cable_type: "O",
   // gis_len ,actual_len, start_reading ,end_reading
+  start_reading: 0,
+  end_reading: 0,
 };
 
 export const CABLE_TYPE_OPTIONS = [

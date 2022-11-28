@@ -58,6 +58,7 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_key: "gis_area",
           label: "Gis Area",
           field_type: FIELD_TYPES.Input,
+          disabled: true,
         },
       ],
     },
