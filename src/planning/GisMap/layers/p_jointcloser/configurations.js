@@ -8,7 +8,7 @@ import { default as Icon } from "assets/markers/joincloser_box.svg";
 import { default as EditIcon } from "assets/markers/joincloser_pin.svg";
 
 export const LAYER_KEY = "p_jointcloser";
-export const PRE_UID = "JNCLSR";
+export const PRE_UID = "JC";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const getViewOptions = () => ({
@@ -30,7 +30,7 @@ export const INITIAL_ELEMENT_DATA = {
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
     {
-      title: "Pole Form",
+      title: "Joint Closer Form",
       fieldConfigs: [...ELEMENT_FORM_ABSTRACT_TEMPLATE],
     },
   ],

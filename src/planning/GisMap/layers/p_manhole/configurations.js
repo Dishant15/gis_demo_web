@@ -9,7 +9,7 @@ import { default as Icon } from "assets/markers/manhole_box.svg";
 import { default as EditIcon } from "assets/markers/manhole_pin.svg";
 
 export const LAYER_KEY = "p_manhole";
-export const PRE_UID = "MANHOLE";
+export const PRE_UID = "MH";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POINT;
 
 export const getViewOptions = () => ({
