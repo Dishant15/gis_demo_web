@@ -2,6 +2,7 @@ import Api from "utils/api.utils";
 import {
   apiDeleteLayerConfig,
   apiGetLayerConfigList,
+  apiGetLayerPortConfig,
   apiPostLayerConfigAdd,
   apiPutLayerConfigEdit,
 } from "utils/url.constants";
@@ -26,5 +27,10 @@ export const upsertElementConfig = async (data, layerKey) => {
 
 export const deleteElementConfig = async (configId, layerKey) => {
   const res = await Api.delete(apiDeleteLayerConfig(layerKey, configId));
+  return res.data;
+};
+
+export const fetchElementPortConfigList = async ({ queryKey }) => {
+  const res = await Api.get(apiGetLayerPortConfig(queryKey[0], queryKey[1]));
   return res.data;
 };
