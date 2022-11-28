@@ -249,14 +249,15 @@ const ConfigurationContent = ({ layerKey }) => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleDeleteClose}>Close</Button>
               <LoadingButton
                 onClick={onDeleteConfirm}
                 autoFocus
                 loading={deleteElementLoading}
+                color="error"
               >
-                Submit
+                Delete
               </LoadingButton>
+              <Button onClick={handleDeleteClose}>Cancel</Button>
             </DialogActions>
           </>
         ) : null}
