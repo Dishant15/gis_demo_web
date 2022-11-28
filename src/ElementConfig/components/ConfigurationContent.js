@@ -34,6 +34,7 @@ import {
   ActionCell,
   SelectValueCell,
 } from "components/common/AgGridCustomCells";
+import ElementPortConfigurations from "./ElementPortConfigurations";
 
 /**
  *
@@ -90,6 +91,7 @@ const ConfigurationContentWrapper = ({ layerKey }) => {
  */
 const ConfigurationContent = ({ layerKey }) => {
   const [showForm, setShowForm] = useState(null);
+  const [showDetails, setShowDetails] = useState(null);
   const [showDialog, setshowDialog] = useState(false);
   const [formData, setFormData] = useState(null); // null for add, data for edit
   const gridRef = useRef();
@@ -140,6 +142,11 @@ const ConfigurationContent = ({ layerKey }) => {
     setShowForm(layerKey);
   };
 
+  const onViewClick = (data) => {
+    setFormData({ elementId: data.id, layerKey });
+    setShowDetails(layerKey);
+  };
+
   const onDeleteClick = (data) => {
     setshowDialog(true);
     setFormData(data);
@@ -156,6 +163,7 @@ const ConfigurationContent = ({ layerKey }) => {
 
   const handleFormClose = useCallback(() => {
     setShowForm(null);
+    setShowDetails(null);
     setFormData(null);
   }, []);
 
@@ -181,6 +189,19 @@ const ConfigurationContent = ({ layerKey }) => {
     handleFormClose,
     upsertElementConfigMutation,
   ]);
+
+  const mayRenderElementDetailsDialog = useMemo(() => {
+    return (
+      <Dialog onClose={handleFormClose} open={!!showDetails}>
+        {!!showDetails ? (
+          <ElementPortConfigurations
+            data={formData}
+            onClose={handleFormClose}
+          />
+        ) : null}
+      </Dialog>
+    );
+  }, [showDetails, formData, handleFormClose]);
 
   return (
     <Stack divider={<Divider flexItem />} height="100%">
@@ -219,11 +240,12 @@ const ConfigurationContent = ({ layerKey }) => {
               {
                 headerName: "Action",
                 field: "id",
-                maxWidth: 140,
+                maxWidth: 166,
                 cellRenderer: ActionCell,
                 cellRendererParams: {
                   onEditClick,
                   onDeleteClick,
+                  onViewClick,
                 },
                 resizable: false,
               },
@@ -238,6 +260,7 @@ const ConfigurationContent = ({ layerKey }) => {
         </Box>
       )}
       {mayRenderFormDialog}
+      {mayRenderElementDetailsDialog}
       <Dialog open={showDialog} onClose={handleDeleteClose}>
         {showDialog ? (
           <>
