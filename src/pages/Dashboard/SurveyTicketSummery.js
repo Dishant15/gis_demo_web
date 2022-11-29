@@ -21,7 +21,9 @@ const SurveyTicketSummery = () => {
   const gridRef = useRef();
   const navigate = useNavigate();
 
-  const { data } = useQuery("surveyTicketSummery", fetchSurveyTicketSummery);
+  const { data } = useQuery("surveyTicketSummery", fetchSurveyTicketSummery, {
+    staleTime: 5 * 60000, // 5 minutes
+  });
 
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
@@ -47,7 +49,7 @@ const SurveyTicketSummery = () => {
           columnDefs={[
             {
               field: "assignee.name",
-              headerName: "Name of Assigned to",
+              headerName: "Assignee",
             },
             {
               field: "region.name",
@@ -55,15 +57,11 @@ const SurveyTicketSummery = () => {
             },
             {
               field: "name",
-              headerName: "Name of ticket",
-            },
-            {
-              field: "ticket_type_display",
-              headerName: "Type of ticket",
+              headerName: "Name",
             },
             {
               field: "created_on",
-              headerName: "Date of creation",
+              headerName: "Created On",
               valueFormatter: (data) => {
                 if (data.value) {
                   return format(new Date(data.value), "dd/MM/yy");
@@ -73,7 +71,7 @@ const SurveyTicketSummery = () => {
             },
             {
               field: "due_date",
-              headerName: "Due date",
+              headerName: "Due Date",
               valueFormatter: (data) => {
                 if (data.value) {
                   return format(new Date(data.value), "dd/MM/yy");
@@ -101,7 +99,7 @@ const SurveyTicketSummery = () => {
             },
             {
               field: "today_homepass",
-              headerName: "Home pass survey done",
+              headerName: "Home pass added today",
             },
             {
               field: "submited_workorders",
@@ -120,7 +118,7 @@ const SurveyTicketSummery = () => {
               headerName: "Total WO",
             },
             {
-              field: "today_homepass",
+              field: "total_home_pass",
               headerName: "Total HP",
             },
             {

@@ -33,6 +33,7 @@ export default function HomePage() {
       client_ticket_count: "--",
       user_count: "----",
     },
+    staleTime: 5 * 60000, // 5 minutes
   });
 
   return (
