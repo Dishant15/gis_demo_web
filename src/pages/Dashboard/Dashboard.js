@@ -3,6 +3,8 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import get from "lodash/get";
+
 import {
   Box,
   Container,
@@ -27,12 +29,6 @@ export default function HomePage() {
   const contentHeight = useSelector(getContentHeight);
 
   const { data } = useQuery("dashboardData", fetchDashboardData, {
-    initialData: {
-      survey_ticket_count: "--",
-      network_ticket_count: "--",
-      client_ticket_count: "--",
-      user_count: "----",
-    },
     staleTime: 5 * 60000, // 5 minutes
   });
 
@@ -49,19 +45,19 @@ export default function HomePage() {
                 <Typography variant="body2" textAlign="center">
                   Survey:{" "}
                   <Box component="b" sx={{ color: "primary.main" }}>
-                    {data.survey_ticket_count}
+                    {get(data, "survey_ticket_count", "--")}
                   </Box>
                 </Typography>
                 <Typography variant="body2" textAlign="center">
                   Planing:{" "}
                   <Box component="b" sx={{ color: "primary.main" }}>
-                    {data.network_ticket_count}
+                    {get(data, "network_ticket_count", "--")}
                   </Box>
                 </Typography>
                 <Typography variant="body2" textAlign="center">
                   Client:{" "}
                   <Box component="b" sx={{ color: "primary.main" }}>
-                    {data.client_ticket_count}
+                    {get(data, "client_ticket_count", "--")}
                   </Box>
                 </Typography>
               </Stack>
@@ -95,7 +91,7 @@ export default function HomePage() {
                 }}
                 component="div"
               >
-                {data.user_count}
+                {get(data, "user_count", "----")}
               </Box>
             </CardContent>
             <CardActions>

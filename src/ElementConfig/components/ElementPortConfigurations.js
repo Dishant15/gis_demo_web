@@ -25,6 +25,22 @@ const ElementPortConfigurations = ({ data, onClose }) => {
     fetchElementPortConfigList
   );
 
+  let Content;
+
+  if (isLoading) {
+    Content = <Typography variant="h6">Loading...</Typography>;
+  } else if (layerKey === "p_cable") {
+    Content = <CablePortConfigTable portConfigList={portConfigData} />;
+  } else if (layerKey === "p_olt") {
+    Content = <OltPortConfigTable portConfigList={portConfigData} />;
+  } else if (layerKey === "p_splitter") {
+    Content = (
+      <Typography variant="h5">
+        No Port Configurations required for Splitter
+      </Typography>
+    );
+  }
+
   return (
     <>
       <Box
@@ -51,13 +67,7 @@ const ElementPortConfigurations = ({ data, onClose }) => {
           height: "502px",
         }}
       >
-        {isLoading ? (
-          <Typography variant="h6">Loading...</Typography>
-        ) : (
-          <Box>
-            <CablePortConfigTable portConfigList={portConfigData} />
-          </Box>
-        )}
+        {Content}
       </DialogContent>
     </>
   );
@@ -106,7 +116,46 @@ const CablePortConfigTable = ({ portConfigList }) => {
                 <TableCell sx={{ backgroundColor: currFibColor }} align="right">
                   {portConfig.fiber_color}
                 </TableCell>
-                <TableCell align="right">{portConfig.carbs}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const OltPortConfigTable = ({ portConfigList }) => {
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Sr No</TableCell>
+            <TableCell align="right">Name</TableCell>
+            <TableCell align="right">Input / Output</TableCell>
+            <TableCell align="right">Port Type</TableCell>
+            <TableCell align="right">Capacity</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {portConfigList.map((portConfig) => {
+            return (
+              <TableRow
+                key={portConfig.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {portConfig.sr_no}
+                </TableCell>
+                <TableCell align="right">{portConfig.name}</TableCell>
+                <TableCell align="right">
+                  {portConfig.is_input ? "Input" : "Output"}
+                </TableCell>
+                <TableCell align="right">
+                  {portConfig.port_type_display}
+                </TableCell>
+                <TableCell align="right">{portConfig.capacity}</TableCell>
               </TableRow>
             );
           })}
