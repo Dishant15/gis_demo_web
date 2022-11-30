@@ -1,5 +1,5 @@
 import React from "react";
-import { Skeleton, Stack } from "@mui/material";
+import { Skeleton, Box } from "@mui/material";
 import { range } from "lodash";
 import GisMapPopups from "../GisMapPopups";
 
@@ -7,11 +7,11 @@ const DummyLoader = () => {
   const rowPills = range(6);
   return (
     <GisMapPopups>
-      <Stack>
+      <Box minWidth="350px" maxWidth="550px">
         {rowPills.map((ind) => {
           return <Skeleton key={ind} animation="wave" height="30px" />;
         })}
-      </Stack>
+      </Box>
     </GisMapPopups>
   );
 };
