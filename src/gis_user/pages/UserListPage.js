@@ -85,7 +85,7 @@ const UserListPage = () => {
         }
         if (!text) {
           type = "info";
-          text = "No user created from given excel.";
+          text = "User details updated successfully.";
         }
         dispatch(
           addNotification({
