@@ -44,10 +44,14 @@ const TicketFormWrapper = ({
     fetchUserList,
     {
       select: (users) => {
-        return filter(
-          users,
-          (user) => !difference(user.regions, loggedInUser.regions).length
-        );
+        return filter(users, (user) => {
+          const hasRegion = !!user.regions.length;
+          const userHasMorePerms = !difference(
+            user.regions,
+            loggedInUser.regions
+          ).length;
+          return hasRegion && userHasMorePerms;
+        });
       },
     }
   );
