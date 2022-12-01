@@ -1,7 +1,9 @@
 import React, { useCallback } from "react";
 import { useQuery } from "react-query";
 import { useForm } from "react-hook-form";
-import { pick, get, find } from "lodash";
+import { pick, get, find, filter, difference } from "lodash";
+
+import { useSelector } from "react-redux";
 
 import { Box, TextField, Stack, Divider, Chip, Skeleton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -12,6 +14,7 @@ import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { generateElementUid } from "planning/GisMap/utils";
 import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuration";
+import { getLoggedUserDetails } from "redux/selectors/auth.selectors";
 
 const TicketFormWrapper = ({
   formData,
@@ -29,6 +32,8 @@ const TicketFormWrapper = ({
    *    TicketAddForm
    *    TicketLayerForm
    */
+  const loggedInUser = useSelector(getLoggedUserDetails);
+
   const { isLoading: regionListLoading, data: regionList = [] } = useQuery(
     ["regionList", "data"],
     fetchRegionList
@@ -36,7 +41,15 @@ const TicketFormWrapper = ({
 
   const { isLoading: userListLoading, data: userList = [] } = useQuery(
     "userList",
-    fetchUserList
+    fetchUserList,
+    {
+      select: (users) => {
+        return filter(
+          users,
+          (user) => !difference(user.regions, loggedInUser.regions).length
+        );
+      },
+    }
   );
 
   const isLoading = regionListLoading || userListLoading;
