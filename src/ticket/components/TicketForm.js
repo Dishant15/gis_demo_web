@@ -14,7 +14,10 @@ import { fetchRegionList } from "region/data/services";
 import { fetchUserList } from "gis_user/data/services";
 import { generateElementUid } from "planning/GisMap/utils";
 import { LAYER_STATUS_OPTIONS } from "planning/GisMap/layers/common/configuration";
-import { getLoggedUserDetails } from "redux/selectors/auth.selectors";
+import {
+  getIsSuperAdminUser,
+  getLoggedUserDetails,
+} from "redux/selectors/auth.selectors";
 
 const TicketFormWrapper = ({
   formData,
@@ -33,6 +36,7 @@ const TicketFormWrapper = ({
    *    TicketLayerForm
    */
   const loggedInUser = useSelector(getLoggedUserDetails);
+  const isSuperAdmin = useSelector(getIsSuperAdminUser);
 
   const { isLoading: regionListLoading, data: regionList = [] } = useQuery(
     ["regionList", "data"],
@@ -44,6 +48,9 @@ const TicketFormWrapper = ({
     fetchUserList,
     {
       select: (users) => {
+        // no need to filter if user is super admin
+        if (isSuperAdmin) return users;
+        // else compare and get all users having less region access than logged user
         return filter(users, (user) => {
           const hasRegion = !!user.regions.length;
           const userHasMorePerms = !difference(
