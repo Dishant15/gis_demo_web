@@ -26,6 +26,7 @@ import {
   getUserListPage,
   getUserRolePage,
   getFeedbackLink,
+  getChangePasswordPage,
 } from "utils/url.constants";
 
 import {
@@ -59,21 +60,28 @@ const NavigationBar = () => {
     get(permissions, "survey_view", false) || isSuperAdminUser;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [menuName, setMenuName] = useState(null);
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
+    setMenuName(null);
   }, []);
 
-  const handleClick = useCallback((e) => {
-    setAnchorEl(e.currentTarget);
-  }, []);
+  const handleClick = useCallback(
+    (name) => (e) => {
+      setAnchorEl(e.currentTarget);
+      setMenuName(name);
+    },
+    []
+  );
 
   const handleLogout = useCallback(() => {
     dispatch(handleLogoutUser);
     navigate(getLoginPath());
   }, []);
 
-  const open = !!anchorEl;
+  const showAdminMenu = !!anchorEl && menuName === "administration-menu";
+  const showSettingsMenu = !!anchorEl && menuName === "settings-menu";
   const showAdministration =
     isSuperAdminUser ||
     (isAdminUser && (canUserView || canRegionView || canTicketView));
@@ -102,17 +110,25 @@ const NavigationBar = () => {
             <Button
               color="inherit"
               id="administration-button"
-              onClick={handleClick}
-              aria-controls={open ? "administration-menu" : undefined}
+              onClick={handleClick("administration-menu")}
+              aria-controls={showAdminMenu ? "administration-menu" : undefined}
               aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+              aria-expanded={showAdminMenu ? "true" : undefined}
               endIcon={<KeyboardArrowDown />}
             >
               Administration
             </Button>
           ) : null}
-          <Button onClick={handleLogout} color="inherit">
-            Logout
+          <Button
+            color="inherit"
+            id="settings-button"
+            onClick={handleClick("settings-menu")}
+            aria-controls={showSettingsMenu ? "settings-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={showSettingsMenu ? "true" : undefined}
+            endIcon={<KeyboardArrowDown />}
+          >
+            Settings
           </Button>
         </Stack>
       );
@@ -142,7 +158,7 @@ const NavigationBar = () => {
           MenuListProps={{
             "aria-labelledby": "administration-button",
           }}
-          open={open}
+          open={showAdminMenu}
           onClose={handleClose}
         >
           {canRegionView ? (
@@ -198,6 +214,24 @@ const NavigationBar = () => {
           >
             Feedback
           </MenuItem>
+        </Menu>
+        <Menu
+          id="settings-menu"
+          anchorEl={anchorEl}
+          MenuListProps={{
+            "aria-labelledby": "settings-button",
+          }}
+          open={showSettingsMenu}
+          onClose={handleClose}
+        >
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getChangePasswordPage()}
+          >
+            Change Password
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
