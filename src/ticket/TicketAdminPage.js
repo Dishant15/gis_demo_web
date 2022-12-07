@@ -3,10 +3,10 @@ import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { Container, Paper } from "@mui/material";
+import PermissionNotFound from "components/common/PermissionNotFound";
 
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
-import PermissionNotFound from "components/common/PermissionNotFound";
 
 /**
  * Parent:

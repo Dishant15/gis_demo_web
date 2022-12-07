@@ -6,7 +6,11 @@ import { Container, Paper } from "@mui/material";
 
 import PermissionNotFound from "components/common/PermissionNotFound";
 
-import { checkUserPermission } from "redux/selectors/auth.selectors";
+import {
+  checkUserPermission,
+  getIsAdminUser,
+  getIsSuperAdminUser,
+} from "redux/selectors/auth.selectors";
 
 /**
  * Parent:
@@ -14,14 +18,36 @@ import { checkUserPermission } from "redux/selectors/auth.selectors";
  */
 const UserAdminPage = () => {
   const canUserView = useSelector(checkUserPermission("user_view"));
+  const isAdminUser = useSelector(getIsAdminUser);
+  const isSuperAdminUser = useSelector(getIsSuperAdminUser);
 
-  return (
-    <Container>
-      <Paper sx={{ mt: 3 }}>
-        {canUserView ? <Outlet /> : <PermissionNotFound />}
-      </Paper>
-    </Container>
-  );
+  const canView = canUserView || isAdminUser || isSuperAdminUser;
+
+  if (canView) {
+    return (
+      <Container>
+        <Paper sx={{ mt: 3 }}>
+          <Outlet />
+        </Paper>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <Paper
+          sx={{
+            mt: 3,
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <PermissionNotFound />
+        </Paper>
+      </Container>
+    );
+  }
 };
 
 export default UserAdminPage;

@@ -24,9 +24,19 @@ import SurveyTicketSummery from "./SurveyTicketSummery";
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { fetchDashboardData } from "../dashboard.service";
 import { getTicketListPage, getUserListPage } from "utils/url.constants";
+import {
+  checkUserPermission,
+  getIsAdminUser,
+  getIsSuperAdminUser,
+} from "redux/selectors/auth.selectors";
 
-export default function HomePage() {
+const HomePage = () => {
   const contentHeight = useSelector(getContentHeight);
+  const canUserView = useSelector(checkUserPermission("user_view"));
+  const isAdminUser = useSelector(getIsAdminUser);
+  const isSuperAdminUser = useSelector(getIsSuperAdminUser);
+
+  const canView = canUserView || isAdminUser || isSuperAdminUser;
 
   const { data } = useQuery("dashboardData", fetchDashboardData, {
     staleTime: 5 * 60000, // 5 minutes
@@ -94,21 +104,25 @@ export default function HomePage() {
                 {get(data, "user_count", "----")}
               </Box>
             </CardContent>
-            <CardActions>
-              <Button
-                component={Link}
-                to={getUserListPage()}
-                color="secondary"
-                size="small"
-                startIcon={<GroupIcon />}
-              >
-                View User List
-              </Button>
-            </CardActions>
+            {canView ? (
+              <CardActions>
+                <Button
+                  component={Link}
+                  to={getUserListPage()}
+                  color="secondary"
+                  size="small"
+                  startIcon={<GroupIcon />}
+                >
+                  View User List
+                </Button>
+              </CardActions>
+            ) : null}
           </Card>
         </Stack>
       </Container>
       <SurveyTicketSummery />
     </Box>
   );
-}
+};
+
+export default HomePage;
