@@ -104,7 +104,7 @@ const HomePage = () => {
                 {get(data, "user_count", "----")}
               </Box>
             </CardContent>
-            {canView ? (
+            {/* {canView ? (
               <CardActions>
                 <Button
                   component={Link}
@@ -116,7 +116,7 @@ const HomePage = () => {
                   View User List
                 </Button>
               </CardActions>
-            ) : null}
+            ) : null} */}
           </Card>
         </Stack>
       </Container>
