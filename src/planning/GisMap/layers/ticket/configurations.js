@@ -23,7 +23,7 @@ export const INITIAL_ELEMENT_DATA = {
   name: "",
   status: "A",
   ticket_type: "S",
-  network_type: "RFS",
+  network_type: "L1",
   due_date: "",
   remarks: "",
   updated_on: "",
