@@ -14,6 +14,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import { Add, Backup as BackupIcon } from "@mui/icons-material";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { AgGridReact } from "ag-grid-react";
@@ -21,6 +22,7 @@ import FilePickerDialog from "components/common/FilePickerDialog";
 
 import {
   fetchApplicationList,
+  fetchExportUser,
   fetchUserList,
   importUser,
 } from "../data/services";
@@ -34,6 +36,7 @@ import {
 import { addNotification } from "redux/reducers/notification.reducer";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
 import ActiveUserCount from "gis_user/components/ActiveUserCount";
+import { format } from "date-fns";
 
 /**
  * Parent:
@@ -45,6 +48,7 @@ const UserListPage = () => {
 
   const canUserAdd = useSelector(checkUserPermission("user_add"));
   const canUserEdit = useSelector(checkUserPermission("user_edit"));
+  const canUserDownload = useSelector(checkUserPermission("user_download"));
   const isSuperAdminUser = useSelector(getIsSuperAdminUser);
 
   const [showImportPopup, setShowImportPopup] = useState(false);
@@ -54,6 +58,37 @@ const UserListPage = () => {
     "applicationList",
     fetchApplicationList
   );
+
+  const { mutate: exportUserMutation, isLoading: loadingExportUser } =
+    useMutation(fetchExportUser, {
+      onSuccess: (res) => {
+        const report_name =
+          "user_list" +
+          "_" +
+          format(new Date(), "dd/MM/yyyy") +
+          "_" +
+          format(new Date(), "hh:mm");
+
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${report_name}.xlsx`);
+        // have to add element to doc for firefox
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
+      },
+    });
 
   const { mutate: importUserMutation, isLoading: loadingImportuser } =
     useMutation(importUser, {
@@ -136,6 +171,17 @@ const UserListPage = () => {
           </Typography>
           <ActiveUserCount />
         </Box>
+        {isSuperAdminUser || canUserDownload ? (
+          <LoadingButton
+            color="secondary"
+            startIcon={<CloudDownloadIcon />}
+            onClick={exportUserMutation}
+            sx={{ ml: 1 }}
+            loading={loadingExportUser}
+          >
+            Export Excel
+          </LoadingButton>
+        ) : null}
         {canUserAdd ? (
           <>
             {isSuperAdminUser ? (

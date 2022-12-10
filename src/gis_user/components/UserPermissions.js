@@ -215,7 +215,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>User</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="user_view"
@@ -243,6 +243,15 @@ const UserPermissions = ({
             color="secondary"
             disabled={disabledAll}
           />
+          <FormCheckbox
+            label="Download"
+            name="user_download"
+            control={control}
+            error={!!errors.user_download}
+            helperText={errors.user_download?.message}
+            color="secondary"
+            disabled={disabledAll}
+          />
         </Stack>
       </Stack>
       <Divider />
@@ -253,7 +262,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>Region</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="region_view"
@@ -292,7 +301,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>Ticket</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="ticket_view"
@@ -330,7 +339,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>Workorders</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="ticket_workorder_view"
@@ -369,7 +378,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>Survey</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="survey_view"
@@ -390,7 +399,7 @@ const UserPermissions = ({
         justifyContent="center"
       >
         <PermissionLabel>Planning</PermissionLabel>
-        <Stack flexDirection="row" minWidth={240}>
+        <Stack flexDirection="row" minWidth={400}>
           <FormCheckbox
             label="View"
             name="planning_view"
@@ -415,7 +424,7 @@ const UserPermissions = ({
               justifyContent="center"
             >
               <PermissionLabel>{name}</PermissionLabel>
-              <Stack flexDirection="row" minWidth={240}>
+              <Stack flexDirection="row" minWidth={400}>
                 <FormCheckbox
                   label="View"
                   name={`${layerKey}_view`}
@@ -479,7 +488,7 @@ export const PermissionLabel = (props) => {
       component="div"
       color="primary"
       mt="10px"
-      minWidth={200}
+      minWidth={240}
     >
       {props.children}
     </Typography>

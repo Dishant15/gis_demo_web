@@ -60,6 +60,7 @@ export const apiGetUserList = () => "/api/user/list/";
 export const apiPostChangePassword = () => "/api/user/change-password/";
 export const apiAddUser = () => "/api/user/add/";
 export const apiUploadExcel = () => "/api/user/import-excel/";
+export const apiUserExportExcel = () => "/api/user/export-excel/";
 export const apiUpdateUserRegion = (userId) =>
   `/api/user/${userId}/update/regions/`;
 export const apiGetUserDetails = (userId) => `/api/user/${userId}/details/`;

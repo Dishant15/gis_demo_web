@@ -15,6 +15,7 @@ import {
   apiPostUserRoleEdit,
   apiUpdateUserRegion,
   apiUploadExcel,
+  apiUserExportExcel,
 } from "utils/url.constants";
 
 export const fetchUserList = async () => {
@@ -89,5 +90,12 @@ export const deleteUserRole = async (roleId) => {
 
 export const fetchActiveUserCount = async () => {
   const res = await Api.get(apiGetActiveUserCount());
+  return res.data;
+};
+
+export const fetchExportUser = async () => {
+  const res = await Api.get(apiUserExportExcel(), null, {
+    responseType: "blob",
+  });
   return res.data;
 };
