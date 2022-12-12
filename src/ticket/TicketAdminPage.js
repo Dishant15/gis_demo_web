@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { Container, Paper } from "@mui/material";
+import { Box, Container, Paper } from "@mui/material";
 import PermissionNotFound from "components/common/PermissionNotFound";
 
 import { getContentHeight } from "redux/selectors/appState.selectors";
@@ -23,6 +23,29 @@ const TicketAdminPage = () => {
       </Paper>
     </Container>
   );
+};
+
+export const TicketListAdminPage = () => {
+  const contentHeight = useSelector(getContentHeight);
+  const canTicketView = useSelector(checkUserPermission("ticket_view"));
+
+  if (canTicketView) {
+    return (
+      <Box p={2} height="100%">
+        <Paper sx={{ height: "100%" }}>
+          <Outlet />
+        </Paper>
+      </Box>
+    );
+  } else {
+    return (
+      <Container sx={{ height: contentHeight, py: 2 }}>
+        <Paper sx={{ height: "100%" }}>
+          <PermissionNotFound />
+        </Paper>
+      </Container>
+    );
+  }
 };
 
 export default TicketAdminPage;

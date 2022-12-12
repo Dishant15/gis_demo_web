@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useSelector } from "react-redux";
+import { format } from "date-fns";
 
 import {
   Box,
@@ -19,7 +20,7 @@ import { Add } from "@mui/icons-material";
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
 
-import { fetchTicketList } from "ticket/data/services";
+import { fetchTicketSummeryList } from "ticket/data/services";
 import {
   getAddTicketPage,
   getEditTicketPage,
@@ -40,12 +41,17 @@ const TicketListPage = () => {
     checkUserPermission("ticket_workorder_view")
   );
 
-  const { isLoading, data } = useQuery("ticketList", fetchTicketList);
+  // const { isLoading, data } = useQuery("ticketList", fetchTicketList);
+  const { isLoading, data } = useQuery(
+    "ticketSummeryList",
+    fetchTicketSummeryList
+  );
+  console.log("🚀 ~ file: TicketListPage.js:45 ~ TicketListPage ~ data", data);
 
   const gridRef = useRef();
 
   const onGridReady = () => {
-    gridRef.current.api.sizeColumnsToFit();
+    // gridRef.current.api.sizeColumnsToFit();
   };
 
   const onEditClick = (ticketId) => {
@@ -59,6 +65,17 @@ const TicketListPage = () => {
       navigate(getTicketWorkorderPage(ticketId));
     }
   };
+
+  const defaultColDef = useMemo(() => {
+    return {
+      resizable: true,
+      filter: "agTextColumnFilter",
+      resizable: true,
+      sortable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+    };
+  }, []);
 
   return (
     <Stack height="100%" divider={<Divider flexItem />}>
@@ -93,9 +110,42 @@ const TicketListPage = () => {
           <AgGridReact
             ref={gridRef}
             rowData={data}
+            defaultColDef={defaultColDef}
             columnDefs={[
-              { field: "unique_id", headerName: "Unique Id" },
-              { field: "name" },
+              {
+                field: "assignee.name",
+                headerName: "Assignee",
+              },
+              {
+                field: "region.name",
+                headerName: "Region",
+              },
+              {
+                field: "name",
+                headerName: "Name",
+              },
+              {
+                field: "created_on",
+                headerName: "Created On",
+                width: 130,
+                valueFormatter: (data) => {
+                  if (data.value) {
+                    return format(new Date(data.value), "dd/MM/yy");
+                  }
+                  return "";
+                },
+              },
+              {
+                field: "due_date",
+                headerName: "Due Date",
+                width: 120,
+                valueFormatter: (data) => {
+                  if (data.value) {
+                    return format(new Date(data.value), "dd/MM/yy");
+                  }
+                  return "";
+                },
+              },
               { field: "ticket_type_display", headerName: "Type", width: 114 },
               { field: "status", cellRenderer: StatusCell, width: 150 },
               {
@@ -114,8 +164,41 @@ const TicketListPage = () => {
                   }
                 },
               },
-              { field: "region.name", headerName: "Region" },
-              { field: "assignee.name", headerName: "Assignee" },
+              {
+                field: "today_workorders",
+                headerName: "Workorder created today",
+                width: 130,
+              },
+              {
+                field: "today_elements",
+                headerName: "EL / HP today",
+                width: 110,
+              },
+              {
+                field: "submited_workorders",
+                headerName: "Submitted",
+                width: 130,
+              },
+              {
+                field: "rejected_workorders",
+                headerName: "Rejected",
+                width: 120,
+              },
+              {
+                field: "approved_workorders",
+                headerName: "Approved",
+                width: 120,
+              },
+              {
+                field: "total_workorders",
+                headerName: "Total WO",
+                width: 100,
+              },
+              {
+                field: "element_count",
+                headerName: "Total HP / EL",
+                width: 100,
+              },
               {
                 headerName: "Action",
                 field: "unique_id",
@@ -129,11 +212,6 @@ const TicketListPage = () => {
                 },
               },
             ]}
-            defaultColDef={{
-              filter: "agTextColumnFilter",
-              resizable: true,
-              sortable: true,
-            }}
             onGridReady={onGridReady}
           />
         </Box>

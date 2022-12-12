@@ -90,6 +90,7 @@ export const apiGetTicketWorkorders = (ticketId) =>
   `/api/ticket/${ticketId}/workorders/`;
 export const apiExportTicket = (ticketId) => `/api/ticket/${ticketId}/export/`;
 export const apiImportTicket = (ticketId) => `/api/ticket/${ticketId}/import/`;
+export const apiGetTicketListSummery = () => `/api/ticket/list/summery/`;
 
 // workorder apis
 export const apiPutWorkOrderEdit = (workOrderId) =>

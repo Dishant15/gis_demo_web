@@ -10,7 +10,13 @@ import {
   apiPutUnitEdit,
   apiExportTicket,
   apiImportTicket,
+  apiGetTicketListSummery,
 } from "utils/url.constants";
+
+export const fetchTicketSummeryList = async () => {
+  const res = await Api.get(apiGetTicketListSummery());
+  return res.data;
+};
 
 export const fetchTicketList = async () => {
   const res = await Api.get(apiGetTicketList());

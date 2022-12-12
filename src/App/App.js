@@ -19,7 +19,7 @@ import UserRoleAdminPage from "gis_user/pages/UserRoleAdminPage";
 import PageNotFound from "components/common/PageNotFound";
 import ChangePasswordPage from "pages/Authentication/ChangePasswordPage";
 
-import TicketAdminPage from "ticket/TicketAdminPage";
+import TicketAdminPage, { TicketListAdminPage } from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
 import TicketAddForm from "ticket/pages/TicketAddForm";
 import TicketEditPage from "ticket/pages/TicketEditPage";
@@ -53,8 +53,6 @@ import {
 } from "../utils/url.constants";
 
 import "./global.scss";
-import "./ag-grid.scss";
-import "./ag-theme-alpine.scss";
 import "react-datetime-range-super-picker/dist/index.css";
 
 export const queryClient = new QueryClient();
@@ -144,7 +142,7 @@ const App = () => {
                       }
                     />
                   </Route>
-                  <Route path="/ticket" element={<TicketAdminPage />}>
+                  <Route path="/ticket" element={<TicketListAdminPage />}>
                     <Route
                       path={getTicketListPage()}
                       element={
@@ -153,6 +151,8 @@ const App = () => {
                         </RequireAuth>
                       }
                     />
+                  </Route>
+                  <Route path="/ticket" element={<TicketAdminPage />}>
                     <Route
                       path={getAddTicketPage()}
                       element={
