@@ -5,7 +5,15 @@ import { pick, get, find, filter, difference } from "lodash";
 
 import { useSelector } from "react-redux";
 
-import { Box, TextField, Stack, Divider, Chip, Skeleton } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Stack,
+  Divider,
+  Chip,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { FormDatePicker, FormSelect } from "components/common/FormFields";
@@ -324,10 +332,20 @@ const TicketForm = ({
             name="assignee"
             control={control}
             options={userList}
-            getOptionLabel={(opt) => `${opt.name} - ${opt.username}`}
-            getOptionValue={(opt) => opt.id}
             labelKey="name"
             valueKey="id"
+            formatOptionLabel={(data) => {
+              return (
+                <Box>
+                  <Typography variant="subtitle1" sx={{ lineHeight: 1.1 }}>
+                    {get(data, "name", "")}
+                  </Typography>
+                  <Typography variant="caption">
+                    {get(data, "username", "")}
+                  </Typography>
+                </Box>
+              );
+            }}
             error={!!errors.assignee}
             helperText={errors.assignee?.message}
             rules={{
