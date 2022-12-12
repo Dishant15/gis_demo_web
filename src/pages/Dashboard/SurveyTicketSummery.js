@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED NOT USED ANY MORE
+ * Delete after updating Ticket list page same as this grid
+ */
+
 import React, { useRef } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import { fetchSurveyTicketSummery } from "pages/dashboard.service";
+import { fetchDashSurveySummery } from "pages/dashboard.service";
 import {
   getPlanningTicketPage,
   getTicketWorkorderPage,
@@ -21,9 +26,13 @@ const SurveyTicketSummery = () => {
   const gridRef = useRef();
   const navigate = useNavigate();
 
-  const { data } = useQuery("surveyTicketSummery", fetchSurveyTicketSummery, {
-    staleTime: 5 * 60000, // 5 minutes
-  });
+  const { data: summeryData = { ticket_list: [] } } = useQuery(
+    "surveyTicketSummery",
+    fetchDashSurveySummery,
+    {
+      staleTime: 5 * 60000, // 5 minutes
+    }
+  );
 
   const onGridReady = () => {
     gridRef.current.api.sizeColumnsToFit();
@@ -45,7 +54,7 @@ const SurveyTicketSummery = () => {
         </Typography>
         <AgGridReact
           ref={gridRef}
-          rowData={data}
+          rowData={summeryData.ticket_list}
           columnDefs={[
             {
               field: "assignee.name",

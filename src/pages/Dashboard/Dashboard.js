@@ -17,13 +17,12 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import GroupIcon from "@mui/icons-material/Group";
 
-import SurveyTicketSummery from "./SurveyTicketSummery";
+import RegionWiseTicketSummery from "./RegionWiseTicketSummery";
 
 import { getContentHeight } from "redux/selectors/appState.selectors";
 import { fetchDashboardData } from "../dashboard.service";
-import { getTicketListPage, getUserListPage } from "utils/url.constants";
+import { getTicketListPage } from "utils/url.constants";
 import {
   checkUserPermission,
   getIsAdminUser,
@@ -43,7 +42,7 @@ const HomePage = () => {
   });
 
   return (
-    <Box sx={{ height: contentHeight, p: 2 }}>
+    <Box sx={{ height: contentHeight, p: 2, pb: 5 }}>
       <Container>
         <Stack direction="row" spacing={2}>
           <Card sx={{ minWidth: 345 }}>
@@ -120,7 +119,7 @@ const HomePage = () => {
           </Card>
         </Stack>
       </Container>
-      <SurveyTicketSummery />
+      <RegionWiseTicketSummery />
     </Box>
   );
 };

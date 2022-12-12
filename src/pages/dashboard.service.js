@@ -9,7 +9,7 @@ export const fetchDashboardData = async () => {
   return res.data;
 };
 
-export const fetchSurveyTicketSummery = async () => {
+export const fetchDashSurveySummery = async () => {
   const res = await Api.get(apiGetDashboardSurveyTicketSummery());
   return res.data;
 };
