@@ -1,6 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+
+import { AgGridReact } from "ag-grid-react";
+
+import find from "lodash/find";
+import split from "lodash/split";
+import filter from "lodash/filter";
+import difference from "lodash/difference";
+
+import { format } from "date-fns";
 
 import {
   Box,
@@ -17,8 +27,8 @@ import { Add, Backup as BackupIcon } from "@mui/icons-material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { AgGridReact } from "ag-grid-react";
 import FilePickerDialog from "components/common/FilePickerDialog";
+import ActiveUserCount from "gis_user/components/ActiveUserCount";
 
 import {
   fetchApplicationList,
@@ -27,16 +37,13 @@ import {
   importUser,
 } from "../data/services";
 import { getAddUserPage, getEditUserPage } from "utils/url.constants";
-import { find, split } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
 import {
   checkUserPermission,
   getIsSuperAdminUser,
+  getLoggedUserDetails,
 } from "redux/selectors/auth.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
-import ActiveUserCount from "gis_user/components/ActiveUserCount";
-import { format } from "date-fns";
 
 /**
  * Parent:
@@ -50,10 +57,24 @@ const UserListPage = () => {
   const canUserEdit = useSelector(checkUserPermission("user_edit"));
   const canUserDownload = useSelector(checkUserPermission("user_download"));
   const isSuperAdminUser = useSelector(getIsSuperAdminUser);
+  const loggedInUser = useSelector(getLoggedUserDetails);
 
   const [showImportPopup, setShowImportPopup] = useState(false);
 
-  const { isLoading, data, refetch } = useQuery("userList", fetchUserList);
+  const { isLoading, data, refetch } = useQuery("userList", fetchUserList, {
+    select: (users) => {
+      // no need to filter if user is super admin
+      if (isSuperAdminUser) return users;
+      // else compare and get all users having less region access than logged user
+      return filter(users, (user) => {
+        const hasRegion = !!user.regions.length;
+        const userHasMorePerms = !difference(user.regions, loggedInUser.regions)
+          .length;
+        return hasRegion && userHasMorePerms;
+      });
+    },
+  });
+
   const { isLoading: applicationLoading, data: applicationList } = useQuery(
     "applicationList",
     fetchApplicationList
