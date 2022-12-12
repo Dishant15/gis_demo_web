@@ -106,6 +106,7 @@ const RegionWiseTicketSummery = () => {
                 <TableCell>Approved</TableCell>
                 <TableCell>WO Total</TableCell>
                 <TableCell>HP Total</TableCell>
+                <TableCell>Tickets</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,6 +154,7 @@ const RegionSummeryItem = ({
     rejected_wo,
     approved_wo,
     total_home_pass,
+    ticket_count,
   } = region;
 
   const total_workorders = submited_wo + rejected_wo + approved_wo;
@@ -215,6 +217,9 @@ const RegionSummeryItem = ({
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
           {total_home_pass}
+        </StyledTableCell>
+        <StyledTableCell component="th" scope="row">
+          {ticket_count}
         </StyledTableCell>
       </TableRow>
 
