@@ -105,6 +105,10 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       );
     }
     //
+    else if (featureType === FEATURE_TYPES.MULTI_POLYGON) {
+      submitData.geometry = latLongMapToCoords(featureCoords);
+    }
+    //
     else if (featureType === FEATURE_TYPES.POINT) {
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
     }
@@ -152,6 +156,8 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       case FEATURE_TYPES.POLYLINE:
         return "Click on map to create line on map. Double click to complete.";
       case FEATURE_TYPES.POLYGON:
+        return "Click on map to place area points on map. Complete polygon and adjust points.";
+      case FEATURE_TYPES.MULTI_POLYGON:
         return "Click on map to place area points on map. Complete polygon and adjust points.";
       case FEATURE_TYPES.POINT:
         return "Click on map to add new location";

@@ -1,3 +1,5 @@
+import pick from "lodash/pick";
+
 import Api from "utils/api.utils";
 import {
   apiGetElementAssociations,
@@ -6,8 +8,10 @@ import {
   apiGetRegionDetails,
   apiGetTicketDetails,
   apiPostAddElement,
+  apiPostRegionAdd,
   apiPostValidateElementGeometry,
   apiPutEditElement,
+  apiPutRegionEdit,
   apiUpdateElementConnections,
 } from "utils/url.constants";
 
@@ -38,13 +42,25 @@ export const fetchElementConnections = async ({ queryKey }) => {
 };
 
 export const addNewElement = async ({ data, layerKey }) => {
-  const res = await Api.post(apiPostAddElement(layerKey), data);
-  return res.data;
+  if (layerKey === "region") {
+    let submitData = pick(data, ["name", "unique_id"]);
+    submitData.coordinates = data.geometry;
+    const res = await Api.post(apiPostRegionAdd(), submitData);
+    return res.data;
+  } else {
+    const res = await Api.post(apiPostAddElement(layerKey), data);
+    return res.data;
+  }
 };
 
 export const editElementDetails = async ({ data, layerKey, elementId }) => {
-  const res = await Api.put(apiPutEditElement(layerKey, elementId), data);
-  return res.data;
+  if (layerKey === "region") {
+    const res = await Api.put(apiPutRegionEdit(elementId), { name: data.name });
+    return res.data;
+  } else {
+    const res = await Api.put(apiPutEditElement(layerKey, elementId), data);
+    return res.data;
+  }
 };
 
 export const addElementConnection = async ({ data, cableId }) => {

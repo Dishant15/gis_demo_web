@@ -1,5 +1,6 @@
 import { getFillColor } from "utils/map.utils";
 import { FEATURE_TYPES } from "../common/configuration";
+import { FIELD_TYPES } from "components/common/DynamicForm";
 
 import Icon from "assets/markers/pentagon.svg";
 
@@ -18,16 +19,50 @@ export const getViewOptions = (props = {}) => {
     strokeWeight: 2,
     fillColor: color,
     fillOpacity: 0.3,
-    clickable: false,
-    draggable: false,
-    editable: false,
     icon: Icon,
     pin: Icon,
   };
+};
+
+export const INITIAL_ELEMENT_DATA = {
+  name: "",
+  unique_id: "",
+};
+
+// this will become function -> generate From Configs
+export const ELEMENT_FORM_TEMPLATE = {
+  sections: [
+    {
+      title: "Region Form",
+      fieldConfigs: [
+        {
+          field_key: "name",
+          label: "Name",
+          field_type: FIELD_TYPES.Input,
+        },
+        {
+          field_key: "unique_id",
+          label: "Unique Id",
+          field_type: FIELD_TYPES.Input,
+          disabled: true,
+        },
+      ],
+    },
+  ],
 };
 
 export const ELEMENT_TABLE_FIELDS = [
   { label: "Name", field: "name", type: "simple" },
   { label: "Unique Id", field: "unique_id", type: "simple" },
   { label: "Layer", field: "layer", type: "simple" },
+];
+
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add_associations",
+    data: ["region"],
+  },
+  {
+    control: "association_list",
+  },
 ];

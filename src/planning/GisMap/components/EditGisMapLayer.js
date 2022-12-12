@@ -143,7 +143,10 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
       submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
     }
     //
-    else if (featureType === FEATURE_TYPES.POLYGON) {
+    else if (
+      featureType === FEATURE_TYPES.POLYGON ||
+      featureType === FEATURE_TYPES.MULTI_POLYGON
+    ) {
       const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords(featureCoords);
       // get area of polygon
@@ -221,6 +224,8 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
         return "Click on map to create line on map. Double click to complete.";
       case FEATURE_TYPES.POLYGON:
         return "Click on map to place area points on map. Complete polygon and adjust points.";
+      case FEATURE_TYPES.MULTI_POLYGON:
+        return "Click on map to place area points on map. Complete polygon and adjust points.";
       case FEATURE_TYPES.POINT:
         return "Click or drag and drop marker to new location";
       default:
@@ -246,7 +251,10 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
           onLoad={handleEditFeatureLoad}
         />
       );
-    } else if (featureType === FEATURE_TYPES.POLYGON) {
+    } else if (
+      featureType === FEATURE_TYPES.POLYGON ||
+      featureType === FEATURE_TYPES.MULTI_POLYGON
+    ) {
       return (
         <Polygon
           path={coordsToLatLongMap(coordinates)}

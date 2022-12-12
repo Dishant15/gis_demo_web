@@ -44,7 +44,6 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
   const hasLayerEditPermission = useSelector(
     checkUserPermission(`${layerKey}_edit`)
   );
-  const hasEditPermission = layerKey !== "region" && hasLayerEditPermission;
 
   // connections | associations
   const extraControls = get(
@@ -56,7 +55,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
   const baseActionsList = useMemo(() => {
     const baseActionsList = [];
 
-    if (hasEditPermission) {
+    if (hasLayerEditPermission) {
       baseActionsList.push({
         name: "Details",
         Icon: EditIcon,
@@ -178,7 +177,7 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
     }
     return baseActionsList;
   }, [
-    hasEditPermission,
+    hasLayerEditPermission,
     dispatch,
     layerKey,
     elemData,

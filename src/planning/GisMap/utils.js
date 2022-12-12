@@ -39,10 +39,13 @@ export const PLANNING_EVENT = {
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
-    preUid: TicketLayer.PRE_UID,
+    preUid: RegionLayer.PRE_UID,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,
+    initialElementData: RegionLayer.INITIAL_ELEMENT_DATA,
+    formConfig: RegionLayer.ELEMENT_FORM_TEMPLATE,
     elementTableFields: RegionLayer.ELEMENT_TABLE_FIELDS,
+    elementTableExtraControls: RegionLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElementForm]: TicketLayer.ElementForm,
