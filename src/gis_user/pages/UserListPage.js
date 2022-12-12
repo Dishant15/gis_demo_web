@@ -24,7 +24,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import { Add, Backup as BackupIcon } from "@mui/icons-material";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import FilePickerDialog from "components/common/FilePickerDialog";
@@ -195,12 +195,12 @@ const UserListPage = () => {
         {isSuperAdminUser || canUserDownload ? (
           <LoadingButton
             color="secondary"
-            startIcon={<CloudDownloadIcon />}
+            startIcon={<DownloadForOfflineIcon />}
             onClick={exportUserMutation}
             sx={{ ml: 1 }}
             loading={loadingExportUser}
           >
-            Export Excel
+            Download xlsx
           </LoadingButton>
         ) : null}
         {canUserAdd ? (
@@ -212,7 +212,7 @@ const UserListPage = () => {
                 onClick={() => setShowImportPopup(true)}
                 sx={{ ml: 1 }}
               >
-                Upload Excel
+                Upload xlsx
               </LoadingButton>
             ) : null}
             <Button
