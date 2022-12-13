@@ -46,7 +46,6 @@ const TicketListPage = () => {
     "ticketSummeryList",
     fetchTicketSummeryList
   );
-  console.log("🚀 ~ file: TicketListPage.js:45 ~ TicketListPage ~ data", data);
 
   const gridRef = useRef();
 
@@ -171,8 +170,14 @@ const TicketListPage = () => {
               },
               {
                 field: "today_elements",
-                headerName: "EL / HP today",
+                headerName: "Homepass today",
                 width: 110,
+                valueFormatter: ({ value, data }) => {
+                  if (data.ticket_type === "S") {
+                    return value;
+                  }
+                  return "--";
+                },
               },
               {
                 field: "submited_workorders",
@@ -196,8 +201,14 @@ const TicketListPage = () => {
               },
               {
                 field: "element_count",
-                headerName: "Total HP / EL",
+                headerName: "Total Homepass",
                 width: 100,
+                valueFormatter: ({ value, data }) => {
+                  if (data.ticket_type === "S") {
+                    return value;
+                  }
+                  return "--";
+                },
               },
               {
                 headerName: "Action",
