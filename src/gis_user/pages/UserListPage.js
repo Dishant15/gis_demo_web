@@ -190,7 +190,7 @@ const UserListPage = () => {
           <Typography className="dtl-title" variant="h5">
             User Management&nbsp;
           </Typography>
-          <ActiveUserCount />
+          {isSuperAdminUser ? <ActiveUserCount /> : null}
         </Box>
         {isSuperAdminUser || canUserDownload ? (
           <LoadingButton

@@ -143,7 +143,7 @@ const RegionWiseTicketSummery = () => {
             flex={1}
             ml={10}
           >
-            Survey Summery overview
+            Survey Summary overview
           </Typography>
           <LoadingButton
             color="secondary"

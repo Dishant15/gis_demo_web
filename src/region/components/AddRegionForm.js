@@ -42,6 +42,7 @@ const AddRegionForm = ({
   onAreaCreate,
   startEditRegion = null,
   handleRegionCreate = null,
+  canUserAddRegion = false,
 }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -151,25 +152,26 @@ const AddRegionForm = ({
           </Button>
         </Stack>
         <Divider flexItem orientation="horizontal" />
-        {!!startEditRegion ? ( // show edit polygon & add child btn if we have the handlers
-          <>
-            <Stack p={1} px={2} direction="row">
-              <Button
-                startIcon={<HighlightAltOutlined />}
-                onClick={startEditRegion(data)}
-              >
-                Edit On Map
-              </Button>
-              <Button
-                startIcon={<AddIcon />}
-                onClick={handleRegionCreate(data.id, data.coordinates)}
-              >
-                Add Region
-              </Button>
-            </Stack>
-            <Divider flexItem orientation="horizontal" />
-          </>
-        ) : null}
+
+        <Stack p={1} px={2} direction="row">
+          {!!startEditRegion ? ( // show edit polygon & add child btn if we have the handlers
+            <Button
+              startIcon={<HighlightAltOutlined />}
+              onClick={startEditRegion(data)}
+            >
+              Edit On Map
+            </Button>
+          ) : null}
+          {canUserAddRegion ? (
+            <Button
+              startIcon={<AddIcon />}
+              onClick={handleRegionCreate(data.id, data.coordinates)}
+            >
+              Add Region
+            </Button>
+          ) : null}
+        </Stack>
+        <Divider flexItem orientation="horizontal" />
         <Box p={2} component="form" onSubmit={handleSubmit(mutate)}>
           <Stack spacing={2}>
             <TextField

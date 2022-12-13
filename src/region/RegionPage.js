@@ -367,6 +367,7 @@ const RegionPage = () => {
               <div className="reg-map-details">
                 <AddRegionForm
                   key="add"
+                  canUserAddRegion={canUserAddRegion}
                   data={{
                     coordinates: newRegionCoords,
                     parentId: newRegionParentId,
@@ -379,6 +380,7 @@ const RegionPage = () => {
               <div className="reg-map-details">
                 <AddRegionForm
                   key="add"
+                  canUserAddRegion={canUserAddRegion}
                   data={{
                     coordinates: newRegionCoords,
                     parentId: newRegionParentId,
@@ -391,6 +393,7 @@ const RegionPage = () => {
               <div className="reg-map-details">
                 <AddRegionForm
                   key={showRegionDetails}
+                  canUserAddRegion={canUserAddRegion}
                   data={find(regionListData, ["id", showRegionDetails])}
                   onAreaCreate={resetAllSelection}
                   startEditRegion={startEditRegion}
