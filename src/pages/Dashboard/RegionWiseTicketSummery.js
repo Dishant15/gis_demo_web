@@ -1,5 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+
+import { format } from "date-fns";
 
 import get from "lodash/get";
 import size from "lodash/size";
@@ -22,12 +25,51 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
+import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import DummyListLoader from "planning/ActionBar/components/DummyListLoader";
 
-import { fetchDashSurveySummery } from "pages/dashboard.service";
+import {
+  fetchDashSurveySummery,
+  fetchExportSurveyTicketSummery,
+} from "pages/dashboard.service";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const RegionWiseTicketSummery = () => {
+  const dispatch = useDispatch();
+  const { mutate: exportMutation, isLoading: loadingExport } = useMutation(
+    fetchExportSurveyTicketSummery,
+    {
+      onSuccess: (res) => {
+        const report_name =
+          "region_ticket_summery" +
+          "_" +
+          format(new Date(), "dd/MM/yyyy") +
+          "_" +
+          format(new Date(), "hh:mm");
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${report_name}.xlsx`);
+        // have to add element to doc for firefox
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      onError: (err) => {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Error",
+            text: err.message,
+          })
+        );
+      },
+    }
+  );
+
   const { data: regionSummeryData, isLoading } = useQuery(
     "surveySummery",
     fetchDashSurveySummery,
@@ -86,9 +128,33 @@ const RegionWiseTicketSummery = () => {
   return (
     <Stack my={2} pb={7}>
       <Paper p={3} className="ag-theme-alpine" width="100%">
-        <Typography textAlign="center" variant="h5" p={1} color="primary.main">
-          Survey Summery overview
-        </Typography>
+        <Stack
+          px={2}
+          py={1}
+          direction="row"
+          spacing={2}
+          width="100%"
+          alignItems="center"
+        >
+          <Typography
+            textAlign="center"
+            variant="h5"
+            color="primary.main"
+            flex={1}
+            ml={10}
+          >
+            Survey Summery overview
+          </Typography>
+          <LoadingButton
+            color="secondary"
+            startIcon={<DownloadForOfflineIcon />}
+            onClick={exportMutation}
+            sx={{ ml: 1 }}
+            loading={loadingExport}
+          >
+            Download xlsx
+          </LoadingButton>
+        </Stack>
         <Divider />
         {isLoading ? (
           <Box p={3}>

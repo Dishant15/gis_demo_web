@@ -33,6 +33,8 @@ export const getFeedbackLink = () =>
 export const apiGetDashboard = () => "/api/dashboard/";
 export const apiGetDashboardSurveyTicketSummery = () =>
   "/api/survey-ticket-summery/";
+export const apiGetDashboardSurveyTicketSummeryExport = () =>
+  "/api/survey-ticket-summery-export/";
 
 export const apiPostLogin = () => "/api/token/";
 // area pocket apis
