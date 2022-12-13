@@ -78,6 +78,7 @@ const ViewLayer = ({ layerKey }) => {
                 <Polygon
                   key={ind}
                   options={{
+                    ...COMMON_POLYGON_OPTIONS,
                     ...viewOptions,
                     ...(highlighted
                       ? {
