@@ -3,6 +3,7 @@ import { FEATURE_TYPES } from "../common/configuration";
 import { FIELD_TYPES } from "components/common/DynamicForm";
 
 import Icon from "assets/markers/pentagon.svg";
+import { get } from "lodash";
 
 export const LAYER_KEY = "region";
 // never use this to generate region, this will be given by user
@@ -46,6 +47,18 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_type: FIELD_TYPES.Input,
           disabled: true,
         },
+        {
+          field_key: "layer",
+          label: "Layer",
+          field_type: FIELD_TYPES.Input,
+          disabled: true,
+        },
+        {
+          field_key: "parentId",
+          label: "Parent ID",
+          field_type: FIELD_TYPES.Input,
+          disabled: true,
+        },
       ],
     },
   ],
@@ -66,3 +79,19 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
     control: "association_list",
   },
 ];
+
+// submitData : { ...elemPartialData }
+// parents : { layerKey: [child1, child2]}
+export const getDependantFields = ({ submitData, parents }) => {
+  const parentRegion = get(parents, "region.0", null);
+  // add parent fields for child region
+  if (!!parentRegion) {
+    return {
+      ...submitData,
+      layer: parentRegion.layer || 1,
+      parentId: parentRegion.id,
+    };
+  } else {
+    return submitData;
+  }
+};

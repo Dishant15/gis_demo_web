@@ -149,7 +149,8 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
       const childFeatureType = LayerKeyMappings[layerKey]["featureType"];
       const parentFeatureType = LayerKeyMappings[parentLayerKey]["featureType"];
 
-      if (childFeatureType === parentFeatureType) {
+      // when adding child region featureType will be same but need to draw new child region so go to else branch
+      if (childFeatureType === parentFeatureType && layerKey !== "region") {
         // if both layer has same geometry copy geometry of parent to child and go to form directly
         const extraParent = {
           [parentLayerKey]: [{ ...parentData }],

@@ -268,7 +268,12 @@ export const onAddElementDetails =
       [layerKey, "getDependantFields"],
       ({ submitData }) => submitData
     );
-    submitData = getDependantFields({ submitData, children, region_list });
+    submitData = getDependantFields({
+      submitData,
+      children,
+      parents,
+      region_list,
+    });
 
     // add config id if layer is configurable
     const configuration = selectedConfig?.id;

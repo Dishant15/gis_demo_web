@@ -43,7 +43,7 @@ export const fetchElementConnections = async ({ queryKey }) => {
 
 export const addNewElement = async ({ data, layerKey }) => {
   if (layerKey === "region") {
-    let submitData = pick(data, ["name", "unique_id"]);
+    let submitData = pick(data, ["name", "unique_id", "layer", "parentId"]);
     submitData.coordinates = data.geometry;
     const res = await Api.post(apiPostRegionAdd(), submitData);
     return res.data;

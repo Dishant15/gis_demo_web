@@ -46,6 +46,7 @@ export const LayerKeyMappings = {
     formConfig: RegionLayer.ELEMENT_FORM_TEMPLATE,
     elementTableFields: RegionLayer.ELEMENT_TABLE_FIELDS,
     elementTableExtraControls: RegionLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
+    getDependantFields: RegionLayer.getDependantFields,
   },
   [TicketLayer.LAYER_KEY]: {
     [PLANNING_EVENT.addElementForm]: TicketLayer.ElementForm,
