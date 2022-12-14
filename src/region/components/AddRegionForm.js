@@ -43,6 +43,7 @@ const AddRegionForm = ({
   startEditRegion = null,
   handleRegionCreate = null,
   canUserAddRegion = false,
+  canUserEditRegion = false,
 }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -208,7 +209,7 @@ const AddRegionForm = ({
                 </Button>
               )}
 
-              {isEdit ? (
+              {isEdit && canUserEditRegion ? (
                 deleteLoading ? (
                   <LoadingButton sx={{ minWidth: "150px" }} loading>
                     Loading...

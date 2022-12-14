@@ -368,6 +368,7 @@ const RegionPage = () => {
                 <AddRegionForm
                   key="add"
                   canUserAddRegion={canUserAddRegion}
+                  canUserEditRegion={canUserEditRegion}
                   data={{
                     coordinates: newRegionCoords,
                     parentId: newRegionParentId,
@@ -381,6 +382,7 @@ const RegionPage = () => {
                 <AddRegionForm
                   key="add"
                   canUserAddRegion={canUserAddRegion}
+                  canUserEditRegion={canUserEditRegion}
                   data={{
                     coordinates: newRegionCoords,
                     parentId: newRegionParentId,
@@ -394,6 +396,7 @@ const RegionPage = () => {
                 <AddRegionForm
                   key={showRegionDetails}
                   canUserAddRegion={canUserAddRegion}
+                  canUserEditRegion={canUserEditRegion}
                   data={find(regionListData, ["id", showRegionDetails])}
                   onAreaCreate={resetAllSelection}
                   startEditRegion={startEditRegion}
