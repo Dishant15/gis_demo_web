@@ -209,7 +209,7 @@ const AddRegionForm = ({
                 </Button>
               )}
 
-              {isEdit && canUserEditRegion ? (
+              {/* {isEdit && canUserEditRegion ? (
                 deleteLoading ? (
                   <LoadingButton sx={{ minWidth: "150px" }} loading>
                     Loading...
@@ -224,7 +224,7 @@ const AddRegionForm = ({
                     Delete
                   </Button>
                 )
-              ) : null}
+              ) : null} */}
             </Stack>
           </Stack>
         </Box>
