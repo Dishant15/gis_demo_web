@@ -138,6 +138,10 @@ export const GisLayerForm = ({ layerKey }) => {
     validatedData = transformAndValidateData
       ? transformAndValidateData(validatedData, setError, isEdit)
       : validatedData;
+    // console.log(
+    //   "🚀 ~ file: GisLayerForm.js:139 ~ onSubmit ~ validatedData",
+    //   validatedData
+    // );
 
     if (isEdit) {
       editElement(validatedData);

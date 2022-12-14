@@ -60,13 +60,21 @@ const TableActions = ({ layerKey, elemData, onEditDataConverter }) => {
         name: "Details",
         Icon: EditIcon,
         onClick: () => {
+          let data = onEditDataConverter
+            ? onEditDataConverter(elemData)
+            : elemData;
+          // PATCH
+          if (layerKey === "region") {
+            data.parentId = elemData?.parent;
+            if (data.parentId) {
+              data.restriction_ids = { layerKey: data.parentId };
+            }
+          }
           dispatch(
             setMapState({
               event: PLANNING_EVENT.editElementForm,
               layerKey,
-              data: onEditDataConverter
-                ? onEditDataConverter(elemData)
-                : elemData,
+              data,
             })
           );
         },

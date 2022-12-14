@@ -55,7 +55,7 @@ export const addNewElement = async ({ data, layerKey }) => {
 
 export const editElementDetails = async ({ data, layerKey, elementId }) => {
   if (layerKey === "region") {
-    let submitData = { name: data.name };
+    let submitData = pick(data, ["name", "unique_id", "layer", "parentId"]);
     if (data?.geometry && Array.isArray(data.geometry)) {
       submitData.coordinates = data.geometry;
     }

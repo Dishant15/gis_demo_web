@@ -85,10 +85,11 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
 export const getDependantFields = ({ submitData, parents }) => {
   const parentRegion = get(parents, "region.0", null);
   // add parent fields for child region
+  // show incremented layer
   if (!!parentRegion) {
     return {
       ...submitData,
-      layer: parentRegion.layer || 1,
+      layer: parentRegion.layer ? parentRegion.layer + 1 : 1,
       parentId: parentRegion.id,
     };
   } else {
