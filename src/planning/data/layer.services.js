@@ -55,7 +55,11 @@ export const addNewElement = async ({ data, layerKey }) => {
 
 export const editElementDetails = async ({ data, layerKey, elementId }) => {
   if (layerKey === "region") {
-    const res = await Api.put(apiPutRegionEdit(elementId), { name: data.name });
+    let submitData = { name: data.name };
+    if (data?.geometry && Array.isArray(data.geometry)) {
+      submitData.coordinates = data.geometry;
+    }
+    const res = await Api.put(apiPutRegionEdit(elementId), submitData);
     return res.data;
   } else {
     const res = await Api.put(apiPutEditElement(layerKey, elementId), data);
