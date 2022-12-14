@@ -158,7 +158,7 @@ const TicketForm = ({
       due_date: get(formData, "due_date") ? new Date(formData.due_date) : "",
       ticket_type: get(formData, "ticket_type"),
       network_type: get(formData, "network_type") || "L1",
-      assignee: find(userList, ["id", get(formData, "assignee")]),
+      assignee: find(userList, ["id", get(formData, "assignee.id")]),
       region: find(regionList, ["id", get(formData, "region.id")]),
     },
   });

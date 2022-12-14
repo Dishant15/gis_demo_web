@@ -34,6 +34,7 @@ export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "Ticket Type", field: "ticket_type_display", type: "simple" },
   { label: "Network Type", field: "network_type_display", type: "simple" },
+  { label: "Assignee", field: "assignee.name", type: "simple" },
   { label: "Due Date", field: "due_date", type: "date" },
   { label: "Remarks", field: "remarks", type: "simple" },
   // { label: "Assignee", field: "assignee.name", type: "simple" }, // need to update serializer, fix assignee in ticket edit after updating details serializer
