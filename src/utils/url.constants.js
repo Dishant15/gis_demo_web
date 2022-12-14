@@ -93,6 +93,8 @@ export const apiGetTicketWorkorders = (ticketId) =>
 export const apiExportTicket = (ticketId) => `/api/ticket/${ticketId}/export/`;
 export const apiImportTicket = (ticketId) => `/api/ticket/${ticketId}/import/`;
 export const apiGetTicketListSummery = () => `/api/ticket/list/summery/`;
+export const apiGetTicketListSummeryExport = () =>
+  `/api/ticket/list/summery-export/`;
 
 // workorder apis
 export const apiPutWorkOrderEdit = (workOrderId) =>

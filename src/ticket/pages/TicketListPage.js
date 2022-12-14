@@ -19,6 +19,7 @@ import { Add } from "@mui/icons-material";
 
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
+import TicketSummeryDownload from "ticket/components/TicketSummeryDownload";
 
 import { fetchTicketSummeryList } from "ticket/data/services";
 import {
@@ -89,6 +90,7 @@ const TicketListPage = () => {
         <Typography flex={1} className="dtl-title" variant="h5">
           Tickets
         </Typography>
+        <TicketSummeryDownload />
         {canTicketAdd ? (
           <Button
             variant="outlined"

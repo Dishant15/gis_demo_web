@@ -11,6 +11,7 @@ import {
   apiExportTicket,
   apiImportTicket,
   apiGetTicketListSummery,
+  apiGetTicketListSummeryExport,
 } from "utils/url.constants";
 
 export const fetchTicketSummeryList = async () => {
@@ -74,6 +75,13 @@ export const importTicket = async ({ ticketId, data }) => {
     headers: {
       "content-type": "multipart/form-data",
     },
+  });
+  return res.data;
+};
+
+export const fetchExportTicketSummery = async () => {
+  const res = await Api.get(apiGetTicketListSummeryExport(), null, {
+    responseType: "blob",
   });
   return res.data;
 };
