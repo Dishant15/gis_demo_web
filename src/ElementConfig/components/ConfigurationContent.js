@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef, useMemo } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import {
   Container,
@@ -90,6 +90,8 @@ const ConfigurationContentWrapper = ({ layerKey }) => {
  *    delete dialog
  */
 const ConfigurationContent = ({ layerKey }) => {
+  const queryClient = useQueryClient();
+
   const [showForm, setShowForm] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
   const [showDialog, setshowDialog] = useState(false);
@@ -108,6 +110,7 @@ const ConfigurationContent = ({ layerKey }) => {
     (mutationData) => upsertElementConfig(mutationData, layerKey),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries("planningLayerConfigsDetails");
         handleFormClose();
         refetch();
       },
@@ -120,6 +123,7 @@ const ConfigurationContent = ({ layerKey }) => {
   const { mutate: deleteElementMutation, isLoading: deleteElementLoading } =
     useMutation((mutationData) => deleteElementConfig(mutationData, layerKey), {
       onSuccess: () => {
+        queryClient.invalidateQueries("planningLayerConfigsDetails");
         handleDeleteClose();
         refetch();
       },
