@@ -251,13 +251,23 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
           onLoad={handleEditFeatureLoad}
         />
       );
-    } else if (
-      featureType === FEATURE_TYPES.POLYGON ||
-      featureType === FEATURE_TYPES.MULTI_POLYGON
-    ) {
+    } else if (featureType === FEATURE_TYPES.POLYGON) {
       return (
         <Polygon
           path={coordsToLatLongMap(coordinates)}
+          options={{
+            ...options,
+            ...GisEditOptions,
+            icon: undefined,
+            pin: undefined,
+          }}
+          onLoad={handleEditFeatureLoad}
+        />
+      );
+    } else if (featureType === FEATURE_TYPES.MULTI_POLYGON) {
+      return (
+        <Polygon
+          path={coordsToLatLongMap(coordinates[0][0])}
           options={{
             ...options,
             ...GisEditOptions,

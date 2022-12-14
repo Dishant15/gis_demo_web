@@ -21,7 +21,7 @@ export const fetchElementDetails = async ({ queryKey }) => {
     const res = await Api.get(apiGetTicketDetails(elementId));
     return res.data;
   } else if (layerKey === "region") {
-    const res = await Api.get(apiGetRegionDetails(elementId, "data"));
+    const res = await Api.get(apiGetRegionDetails(elementId, "detail"));
     return res.data;
   } else {
     const res = await Api.get(apiGetElementDetails(layerKey, elementId));
