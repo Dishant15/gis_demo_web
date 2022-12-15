@@ -192,12 +192,21 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
               data: { coordinates: submitData.geometry },
             });
           } else {
+            // PATCH
+            if (layerKey === "region") {
+              if (mapStateData?.parent) {
+                submitData.parentId = mapStateData.parent;
+              }
+              if (mapStateData?.layer) {
+                submitData.layer = mapStateData.layer;
+              }
+            }
             editElement(submitData);
           }
         },
       }
     );
-  }, [layerKey, selectedRegionIds, elementId]);
+  }, [layerKey, selectedRegionIds, elementId, mapStateData]);
 
   const handleEditFeatureLoad = useCallback((feature) => {
     featureRef.current = feature;
