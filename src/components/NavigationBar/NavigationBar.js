@@ -206,14 +206,16 @@ const NavigationBar = () => {
               Element Configuration
             </MenuItem>
           ) : null}
-          <MenuItem
-            onClick={handleClose}
-            component="a"
-            href={getFeedbackLink()}
-            target="__blank"
-          >
-            Feedback
-          </MenuItem>
+          {isSuperAdminUser ? (
+            <MenuItem
+              onClick={handleClose}
+              component="a"
+              href={getFeedbackLink()}
+              target="__blank"
+            >
+              Feedback
+            </MenuItem>
+          ) : null}
         </Menu>
         <Menu
           id="settings-menu"
