@@ -57,7 +57,7 @@ const TicketSideBar = React.memo(({ ticketId }) => {
               Error occured while fetching data
             </Typography>
           </Box>
-        ) : (
+        ) : minimized ? null : (
           <Box className="ticket-sidebar-content">
             <TicketWorkOrderList workOrderList={work_orders} />
           </Box>
