@@ -85,7 +85,13 @@ const ElementListTable = ({ elementList }) => {
     );
 
   return (
-    <Stack spacing={1} divider={<Divider />} py={1}>
+    <Stack
+      spacing={1}
+      divider={<Divider />}
+      py={1}
+      maxHeight="72vh"
+      overflow="auto"
+    >
       {elementList.map((element) => {
         const Icon =
           LayerKeyMappings[element.layerKey]["getViewOptions"](element).icon;

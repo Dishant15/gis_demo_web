@@ -91,7 +91,13 @@ const ListElementConnections = ({ layerKey }) => {
         </Stack>
         <Divider />
         {!!size(elemConnectionData) ? (
-          <Stack spacing={1} py={1} divider={<Divider />}>
+          <Stack
+            spacing={1}
+            py={1}
+            divider={<Divider />}
+            maxHeight="72vh"
+            overflow="auto"
+          >
             {elemConnectionData.map((connection) => {
               const { element, layer_info } = connection;
               const EndIcon =

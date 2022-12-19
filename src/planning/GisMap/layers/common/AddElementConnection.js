@@ -233,7 +233,13 @@ const AddElementConnection = () => {
           </IconButton>
         </Stack>
         {size(elementList) ? (
-          <Stack spacing={1} divider={<Divider />} py={1}>
+          <Stack
+            spacing={1}
+            divider={<Divider />}
+            py={1}
+            maxHeight="72vh"
+            overflow="auto"
+          >
             {ConnectionList}
           </Stack>
         ) : (

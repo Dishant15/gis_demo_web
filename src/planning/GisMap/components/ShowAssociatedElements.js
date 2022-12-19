@@ -104,7 +104,13 @@ const ElementList = ({ data }) => {
     );
 
   return (
-    <Stack spacing={1} divider={<Divider />} py={1}>
+    <Stack
+      spacing={1}
+      divider={<Divider />}
+      py={1}
+      maxHeight="72vh"
+      overflow="auto"
+    >
       {data.map(({ element, layer_info }) => {
         const { layer_key } = layer_info;
         const Icon =
