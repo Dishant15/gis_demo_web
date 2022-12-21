@@ -148,7 +148,7 @@ const NavigationBar = () => {
                 </Typography>
                 {loginSince ? (
                   <Typography variant="caption">
-                    Login since {format(loginSince, "dd/MM hh:mm")}
+                    Login since {format(new Date(loginSince), "dd/MM hh:mm")}
                   </Typography>
                 ) : null}
               </Box>
