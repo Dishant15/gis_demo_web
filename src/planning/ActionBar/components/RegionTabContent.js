@@ -11,6 +11,8 @@ import {
   orderBy,
   size,
   xor,
+  find,
+  last,
 } from "lodash";
 import {
   Box,
@@ -27,7 +29,7 @@ import ExpandMore from "components/common/ExpandMore";
 import DummyListLoader from "./DummyListLoader";
 
 import { fetchRegionList } from "planning/data/actionBar.services";
-import { getFillColor } from "utils/map.utils";
+import { getFillColor, pointCoordsToLatLongMap } from "utils/map.utils";
 import {
   handleRegionExpand,
   setActiveTab,
@@ -36,6 +38,7 @@ import {
   getExpandedRegionIds,
   getSelectedRegionIds,
 } from "planning/data/planningState.selectors";
+import { setMapPosition } from "planning/data/planningGis.reducer";
 import { onRegionSelectionUpdate } from "planning/data/planning.actions";
 
 const RegionTabContent = () => {
@@ -103,10 +106,20 @@ const RegionTabContent = () => {
     // check if regions changed
     if (size(xor(regionIdList, selectedRegionIds))) {
       dispatch(onRegionSelectionUpdate(regionIdList));
+      // get last selected region and center
+      const selectedRegion = find(regionList, ["id", last(regionIdList)]);
+      if (selectedRegion?.center) {
+        dispatch(
+          setMapPosition({
+            center: pointCoordsToLatLongMap(selectedRegion.center),
+            zoom: 16,
+          })
+        );
+      }
     }
     // change tab to layers
     dispatch(setActiveTab(1));
-  }, [selectedRegionSet, selectedRegionIds]);
+  }, [selectedRegionSet, selectedRegionIds, regionList]);
 
   if (isLoading) return <DummyListLoader />;
 
