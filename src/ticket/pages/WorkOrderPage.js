@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import {
   cloneDeep,
@@ -62,6 +62,8 @@ const WorkOrderPage = () => {
 
   // query and mutations
   const { ticketId } = useParams();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const canTicketWorkorderAdd = useSelector(
     checkUserPermission("ticket_workorder_add")
@@ -443,6 +445,10 @@ const WorkOrderPage = () => {
     []
   );
 
+  const handleGoBack = useCallback(() => {
+    navigate(-1);
+  }, []);
+
   const showStatusPopover = !isNull(surveyStatusEdit);
   const hasWorkorders = size(work_orders);
   const hasFilteredWorkOrders = size(filteredWorkOrders);
@@ -457,8 +463,7 @@ const WorkOrderPage = () => {
       <Stack direction="row" justifyContent="space-between">
         <Button
           color="secondary"
-          component={Link}
-          to={getTicketListPage()}
+          onClick={handleGoBack}
           startIcon={<ArrowBackIcon />}
         >
           Go Back
