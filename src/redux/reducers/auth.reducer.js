@@ -6,6 +6,7 @@ const initialState = {
   user: {},
   isAdmin: false,
   permissions: {},
+  loginSince: null,
 };
 
 const authSlice = createSlice({
@@ -20,6 +21,7 @@ const authSlice = createSlice({
       state.isAdmin = !!(
         get(payload, "user.is_staff") || get(payload, "user.is_superuser")
       );
+      state.loginSince = new Date();
     },
     logout: (state) => {
       return initialState;

@@ -7,6 +7,7 @@ import get from "lodash/get";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import {
   AppBar,
+  Box,
   Button,
   Menu,
   MenuItem,
@@ -33,12 +34,16 @@ import {
   getIsAdminUser,
   getIsSuperAdminUser,
   getIsUserLoggedIn,
+  getLoggedUserDetails,
+  getLoggedUserLoginTime,
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
 import { handleLogoutUser } from "redux/actions/auth.actions";
 import LOGO from "assets/gtpl.jpeg";
 
 import "./navigation-bar.scss";
+import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
+import { format } from "date-fns";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -48,6 +53,8 @@ const NavigationBar = () => {
   const isSuperAdminUser = useSelector(getIsSuperAdminUser);
   const permissions = useSelector(getUserPermissions);
   const isUserLoggedIn = useSelector(getIsUserLoggedIn);
+  const loggedUserDetails = useSelector(getLoggedUserDetails);
+  const loginSince = useSelector(getLoggedUserLoginTime);
 
   const canUserView = get(permissions, "user_view", false) || isSuperAdminUser;
   const canRegionView =
@@ -120,6 +127,11 @@ const NavigationBar = () => {
             </Button>
           ) : null}
           <Button
+            sx={{
+              padding: "2px 4px",
+              textAlign: "left",
+              textTransform: "initial",
+            }}
             color="inherit"
             id="settings-button"
             onClick={handleClick("settings-menu")}
@@ -128,7 +140,19 @@ const NavigationBar = () => {
             aria-expanded={showSettingsMenu ? "true" : undefined}
             endIcon={<KeyboardArrowDown />}
           >
-            Settings
+            <Box display="flex" alignItems="center">
+              <BackgroundLetterAvatars name={loggedUserDetails.name} />
+              <Box lineHeight={1} pl={1}>
+                <Typography variant="subtitle2" lineHeight={1.1}>
+                  {loggedUserDetails.username}
+                </Typography>
+                {loginSince ? (
+                  <Typography variant="caption">
+                    Login since {format(loginSince, "dd/MM hh:mm")}
+                  </Typography>
+                ) : null}
+              </Box>
+            </Box>
           </Button>
         </Stack>
       );
@@ -141,7 +165,13 @@ const NavigationBar = () => {
         </Stack>
       );
     }
-  }, [isUserLoggedIn, showAdministration, canPlanningView, canSurveyView]);
+  }, [
+    isUserLoggedIn,
+    showAdministration,
+    canPlanningView,
+    canSurveyView,
+    loggedUserDetails,
+  ]);
 
   return (
     <AppBar position="static" id="navigation-bar">

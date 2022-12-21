@@ -4,6 +4,7 @@ import get from "lodash/get";
 export const getIsUserLoggedIn = (store) => !!store.auth.token;
 
 export const getLoggedUserDetails = (store) => store.auth.user;
+export const getLoggedUserLoginTime = (store) => store.auth.loginSince;
 
 export const getIsAdminUser = (store) => store.auth.isAdmin;
 
