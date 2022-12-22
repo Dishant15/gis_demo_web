@@ -6,14 +6,7 @@ import some from "lodash/some";
 import indexOf from "lodash/indexOf";
 import size from "lodash/size";
 
-import {
-  Divider,
-  Stack,
-  Typography,
-  Box,
-  IconButton,
-  Button,
-} from "@mui/material";
+import { Divider, Stack, Typography, Box, IconButton } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -172,7 +165,11 @@ const AddElementConnection = () => {
             onClick={handleShowDetails(element)}
           >
             <Typography variant="subtitle1" lineHeight={1.1}>
-              {name}
+              {name}{" "}
+              <Typography
+                variant="caption"
+                lineHeight={1}
+              >{`(${cable_end} End)`}</Typography>
             </Typography>
             <Typography variant="caption">#{network_id}</Typography>
           </Box>
