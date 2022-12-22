@@ -1,5 +1,6 @@
 import {
   ELEMENT_FORM_ABSTRACT_TEMPLATE,
+  ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
   ELEMENT_TABLE_ABSTRACT_FIELDS,
   FEATURE_TYPES,
 } from "../common/configuration";
@@ -30,6 +31,10 @@ export const INITIAL_ELEMENT_DATA = {
 // this will become function -> generate From Configs
 export const ELEMENT_FORM_TEMPLATE = {
   sections: [
+    {
+      ...ELEMENT_FORM_CONFIG_ABSTRACT_SECTION,
+      title: "OLT Configuration",
+    },
     {
       title: "OLT Form",
       fieldConfigs: [
