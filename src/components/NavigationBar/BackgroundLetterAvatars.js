@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "@mui/material/Avatar";
+import get from "lodash/get";
 
 const stringToColor = (string) => {
   let hash = 0;
@@ -20,11 +21,16 @@ const stringToColor = (string) => {
 };
 
 const stringAvatar = (name) => {
+  const namelist = name.split(" ");
+  const name1 = get(namelist, [0, 0], "G");
+  const name2 = get(namelist, [1, 0], "T");
   return {
-    // sx: {
-    //   bgcolor: stringToColor(name),
-    // },
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    sx: {
+      height: "34px",
+      width: "34px",
+      fontSize: "1rem",
+    },
+    children: `${name1}${name2}`,
   };
 };
 
