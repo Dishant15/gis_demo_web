@@ -49,7 +49,6 @@ const ListElementConnections = ({ layerKey }) => {
         layerKey,
         elementGeometry,
         elementId,
-        existingConnections: elemConnectionData,
       })
     );
   };
