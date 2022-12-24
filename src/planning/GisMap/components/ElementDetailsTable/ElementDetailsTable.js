@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import Box from "@mui/material/Box";
 
-import GisMapPopups from "../GisMapPopups";
+import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import TableHeader from "./TableHeader";
 import DummyLoader from "./DummyLoader";
 import TableActions from "./TableActions";

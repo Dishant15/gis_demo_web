@@ -15,8 +15,9 @@ import Divider from "@mui/material/Divider";
 
 import LanguageIcon from "@mui/icons-material/Language";
 
-import DummyLoader from "./ElementDetailsTable/DummyLoader";
 import GisMapPopups from "./GisMapPopups";
+import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
+
 import TableHeader from "./ElementDetailsTable/TableHeader";
 
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -53,7 +54,7 @@ const ShowAssociatedElements = () => {
   }, []);
 
   if (isLoading) {
-    return <DummyLoader />;
+    return <GisMapPopupLoader />;
   }
 
   return (

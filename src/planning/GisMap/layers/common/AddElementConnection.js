@@ -15,6 +15,7 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
+import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -134,6 +135,8 @@ const AddElementConnection = () => {
     },
     []
   );
+
+  if (connectionsLoading) return <GisMapPopupLoader />;
 
   // loop over possible connections, This will be p_cable elements only for element connections
   const ConnectionList = elementList.map((element) => {

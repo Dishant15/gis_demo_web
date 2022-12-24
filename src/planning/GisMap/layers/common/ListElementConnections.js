@@ -21,7 +21,7 @@ import SwipeRightAltIcon from "@mui/icons-material/SwipeRightAlt";
 
 import AddIcon from "@mui/icons-material/Add";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
-import { default as ElemTableDummyLoader } from "planning/GisMap/components/ElementDetailsTable/DummyLoader";
+import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
@@ -53,7 +53,7 @@ const ListElementConnections = ({ layerKey }) => {
     );
   };
 
-  if (isLoading) return <ElemTableDummyLoader />;
+  if (isLoading) return <GisMapPopupLoader />;
   return (
     <GisMapPopups dragId="ElementConnections">
       <Box minWidth="350px" maxWidth="550px">
