@@ -12,8 +12,8 @@ import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 
-import DummyListLoader from "./DummyListLoader";
 import ElementConfigPopup from "./ElementConfigPopup";
+import AddElementContentLoader from "./AddElementContentLoader";
 
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
@@ -104,7 +104,7 @@ const AddElementContent = () => {
   }, [layerConfigPopup]);
 
   if (isLoading) {
-    return <DummyListLoader />;
+    return <AddElementContentLoader />;
   }
 
   if (!!size(layerCofigs)) {

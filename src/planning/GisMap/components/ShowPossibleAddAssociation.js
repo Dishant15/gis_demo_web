@@ -18,8 +18,8 @@ import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "./GisMapPopups";
-import DummyLoader from "./ElementDetailsTable/DummyLoader";
 import ElementConfigPopup from "planning/ActionBar/components/ElementConfigPopup";
+import AddElementContentLoader from "planning/ActionBar/components/AddElementContentLoader";
 
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import {
@@ -221,7 +221,7 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
   }, [layerConfigPopup]);
 
   if (isLoading || isValidationLoading) {
-    return <DummyLoader />;
+    return <AddElementContentLoader />;
   }
 
   if (!!size(layerCofigs)) {

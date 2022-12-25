@@ -1,6 +1,8 @@
 import React from "react";
 import { Skeleton, Box } from "@mui/material";
-import { range } from "lodash";
+
+import range from "lodash/range";
+
 import GisMapPopups from "../GisMapPopups";
 
 const DummyLoader = () => {

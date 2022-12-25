@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 import some from "lodash/some";
-import indexOf from "lodash/indexOf";
 import size from "lodash/size";
 
 import { Divider, Stack, Typography, Box, IconButton } from "@mui/material";
@@ -16,10 +15,14 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
+import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { addElementConnection } from "planning/data/layer.services";
+import {
+  addElementConnection,
+  fetchElementConnections,
+} from "planning/data/layer.services";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -33,12 +36,18 @@ import {
 const AddElementConnection = () => {
   const dispatch = useDispatch();
   const selectedRegionIds = useSelector(getSelectedRegionIds);
-  const { elementId, layerKey, elementList, existingConnections } = useSelector(
+  const { elementId, layerKey, elementList } = useSelector(
     getPlanningMapStateData
   );
 
-  // on new cable connect add success add cableId to this list to show connected without server fetch
-  const [newConnection, setNewConnection] = useState([]);
+  const {
+    data: existingConnections,
+    isLoading: connectionsLoading,
+    refetch,
+  } = useQuery(
+    ["elementConnections", layerKey, elementId],
+    fetchElementConnections
+  );
 
   const { mutate: updateConnectionMutation, isLoading } = useMutation(
     addElementConnection,
@@ -59,8 +68,7 @@ const AddElementConnection = () => {
             text: "Element to table connection was updated successfully",
           })
         );
-        // mark current cable as connected
-        setNewConnection((currNewConns) => [...currNewConns, res.id]);
+        refetch();
       },
       onError: (err) => {
         dispatch(
@@ -128,14 +136,13 @@ const AddElementConnection = () => {
     []
   );
 
+  if (connectionsLoading) return <GisMapPopupLoader />;
+
   // loop over possible connections, This will be p_cable elements only for element connections
   const ConnectionList = elementList.map((element) => {
     const { id, name, cable_end, network_id, layerKey } = element;
     // check if same layer_key, id data in existingConnections
-    const isConnected =
-      some(existingConnections, ["element.id", id]) ||
-      // if user just connected one of the cable, get that from state
-      indexOf(newConnection, id) !== -1;
+    const isConnected = some(existingConnections, ["element.id", id]);
     // if true than disable connect btn
     const Icon = LayerKeyMappings[layerKey]["getViewOptions"](element).icon;
     return (

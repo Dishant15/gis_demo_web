@@ -4,9 +4,9 @@ import { useQuery } from "react-query";
 
 import Box from "@mui/material/Box";
 
-import GisMapPopups from "../GisMapPopups";
+import GisMapPopups from "planning/GisMap/components/GisMapPopups";
+import { GisElementTableLoader } from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 import TableHeader from "./TableHeader";
-import DummyLoader from "./DummyLoader";
 import TableActions from "./TableActions";
 import TableContent from "./TableContent";
 
@@ -48,7 +48,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
   }, [dispatch]);
 
   // show dummy loader for loading
-  if (isLoading) return <DummyLoader />;
+  if (isLoading) return <GisElementTableLoader />;
 
   return (
     <GisMapPopups dragId="element-table">

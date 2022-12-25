@@ -144,7 +144,7 @@ export const onRegionSelectionUpdate =
   };
 
 export const onElementAddConnectionEvent =
-  ({ layerKey, elementId, elementGeometry, existingConnections }) =>
+  ({ layerKey, elementId, elementGeometry }) =>
   (dispatch, getState) => {
     const storeState = getState();
     // check if cable layer is selected in layers tab
@@ -197,7 +197,6 @@ export const onElementAddConnectionEvent =
           elementList: resultCableList,
           elementId,
           layerKey,
-          existingConnections,
         },
       })
     );

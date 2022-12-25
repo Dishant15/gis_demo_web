@@ -3,9 +3,9 @@ import { Box, Stack, Typography, Skeleton } from "@mui/material";
 
 const WorkOrderLoading = () => {
   return (
-    <Box id="dash-task-list" sx={{ backgroundColor: "#efefef" }}>
+    <Box id="dash-task-list">
       <Typography className="dtl-title" variant="h5">
-        Survey Tasks
+        Workorders
       </Typography>
       <Stack
         className="dtl-content-wrapper"

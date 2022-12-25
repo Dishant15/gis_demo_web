@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import TicketWorkOrderList from "./components/TicketWorkOrderList";
-import DummyLoader from "planning/GisMap/components/ElementDetailsTable/DummyLoader";
+import { GisElementTableLoader } from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import TableHeader from "planning/GisMap/components/ElementDetailsTable/TableHeader";
 
@@ -38,7 +38,7 @@ const TicketSideBar = React.memo(({ ticketId }) => {
   }, [setMinimized]);
 
   if (isLoading) {
-    return <DummyLoader />;
+    return <GisElementTableLoader />;
   }
 
   return (
