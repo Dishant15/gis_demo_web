@@ -94,6 +94,10 @@ export const ELEMENT_FORM_TEMPLATE = {
       ],
     },
   ],
+  // this shows where dependant template data comes from
+  metaData: {
+    geometryUpdateFields: ["gis_len"],
+  },
 };
 
 export const INITIAL_CONFIG_DATA = {

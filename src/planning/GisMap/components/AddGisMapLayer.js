@@ -1,8 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DrawingManager, Polygon } from "@react-google-maps/api";
+import Geocode from "react-geocode";
 
-import { lineString, length, area, polygon, convertArea } from "@turf/turf";
+import {
+  lineString,
+  length,
+  area,
+  polygon,
+  convertArea,
+  centroid,
+} from "@turf/turf";
 import round from "lodash/round";
 import get from "lodash/get";
 import size from "lodash/size";
@@ -33,6 +41,7 @@ import useValidateGeometry from "../hooks/useValidateGeometry";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { onAddElementDetails } from "planning/data/planning.actions";
 import { DRAG_ICON_WIDTH } from "utils/constant";
+import { getFormattedAddressFromGoogleAddress } from "utils/app.utils";
 
 const GisEditOptions = {
   clickable: true,
@@ -66,6 +75,11 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
   const options = get(LayerKeyMappings, [layerKey, "getViewOptions"])(
     configuration
   );
+  const formMetaData = get(
+    LayerKeyMappings,
+    [layerKey, "formConfig", "metaData"],
+    {}
+  );
 
   /**************************** */
   //        Handlers            //
@@ -91,18 +105,10 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     let submitData = {};
     if (featureType === FEATURE_TYPES.POLYLINE) {
       submitData.geometry = latLongMapToLineCoords(featureCoords);
-      // get length and round to 4 decimals
-      submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
     }
     //
     else if (featureType === FEATURE_TYPES.POLYGON) {
       submitData.geometry = latLongMapToCoords(featureCoords);
-      // get area of polygon
-      const areaInMeters = area(polygon([submitData.geometry]));
-      submitData.gis_area = round(
-        convertArea(areaInMeters, "meters", "kilometers"),
-        4
-      );
     }
     //
     else if (featureType === FEATURE_TYPES.MULTI_POLYGON) {
@@ -116,6 +122,27 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     else {
       throw new Error("feature type is invalid");
     }
+
+    // add geometry related fields
+    const geometryFields = Array.isArray(formMetaData.geometryUpdateFields)
+      ? formMetaData.geometryUpdateFields
+      : [];
+
+    for (let index = 0; index < geometryFields.length; index++) {
+      const field = geometryFields[index];
+      if (field === "gis_len") {
+        // get length and round to 4 decimals
+        submitData.gis_len = round(length(lineString(submitData.geometry)), 4);
+      } else if (field === "gis_area") {
+        // get area of polygon
+        const areaInMeters = area(polygon([submitData.geometry]));
+        submitData.gis_area = round(
+          convertArea(areaInMeters, "meters", "kilometers"),
+          4
+        );
+      }
+    }
+
     let mutationData;
     if (!!restriction_ids) {
       // validate with parent geometry contains check
@@ -136,11 +163,47 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     // server side validate geometry
     validateElementMutation(mutationData, {
       onSuccess: (res) => {
-        // clear map refs
-        featureRef.current.setMap(null);
-        dispatch(
-          onAddElementDetails({ layerKey, validationRes: res, submitData })
-        );
+        if (formMetaData.getElementAddressData) {
+          let latLong;
+          if (featureType === FEATURE_TYPES.POINT) {
+            latLong = [submitData.geometry[1], submitData.geometry[0]];
+          } else {
+            const turfPoint = polygon([submitData.geometry]);
+            const centerRes = centroid(turfPoint);
+            const center = centerRes.geometry.coordinates;
+            latLong = [center[1], center[0]];
+          }
+          // Get address from latitude, longitude.
+          Geocode.fromLatLng(...latLong).then(
+            (response) => {
+              const formattedAddress =
+                getFormattedAddressFromGoogleAddress(response);
+              submitData = formMetaData.getElementAddressData(
+                formattedAddress,
+                submitData
+              );
+              // clear map refs
+              featureRef.current.setMap(null);
+              dispatch(
+                onAddElementDetails({
+                  layerKey,
+                  validationRes: res,
+                  submitData,
+                })
+              );
+            },
+            (error) => {
+              // TODO: what to do ?
+              console.error(error);
+            }
+          );
+        } else {
+          // clear map refs
+          featureRef.current.setMap(null);
+          dispatch(
+            onAddElementDetails({ layerKey, validationRes: res, submitData })
+          );
+        }
       },
     });
   };

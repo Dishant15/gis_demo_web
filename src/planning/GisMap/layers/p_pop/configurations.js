@@ -73,6 +73,13 @@ export const ELEMENT_FORM_TEMPLATE = {
       ],
     },
   ],
+  // this shows where dependant template data comes from
+  metaData: {
+    getElementAddressData: (address, submitData) => {
+      submitData.address = address.address;
+      return submitData;
+    },
+  },
 };
 
 export const ELEMENT_TABLE_FIELDS = [

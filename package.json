@@ -26,6 +26,7 @@
     "react-datetime-range-super-picker": "^1.14.1",
     "react-dom": "^18.1.0",
     "react-draggable": "^4.4.5",
+    "react-geocode": "^0.2.3",
     "react-hook-form": "^7.31.0",
     "react-query": "^3.38.1",
     "react-redux": "^8.0.1",
