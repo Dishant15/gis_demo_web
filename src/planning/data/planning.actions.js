@@ -11,6 +11,7 @@ import get from "lodash/get";
 import last from "lodash/last";
 import size from "lodash/size";
 import isEmpty from "lodash/isEmpty";
+import merge from "lodash/merge";
 
 import {
   getLayerSelectedConfiguration,
@@ -51,7 +52,7 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
-import { merge } from "lodash";
+import { filterGisDataByPolygon } from "./planning.utils";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const clickLatLong = mapMouseEvent.latLng.toJSON();
@@ -59,6 +60,7 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const storeState = getState();
   const mapStateEvent = getPlanningMapStateEvent(storeState);
   const layerData = getAllLayersData(storeState);
+  const selectedLayerKeys = getSelectedLayerKeys(storeState);
 
   if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
     // if ths is select elements event get list of elements around user click
@@ -68,42 +70,13 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
       steps: 10,
       units: "kilometers",
     });
-    const elementResultList = [];
-    // loop over layerData
-    const layerKeyList = Object.keys(layerData);
-    // check intersects
-    for (let lkInd = 0; lkInd < layerKeyList.length; lkInd++) {
-      const currLayerKey = layerKeyList[lkInd];
 
-      if (currLayerKey === "region") continue;
-      const currLayerData = layerData[currLayerKey];
-      const featureType = LayerKeyMappings[currLayerKey]["featureType"];
-
-      for (let elemInd = 0; elemInd < currLayerData.length; elemInd++) {
-        const element = currLayerData[elemInd];
-        // create turf geom for each element
-        let turfGeom;
-        if (featureType === FEATURE_TYPES.POINT) {
-          turfGeom = point(element.geometry);
-        } else if (featureType === FEATURE_TYPES.POLYLINE) {
-          turfGeom = lineString(element.geometry);
-        } else if (featureType === FEATURE_TYPES.POLYGON) {
-          turfGeom = polygon([element.geometry]);
-        } else {
-          // multi polygon
-          turfGeom = multiPolygon(element.geometry);
-        }
-        // check intersects
-        const isIntersecting = booleanIntersects(circPoly, turfGeom);
-        // add to list if intersect true
-        if (isIntersecting) {
-          elementResultList.push({
-            ...element,
-            layerKey: currLayerKey,
-          });
-        }
-      }
-    }
+    const elementResultList = filterGisDataByPolygon({
+      filterPolygon: circPoly,
+      gisData: layerData,
+      whiteList: selectedLayerKeys,
+      blackList: ["region"],
+    });
     const filterCoords = coordsToLatLongMap(circPoly.geometry.coordinates[0]);
     // fire next event : listElementsOnMap, with new list data
     dispatch(
