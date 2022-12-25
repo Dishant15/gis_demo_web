@@ -57,6 +57,10 @@ export const ELEMENT_FORM_TEMPLATE = {
       ],
     },
   ],
+  // this shows where dependant template data comes from
+  metaData: {
+    geometryUpdateFields: ["gis_area"],
+  },
 };
 
 export const ELEMENT_TABLE_FIELDS = [

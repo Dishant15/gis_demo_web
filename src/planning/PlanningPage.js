@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { isNull } from "lodash";
 
+import Geocode from "react-geocode";
+
 import ActionBar from "./ActionBar";
 import TicketSideBar from "./TicketContent";
 import GisMap from "./GisMap";
@@ -16,6 +18,10 @@ const PlanningPage = () => {
   const { search } = useLocation();
   const dispatch = useDispatch();
   const ticketId = useSelector(getPlanningTicketId);
+
+  useEffect(() => {
+    Geocode.setApiKey(process.env.REACT_APP_GOOGLE_API_KEY);
+  }, []);
 
   useEffect(() => {
     const query = new URLSearchParams(search);
