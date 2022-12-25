@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import get from "lodash/get";
+import has from "lodash/has";
 
 import { validateElementGeometry } from "planning/data/layer.services";
 import { addNotification } from "redux/reducers/notification.reducer";
@@ -18,22 +19,25 @@ const useValidateGeometry = () => {
       onError: (err) => {
         if (err.response.status === 400) {
           const errData = get(err, "response.data", {});
-          // is intersections error
-          if (!!errData.intersects?.length) {
-            // get and show error polygon
-            let errPolyCoords = [];
-            for (
-              let int_ind = 0;
-              int_ind < errData.intersects.length;
-              int_ind++
-            ) {
-              const currIntersectCoords = errData.intersects[int_ind];
+          // is intersection error
+          if (has(errData, "intersects")) {
+            if (!!errData.intersects?.length) {
+              // get and show error polygon
+              let errPolyCoords = [];
+              for (
+                let int_ind = 0;
+                int_ind < errData.intersects.length;
+                int_ind++
+              ) {
+                const currIntersectCoords = errData.intersects[int_ind];
 
-              const errCoordinates = coordsToLatLongMap(currIntersectCoords[0]);
-
-              errPolyCoords.push(errCoordinates);
+                const errCoordinates = coordsToLatLongMap(
+                  currIntersectCoords[0]
+                );
+                errPolyCoords.push(errCoordinates);
+              }
+              setErrPolygons(errPolyCoords);
             }
-            setErrPolygons(errPolyCoords);
             dispatch(
               addNotification({
                 type: "error",
