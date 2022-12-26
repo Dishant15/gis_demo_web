@@ -77,7 +77,6 @@ export const ELEMENT_FORM_TEMPLATE = {
   metaData: {
     getElementAddressData: (address, submitData) => {
       submitData.address = address.address;
-      return submitData;
     },
   },
 };

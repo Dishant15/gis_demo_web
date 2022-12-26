@@ -10,6 +10,8 @@ import {
   polygon,
   convertArea,
   centroid,
+  points,
+  center as centerFn,
 } from "@turf/turf";
 import round from "lodash/round";
 import get from "lodash/get";
@@ -90,32 +92,25 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
   }, []);
 
   const handleAddComplete = () => {
-    const featureCoords =
-      featureType === FEATURE_TYPES.POINT
-        ? getMarkerCoordinatesFromFeature(featureRef.current)
-        : getCoordinatesFromFeature(featureRef.current);
-    // apply validation before add coordinates
-    let validated = true;
-    if (validation) {
-      validated = validation(featureCoords);
-    }
-    if (!validated) return;
-
     // set coords to form data
     let submitData = {};
     if (featureType === FEATURE_TYPES.POLYLINE) {
+      const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToLineCoords(featureCoords);
     }
     //
     else if (featureType === FEATURE_TYPES.POLYGON) {
+      const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords(featureCoords);
     }
     //
     else if (featureType === FEATURE_TYPES.MULTI_POLYGON) {
+      const featureCoords = getCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords(featureCoords);
     }
     //
     else if (featureType === FEATURE_TYPES.POINT) {
+      const featureCoords = getMarkerCoordinatesFromFeature(featureRef.current);
       submitData.geometry = latLongMapToCoords([featureCoords])[0];
     }
     //
@@ -123,7 +118,11 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
       throw new Error("feature type is invalid");
     }
 
-    // add geometry related fields
+    /**
+     * get form config from LayerKeyMappings > layerKey
+     * check form config have meta data and geometryFields exist
+     * geometryFields used to auto calculate some fields and pre-fields into form
+     */
     const geometryFields = Array.isArray(formMetaData.geometryUpdateFields)
       ? formMetaData.geometryUpdateFields
       : [];
@@ -163,25 +162,45 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
     // server side validate geometry
     validateElementMutation(mutationData, {
       onSuccess: (res) => {
+        /**
+         * get form config from LayerKeyMappings > layerKey
+         * check form config have meta data and getElementAddressData exist
+         * getElementAddressData used to fetch address from lat, lng
+         */
         if (formMetaData.getElementAddressData) {
-          let latLong;
-          if (featureType === FEATURE_TYPES.POINT) {
-            latLong = [submitData.geometry[1], submitData.geometry[0]];
-          } else {
+          // @TODO: add validations for multi polygon and line
+          let latLong; // [lat, lng]
+          if (featureType === FEATURE_TYPES.POLYLINE) {
+            const features = points(submitData.geometry);
+            const centerRes = centerFn(features);
+            const center = centerRes.geometry.coordinates;
+            latLong = [center[1], center[0]];
+          }
+          //
+          else if (featureType === FEATURE_TYPES.POLYGON) {
             const turfPoint = polygon([submitData.geometry]);
             const centerRes = centroid(turfPoint);
             const center = centerRes.geometry.coordinates;
             latLong = [center[1], center[0]];
+          }
+          //
+          else if (featureType === FEATURE_TYPES.MULTI_POLYGON) {
+            const turfPoint = polygon(submitData.geometry);
+            const centerRes = centroid(turfPoint);
+            const center = centerRes.geometry.coordinates;
+            latLong = [center[1], center[0]];
+          }
+          //
+          else if (featureType === FEATURE_TYPES.POINT) {
+            latLong = [submitData.geometry[1], submitData.geometry[0]];
           }
           // Get address from latitude, longitude.
           Geocode.fromLatLng(...latLong).then(
             (response) => {
               const formattedAddress =
                 getFormattedAddressFromGoogleAddress(response);
-              submitData = formMetaData.getElementAddressData(
-                formattedAddress,
-                submitData
-              );
+
+              formMetaData.getElementAddressData(formattedAddress, submitData);
               // clear map refs
               featureRef.current.setMap(null);
               dispatch(
@@ -193,8 +212,8 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
               );
             },
             (error) => {
-              // TODO: what to do ?
-              console.error(error);
+              // address can not be fetched
+              console.log("address can not be fetched ", error);
             }
           );
         } else {

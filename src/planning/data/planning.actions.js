@@ -291,7 +291,7 @@ export const onPolygonShowOnMap =
     dispatch(
       setMapPosition({
         center: pointCoordsToLatLongMap(center),
-        zoom: 16,
+        zoom: 18,
       })
     );
     dispatch(
@@ -319,7 +319,7 @@ export const onTicketPolygonShowOnMap = (center, woId) => (dispatch) => {
   dispatch(
     setMapPosition({
       center: center,
-      zoom: 16,
+      zoom: 18,
     })
   );
   dispatch(setTicketMapHighlight(woId));

@@ -97,6 +97,9 @@ export const ELEMENT_FORM_TEMPLATE = {
   // this shows where dependant template data comes from
   metaData: {
     geometryUpdateFields: ["gis_len"],
+    getElementAddressData: (address, submitData) => {
+      submitData.address = address.address;
+    },
   },
 };
 

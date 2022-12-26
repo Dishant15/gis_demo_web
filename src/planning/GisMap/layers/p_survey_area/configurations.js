@@ -173,7 +173,6 @@ export const ELEMENT_FORM_TEMPLATE = {
       submitData.city = address.city;
       submitData.area = address.area;
       submitData.name = address.name || address.area;
-      return submitData;
     },
   },
 };

@@ -112,7 +112,7 @@ const RegionTabContent = () => {
         dispatch(
           setMapPosition({
             center: pointCoordsToLatLongMap(selectedRegion.center),
-            zoom: 16,
+            zoom: 18,
           })
         );
       }
