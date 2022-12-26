@@ -56,7 +56,11 @@ const TicketMapViewLayers = React.memo(() => {
                     // add default icon here
                     url: viewOptions.icon,
                   }}
-                  zIndex={zIndexMapping[layer_key]}
+                  zIndex={
+                    highlighted
+                      ? zIndexMapping.highlighted
+                      : zIndexMapping[layer_key]
+                  }
                   position={element.coordinates}
                   animation={highlighted ? 1 : null}
                 />
@@ -69,11 +73,21 @@ const TicketMapViewLayers = React.memo(() => {
                     options={{
                       ...COMMON_POLYGON_OPTIONS,
                       ...viewOptions,
-                      zIndex: zIndexMapping[layer_key],
+                      ...(highlighted
+                        ? {
+                            strokeOpacity: 0,
+                            strokeWeight: 0,
+                          }
+                        : {}),
+                      zIndex: highlighted
+                        ? zIndexMapping.highlighted
+                        : zIndexMapping[layer_key],
                     }}
                     paths={element.coordinates}
                   />
-                  <AnimatedPolyline coordinates={element.coordinates} />
+                  {highlighted ? (
+                    <AnimatedPolyline coordinates={element.coordinates} />
+                  ) : null}
                 </Fragment>
               );
 
