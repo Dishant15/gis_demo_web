@@ -13,6 +13,7 @@ export const getAddUserPage = () => "/users/add";
 export const getEditUserPage = (userId = ":userId") => `/users/edit/${userId}`;
 export const getUserRolePage = () => "/users/roles";
 export const getChangePasswordPage = () => "/change-password";
+export const getProfilePage = () => "/profile";
 
 export const getTicketListPage = () => "/ticket/list";
 export const getAddTicketPage = () => "/ticket/add";
@@ -60,6 +61,7 @@ export const apiKmlToCoordinates = () => `/api/region/kml-to-coordinates/`;
 // user & Auth apis
 export const apiGetUserList = () => "/api/user/list/";
 export const apiPostChangePassword = () => "/api/user/change-password/";
+export const apiPostProfileEdit = () => "/api/user/profile-edit/";
 export const apiAddUser = () => "/api/user/add/";
 export const apiUploadExcel = () => "/api/user/import-excel/";
 export const apiUserExportExcel = () => "/api/user/export-excel/";

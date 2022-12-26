@@ -18,6 +18,7 @@ import UserAdminForm from "gis_user/pages/UserAdminForm";
 import UserRoleAdminPage from "gis_user/pages/UserRoleAdminPage";
 import PageNotFound from "components/common/PageNotFound";
 import ChangePasswordPage from "pages/Authentication/ChangePasswordPage";
+import ProfilePage from "pages/Authentication/ProfilePage";
 
 import TicketAdminPage, { TicketListAdminPage } from "ticket/TicketAdminPage";
 import TicketListPage from "ticket/pages/TicketListPage";
@@ -50,6 +51,7 @@ import {
   getUserRolePage,
   get404,
   getChangePasswordPage,
+  getProfilePage,
 } from "../utils/url.constants";
 
 import "./global.scss";
@@ -178,6 +180,14 @@ const App = () => {
                       }
                     />
                   </Route>
+                  <Route
+                    path={getProfilePage()}
+                    element={
+                      <RequireAuth>
+                        <ProfilePage />
+                      </RequireAuth>
+                    }
+                  />
                   <Route
                     path={getChangePasswordPage()}
                     element={

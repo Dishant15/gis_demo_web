@@ -15,6 +15,8 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import PersonIcon from "@mui/icons-material/Person";
 
 import {
   getGeoSurveyPath,
@@ -28,6 +30,7 @@ import {
   getUserRolePage,
   getFeedbackLink,
   getChangePasswordPage,
+  getProfilePage,
 } from "utils/url.constants";
 
 import {
@@ -141,7 +144,14 @@ const NavigationBar = () => {
             endIcon={<KeyboardArrowDown />}
           >
             <Box display="flex" alignItems="center">
-              <BackgroundLetterAvatars name={loggedUserDetails.name} />
+              <Avatar
+                sx={{
+                  height: "34px",
+                  width: "34px",
+                }}
+              >
+                <PersonIcon />
+              </Avatar>
               <Box lineHeight={1} pl={1}>
                 <Typography variant="subtitle2" lineHeight={1.1}>
                   {loggedUserDetails.username}
@@ -256,6 +266,13 @@ const NavigationBar = () => {
           open={showSettingsMenu}
           onClose={handleClose}
         >
+          <MenuItem
+            onClick={handleClose}
+            component={Link}
+            to={getProfilePage()}
+          >
+            Profile
+          </MenuItem>
           <MenuItem
             onClick={handleClose}
             component={Link}

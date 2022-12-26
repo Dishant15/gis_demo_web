@@ -23,11 +23,14 @@ const authSlice = createSlice({
       );
       state.loginSince = Number(new Date());
     },
+    updateUserDetails: (state, { payload }) => {
+      state.user = payload;
+    },
     logout: (state) => {
       return initialState;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, updateUserDetails } = authSlice.actions;
 export default authSlice.reducer;
