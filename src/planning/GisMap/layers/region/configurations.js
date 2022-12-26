@@ -46,6 +46,8 @@ export const ELEMENT_FORM_TEMPLATE = {
           label: "Unique Id",
           field_type: FIELD_TYPES.Input,
           disabled: true,
+          modifyProperty: (isEdit) =>
+            isEdit ? { disabled: true } : { disabled: false },
         },
         {
           field_key: "layer",

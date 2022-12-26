@@ -1,8 +1,9 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 
 import get from "lodash/get";
+import merge from "lodash/merge";
 
 import Box from "@mui/material/Box";
 import DynamicForm from "components/common/DynamicForm";
@@ -39,12 +40,33 @@ export const GisLayerForm = ({ layerKey }) => {
   const { event, data: mapStateData } = useSelector(getPlanningMapState);
 
   const isEdit = event === PLANNING_EVENT.editElementForm;
-  const formConfig = get(LayerKeyMappings, [layerKey, "formConfig"]);
   const transformAndValidateData = get(LayerKeyMappings, [
     layerKey,
     "transformAndValidateData",
   ]);
   const isConfigurable = !!get(mapStateData, "configuration");
+
+  /**
+   * get form config from LayerKeyMappings > layerKey
+   * check in form config have modifyProperty function or not
+   * modifyProperty used to update fieldConfig based on Edit flag
+   */
+  const formConfig = useMemo(() => {
+    let config = get(LayerKeyMappings, [layerKey, "formConfig"]);
+    for (let index = 0; index < config.sections.length; index++) {
+      let section = config.sections[index];
+
+      for (let secInd = 0; secInd < section.fieldConfigs.length; secInd++) {
+        let fieldConfig = section.fieldConfigs[secInd];
+
+        if (fieldConfig.modifyProperty) {
+          const modifiedProperties = fieldConfig.modifyProperty(isEdit);
+          merge(fieldConfig, modifiedProperties);
+        }
+      }
+    }
+    return config;
+  }, [layerKey, isEdit]);
 
   const queryRes = useQuery(
     "planningLayerConfigsDetails",
