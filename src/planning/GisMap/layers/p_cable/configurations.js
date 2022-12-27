@@ -10,20 +10,74 @@ export const LAYER_KEY = "p_cable";
 export const PRE_UID = "CBL";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYLINE;
 
-export const getViewOptions = ({ color_on_map }) => {
-  return {
-    strokeColor: color_on_map,
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: color_on_map,
-    fillOpacity: 1,
-    clickable: false,
-    draggable: false,
-    editable: false,
-    radius: 30000,
-    icon: CableIcon,
-    pin: CableIcon,
-  };
+const dashLineSymbol = {
+  path: "M 0,-1 0,1",
+  strokeOpacity: 1,
+};
+
+const dotLineSymbol = {
+  path: "M 0,2 0,2",
+  strokeOpacity: 1,
+};
+
+export const getViewOptions = ({ color_on_map, cable_type }) => {
+  switch (cable_type) {
+    case "U":
+      return {
+        strokeColor: color_on_map,
+        strokeOpacity: 0,
+        strokeWeight: 5,
+        clickable: false,
+        draggable: false,
+        editable: false,
+        radius: 30000,
+        geodesic: true,
+        icons: [
+          {
+            icon: dotLineSymbol,
+            offset: "0px",
+            repeat: "10px",
+          },
+        ],
+        icon: CableIcon,
+        pin: CableIcon,
+      };
+    case "W":
+      return {
+        strokeColor: color_on_map,
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        clickable: false,
+        draggable: false,
+        editable: false,
+        radius: 30000,
+        geodesic: true,
+        icons: [
+          {
+            icon: dashLineSymbol,
+            offset: "0px",
+            repeat: "20px",
+          },
+        ],
+        icon: CableIcon,
+        pin: CableIcon,
+      };
+    default:
+      // cable_type => "O"
+      return {
+        strokeColor: color_on_map,
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: color_on_map,
+        fillOpacity: 1,
+        clickable: false,
+        draggable: false,
+        editable: false,
+        radius: 30000,
+        icon: CableIcon,
+        pin: CableIcon,
+      };
+  }
 };
 
 export const INITIAL_ELEMENT_DATA = {
