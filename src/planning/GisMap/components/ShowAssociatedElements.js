@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 
 import size from "lodash/size";
 import get from "lodash/get";
+import groupBy from "lodash/groupBy";
+import map from "lodash/map";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -12,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Divider from "@mui/material/Divider";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandMore from "components/common/ExpandMore";
 
 import LanguageIcon from "@mui/icons-material/Language";
 
@@ -67,13 +71,13 @@ const ShowAssociatedElements = () => {
           handlePopupMinimize={handlePopupMinimize}
           handleCloseDetails={handleCloseDetails}
         />
-        {minimized ? null : <ElementList data={associations} />}
+        {minimized ? null : <Content data={associations} />}
       </Box>
     </GisMapPopups>
   );
 };
 
-const ElementList = ({ data }) => {
+const Content = ({ data }) => {
   const dispatch = useDispatch();
 
   const handleShowOnMap = useCallback(
@@ -95,6 +99,8 @@ const ElementList = ({ data }) => {
     []
   );
 
+  const groupedAssociations = groupBy(data, "layer_info.layer_key");
+
   if (!size(data))
     return (
       <Box p={2}>
@@ -105,69 +111,134 @@ const ElementList = ({ data }) => {
     );
 
   return (
-    <Stack
-      spacing={1}
-      divider={<Divider />}
-      py={1}
-      maxHeight="72vh"
-      overflow="auto"
-    >
-      {data.map(({ element, layer_info }) => {
-        const { layer_key } = layer_info;
-        const Icon =
-          LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
-        const networkId = get(element, "network_id", "");
+    <Stack py={1} maxHeight="72vh" overflow="auto">
+      {map(groupedAssociations, (item, key) => {
         return (
-          <Stack
-            key={networkId}
-            direction="row"
-            spacing={1}
-            alignItems="center"
-          >
-            <Paper
-              sx={{
-                width: "42px",
-                height: "42px",
-                lineHeight: "42px",
-                textAlign: "center",
-                marginLeft: "8px",
-              }}
-            >
-              <img
-                className="responsive-img"
-                src={Icon}
-                alt={layer_info.layer_key}
-              />
-            </Paper>
-            <Stack flex={1} flexDirection="row">
-              <Box
-                flex={1}
-                className="clickable"
-                onClick={handleShowDetails(element.id, layer_key)}
-              >
-                <Typography variant="subtitle1" lineHeight={1.1}>
-                  {get(element, "name", "")}
-                </Typography>
-                <Typography variant="caption">#{networkId}</Typography>
-              </Box>
-              <Tooltip title="Show on map">
-                <IconButton
-                  sx={{
-                    marginLeft: "8px",
-                    marginRight: "8px",
-                  }}
-                  aria-label="show-location"
-                  onClick={handleShowOnMap(element, layer_info.layer_key)}
-                >
-                  <LanguageIcon />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Stack>
+          <CollapsibleContent
+            key={key}
+            layerKey={key}
+            data={item}
+            handleShowOnMap={handleShowOnMap}
+            handleShowDetails={handleShowDetails}
+          />
         );
       })}
     </Stack>
   );
+};
+
+const CollapsibleContent = ({
+  layerKey,
+  data,
+  handleShowOnMap,
+  handleShowDetails,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = useCallback(() => {
+    setIsExpanded((val) => !val);
+  }, [setIsExpanded]);
+
+  // get icon
+  const getViewOptions = get(LayerKeyMappings, [layerKey, "getViewOptions"]);
+  const Icon = getViewOptions ? getViewOptions({}).icon : Fragment;
+
+  return (
+    <Box className="reg-list-pill clickable">
+      <Stack direction="row" width="100%" spacing={2} onClick={toggleExpand}>
+        <Box className="pl-layer-icon-block">
+          <Box
+            className="icon-wrapper"
+            sx={{
+              width: "38px !important",
+              height: "38px !important",
+              borderWidth: "0 !important",
+            }}
+          >
+            <img src={Icon} alt={get(data, "0.layer_info.name", "")} />
+          </Box>
+        </Box>
+        <Stack direction="row" flex={1} alignItems="center">
+          <span>
+            {get(data, "0.layer_info.name", "")} {`(${size(data)})`}
+          </span>
+        </Stack>
+        <Box display="flex" pr={1}>
+          <ExpandMore
+            expand={isExpanded}
+            aria-expanded={isExpanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </Box>
+      </Stack>
+
+      <Divider flexItem />
+
+      {isExpanded ? (
+        <ElementContentList
+          data={data}
+          handleShowOnMap={handleShowOnMap}
+          handleShowDetails={handleShowDetails}
+        />
+      ) : null}
+    </Box>
+  );
+};
+
+const ElementContentList = ({ data, handleShowDetails, handleShowOnMap }) => {
+  return data.map(({ element, layer_info }) => {
+    const { layer_key } = layer_info;
+    const Icon = LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
+    const networkId = get(element, "network_id", "");
+    return (
+      <Fragment key={networkId}>
+        <Stack direction="row" spacing={1} alignItems="center" py={1}>
+          <Paper
+            sx={{
+              width: "42px",
+              height: "42px",
+              lineHeight: "42px",
+              textAlign: "center",
+              marginLeft: "8px",
+            }}
+          >
+            <img
+              className="responsive-img"
+              src={Icon}
+              alt={layer_info.layer_key}
+            />
+          </Paper>
+          <Stack flex={1} flexDirection="row">
+            <Box
+              flex={1}
+              className="clickable"
+              onClick={handleShowDetails(element.id, layer_key)}
+            >
+              <Typography variant="subtitle1" lineHeight={1.1}>
+                {get(element, "name", "")}
+              </Typography>
+              <Typography variant="caption">#{networkId}</Typography>
+            </Box>
+            <Tooltip title="Show on map">
+              <IconButton
+                sx={{
+                  marginLeft: "8px",
+                  marginRight: "8px",
+                }}
+                aria-label="show-location"
+                onClick={handleShowOnMap(element, layer_info.layer_key)}
+              >
+                <LanguageIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Stack>
+        <Divider flexItem />
+      </Fragment>
+    );
+  });
 };
 
 export default ShowAssociatedElements;
