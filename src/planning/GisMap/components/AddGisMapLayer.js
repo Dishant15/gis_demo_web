@@ -168,7 +168,6 @@ const AddGisMapLayer = ({ validation = false, layerKey }) => {
          * getElementAddressData used to fetch address from lat, lng
          */
         if (formMetaData.getElementAddressData) {
-          // @TODO: add validations for multi polygon and line
           let latLong; // [lat, lng]
           if (featureType === FEATURE_TYPES.POLYLINE) {
             const features = points(submitData.geometry);
