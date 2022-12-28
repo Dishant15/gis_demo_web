@@ -19,7 +19,6 @@ const ConfigSelect = ({
   const configList = useSelector(
     getSingleLayerConfigurationList(configuration.layerKey)
   );
-  console.log(configuration, configList);
   return (
     <FormSelect
       label={label}

@@ -103,10 +103,6 @@ const GeoSurveyPage = () => {
       units: "kilometers",
       maxEdge: 1,
     });
-    console.log(
-      "🚀 ~ file: GeoSurveyPage.js ~ line 104 ~ generateAreaPocket ~ tf_hull",
-      tf_hull
-    );
     // get coordinates of polygon and convert to latlongMap
     let newAreaPolyCoords = [];
     if (tf_hull.geometry.type === "MultiPolygon") {

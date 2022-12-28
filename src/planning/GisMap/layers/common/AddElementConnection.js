@@ -77,7 +77,6 @@ const AddElementConnection = () => {
             title: "Connection update failed",
           })
         );
-        console.log(err);
       },
     }
   );

@@ -68,9 +68,7 @@ const AreaPocketMap = ({ surveyList }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     mapRef.current.data.setControls(null);
-    mapRef.current.data.toGeoJson((data) => {
-      console.log("🚀 ~ file: survey.js ~ line 38 ~ handleSubmit ~ data", data);
-    });
+    mapRef.current.data.toGeoJson((data) => {});
   };
 
   return <div ref={ref} id="map" />;

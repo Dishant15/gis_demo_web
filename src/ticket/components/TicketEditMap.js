@@ -64,10 +64,6 @@ const TicketEditMap = ({ ticketData }) => {
             text: err.message,
           })
         );
-        console.log(
-          "🚀 ~ file: TicketEditMap.js ~ line 10 ~ TicketEditMap ~ err",
-          err
-        );
       },
     }
   );
