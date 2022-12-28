@@ -29,7 +29,12 @@ import {
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { Paper } from "@mui/material";
 import { onTicketWoShowOnMapClick } from "planning/data/planning.actions";
-import { workOrderStatusTypes } from "utils/constant";
+import { workOrderStatusFormTypes, workOrderStatusTypes } from "utils/constant";
+import {
+  getSelectedLayerKeys,
+  getSelectedRegionIds,
+} from "planning/data/planningState.selectors";
+import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 
 /**
  * Parent
@@ -40,6 +45,9 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
   const $anchorEl = useRef();
   const [statusData, setStatusData] = useState({});
   const ticketId = useSelector(getPlanningTicketId);
+
+  const regionIdList = useSelector(getSelectedRegionIds);
+  const selectedLayerKeys = useSelector(getSelectedLayerKeys);
 
   const { mutate, isLoading } = useMutation(
     (mutationData) => {
@@ -87,12 +95,24 @@ const TicketWorkOrderList = ({ workOrderList = [] }) => {
             onSuccess: () => {
               dispatch(fetchTicketWorkorderDataThunk(ticketId));
               handleStatusCancel();
+              // refetch layer data on verify workorder
+              if (data.status === workOrderStatusFormTypes.V.value) {
+                for (let l_ind = 0; l_ind < selectedLayerKeys.length; l_ind++) {
+                  const currLayerKey = selectedLayerKeys[l_ind];
+                  dispatch(
+                    fetchLayerDataThunk({
+                      regionIdList,
+                      layerKey: currLayerKey,
+                    })
+                  );
+                }
+              }
             },
           }
         );
       }
     },
-    [statusData]
+    [statusData, regionIdList, selectedLayerKeys]
   );
 
   const handleShowOnMap = useCallback(
