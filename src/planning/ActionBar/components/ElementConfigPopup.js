@@ -1,8 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Typography, Stack, IconButton, Divider } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Box, Stack, IconButton, Divider } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { getSingleLayerConfigurationList } from "planning/data/planningState.selectors";
