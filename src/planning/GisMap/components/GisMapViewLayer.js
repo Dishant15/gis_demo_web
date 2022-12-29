@@ -2,6 +2,7 @@ import React, { memo, Fragment, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
+import SymbolPolyline from "components/common/Map/SymbolPolyline";
 
 import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { getSelectedLayerKeys } from "planning/data/planningState.selectors";
@@ -141,7 +142,7 @@ const ViewLayer = ({ layerKey }) => {
         if (hidden) return null;
 
         if (highlighted) {
-          return <AnimatedPolyline key={id} coordinates={coordinates} />;
+          return <SymbolPolyline key={id} coordinates={coordinates} />;
         } else {
           return (
             <Polyline
