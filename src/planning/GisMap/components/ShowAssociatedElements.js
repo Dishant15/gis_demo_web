@@ -118,6 +118,7 @@ const Content = ({ data }) => {
             key={key}
             layerKey={key}
             data={item}
+            dataCount={size(item)}
             handleShowOnMap={handleShowOnMap}
             handleShowDetails={handleShowDetails}
           />
@@ -130,10 +131,11 @@ const Content = ({ data }) => {
 const CollapsibleContent = ({
   layerKey,
   data,
+  dataCount,
   handleShowOnMap,
   handleShowDetails,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(dataCount < 5);
 
   const toggleExpand = useCallback(() => {
     setIsExpanded((val) => !val);
@@ -145,7 +147,17 @@ const CollapsibleContent = ({
 
   return (
     <Box className="reg-list-pill clickable">
-      <Stack direction="row" width="100%" spacing={2} onClick={toggleExpand}>
+      <Stack
+        sx={{
+          color: "secondary.dark",
+          borderBottom: "1px solid",
+          borderBottomColor: "secondary.dark",
+        }}
+        direction="row"
+        width="100%"
+        spacing={2}
+        onClick={toggleExpand}
+      >
         <Box className="pl-layer-icon-block">
           <Box
             className="icon-wrapper"
@@ -160,7 +172,7 @@ const CollapsibleContent = ({
         </Box>
         <Stack direction="row" flex={1} alignItems="center">
           <span>
-            {get(data, "0.layer_info.name", "")} {`(${size(data)})`}
+            {get(data, "0.layer_info.name", "")} {`(${dataCount})`}
           </span>
         </Stack>
         <Box display="flex" pr={1}>
@@ -178,7 +190,7 @@ const CollapsibleContent = ({
 
       {isExpanded ? (
         <ElementContentList
-          data={data}
+          elementList={data}
           handleShowOnMap={handleShowOnMap}
           handleShowDetails={handleShowDetails}
         />
@@ -187,58 +199,72 @@ const CollapsibleContent = ({
   );
 };
 
-const ElementContentList = ({ data, handleShowDetails, handleShowOnMap }) => {
-  return data.map(({ element, layer_info }) => {
-    const { layer_key } = layer_info;
-    const Icon = LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
-    const networkId = get(element, "network_id", "");
-    return (
-      <Fragment key={networkId}>
-        <Stack direction="row" spacing={1} alignItems="center" py={1}>
-          <Paper
-            sx={{
-              width: "42px",
-              height: "42px",
-              lineHeight: "42px",
-              textAlign: "center",
-              marginLeft: "8px",
-            }}
-          >
-            <img
-              className="responsive-img"
-              src={Icon}
-              alt={layer_info.layer_key}
-            />
-          </Paper>
-          <Stack flex={1} flexDirection="row">
-            <Box
-              flex={1}
-              className="clickable"
-              onClick={handleShowDetails(element.id, layer_key)}
-            >
-              <Typography variant="subtitle1" lineHeight={1.1}>
-                {get(element, "name", "")}
-              </Typography>
-              <Typography variant="caption">#{networkId}</Typography>
-            </Box>
-            <Tooltip title="Show on map">
-              <IconButton
+const ElementContentList = ({
+  elementList,
+  handleShowDetails,
+  handleShowOnMap,
+}) => {
+  return (
+    <Box
+      sx={{
+        borderBottom: "1px solid",
+        borderBottomColor: "secondary.dark",
+      }}
+    >
+      {elementList.map(({ element, layer_info }) => {
+        const { layer_key } = layer_info;
+        const Icon =
+          LayerKeyMappings[layer_key]["getViewOptions"](element).icon;
+        const networkId = get(element, "network_id", "");
+        return (
+          <Fragment key={networkId}>
+            <Stack direction="row" spacing={1} alignItems="center" py={1}>
+              <Paper
                 sx={{
+                  width: "42px",
+                  height: "42px",
+                  lineHeight: "42px",
+                  textAlign: "center",
                   marginLeft: "8px",
-                  marginRight: "8px",
                 }}
-                aria-label="show-location"
-                onClick={handleShowOnMap(element, layer_info.layer_key)}
               >
-                <LanguageIcon />
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </Stack>
-        <Divider flexItem />
-      </Fragment>
-    );
-  });
+                <img
+                  className="responsive-img"
+                  src={Icon}
+                  alt={layer_info.layer_key}
+                />
+              </Paper>
+              <Stack flex={1} flexDirection="row">
+                <Box
+                  flex={1}
+                  className="clickable"
+                  onClick={handleShowDetails(element.id, layer_key)}
+                >
+                  <Typography variant="subtitle1" lineHeight={1.1}>
+                    {get(element, "name", "")}
+                  </Typography>
+                  <Typography variant="caption">#{networkId}</Typography>
+                </Box>
+                <Tooltip title="Show on map">
+                  <IconButton
+                    sx={{
+                      marginLeft: "8px",
+                      marginRight: "8px",
+                    }}
+                    aria-label="show-location"
+                    onClick={handleShowOnMap(element, layer_info.layer_key)}
+                  >
+                    <LanguageIcon />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            </Stack>
+            <Divider flexItem />
+          </Fragment>
+        );
+      })}
+    </Box>
+  );
 };
 
 export default ShowAssociatedElements;
