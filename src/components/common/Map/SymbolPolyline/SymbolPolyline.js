@@ -15,6 +15,7 @@ const SymbolPolyline = ({ coordinates }) => {
       path={coordinates}
       zIndex={zIndexMapping.highlighted + 1}
       options={{
+        zIndex: zIndexMapping.highlighted + 1,
         strokeColor: HIGHLIGHT_COLOR,
         strokeOpacity: 0,
         strokeWeight: 4,

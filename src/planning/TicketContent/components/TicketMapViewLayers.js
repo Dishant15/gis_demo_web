@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 
 import { Polyline, Marker, Polygon } from "@react-google-maps/api";
+import SymbolPolyline from "components/common/Map/SymbolPolyline";
 
 import { getPlanningTicketData } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings } from "planning/GisMap/utils";
@@ -94,10 +95,7 @@ const TicketMapViewLayers = React.memo(() => {
             case FEATURE_TYPES.POLYLINE:
               if (highlighted) {
                 return (
-                  <AnimatedPolyline
-                    key={id}
-                    coordinates={element.coordinates}
-                  />
+                  <SymbolPolyline key={id} coordinates={element.coordinates} />
                 );
               } else {
                 return (
