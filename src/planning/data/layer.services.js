@@ -9,6 +9,7 @@ import {
   apiGetTicketDetails,
   apiPostAddElement,
   apiPostLayerDownload,
+  apiPostLayerUpload,
   apiPostRegionAdd,
   apiPostValidateElementGeometry,
   apiPutEditElement,
@@ -83,5 +84,10 @@ export const fetchDownloadLayerData = async ({ data, layerKey }) => {
   const res = await Api.post(apiPostLayerDownload(layerKey), data, null, {
     responseType: "blob",
   });
+  return res.data;
+};
+
+export const uploadLayerData = async ({ data, layerKey }) => {
+  const res = await Api.post(apiPostLayerUpload(layerKey), data);
   return res.data;
 };

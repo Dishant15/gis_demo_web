@@ -19,7 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import GisMapPopups from "./GisMapPopups";
 import ElementConfigPopup from "planning/ActionBar/components/ElementConfigPopup";
-import AddElementContentLoader from "planning/ActionBar/components/AddElementContentLoader";
+import AddElementContentLoader from "planning/ActionBar/components/AddElementContent/AddElementContentLoader";
 
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import {
