@@ -6,10 +6,13 @@ import noop from "lodash/noop";
 import size from "lodash/size";
 import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
+import ExportLayer from "./ExportLayer";
 
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import {
@@ -112,17 +115,24 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
           <span>
             {name} {isFetched ? `(${count})` : ""}
           </span>
-          {isLoading ? (
-            <LoadingButton loading />
-          ) : isSelected ? (
-            <CheckBoxIcon color="secondary" />
-          ) : null}
+          <Box display="flex" alignItems="center">
+            {isLoading ? (
+              <LoadingButton loading />
+            ) : isSelected ? (
+              <CheckBoxIcon color="secondary" />
+            ) : null}
+          </Box>
         </Stack>
       </Stack>
 
       <Divider flexItem />
 
-      {isExpanded ? <ElementList layerKey={layer_key} /> : null}
+      {isExpanded ? (
+        <Box>
+          <ExportLayer layerConfig={layerConfig} />
+          <ElementList layerKey={layer_key} />
+        </Box>
+      ) : null}
     </Box>
   );
 };

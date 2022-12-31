@@ -159,5 +159,8 @@ export const apiUpdateElementConnections = (cableId) =>
 export const apiGetElementAssociations = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/associations/`;
 
+export const apiPostLayerDownload = (layerKey = ":layer_key") =>
+  `/api/planning/layer/${layerKey}/download/`;
+
 export const getGoogleAddress = (long, lat) =>
   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
