@@ -19,21 +19,24 @@ const SymbolPolyline = ({ coordinates }) => {
         strokeColor: HIGHLIGHT_COLOR,
         strokeOpacity: 0,
         strokeWeight: 4,
+        clickable: false,
+        draggable: false,
+        editable: false,
         geodesic: true,
         icons: [
           {
             icon: {
-              path: 4.0,
+              path: 2.0,
               strokeOpacity: 1,
             },
-            offset: "0%",
+            offset: "100%",
           },
           {
             icon: {
               path: 0.0,
               strokeOpacity: 1,
             },
-            offset: "100%",
+            offset: "0%",
           },
           {
             icon: dashlineSymbol,
