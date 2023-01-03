@@ -452,6 +452,15 @@ const UserPermissions = ({
                   color="secondary"
                   disabled={disabledAll}
                 />
+                <FormCheckbox
+                  label="Download"
+                  name={`${layerKey}_download`}
+                  control={control}
+                  error={has(errors, `${layerKey}_download`)}
+                  helperText={get(errors, `${layerKey}_download.message`, "")}
+                  color="secondary"
+                  disabled={disabledAll}
+                />
               </Stack>
             </Stack>
             <Divider />

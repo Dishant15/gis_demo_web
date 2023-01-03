@@ -12,7 +12,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
-import ExportLayer from "./ExportLayer";
+import DownloadLayer from "./DownloadLayer";
 
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import {
@@ -27,6 +27,7 @@ import {
 import { addNotification } from "redux/reducers/notification.reducer";
 import { openElementDetails } from "planning/data/planning.actions";
 import { LayerKeyMappings } from "planning/GisMap/utils";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 const LayerTab = ({ layerConfig, regionIdList }) => {
   /**
@@ -40,6 +41,9 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const dispatch = useDispatch();
   const [isExpanded, setExpanded] = useState(false);
   const layerNetState = useSelector(getLayerNetworkState(layer_key));
+  const hasDownloadPermission = useSelector(
+    checkUserPermission(`${layer_key}_download`)
+  );
 
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
@@ -129,7 +133,9 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
 
       {isExpanded ? (
         <Box>
-          <ExportLayer layerConfig={layerConfig} />
+          {hasDownloadPermission ? (
+            <DownloadLayer layerConfig={layerConfig} />
+          ) : null}
           <ElementList layerKey={layer_key} />
         </Box>
       ) : null}

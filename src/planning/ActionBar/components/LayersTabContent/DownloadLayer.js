@@ -15,7 +15,7 @@ import { getLayerViewData } from "planning/data/planningGis.selectors";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { fetchDownloadLayerData } from "planning/data/layer.services";
 
-const ExportLayer = ({ layerConfig }) => {
+const DownloadLayer = ({ layerConfig }) => {
   const dispatch = useDispatch();
   const { layer_key, name } = layerConfig;
 
@@ -82,4 +82,4 @@ const ExportLayer = ({ layerConfig }) => {
   );
 };
 
-export default ExportLayer;
+export default DownloadLayer;
