@@ -122,6 +122,9 @@ export const apiGetElementDetails = (layerKey, elementId) =>
 export const apiPutEditElement = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/edit/`;
 
+export const apiDeteleElement = (layerKey, elementId) =>
+  `/api/planning/layer/${layerKey}/${elementId}/delete/`;
+
 export const apiGetTicketWorkorderElements = (ticketId = ":ticketId") =>
   `/api/ticket/${ticketId}/workorders/elements/`;
 

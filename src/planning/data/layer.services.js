@@ -13,6 +13,7 @@ import {
   apiPostRegionAdd,
   apiPostValidateElementGeometry,
   apiPutEditElement,
+  apiDeteleElement,
   apiPutRegionEdit,
   apiUpdateElementConnections,
 } from "utils/url.constants";
@@ -89,5 +90,10 @@ export const fetchDownloadLayerData = async ({ data, layerKey }) => {
 
 export const uploadLayerData = async ({ data, layerKey }) => {
   const res = await Api.post(apiPostLayerUpload(layerKey), data);
+  return res.data;
+};
+
+export const deleteLayer = async ({ layerKey, elementId }) => {
+  const res = await Api.delete(apiDeteleElement(layerKey, elementId));
   return res.data;
 };

@@ -66,6 +66,7 @@ const ElementDetailsTable = ({ layerKey, onEditDataConverter }) => {
               elemData={elemData}
               layerKey={layerKey}
               onEditDataConverter={onEditDataConverter}
+              handleCloseDetails={handleCloseDetails}
             />
             <TableContent layerKey={layerKey} elemData={elemData} />
           </>
