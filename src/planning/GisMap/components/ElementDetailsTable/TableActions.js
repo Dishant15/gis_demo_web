@@ -293,7 +293,7 @@ const TableActions = ({
         isLoading={isLoading}
         text={
           <>
-            Are you sure to delete element <b>{get(elemData, "name", "")}</b>
+            Are you sure you want to delete <b>{get(elemData, "name", "")}</b> ?
           </>
         }
       />
