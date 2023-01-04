@@ -10,7 +10,7 @@ import filter from "lodash/filter";
 
 import { handleLayerSelect, removeLayerSelect } from "./planningState.reducer";
 import { logout } from "redux/reducers/auth.reducer";
-import { convertLayerServerData, PLANNING_EVENT } from "../GisMap/utils";
+import { convertLayerServerData } from "../GisMap/utils";
 import { fetchLayerDataThunk } from "./actionBar.services";
 import { fetchTicketWorkorderDataThunk } from "./ticket.services";
 import { coordsToLatLongMap } from "utils/map.utils";

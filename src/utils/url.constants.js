@@ -122,6 +122,9 @@ export const apiGetElementDetails = (layerKey, elementId) =>
 export const apiPutEditElement = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/edit/`;
 
+export const apiDeteleElement = (layerKey, elementId) =>
+  `/api/planning/layer/${layerKey}/${elementId}/delete/`;
+
 export const apiGetTicketWorkorderElements = (ticketId = ":ticketId") =>
   `/api/ticket/${ticketId}/workorders/elements/`;
 
@@ -158,6 +161,12 @@ export const apiUpdateElementConnections = (cableId) =>
 
 export const apiGetElementAssociations = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/associations/`;
+
+export const apiPostLayerDownload = (layerKey = ":layer_key") =>
+  `/api/planning/layer/${layerKey}/download/`;
+
+export const apiPostLayerUpload = (layerKey = ":layer_key") =>
+  `/api/planning/layer/${layerKey}/upload/`;
 
 export const getGoogleAddress = (long, lat) =>
   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;

@@ -437,6 +437,14 @@ const UserRoleForm = ({ data, handleRoleSelect }) => {
                   helperText={get(errors, `${layerKey}_edit.message`, "")}
                   color="secondary"
                 />
+                <FormCheckbox
+                  label="Download"
+                  name={`${layerKey}_download`}
+                  control={control}
+                  error={has(errors, `${layerKey}_download`)}
+                  helperText={get(errors, `${layerKey}_download.message`, "")}
+                  color="secondary"
+                />
               </Stack>
             </Stack>
             <Divider />

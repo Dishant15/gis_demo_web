@@ -8,79 +8,34 @@ import size from "lodash/size";
 import includes from "lodash/includes";
 
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
 
 import IconButton from "@mui/material/IconButton";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import CloseIcon from "@mui/icons-material/Close";
 
-import GisMapPopups from "./GisMapPopups";
 import ElementConfigPopup from "planning/ActionBar/components/ElementConfigPopup";
-import AddElementContentLoader from "planning/ActionBar/components/AddElementContentLoader";
+import AddElementContentLoader from "planning/ActionBar/components/AddElementContent/AddElementContentLoader";
 
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
 import {
   selectConfiguration,
   setLayerConfigurations,
 } from "planning/data/planningState.reducer";
-import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { getSelectedConfigurations } from "planning/data/planningState.selectors";
-import { setMapState } from "planning/data/planningGis.reducer";
 import {
   onAddElementGeometry,
   onAddElementDetails,
 } from "planning/data/planning.actions";
-import { DRAG_ICON_WIDTH } from "utils/constant";
-import { LayerKeyMappings } from "../utils";
-import useValidateGeometry from "../hooks/useValidateGeometry";
+import { LayerKeyMappings } from "../../utils";
+import useValidateGeometry from "../../hooks/useValidateGeometry";
 
 const getElementIdName = (layerKey) => {
   return `association-add-element-${layerKey}`;
 };
 
-const ShowPossibleAddAssociation = () => {
-  const dispatch = useDispatch();
-
-  const { layerKey, data } = useSelector(getPlanningMapState);
-  const { elementData, listOfLayers } = data;
-
-  const handleCloseDetails = useCallback(() => {
-    dispatch(setMapState({}));
-  }, [dispatch]);
-
-  return (
-    <GisMapPopups dragId="ShowPossibleAddAssociation">
-      <Box minWidth="350px" maxWidth="550px">
-        {/* header */}
-        <Stack
-          sx={{ backgroundColor: "primary.main", color: "background.default" }}
-          direction="row"
-          alignItems="center"
-          p={1}
-          pl={`${DRAG_ICON_WIDTH}px`}
-        >
-          <Typography variant="h6" textAlign="left" flex={1}>
-            {elementData.name}
-          </Typography>
-          <IconButton onClick={handleCloseDetails}>
-            <CloseIcon />
-          </IconButton>
-        </Stack>
-        {/* content */}
-        <AddContent
-          parentData={elementData}
-          parentLayerKey={layerKey}
-          listOfLayers={listOfLayers}
-        />
-      </Box>
-    </GisMapPopups>
-  );
-};
-
-const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
+const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
   const { isLoading, data } = useQuery(
     "planningLayerConfigsDetails",
     fetchLayerListDetails,
@@ -243,7 +198,7 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
             let Icon;
             if (is_configurable) {
               let currConfig = get(selectedConfigurations, layer_key, false);
-              if (!currConfig) currConfig = configuration[0];
+              if (!currConfig) currConfig = get(configuration, "0", {});
               // configurable layers will have getIcon function
               Icon =
                 LayerKeyMappings[layer_key]["getViewOptions"](currConfig).icon;
@@ -296,4 +251,4 @@ const AddContent = ({ listOfLayers, parentData, parentLayerKey }) => {
   }
 };
 
-export default ShowPossibleAddAssociation;
+export default AddAssociationList;

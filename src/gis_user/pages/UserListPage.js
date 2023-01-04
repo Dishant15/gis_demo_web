@@ -177,7 +177,7 @@ const UserListPage = () => {
   }, []);
 
   return (
-    <Stack divider={<Divider flexItem />}>
+    <Stack divider={<Divider flexItem />} height="87vh">
       <Stack
         px={2}
         py={1}
@@ -227,7 +227,7 @@ const UserListPage = () => {
         ) : null}
       </Stack>
 
-      <Box p={2} className="ag-theme-alpine" width="100%">
+      <Box p={2} className="ag-theme-alpine" width="100%" height="100%">
         <AgGridReact
           ref={gridRef}
           rowData={data}
@@ -278,7 +278,8 @@ const UserListPage = () => {
             sortable: true,
           }}
           onGridReady={onGridReady}
-          domLayout="autoHeight"
+          paginationAutoPageSize={true}
+          pagination={true}
         />
       </Box>
 

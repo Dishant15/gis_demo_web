@@ -190,7 +190,12 @@ const UploadInput = styled("input")({
  *
  * separate file picker button
  */
-const UploadButton = ({ text, onChange, accept = "*" }) => {
+export const UploadButton = ({
+  text,
+  variant = "text",
+  onChange,
+  accept = "*",
+}) => {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <label htmlFor="contained-button-file">
@@ -200,7 +205,7 @@ const UploadButton = ({ text, onChange, accept = "*" }) => {
           onChange={onChange}
           accept={accept}
         />
-        <Button variant="text" component="span">
+        <Button variant={variant} component="span">
           {text}
         </Button>
       </label>

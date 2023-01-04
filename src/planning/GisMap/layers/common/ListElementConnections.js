@@ -18,14 +18,18 @@ import Paper from "@mui/material/Paper";
 import CloseIcon from "@mui/icons-material/Close";
 import SwipeLeftAltIcon from "@mui/icons-material/SwipeLeftAlt";
 import SwipeRightAltIcon from "@mui/icons-material/SwipeRightAlt";
-
 import AddIcon from "@mui/icons-material/Add";
+import LanguageIcon from "@mui/icons-material/Language";
+
 import GisMapPopups from "planning/GisMap/components/GisMapPopups";
 import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
-import { onElementAddConnectionEvent } from "planning/data/planning.actions";
+import {
+  onElementAddConnectionEvent,
+  onElementListItemClick,
+} from "planning/data/planning.actions";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { DRAG_ICON_WIDTH } from "utils/constant";
@@ -53,7 +57,20 @@ const ListElementConnections = ({ layerKey }) => {
     );
   };
 
+  const handleShowOnMap = useCallback(
+    (layerKey, elementId) => () => {
+      dispatch(
+        onElementListItemClick({
+          layerKey,
+          id: elementId,
+        })
+      );
+    },
+    []
+  );
+
   if (isLoading) return <GisMapPopupLoader />;
+
   return (
     <GisMapPopups dragId="ElementConnections">
       <Box minWidth="350px" maxWidth="550px">
@@ -149,6 +166,20 @@ const ListElementConnections = ({ layerKey }) => {
                         #{get(element, "network_id", "")}
                       </Typography>
                     </Box>
+                    <Tooltip title="Show on map" placement="top">
+                      <IconButton
+                        sx={{
+                          marginRight: "8px",
+                        }}
+                        aria-label="show-location"
+                        onClick={handleShowOnMap(
+                          layer_info.layer_key,
+                          element.id
+                        )}
+                      >
+                        <LanguageIcon />
+                      </IconButton>
+                    </Tooltip>
                     <Stack alignItems="center" pr={1} maxWidth="52px">
                       <Typography variant="caption">
                         {element.cable_end} End

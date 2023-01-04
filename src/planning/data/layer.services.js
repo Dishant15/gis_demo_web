@@ -8,9 +8,12 @@ import {
   apiGetRegionDetails,
   apiGetTicketDetails,
   apiPostAddElement,
+  apiPostLayerDownload,
+  apiPostLayerUpload,
   apiPostRegionAdd,
   apiPostValidateElementGeometry,
   apiPutEditElement,
+  apiDeteleElement,
   apiPutRegionEdit,
   apiUpdateElementConnections,
 } from "utils/url.constants";
@@ -75,5 +78,22 @@ export const addElementConnection = async ({ data, cableId }) => {
 export const fetchElementAssociations = async ({ queryKey }) => {
   const [_key, layerKey, elementId] = queryKey;
   const res = await Api.get(apiGetElementAssociations(layerKey, elementId));
+  return res.data;
+};
+
+export const fetchDownloadLayerData = async ({ data, layerKey }) => {
+  const res = await Api.post(apiPostLayerDownload(layerKey), data, null, {
+    responseType: "blob",
+  });
+  return res.data;
+};
+
+export const uploadLayerData = async ({ data, layerKey }) => {
+  const res = await Api.post(apiPostLayerUpload(layerKey), data);
+  return res.data;
+};
+
+export const deleteLayer = async ({ layerKey, elementId }) => {
+  const res = await Api.delete(apiDeteleElement(layerKey, elementId));
   return res.data;
 };

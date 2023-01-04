@@ -6,10 +6,13 @@ import noop from "lodash/noop";
 import size from "lodash/size";
 import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
+import DownloadLayer from "./DownloadLayer";
 
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import {
@@ -24,6 +27,7 @@ import {
 import { addNotification } from "redux/reducers/notification.reducer";
 import { openElementDetails } from "planning/data/planning.actions";
 import { LayerKeyMappings } from "planning/GisMap/utils";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 const LayerTab = ({ layerConfig, regionIdList }) => {
   /**
@@ -37,6 +41,9 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
   const dispatch = useDispatch();
   const [isExpanded, setExpanded] = useState(false);
   const layerNetState = useSelector(getLayerNetworkState(layer_key));
+  const hasDownloadPermission = useSelector(
+    checkUserPermission(`${layer_key}_download`)
+  );
 
   const isLoading = get(layerNetState, "isLoading", false);
   const isSelected = get(layerNetState, "isSelected", false);
@@ -112,17 +119,26 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
           <span>
             {name} {isFetched ? `(${count})` : ""}
           </span>
-          {isLoading ? (
-            <LoadingButton loading />
-          ) : isSelected ? (
-            <CheckBoxIcon color="secondary" />
-          ) : null}
+          <Box display="flex" alignItems="center">
+            {isLoading ? (
+              <LoadingButton loading />
+            ) : isSelected ? (
+              <CheckBoxIcon color="secondary" />
+            ) : null}
+          </Box>
         </Stack>
       </Stack>
 
       <Divider flexItem />
 
-      {isExpanded ? <ElementList layerKey={layer_key} /> : null}
+      {isExpanded ? (
+        <Box>
+          {hasDownloadPermission ? (
+            <DownloadLayer layerConfig={layerConfig} />
+          ) : null}
+          <ElementList layerKey={layer_key} />
+        </Box>
+      ) : null}
     </Box>
   );
 };

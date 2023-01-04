@@ -112,6 +112,8 @@ const TicketListPage = () => {
             ref={gridRef}
             rowData={data}
             defaultColDef={defaultColDef}
+            paginationAutoPageSize={true}
+            pagination={true}
             columnDefs={[
               {
                 field: "assignee.name",
