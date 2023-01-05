@@ -4,16 +4,20 @@ import { useQuery } from "react-query";
 
 import Box from "@mui/material/Box";
 
-import GisMapPopupLoader from "../GisMapPopups/GisMapPopupLoader";
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
 import CablePortDetails from "./CablePortDetails";
+import SpliterPortDetails from "./SpliterPortDetails";
+import OltPortDetails from "./OltPortDetails";
+import { GisElementTableLoader } from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { fetchElementPortDetails } from "planning/data/layer.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 
 import { LAYER_KEY as CableLayerKey } from "planning/GisMap/layers/p_cable";
+import { LAYER_KEY as OltLayerKey } from "planning/GisMap/layers/p_olt";
+import { LAYER_KEY as SplitterLayerKey } from "planning/GisMap/layers/p_splitter";
 import { transformCablePortData } from "./port.utils";
 
 /**
@@ -46,9 +50,16 @@ const ElementPortDetails = () => {
 
   const Content = useMemo(() => {
     switch (layerKey) {
-      case CableLayerKey:
+      case CableLayerKey: {
         const transformedDetails = transformCablePortData(portDetails);
         return <CablePortDetails portDetails={transformedDetails} />;
+      }
+      case OltLayerKey: {
+        return <OltPortDetails portDetails={portDetails} />;
+      }
+      case SplitterLayerKey: {
+        return <SpliterPortDetails portDetails={portDetails} />;
+      }
 
       default:
         return null;
@@ -56,7 +67,7 @@ const ElementPortDetails = () => {
   }, [layerKey, portDetails]);
 
   if (isLoading) {
-    return <GisMapPopupLoader />;
+    return <GisElementTableLoader />;
   }
 
   return (
@@ -68,7 +79,11 @@ const ElementPortDetails = () => {
           handlePopupMinimize={handlePopupMinimize}
           handleCloseDetails={handleCloseDetails}
         />
-        {minimized ? null : Content}
+        {minimized ? null : (
+          <Box maxHeight="72vh" overflow="auto">
+            {Content}
+          </Box>
+        )}
       </Box>
     </GisMapPopups>
   );
