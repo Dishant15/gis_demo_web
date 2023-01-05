@@ -170,3 +170,6 @@ export const apiPostLayerUpload = (layerKey = ":layer_key") =>
 
 export const getGoogleAddress = (long, lat) =>
   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
+
+export const apiGetElementPortDetails = (layerKey, elementId) =>
+  `/api/planning/layer/${layerKey}/${elementId}/ports/`;

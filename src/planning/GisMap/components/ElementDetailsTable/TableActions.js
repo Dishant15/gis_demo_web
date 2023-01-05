@@ -17,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LanguageIcon from "@mui/icons-material/Language";
 import LanIcon from "@mui/icons-material/Lan";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AppsIcon from "@mui/icons-material/Apps";
 
 import DeleteConfirmDialog from "components/common/DeleteConfirmDialog";
 
@@ -34,6 +35,7 @@ import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import {
   editElementGeometry,
   showAssociatiationList,
+  showElementPortDetails,
   showPossibleAddAssociatiation,
 } from "planning/data/event.actions";
 import { deleteLayer } from "planning/data/layer.services";
@@ -233,6 +235,21 @@ const TableActions = ({
             onClick: () => {
               dispatch(
                 showAssociatiationList({
+                  layerKey,
+                  elementId: elemData.id,
+                })
+              );
+            },
+          });
+        }
+        //
+        else if (control === "ports") {
+          baseActionsList.push({
+            name: "Show Port Details",
+            Icon: AppsIcon,
+            onClick: () => {
+              dispatch(
+                showElementPortDetails({
                   layerKey,
                   elementId: elemData.id,
                 })

@@ -131,4 +131,7 @@ export const ELEMENT_TABLE_EXTRA_CONTROLS = [
   {
     control: "connections",
   },
+  {
+    control: "ports",
+  },
 ];

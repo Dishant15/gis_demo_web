@@ -16,6 +16,7 @@ import MapEventInfoCard from "./MapEventInfoCard";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import ElementPortDetails from "./ElementPortDetails";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -75,6 +76,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.listElementsOnMap:
       return <ElementList />;
+
+    case PLANNING_EVENT.showPortDetails:
+      return <ElementPortDetails />;
 
     case PLANNING_EVENT.selectElementsOnMapClick:
       return (

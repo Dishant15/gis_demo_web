@@ -32,9 +32,10 @@ export const PLANNING_EVENT = {
   addElementConnection: 7,
   showPossibleAddAssociatiation: 8,
   showAssociatedElements: 9,
+  showPortDetails: 10,
   // map select elements on location
-  selectElementsOnMapClick: 10,
-  listElementsOnMap: 11,
+  selectElementsOnMapClick: 11,
+  listElementsOnMap: 12,
 };
 
 export const LayerKeyMappings = {
@@ -88,6 +89,7 @@ export const LayerKeyMappings = {
     initialElementData: CableLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: CableLayer.ELEMENT_TABLE_FIELDS,
     formConfig: CableLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: CableLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     // config fields
     ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,
