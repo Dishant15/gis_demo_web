@@ -13,6 +13,9 @@ import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { fetchElementPortDetails } from "planning/data/layer.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 
+import { LAYER_KEY as CableLayerKey } from "planning/GisMap/layers/p_cable";
+import { transformCablePortData } from "./port.utils";
+
 /**
  * fetch port details
  * manage loading
@@ -41,26 +44,20 @@ const ElementPortDetails = () => {
     setMinimized((val) => !val);
   }, []);
 
-  if (isLoading) {
-    return <GisMapPopupLoader />;
-  }
-
   const Content = useMemo(() => {
     switch (layerKey) {
-      case "p_cable":
-        // portDetails = [ { T6F4, cnn_to : spxysdf-P11.O, color: 'red', isInput: false}, { T6F4, cnn_to : sp.asdfb-P1.I, color: 'red', isInput: true}]
-
-        // transformedPortDetails = [{ T6F4, color: 'red', conn__to_A_end= sp.asdfb-P1.I, conn__to_B_end: spxysdf-P11.O }]
-        // portDetails -> F4T6 will have 2 port entry, input and output
-        // transformedPortDetails -> combine input output
-        // shape -> { srNo, name: T4F6, colors, conncted element : A, B }
-        const transformedPortDetails = portDetails;
-        return <CablePortDetails portDetails={transformedPortDetails} />;
+      case CableLayerKey:
+        const transformedDetails = transformCablePortData(portDetails);
+        return <CablePortDetails portDetails={transformedDetails} />;
 
       default:
         return null;
     }
   }, [layerKey, portDetails]);
+
+  if (isLoading) {
+    return <GisMapPopupLoader />;
+  }
 
   return (
     <GisMapPopups dragId="ShowAssociatedElements">
