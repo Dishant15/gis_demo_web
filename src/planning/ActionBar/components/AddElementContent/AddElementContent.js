@@ -13,7 +13,6 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
 import Dialog from "@mui/material/Dialog";
 
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
@@ -21,6 +20,7 @@ import PublishIcon from "@mui/icons-material/Publish";
 
 import ElementConfigPopup from "../ElementConfigPopup";
 import AddElementContentLoader from "./AddElementContentLoader";
+import UploadForm from "./UploadForm";
 
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { fetchLayerListDetails } from "planning/data/actionBar.services";
@@ -29,7 +29,7 @@ import {
   onAddElementGeometry,
   onFetchLayerListDetailsSuccess,
 } from "planning/data/planning.actions";
-import UploadForm from "./UploadForm";
+import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -56,6 +56,7 @@ const AddElementContent = () => {
   // if popup open : layerKey of selected configs, null if closed
   const [layerConfigPopup, setLayerConfigPopup] = useState(null);
   const selectedConfigurations = useSelector(getSelectedConfigurations);
+  const isSuperUser = useSelector(getIsSuperAdminUser);
 
   // shape: [ { layer_key, name, is_configurable, can_add, can_edit,
   //              configuration: [ **list of layer wise configs] }, ... ]
@@ -131,20 +132,21 @@ const AddElementContent = () => {
           <Typography variant="h6" color="primary">
             Add Element
           </Typography>
-          <Button
-            variant="outlined"
-            color="success"
-            size="small"
-            startIcon={<PublishIcon />}
-            onClick={handleFilePickerShow}
-          >
-            Upload
-          </Button>
+          {isSuperUser ? (
+            <Button
+              variant="outlined"
+              color="success"
+              size="small"
+              startIcon={<PublishIcon />}
+              onClick={handleFilePickerShow}
+            >
+              Upload
+            </Button>
+          ) : null}
         </Stack>
-        <Divider />
       </>
     );
-  }, []);
+  }, [isSuperUser]);
 
   if (isLoading) {
     return <AddElementContentLoader />;
@@ -154,7 +156,7 @@ const AddElementContent = () => {
     <Box>
       {maybeRenderHeader}
       {!!size(layerCofigs) ? (
-        <Grid container spacing={2} mt={1}>
+        <Grid container spacing={2}>
           {layerCofigs.map((config) => {
             const { layer_key, name, is_configurable, configuration } = config;
             // get icon
