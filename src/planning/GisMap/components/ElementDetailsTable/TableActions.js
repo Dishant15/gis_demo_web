@@ -19,7 +19,7 @@ import LanIcon from "@mui/icons-material/Lan";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SettingsInputCompositeIcon from "@mui/icons-material/SettingsInputComposite";
 
-import DeleteConfirmDialog from "components/common/DeleteConfirmDialog";
+import ConfirmDialog from "components/common/ConfirmDialog";
 
 import {
   checkUserPermission,
@@ -303,10 +303,10 @@ const TableActions = ({
           </Tooltip>
         );
       })}
-      <DeleteConfirmDialog
+      <ConfirmDialog
         show={showPopup}
         onClose={handleHidePopup}
-        onDeleteConfirm={deleteMutation}
+        onConfirm={deleteMutation}
         isLoading={isLoading}
         text={
           <>

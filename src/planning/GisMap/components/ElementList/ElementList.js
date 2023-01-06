@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import size from "lodash/size";
 import get from "lodash/get";
@@ -16,17 +16,11 @@ import LanguageIcon from "@mui/icons-material/Language";
 
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
+import ConfirmDialog from "components/common/ConfirmDialog";
 
-import {
-  getPlanningMapState,
-  getPlanningMapStateData,
-} from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings } from "../../utils";
-import {
-  onElementListItemClick,
-  openElementDetails,
-} from "planning/data/planning.actions";
+import { useElementListHook } from "./useElementList";
 
 const ElementList = () => {
   const [minimized, setMinimized] = useState(false);
@@ -56,38 +50,16 @@ const ElementList = () => {
 };
 
 const ElementListTable = () => {
-  const dispatch = useDispatch();
-
-  const { event, data: eventData } = useSelector(getPlanningMapState);
-  const { elementList, elementData: parentData } = eventData;
-
-  const handleShowOnMap = useCallback(
-    (element) => () => {
-      dispatch(onElementListItemClick(element));
-    },
-    []
-  );
-
-  const handleShowDetails = useCallback(
-    (element) => () => {
-      dispatch(
-        openElementDetails({
-          layerKey: element.layerKey,
-          elementId: element.id,
-        })
-      );
-    },
-    []
-  );
-
-  const handleAddExistingAssociation = useCallback(
-    (elementToAssociate) => () => {
-      // show popup are you sure ?
-      // get parentData with geometry
-      // call validation api with parent geomentry
-      // call edit api for element with all the parent child and other data
-    }
-  );
+  const {
+    elementList,
+    isAssociationList,
+    showPopup,
+    handleShowOnMap,
+    handleShowDetails,
+    handleAddExistingAssociation,
+    handleShowPopup,
+    handleHidePopup,
+  } = useElementListHook();
 
   if (!size(elementList))
     return (
@@ -99,70 +71,84 @@ const ElementListTable = () => {
     );
 
   return (
-    <Stack
-      spacing={1}
-      divider={<Divider />}
-      py={1}
-      maxHeight="72vh"
-      overflow="auto"
-    >
-      {elementList.map((element) => {
-        const Icon =
-          LayerKeyMappings[element.layerKey]["getViewOptions"](element).icon;
-        const networkId = get(element, "network_id", "");
+    <>
+      <Stack
+        spacing={1}
+        divider={<Divider />}
+        py={1}
+        maxHeight="72vh"
+        overflow="auto"
+      >
+        {elementList.map((element) => {
+          const Icon =
+            LayerKeyMappings[element.layerKey]["getViewOptions"](element).icon;
+          const networkId = get(element, "network_id", "");
 
-        return (
-          <Stack
-            key={networkId}
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            py={0.5}
-            className="change-bg-on-hover"
-          >
-            <Paper
-              sx={{
-                width: "42px",
-                height: "42px",
-                lineHeight: "42px",
-                textAlign: "center",
-                marginLeft: "8px",
-              }}
+          return (
+            <Stack
+              key={networkId}
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              py={0.5}
+              className="change-bg-on-hover"
             >
-              <img
-                className="responsive-img"
-                src={Icon}
-                alt={element.layerKey}
-              />
-            </Paper>
-            <Stack flex={1} flexDirection="row">
-              <Box
-                className="clickable"
-                flex={1}
-                onClick={handleShowDetails(element)}
+              <Paper
+                sx={{
+                  width: "42px",
+                  height: "42px",
+                  lineHeight: "42px",
+                  textAlign: "center",
+                  marginLeft: "8px",
+                }}
               >
-                <Typography variant="subtitle1" lineHeight={1.1}>
-                  {get(element, "name", "")}
-                </Typography>
-                <Typography variant="caption">#{networkId}</Typography>
-              </Box>
-              <Tooltip title="Show on map">
-                <IconButton
-                  sx={{
-                    marginLeft: "8px",
-                    marginRight: "8px",
-                  }}
-                  aria-label="show-location"
-                  onClick={handleShowOnMap(element)}
+                <img
+                  className="responsive-img"
+                  src={Icon}
+                  alt={element.layerKey}
+                />
+              </Paper>
+              <Stack flex={1} flexDirection="row">
+                <Box
+                  className="clickable"
+                  flex={1}
+                  onClick={
+                    isAssociationList
+                      ? handleShowPopup(element)
+                      : handleShowDetails(element)
+                  }
                 >
-                  <LanguageIcon />
-                </IconButton>
-              </Tooltip>
+                  <Typography variant="subtitle1" lineHeight={1.1}>
+                    {get(element, "name", "")}
+                  </Typography>
+                  <Typography variant="caption">#{networkId}</Typography>
+                </Box>
+                <Tooltip title="Show on map">
+                  <IconButton
+                    sx={{
+                      marginLeft: "8px",
+                      marginRight: "8px",
+                    }}
+                    aria-label="show-location"
+                    onClick={handleShowOnMap(element)}
+                  >
+                    <LanguageIcon />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
             </Stack>
-          </Stack>
-        );
-      })}
-    </Stack>
+          );
+        })}
+      </Stack>
+      <ConfirmDialog
+        show={showPopup}
+        onClose={handleHidePopup}
+        onConfirm={handleAddExistingAssociation}
+        title="Add Association"
+        text="Are you sure ?"
+        confirmText="Sure"
+      />
+    </>
   );
 };
 

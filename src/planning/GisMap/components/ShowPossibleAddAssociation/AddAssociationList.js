@@ -14,6 +14,7 @@ import Popover from "@mui/material/Popover";
 
 import IconButton from "@mui/material/IconButton";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+import AddIcon from "@mui/icons-material/Add";
 
 import ElementConfigPopup from "planning/ActionBar/components/ElementConfigPopup";
 import AddElementContentLoader from "planning/ActionBar/components/AddElementContent/AddElementContentLoader";
@@ -195,7 +196,12 @@ const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
   if (!!size(layerCofigs)) {
     return (
       <Box p={2} pt={0}>
-        <Stack direction="row" py={1} alignItems="center">
+        <Stack
+          direction="row"
+          py={1}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Typography
             variant="subtitle1"
             textTransform="uppercase"
@@ -204,7 +210,10 @@ const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
           >
             Add Element
           </Typography>
-          <Button onClick={handleAssociateExistingElementClick}>
+          <Button
+            onClick={handleAssociateExistingElementClick}
+            startIcon={<AddIcon />}
+          >
             Associate Existing Element
           </Button>
         </Stack>

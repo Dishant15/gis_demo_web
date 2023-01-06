@@ -75,12 +75,12 @@ export const selectElementsOnMapClick = (dispatch, getState) => {
 };
 
 export const listElementsOnMap =
-  ({ elementList, filterCoords }) =>
+  ({ elementList, elementData, filterCoords, isAssociationList }) =>
   (dispatch) => {
     dispatch(
       setMapState({
         event: PLANNING_EVENT.listElementsOnMap,
-        data: { elementList, filterCoords },
+        data: { elementList, elementData, filterCoords, isAssociationList },
       })
     );
   };

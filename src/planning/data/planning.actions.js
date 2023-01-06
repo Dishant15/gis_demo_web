@@ -53,7 +53,10 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
-import { filterGisDataByPolygon } from "./planning.utils";
+import {
+  filterGisDataByPolygon,
+  generateNetworkIdFromParent,
+} from "./planning.utils";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
   const storeState = getState();
@@ -103,6 +106,8 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
         elementList: elementResultList,
         elementData,
         filterCoords,
+        isAssociationList:
+          mapStateEvent === PLANNING_EVENT.associateElementOnMapClick,
       })
     );
   }
@@ -233,28 +238,16 @@ export const onAddElementDetails =
 
     // generate ids
     let unique_id = generateElementUid(layerKey);
-    let network_id = "";
 
-    let region_list;
     // generate parent association data from parents res
     // shape: { layerKey : [{id, name, uid, netid}, ... ], ...]
     const parents = get(validationRes, "data.parents", {});
-    if (isEmpty(parents)) {
-      // generate from region
-      region_list = get(validationRes, "data.region_list");
-      // get region uid
-      const reg_uid = !!size(region_list) ? last(region_list).unique_id : "RGN";
-      network_id = `${reg_uid}-${unique_id}`;
-    } else {
-      // generate network id from parent list, get first key
-      const firstLayerKey = Object.keys(parents)[0];
-      const parentNetId = get(
-        parents,
-        [firstLayerKey, "0", "network_id"],
-        "PNI"
-      );
-      network_id = `${parentNetId}-${unique_id}`;
-    }
+    const region_list = get(validationRes, "data.region_list");
+    const network_id = generateNetworkIdFromParent(
+      unique_id,
+      parents,
+      region_list
+    );
     // generate children association data from children res
     const children = get(validationRes, "data.children", {});
 
