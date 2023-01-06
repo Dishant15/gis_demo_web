@@ -85,6 +85,11 @@ const GisMapEventLayer = React.memo(() => {
         <MapEventInfoCard helpText="Click on map to get list of elements at that location" />
       );
 
+    case PLANNING_EVENT.associateElementOnMapClick:
+      return (
+        <MapEventInfoCard helpText="Click on map to get element you want to associate with selected element" />
+      );
+
     default:
       return null;
   }

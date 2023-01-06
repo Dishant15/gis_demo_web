@@ -30,6 +30,8 @@ import {
 } from "planning/data/planning.actions";
 import { LayerKeyMappings } from "../../utils";
 import useValidateGeometry from "../../hooks/useValidateGeometry";
+import { Button, Stack } from "@mui/material";
+import { associateElementOnMapClick } from "planning/data/event.actions";
 
 const getElementIdName = (layerKey) => {
   return `association-add-element-${layerKey}`;
@@ -146,6 +148,17 @@ const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
     [parentLayerKey, parentData]
   );
 
+  const handleAssociateExistingElementClick = useCallback(() => {
+    // fire event to
+    dispatch(
+      associateElementOnMapClick({
+        layerKey: parentLayerKey,
+        elementData: parentData,
+        listOfLayers,
+      })
+    );
+  }, [parentLayerKey, parentData, listOfLayers]);
+
   const mayRenderElementConfigPopup = useMemo(() => {
     const showPopover = !!layerConfigPopup;
     // anchorEl required node element, so not saving full element in state
@@ -182,15 +195,19 @@ const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
   if (!!size(layerCofigs)) {
     return (
       <Box p={2} pt={0}>
-        <Typography
-          variant="subtitle1"
-          textTransform="uppercase"
-          color="text.secondary"
-          fontWeight={500}
-          py={1}
-        >
-          Add Element
-        </Typography>
+        <Stack direction="row" py={1} alignItems="center">
+          <Typography
+            variant="subtitle1"
+            textTransform="uppercase"
+            color="text.secondary"
+            fontWeight={500}
+          >
+            Add Element
+          </Typography>
+          <Button onClick={handleAssociateExistingElementClick}>
+            Associate Existing Element
+          </Button>
+        </Stack>
         <Grid container spacing={2}>
           {layerCofigs.map((config) => {
             const { layer_key, name, is_configurable, configuration } = config;

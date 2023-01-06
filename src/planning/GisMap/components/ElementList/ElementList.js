@@ -14,12 +14,15 @@ import Divider from "@mui/material/Divider";
 
 import LanguageIcon from "@mui/icons-material/Language";
 
-import GisMapPopups from "./GisMapPopups";
-import TableHeader from "./ElementDetailsTable/TableHeader";
+import GisMapPopups from "../GisMapPopups";
+import TableHeader from "../ElementDetailsTable/TableHeader";
 
-import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
+import {
+  getPlanningMapState,
+  getPlanningMapStateData,
+} from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { LayerKeyMappings } from "../utils";
+import { LayerKeyMappings } from "../../utils";
 import {
   onElementListItemClick,
   openElementDetails,
@@ -28,7 +31,6 @@ import {
 const ElementList = () => {
   const [minimized, setMinimized] = useState(false);
   const dispatch = useDispatch();
-  const { elementList } = useSelector(getPlanningMapStateData);
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -47,14 +49,17 @@ const ElementList = () => {
           handlePopupMinimize={handlePopupMinimize}
           handleCloseDetails={handleCloseDetails}
         />
-        {minimized ? null : <ElementListTable elementList={elementList} />}
+        {minimized ? null : <ElementListTable />}
       </Box>
     </GisMapPopups>
   );
 };
 
-const ElementListTable = ({ elementList }) => {
+const ElementListTable = () => {
   const dispatch = useDispatch();
+
+  const { event, data: eventData } = useSelector(getPlanningMapState);
+  const { elementList, elementData: parentData } = eventData;
 
   const handleShowOnMap = useCallback(
     (element) => () => {
@@ -73,6 +78,15 @@ const ElementListTable = ({ elementList }) => {
       );
     },
     []
+  );
+
+  const handleAddExistingAssociation = useCallback(
+    (elementToAssociate) => () => {
+      // show popup are you sure ?
+      // get parentData with geometry
+      // call validation api with parent geomentry
+      // call edit api for element with all the parent child and other data
+    }
   );
 
   if (!size(elementList))

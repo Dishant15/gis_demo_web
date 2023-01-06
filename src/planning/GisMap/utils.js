@@ -30,9 +30,11 @@ export const PLANNING_EVENT = {
   // special events
   showElementConnections: 6,
   addElementConnection: 7,
-  showPossibleAddAssociatiation: 8,
-  showAssociatedElements: 9,
   showPortDetails: 10,
+  // association events
+  showAssociatedElements: 9,
+  showPossibleAddAssociatiation: 8,
+  associateElementOnMapClick: 13,
   // map select elements on location
   selectElementsOnMapClick: 11,
   listElementsOnMap: 12,
@@ -40,6 +42,8 @@ export const PLANNING_EVENT = {
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
+    // @TODO : test if we can use this way
+    layerConfiguration: RegionLayer,
     preUid: RegionLayer.PRE_UID,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,

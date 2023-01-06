@@ -27,6 +27,7 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import {
   getAllLayersData,
   getLayerViewData,
+  getPlanningMapStateData,
   getPlanningMapStateEvent,
 } from "./planningGis.selectors";
 import {
@@ -55,14 +56,18 @@ import { listElementsOnMap } from "./event.actions";
 import { filterGisDataByPolygon } from "./planning.utils";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
-  const clickLatLong = mapMouseEvent.latLng.toJSON();
-
   const storeState = getState();
   const mapStateEvent = getPlanningMapStateEvent(storeState);
-  const layerData = getAllLayersData(storeState);
-  const selectedLayerKeys = getSelectedLayerKeys(storeState);
 
-  if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
+  if (
+    mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick ||
+    mapStateEvent === PLANNING_EVENT.associateElementOnMapClick
+  ) {
+    const clickLatLong = mapMouseEvent.latLng.toJSON();
+
+    const layerData = getAllLayersData(storeState);
+    const selectedLayerKeys = getSelectedLayerKeys(storeState);
+
     // if ths is select elements event get list of elements around user click
     const clickPoint = pointLatLongMapToCoords(clickLatLong);
     // create a circle at user click location
@@ -71,16 +76,34 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
       units: "kilometers",
     });
 
+    let whiteList,
+      blackList,
+      elementData = {};
+    if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
+      whiteList = selectedLayerKeys;
+      blackList = ["region"];
+    } else if (mapStateEvent === PLANNING_EVENT.associateElementOnMapClick) {
+      const mapStateData = getPlanningMapStateData(storeState);
+      elementData = mapStateData.elementData;
+      // listOfLayers will be all the possible layers user can associate with current parent
+      whiteList = mapStateData.listOfLayers;
+      blackList = [];
+    }
+
     const elementResultList = filterGisDataByPolygon({
       filterPolygon: circPoly,
       gisData: layerData,
-      whiteList: selectedLayerKeys,
-      blackList: ["region"],
+      whiteList,
+      blackList,
     });
     const filterCoords = coordsToLatLongMap(circPoly.geometry.coordinates[0]);
     // fire next event : listElementsOnMap, with new list data
     dispatch(
-      listElementsOnMap({ elementList: elementResultList, filterCoords })
+      listElementsOnMap({
+        elementList: elementResultList,
+        elementData,
+        filterCoords,
+      })
     );
   }
 };

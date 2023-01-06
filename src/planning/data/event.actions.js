@@ -46,6 +46,18 @@ export const showAssociatiationList =
     );
   };
 
+export const associateElementOnMapClick =
+  ({ layerKey, elementData, listOfLayers }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.associateElementOnMapClick,
+        layerKey,
+        data: { elementData, listOfLayers },
+      })
+    );
+  };
+
 export const selectElementsOnMapClick = (dispatch, getState) => {
   const event = getPlanningMapStateEvent(getState());
 
