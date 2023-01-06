@@ -5,14 +5,14 @@ import { useMutation } from "react-query";
 import isNull from "lodash/isNull";
 import get from "lodash/get";
 
+import useValidateGeometry from "planning/GisMap/hooks/useValidateGeometry";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import {
   onElementListItemClick,
   openElementDetails,
 } from "planning/data/planning.actions";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
-import { generateElementUid, LayerKeyMappings } from "planning/GisMap/utils";
-import useValidateGeometry from "planning/GisMap/hooks/useValidateGeometry";
+import { LayerKeyMappings } from "planning/GisMap/utils";
 import { generateNetworkIdFromParent } from "planning/data/planning.utils";
 import { editElementDetails } from "planning/data/layer.services";
 
@@ -85,9 +85,8 @@ export const useElementListHook = () => {
           const parents = get(res, "data.parents", {});
           const region_list = get(res, "data.region_list");
 
-          const unique_id = generateElementUid(layerKey);
           const network_id = generateNetworkIdFromParent(
-            unique_id,
+            elementToAssociate.unique_id,
             parents,
             region_list
           );
@@ -104,7 +103,6 @@ export const useElementListHook = () => {
             region_list,
           });
           submitData.association = get(res, "data", {});
-          submitData.unique_id = unique_id;
           submitData.network_id = network_id;
           console.log(
             "🚀 ~ file: useElementList.js:93 ~ submitData",
