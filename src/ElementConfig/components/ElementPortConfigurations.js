@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { fetchElementPortConfigList } from "ElementConfig/data/services";
+import { FIBER_COLOR_CODE_HEX_MAPPING } from "planning/GisMap/components/ElementPortDetails/port.utils";
 
 const ElementPortConfigurations = ({ data, onClose }) => {
   const { layerKey, elementId } = data;
@@ -92,7 +93,7 @@ const CablePortConfigTable = ({ portConfigList }) => {
             const { fiber_color } = portConfig;
 
             const isDash = fiber_color.includes("d-");
-            const currFibColor = fiber_color.includes("d-")
+            const currFibColor = isDash
               ? fiber_color.substring(2)
               : fiber_color;
             return (
@@ -106,14 +107,20 @@ const CablePortConfigTable = ({ portConfigList }) => {
                 <TableCell align="right">{portConfig.name}</TableCell>
                 <TableCell
                   sx={{
-                    backgroundColor: portConfig.tube_color,
+                    backgroundColor:
+                      FIBER_COLOR_CODE_HEX_MAPPING[portConfig.tube_color],
                     color: "white",
                   }}
                   align="right"
                 >
                   {portConfig.tube_color}
                 </TableCell>
-                <TableCell sx={{ backgroundColor: currFibColor }} align="right">
+                <TableCell
+                  sx={{
+                    backgroundColor: FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
+                  }}
+                  align="right"
+                >
                   {portConfig.fiber_color}
                 </TableCell>
               </TableRow>

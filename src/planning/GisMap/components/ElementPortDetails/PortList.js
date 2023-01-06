@@ -38,11 +38,14 @@ const PortList = ({ portList, tableConfig }) => {
                   }
                   //
                   else if (conf.type === "color") {
+                    const isDash = value.includes("d-");
+                    const currFibColor = isDash ? value.substring(2) : value;
                     return (
                       <TableCell
                         key={conf.key}
                         sx={{
-                          backgroundColor: FIBER_COLOR_CODE_HEX_MAPPING[value],
+                          backgroundColor:
+                            FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
                         }}
                       >
                         {value}

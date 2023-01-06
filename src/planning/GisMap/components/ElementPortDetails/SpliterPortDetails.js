@@ -13,7 +13,7 @@ const tableConfig = [
     key: "sr_no",
   },
   {
-    label: "Name",
+    label: "Port",
     key: "name",
   },
   {
@@ -21,7 +21,7 @@ const tableConfig = [
     key: "status",
   },
   {
-    label: "Port",
+    label: "Connection",
     key: "connected_to",
     type: "port_number",
   },

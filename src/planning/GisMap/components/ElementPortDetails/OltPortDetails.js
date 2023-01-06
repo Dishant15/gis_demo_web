@@ -13,7 +13,7 @@ const tableConfig = [
     key: "sr_no",
   },
   {
-    label: "Name",
+    label: "Port",
     key: "name",
   },
   {
@@ -25,11 +25,11 @@ const tableConfig = [
     key: "port_type",
   },
   {
-    label: "Capacity",
+    label: "Capacity (Gb/s)",
     key: "capacity",
   },
   {
-    label: "Port",
+    label: "Connection",
     key: "connected_to",
     type: "port_number",
   },
@@ -45,11 +45,11 @@ const OltPortDetails = ({ portDetails }) => {
   return (
     <Box px={1} pb={1}>
       <Typography variant="h6" py={1}>
-        Input ports
+        Uplink ports
       </Typography>
       <PortList portList={inputList} tableConfig={tableConfig} />
       <Typography variant="h6" py={1}>
-        Output ports
+        Downlink ports
       </Typography>
       <PortList portList={outputList} tableConfig={tableConfig} />
     </Box>

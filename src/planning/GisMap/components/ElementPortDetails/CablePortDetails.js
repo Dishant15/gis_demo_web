@@ -28,12 +28,12 @@ const tableConfig = [
     type: "color",
   },
   {
-    label: "Input port",
+    label: "A End",
     key: "conn__to_A_end",
     type: "port_number",
   },
   {
-    label: "Output port",
+    label: "B End",
     key: "conn__to_B_end",
     type: "port_number",
   },
