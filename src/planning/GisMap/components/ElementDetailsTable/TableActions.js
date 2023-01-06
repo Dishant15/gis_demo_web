@@ -17,7 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LanguageIcon from "@mui/icons-material/Language";
 import LanIcon from "@mui/icons-material/Lan";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import AppsIcon from "@mui/icons-material/Apps";
+import SettingsInputCompositeIcon from "@mui/icons-material/SettingsInputComposite";
 
 import DeleteConfirmDialog from "components/common/DeleteConfirmDialog";
 
@@ -246,7 +246,7 @@ const TableActions = ({
         else if (control === "ports") {
           baseActionsList.push({
             name: "Show Port Details",
-            Icon: AppsIcon,
+            Icon: SettingsInputCompositeIcon,
             onClick: () => {
               dispatch(
                 showElementPortDetails({

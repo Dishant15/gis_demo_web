@@ -72,7 +72,7 @@ const ElementPortDetails = () => {
 
   return (
     <GisMapPopups dragId="ShowAssociatedElements">
-      <Box minWidth="350px" maxWidth="550px">
+      <Box minWidth="350px" maxWidth="auto">
         <TableHeader
           title="Port details"
           minimized={minimized}

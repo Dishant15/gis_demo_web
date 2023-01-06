@@ -9,25 +9,52 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
 
 import PortCell from "./PortCell";
-import { FIBER_COLOR_CODE_HEX_MAPPING } from "./port.utils";
+import ColorCell from "./ColorCell";
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+const StyledTableHead = styled(TableHead)(({ theme }) => {
+  return {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  };
+});
+
+const StyledTableCell = styled(TableCell)(({ theme }) => {
+  return {
+    color: theme.palette.primary.contrastText,
+    textAlign: "center",
+  };
+});
 
 const PortList = ({ portList, tableConfig }) => {
   return (
     <TableContainer component={Paper} sx={{ paddingBottom: 1 }}>
       <Table>
-        <TableHead>
+        <StyledTableHead>
           <TableRow>
             {tableConfig.map((conf) => {
-              return <TableCell key={conf.label}>{conf.label}</TableCell>;
+              return (
+                <StyledTableCell key={conf.label}>{conf.label}</StyledTableCell>
+              );
             })}
           </TableRow>
-        </TableHead>
+        </StyledTableHead>
         <TableBody>
           {portList.map((port) => {
             return (
-              <TableRow
+              <StyledTableRow
                 key={port.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
@@ -38,26 +65,14 @@ const PortList = ({ portList, tableConfig }) => {
                   }
                   //
                   else if (conf.type === "color") {
-                    const isDash = value.includes("d-");
-                    const currFibColor = isDash ? value.substring(2) : value;
-                    return (
-                      <TableCell
-                        key={conf.key}
-                        sx={{
-                          backgroundColor:
-                            FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
-                        }}
-                      >
-                        {value}
-                      </TableCell>
-                    );
+                    return <ColorCell key={conf.key} value={value} />;
                   }
                   //
                   else {
                     return <TableCell key={conf.key}>{value}</TableCell>;
                   }
                 })}
-              </TableRow>
+              </StyledTableRow>
             );
           })}
         </TableBody>

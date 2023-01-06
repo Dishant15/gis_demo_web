@@ -18,11 +18,11 @@ const tableConfig = [
   },
   {
     label: "Status",
-    key: "status",
+    key: "status_display",
   },
   {
     label: "Port Type",
-    key: "port_type",
+    key: "port_type_display",
   },
   {
     label: "Capacity (Gb/s)",

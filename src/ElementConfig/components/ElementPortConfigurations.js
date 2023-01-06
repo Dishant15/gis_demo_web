@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
+import ColorCell from "planning/GisMap/components/ElementPortDetails/ColorCell";
+
 import { fetchElementPortConfigList } from "ElementConfig/data/services";
 import { FIBER_COLOR_CODE_HEX_MAPPING } from "planning/GisMap/components/ElementPortDetails/port.utils";
 
@@ -115,14 +117,7 @@ const CablePortConfigTable = ({ portConfigList }) => {
                 >
                   {portConfig.tube_color}
                 </TableCell>
-                <TableCell
-                  sx={{
-                    backgroundColor: FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
-                  }}
-                  align="right"
-                >
-                  {portConfig.fiber_color}
-                </TableCell>
+                <ColorCell value={portConfig.fiber_color} align="right" />
               </TableRow>
             );
           })}

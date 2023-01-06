@@ -18,7 +18,7 @@ const tableConfig = [
   },
   {
     label: "Status",
-    key: "status",
+    key: "status_display",
   },
   {
     label: "Connection",
