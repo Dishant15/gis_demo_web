@@ -16,6 +16,21 @@ const useValidateGeometry = () => {
     useMutation(validateElementGeometry, {
       // reset errors on mutate
       onMutate: () => setErrPolygons([]),
+      onSuccess: (res) => {
+        const softErrors = get(res, "data.soft_errors");
+        if (!!softErrors) {
+          for (let seInd = 0; seInd < softErrors.length; seInd++) {
+            const currError = softErrors[seInd];
+            dispatch(
+              addNotification({
+                type: "warning",
+                title: "Data Integration not complete",
+                text: get(currError, "contains.0"),
+              })
+            );
+          }
+        }
+      },
       onError: (err) => {
         if (err.response.status === 400) {
           const errData = get(err, "response.data", {});
