@@ -2,15 +2,11 @@ import {
   circle,
   point,
   lineString,
-  polygon,
-  multiPolygon,
   booleanIntersects,
   distance,
 } from "@turf/turf";
 import get from "lodash/get";
-import last from "lodash/last";
 import size from "lodash/size";
-import isEmpty from "lodash/isEmpty";
 import merge from "lodash/merge";
 
 import {
@@ -81,13 +77,15 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
 
     let whiteList,
       blackList,
-      elementData = {};
+      elementData = {},
+      extraParent = {};
     if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
       whiteList = selectedLayerKeys;
       blackList = ["region"];
     } else if (mapStateEvent === PLANNING_EVENT.associateElementOnMapClick) {
       const mapStateData = getPlanningMapStateData(storeState);
       elementData = mapStateData.elementData;
+      extraParent = mapStateData.extraParent;
       // listOfLayers will be all the possible layers user can associate with current parent
       whiteList = mapStateData.listOfLayers;
       blackList = [];
@@ -103,9 +101,14 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
     // fire next event : listElementsOnMap, with new list data
     dispatch(
       listElementsOnMap({
-        elementList: elementResultList,
+        // association related fields
         elementData,
+        extraParent,
+        // actual filtered elements
+        elementList: elementResultList,
+        // polygon coords used to filter
         filterCoords,
+        // info for next event that current filter was for association list or not
         isAssociationList:
           mapStateEvent === PLANNING_EVENT.associateElementOnMapClick,
       })

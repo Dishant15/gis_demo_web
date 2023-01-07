@@ -156,6 +156,9 @@ const AddAssociationList = ({ listOfLayers, parentData, parentLayerKey }) => {
         layerKey: parentLayerKey,
         elementData: parentData,
         listOfLayers,
+        extraParent: {
+          [parentLayerKey]: [{ ...parentData }],
+        },
       })
     );
   }, [parentLayerKey, parentData, listOfLayers]);

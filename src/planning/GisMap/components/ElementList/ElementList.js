@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 
 import size from "lodash/size";
 import get from "lodash/get";
+import isNull from "lodash/isNull";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -53,13 +54,16 @@ const ElementListTable = () => {
   const {
     elementList,
     isAssociationList,
-    showPopup,
+    selectedElement,
+    isEditLoading,
     handleShowOnMap,
     handleShowDetails,
     handleAddExistingAssociation,
     handleShowPopup,
     handleHidePopup,
   } = useElementListHook();
+
+  const showPopup = !isNull(selectedElement);
 
   if (!size(elementList))
     return (
@@ -144,9 +148,10 @@ const ElementListTable = () => {
         show={showPopup}
         onClose={handleHidePopup}
         onConfirm={handleAddExistingAssociation}
-        title="Add Association"
-        text="Are you sure ?"
-        confirmText="Sure"
+        isLoading={isEditLoading}
+        title={`Associate ${selectedElement?.name}`}
+        text={`Are you sure you want to add association with element : ${selectedElement?.name} #${selectedElement?.unique_id}`}
+        confirmText="Associate"
       />
     </>
   );

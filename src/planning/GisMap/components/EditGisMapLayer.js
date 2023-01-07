@@ -24,13 +24,14 @@ import {
 import { editElementDetails } from "planning/data/layer.services";
 import { fetchLayerDataThunk } from "planning/data/actionBar.services";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { setMapState, unHideElement } from "planning/data/planningGis.reducer";
+import { unHideElement } from "planning/data/planningGis.reducer";
 import { handleLayerSelect } from "planning/data/planningState.reducer";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
 import { FEATURE_TYPES, zIndexMapping } from "../layers/common/configuration";
 import { DRAG_ICON_WIDTH } from "utils/constant";
+import { openElementDetails } from "planning/data/planning.actions";
 
 const GisEditOptions = {
   clickable: true,
@@ -89,13 +90,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
     // unhide element from layerData
     dispatch(unHideElement({ layerKey, elementId }));
     // complete current event -> fire next event OR go to details by default
-    dispatch(
-      setMapState({
-        event: PLANNING_EVENT.showElementDetails,
-        layerKey,
-        data: { elementId },
-      })
-    );
+    dispatch(openElementDetails({ layerKey, elementId }));
   };
 
   const onErrorHandler = (err) => {
@@ -242,13 +237,7 @@ const EditGisMapLayer = ({ layerKey, editElementAction }) => {
     // unhide element from layerData
     dispatch(unHideElement({ layerKey, elementId }));
     // go back to details
-    dispatch(
-      setMapState({
-        event: PLANNING_EVENT.showElementDetails,
-        layerKey,
-        data: { elementId },
-      })
-    );
+    dispatch(openElementDetails({ layerKey, elementId }));
     featureRef.current.setMap(null);
   }, [layerKey, elementId]);
 

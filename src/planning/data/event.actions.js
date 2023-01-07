@@ -47,13 +47,13 @@ export const showAssociatiationList =
   };
 
 export const associateElementOnMapClick =
-  ({ layerKey, elementData, listOfLayers }) =>
+  ({ layerKey, elementData, listOfLayers, extraParent }) =>
   (dispatch) => {
     dispatch(
       setMapState({
         event: PLANNING_EVENT.associateElementOnMapClick,
         layerKey,
-        data: { elementData, listOfLayers },
+        data: { elementData, listOfLayers, extraParent },
       })
     );
   };
@@ -75,12 +75,24 @@ export const selectElementsOnMapClick = (dispatch, getState) => {
 };
 
 export const listElementsOnMap =
-  ({ elementList, elementData, filterCoords, isAssociationList }) =>
+  ({
+    elementList,
+    elementData,
+    filterCoords,
+    isAssociationList,
+    extraParent,
+  }) =>
   (dispatch) => {
     dispatch(
       setMapState({
         event: PLANNING_EVENT.listElementsOnMap,
-        data: { elementList, elementData, filterCoords, isAssociationList },
+        data: {
+          elementList,
+          elementData,
+          filterCoords,
+          isAssociationList,
+          extraParent,
+        },
       })
     );
   };
