@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMutation } from "react-query";
 
 import get from "lodash/get";
@@ -21,26 +21,65 @@ import { UploadButton } from "components/common/FilePickerDialog";
 
 import { addNotification } from "redux/reducers/notification.reducer";
 import { uploadLayerData } from "planning/data/layer.services";
+import { LayerKeyMappings } from "planning/GisMap/utils";
+import { getSelectedRegionIds } from "planning/data/planningState.selectors";
+import { NOTIFICATION_TYPE } from "components/common/Notification/Notification";
+import { setActiveTab } from "planning/data/planningState.reducer";
 
 const UploadForm = ({ importLayerCofigs, onClose }) => {
+  /**
+   * Parent
+   *    AddElementContent
+   */
   const dispatch = useDispatch();
+  const selectedRegionIds = useSelector(getSelectedRegionIds);
 
   const { mutate: uploadLayerDataMutation, isLoading } = useMutation(
     uploadLayerData,
     {
       onError: (err) => {
-        dispatch(
-          addNotification({
-            type: "error",
-            title: "Upload layer data",
-            text: get(err, "data.__all__"),
-          })
-        );
+        const statusCode = get(err, "response.status");
+        if (statusCode === 403) {
+          dispatch(
+            addNotification({
+              type: "error",
+              title: "Upload layer data",
+              text: "Permission required to upload this layer",
+            })
+          );
+        } else {
+          dispatch(
+            addNotification({
+              type: "error",
+              title: "Upload layer data",
+              text: "Invalid excel data",
+            })
+          );
+        }
       },
       onSuccess: (res) => {
+        const success_count = get(res, "success_count", 0);
+        const error_count = get(res, "error_count", 0);
+        if (error_count) {
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPE.WARNING,
+              title: "Upload layer data",
+              text: `${success_count} elements added successfully. ${error_count} elements are failed to add.`,
+            })
+          );
+        } else {
+          dispatch(
+            addNotification({
+              type: NOTIFICATION_TYPE.SUCCESS,
+              title: "Upload layer data",
+              text: `${success_count} elements added successfully.`,
+            })
+          );
+        }
         dispatch(
           addNotification({
-            type: "success",
+            type: NOTIFICATION_TYPE.SUCCESS,
             title: "Upload layer data",
             text: get(res, "data.__all__"),
           })
@@ -66,10 +105,22 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
 
   const onFormSubmit = useCallback(
     (data) => {
+      if (!size(selectedRegionIds)) {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPE.ERROR,
+            title: "Select Region first",
+            text: "Please select region to narrow down your upload of elements.",
+          })
+        );
+        // change tab to regions
+        dispatch(setActiveTab(0));
+        return;
+      }
       if (!size(files)) {
         dispatch(
           addNotification({
-            type: "error",
+            type: NOTIFICATION_TYPE.ERROR,
             title: "Input",
             text: "Please select file",
           })
@@ -77,9 +128,13 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
       }
       const formData = new FormData();
       formData.append("file", files[0], files[0].name);
+
+      const featureType = get(LayerKeyMappings, [data.layerKey, "featureType"]);
+      formData.append("featureType", featureType);
+      formData.append("region_ids", selectedRegionIds);
       uploadLayerDataMutation({ layerKey: data.layerKey, data: formData });
     },
-    [files]
+    [files, selectedRegionIds]
   );
 
   return (

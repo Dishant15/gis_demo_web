@@ -29,7 +29,10 @@ import {
   onAddElementGeometry,
   onFetchLayerListDetailsSuccess,
 } from "planning/data/planning.actions";
-import { getIsSuperAdminUser } from "redux/selectors/auth.selectors";
+import {
+  getIsSuperAdminUser,
+  getUserPermissions,
+} from "redux/selectors/auth.selectors";
 
 const getElementIdName = (layerKey) => {
   return `pl-add-element-${layerKey}`;
@@ -57,6 +60,7 @@ const AddElementContent = () => {
   const [layerConfigPopup, setLayerConfigPopup] = useState(null);
   const selectedConfigurations = useSelector(getSelectedConfigurations);
   const isSuperUser = useSelector(getIsSuperAdminUser);
+  const permissions = useSelector(getUserPermissions);
 
   // shape: [ { layer_key, name, is_configurable, can_add, can_edit,
   //              configuration: [ **list of layer wise configs] }, ... ]
@@ -65,8 +69,13 @@ const AddElementContent = () => {
   }, [data]);
 
   const importLayerCofigs = useMemo(() => {
-    return filter(data, ["can_import", true]);
-  }, [data]);
+    return filter(
+      data,
+      (config) =>
+        config.can_import &&
+        (isSuperUser || get(permissions, `${config.layer_key}_upload`))
+    );
+  }, [data, permissions, isSuperUser]);
 
   const handleAddElementClick = useCallback(
     (layerKey) => () => {
@@ -132,7 +141,7 @@ const AddElementContent = () => {
           <Typography variant="h6" color="primary">
             Add Element
           </Typography>
-          {isSuperUser ? (
+          {!!importLayerCofigs.length ? (
             <Button
               variant="outlined"
               color="success"
@@ -146,7 +155,7 @@ const AddElementContent = () => {
         </Stack>
       </>
     );
-  }, [isSuperUser]);
+  }, [importLayerCofigs]);
 
   if (isLoading) {
     return <AddElementContentLoader />;

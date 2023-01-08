@@ -49,7 +49,10 @@ import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
 import { SURVEY_TAG_LIST, workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
 import { getTicketListPage } from "utils/url.constants";
-import { checkUserPermission } from "redux/selectors/auth.selectors";
+import {
+  checkUserPermission,
+  getIsSuperAdminUser,
+} from "redux/selectors/auth.selectors";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 import "../styles/ticket_survey_list.scss";
@@ -65,11 +68,15 @@ const WorkOrderPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const canTicketWorkorderAdd = useSelector(
-    checkUserPermission("ticket_workorder_add")
-  );
   const canTicketWorkorderEdit = useSelector(
     checkUserPermission("ticket_workorder_edit")
+  );
+  const isSuperUser = useSelector(getIsSuperAdminUser);
+  const hasDownloadSArea = useSelector(
+    checkUserPermission("p_survey_area_download")
+  );
+  const hasDownloadBuilding = useSelector(
+    checkUserPermission("p_survey_building_download")
   );
 
   const { isLoading, data, refetch } = useQuery(
@@ -453,6 +460,8 @@ const WorkOrderPage = () => {
   const hasWorkorders = size(work_orders);
   const hasFilteredWorkOrders = size(filteredWorkOrders);
   const showFilePicker = !isNull(importData);
+  const hasDownloadPermission =
+    isSuperUser || (hasDownloadSArea && hasDownloadBuilding);
 
   if (isLoading) {
     return <WorkOrderLoading />;
@@ -483,15 +492,17 @@ const WorkOrderPage = () => {
               Upload
             </LoadingButton>
           ) : null} */}
-          <LoadingButton
-            color="secondary"
-            startIcon={<GetAppIcon />}
-            loading={loadingExportTicket}
-            onClick={() => exportTicketMutation(ticketData.id)}
-            sx={{ ml: 1 }}
-          >
-            Export .shp
-          </LoadingButton>
+          {hasDownloadPermission ? (
+            <LoadingButton
+              color="secondary"
+              startIcon={<GetAppIcon />}
+              loading={loadingExportTicket}
+              onClick={() => exportTicketMutation(ticketData.id)}
+              sx={{ ml: 1 }}
+            >
+              Download
+            </LoadingButton>
+          ) : null}
         </Stack>
       </Stack>
 

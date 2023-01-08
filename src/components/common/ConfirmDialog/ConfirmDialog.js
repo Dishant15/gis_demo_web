@@ -10,13 +10,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-const DeleteConfirmDialog = ({
+const ConfirmDialog = ({
   show = false,
-  onClose = noop,
+  isLoading = false,
   title = "Delete Configuration",
   text = "Are you sure to delete ?",
-  isLoading = false,
-  onDeleteConfirm = noop,
+  confirmText = "Delete",
+  deleteText = "Cancel",
+  onClose = noop,
+  onConfirm = noop,
 }) => {
   return (
     <Dialog open={show} onClose={onClose}>
@@ -28,14 +30,14 @@ const DeleteConfirmDialog = ({
           </DialogContent>
           <DialogActions>
             <LoadingButton
-              onClick={onDeleteConfirm}
+              onClick={onConfirm}
               autoFocus
               loading={isLoading}
               color="error"
             >
-              Delete
+              {confirmText}
             </LoadingButton>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>{deleteText}</Button>
           </DialogActions>
         </>
       ) : null}
@@ -43,4 +45,4 @@ const DeleteConfirmDialog = ({
   );
 };
 
-export default DeleteConfirmDialog;
+export default ConfirmDialog;

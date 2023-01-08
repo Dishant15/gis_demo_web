@@ -2,15 +2,11 @@ import {
   circle,
   point,
   lineString,
-  polygon,
-  multiPolygon,
   booleanIntersects,
   distance,
 } from "@turf/turf";
 import get from "lodash/get";
-import last from "lodash/last";
 import size from "lodash/size";
-import isEmpty from "lodash/isEmpty";
 import merge from "lodash/merge";
 
 import {
@@ -27,6 +23,7 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import {
   getAllLayersData,
   getLayerViewData,
+  getPlanningMapStateData,
   getPlanningMapStateEvent,
 } from "./planningGis.selectors";
 import {
@@ -52,17 +49,24 @@ import {
 } from "utils/map.utils";
 import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
 import { listElementsOnMap } from "./event.actions";
-import { filterGisDataByPolygon } from "./planning.utils";
+import {
+  filterGisDataByPolygon,
+  generateNetworkIdFromParent,
+} from "./planning.utils";
 
 export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
-  const clickLatLong = mapMouseEvent.latLng.toJSON();
-
   const storeState = getState();
   const mapStateEvent = getPlanningMapStateEvent(storeState);
-  const layerData = getAllLayersData(storeState);
-  const selectedLayerKeys = getSelectedLayerKeys(storeState);
 
-  if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
+  if (
+    mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick ||
+    mapStateEvent === PLANNING_EVENT.associateElementOnMapClick
+  ) {
+    const clickLatLong = mapMouseEvent.latLng.toJSON();
+
+    const layerData = getAllLayersData(storeState);
+    const selectedLayerKeys = getSelectedLayerKeys(storeState);
+
     // if ths is select elements event get list of elements around user click
     const clickPoint = pointLatLongMapToCoords(clickLatLong);
     // create a circle at user click location
@@ -71,16 +75,43 @@ export const onGisMapClick = (mapMouseEvent) => (dispatch, getState) => {
       units: "kilometers",
     });
 
+    let whiteList,
+      blackList,
+      elementData = {},
+      extraParent = {};
+    if (mapStateEvent === PLANNING_EVENT.selectElementsOnMapClick) {
+      whiteList = selectedLayerKeys;
+      blackList = ["region"];
+    } else if (mapStateEvent === PLANNING_EVENT.associateElementOnMapClick) {
+      const mapStateData = getPlanningMapStateData(storeState);
+      elementData = mapStateData.elementData;
+      extraParent = mapStateData.extraParent;
+      // listOfLayers will be all the possible layers user can associate with current parent
+      whiteList = mapStateData.listOfLayers;
+      blackList = [];
+    }
+
     const elementResultList = filterGisDataByPolygon({
       filterPolygon: circPoly,
       gisData: layerData,
-      whiteList: selectedLayerKeys,
-      blackList: ["region"],
+      whiteList,
+      blackList,
     });
     const filterCoords = coordsToLatLongMap(circPoly.geometry.coordinates[0]);
     // fire next event : listElementsOnMap, with new list data
     dispatch(
-      listElementsOnMap({ elementList: elementResultList, filterCoords })
+      listElementsOnMap({
+        // association related fields
+        elementData,
+        extraParent,
+        // actual filtered elements
+        elementList: elementResultList,
+        // polygon coords used to filter
+        filterCoords,
+        // info for next event that current filter was for association list or not
+        isAssociationList:
+          mapStateEvent === PLANNING_EVENT.associateElementOnMapClick,
+      })
     );
   }
 };
@@ -210,28 +241,16 @@ export const onAddElementDetails =
 
     // generate ids
     let unique_id = generateElementUid(layerKey);
-    let network_id = "";
 
-    let region_list;
     // generate parent association data from parents res
     // shape: { layerKey : [{id, name, uid, netid}, ... ], ...]
     const parents = get(validationRes, "data.parents", {});
-    if (isEmpty(parents)) {
-      // generate from region
-      region_list = get(validationRes, "data.region_list");
-      // get region uid
-      const reg_uid = !!size(region_list) ? last(region_list).unique_id : "RGN";
-      network_id = `${reg_uid}-${unique_id}`;
-    } else {
-      // generate network id from parent list, get first key
-      const firstLayerKey = Object.keys(parents)[0];
-      const parentNetId = get(
-        parents,
-        [firstLayerKey, "0", "network_id"],
-        "PNI"
-      );
-      network_id = `${parentNetId}-${unique_id}`;
-    }
+    const region_list = get(validationRes, "data.region_list");
+    const network_id = generateNetworkIdFromParent(
+      unique_id,
+      parents,
+      region_list
+    );
     // generate children association data from children res
     const children = get(validationRes, "data.children", {});
 

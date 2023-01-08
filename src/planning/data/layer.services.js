@@ -16,6 +16,7 @@ import {
   apiDeteleElement,
   apiPutRegionEdit,
   apiUpdateElementConnections,
+  apiGetElementPortDetails,
 } from "utils/url.constants";
 
 export const fetchElementDetails = async ({ queryKey }) => {
@@ -78,6 +79,12 @@ export const addElementConnection = async ({ data, cableId }) => {
 export const fetchElementAssociations = async ({ queryKey }) => {
   const [_key, layerKey, elementId] = queryKey;
   const res = await Api.get(apiGetElementAssociations(layerKey, elementId));
+  return res.data;
+};
+
+export const fetchElementPortDetails = async ({ queryKey }) => {
+  const [_key, layerKey, elementId] = queryKey;
+  const res = await Api.get(apiGetElementPortDetails(layerKey, elementId));
   return res.data;
 };
 

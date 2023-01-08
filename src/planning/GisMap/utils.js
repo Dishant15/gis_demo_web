@@ -30,15 +30,20 @@ export const PLANNING_EVENT = {
   // special events
   showElementConnections: 6,
   addElementConnection: 7,
-  showPossibleAddAssociatiation: 8,
+  showPortDetails: 10,
+  // association events
   showAssociatedElements: 9,
+  showPossibleAddAssociatiation: 8,
+  associateElementOnMapClick: 13,
   // map select elements on location
-  selectElementsOnMapClick: 10,
-  listElementsOnMap: 11,
+  selectElementsOnMapClick: 11,
+  listElementsOnMap: 12,
 };
 
 export const LayerKeyMappings = {
   [RegionLayer.LAYER_KEY]: {
+    // @TODO : test if we can use this way
+    layerConfiguration: RegionLayer,
     preUid: RegionLayer.PRE_UID,
     featureType: RegionLayer.LAYER_FEATURE_TYPE,
     getViewOptions: RegionLayer.getViewOptions,
@@ -88,6 +93,7 @@ export const LayerKeyMappings = {
     initialElementData: CableLayer.INITIAL_ELEMENT_DATA,
     elementTableFields: CableLayer.ELEMENT_TABLE_FIELDS,
     formConfig: CableLayer.ELEMENT_FORM_TEMPLATE,
+    elementTableExtraControls: CableLayer.ELEMENT_TABLE_EXTRA_CONTROLS,
     // config fields
     ConfigFormTemplate: CableLayer.ELEMENT_CONFIG_TEMPLATE,
     ConfigInitData: CableLayer.INITIAL_CONFIG_DATA,

@@ -46,6 +46,18 @@ export const showAssociatiationList =
     );
   };
 
+export const associateElementOnMapClick =
+  ({ layerKey, elementData, listOfLayers, extraParent }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.associateElementOnMapClick,
+        layerKey,
+        data: { elementData, listOfLayers, extraParent },
+      })
+    );
+  };
+
 export const selectElementsOnMapClick = (dispatch, getState) => {
   const event = getPlanningMapStateEvent(getState());
 
@@ -63,12 +75,36 @@ export const selectElementsOnMapClick = (dispatch, getState) => {
 };
 
 export const listElementsOnMap =
-  ({ elementList, filterCoords }) =>
+  ({
+    elementList,
+    elementData,
+    filterCoords,
+    isAssociationList,
+    extraParent,
+  }) =>
   (dispatch) => {
     dispatch(
       setMapState({
         event: PLANNING_EVENT.listElementsOnMap,
-        data: { elementList, filterCoords },
+        data: {
+          elementList,
+          elementData,
+          filterCoords,
+          isAssociationList,
+          extraParent,
+        },
+      })
+    );
+  };
+
+export const showElementPortDetails =
+  ({ layerKey, elementId }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.showPortDetails,
+        layerKey,
+        data: { elementId },
       })
     );
   };

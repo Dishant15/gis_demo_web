@@ -33,6 +33,13 @@ const SymbolPolyline = ({ coordinates }) => {
           },
           {
             icon: {
+              path: 2.0,
+              strokeOpacity: 1,
+            },
+            offset: "50%",
+          },
+          {
+            icon: {
               path: 0.0,
               strokeOpacity: 1,
             },
