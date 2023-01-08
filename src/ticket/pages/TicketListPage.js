@@ -45,7 +45,10 @@ const TicketListPage = () => {
   // const { isLoading, data } = useQuery("ticketList", fetchTicketList);
   const { isLoading, data } = useQuery(
     "ticketSummeryList",
-    fetchTicketSummeryList
+    fetchTicketSummeryList,
+    {
+      staleTime: Infinity,
+    }
   );
 
   const gridRef = useRef();
