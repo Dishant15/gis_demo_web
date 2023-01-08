@@ -38,13 +38,24 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
     uploadLayerData,
     {
       onError: (err) => {
-        dispatch(
-          addNotification({
-            type: "error",
-            title: "Upload layer data",
-            text: "Invalid excel data",
-          })
-        );
+        const statusCode = get(err, "response.status");
+        if (statusCode === 403) {
+          dispatch(
+            addNotification({
+              type: "error",
+              title: "Upload layer data",
+              text: "Permission required to upload this layer",
+            })
+          );
+        } else {
+          dispatch(
+            addNotification({
+              type: "error",
+              title: "Upload layer data",
+              text: "Invalid excel data",
+            })
+          );
+        }
       },
       onSuccess: (res) => {
         const success_count = get(res, "success_count", 0);

@@ -461,6 +461,15 @@ const UserPermissions = ({
                   color="secondary"
                   disabled={disabledAll}
                 />
+                <FormCheckbox
+                  label="Upload"
+                  name={`${layerKey}_upload`}
+                  control={control}
+                  error={has(errors, `${layerKey}_upload`)}
+                  helperText={get(errors, `${layerKey}_upload.message`, "")}
+                  color="secondary"
+                  disabled={disabledAll}
+                />
               </Stack>
             </Stack>
             <Divider />
