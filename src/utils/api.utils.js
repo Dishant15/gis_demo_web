@@ -18,7 +18,6 @@ export function convertObjectToQueryParams(object) {
 }
 
 export const apiRequestConfig = {
-  timeout: 20000,
   headers: {
     "Content-Type": "application/json",
   },
