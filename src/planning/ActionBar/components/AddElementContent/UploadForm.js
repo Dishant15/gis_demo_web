@@ -59,13 +59,14 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
       },
       onSuccess: (res) => {
         const success_count = get(res, "success_count", 0);
-        const error_count = get(res, "error_count", 0);
-        if (error_count) {
+        const error_list = get(res, "error_list", []);
+        if (error_list?.length) {
+          console.log("failed => ", error_list);
           dispatch(
             addNotification({
               type: NOTIFICATION_TYPE.WARNING,
               title: "Upload layer data",
-              text: `${success_count} elements added successfully. ${error_count} elements are failed to add.`,
+              text: `${success_count} elements added successfully. ${error_list?.length} elements are failed to add.`,
             })
           );
         } else {
