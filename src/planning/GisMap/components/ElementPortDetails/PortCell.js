@@ -7,7 +7,7 @@ import TableCell from "@mui/material/TableCell";
  *    CablePortDetails
  */
 const PortCell = ({ value }) => {
-  return <TableCell>{value}</TableCell>;
+  return <TableCell>{value || "Not Connected"}</TableCell>;
 };
 
 export default PortCell;

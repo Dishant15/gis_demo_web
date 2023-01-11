@@ -31,6 +31,7 @@ const GisMapPopups = ({ children, dragId }) => {
             position: "fixed",
             top: "10%",
             right: "10%",
+            zIndex: 2,
           }}
         >
           <Paper elevation={3} className="g-relative">
