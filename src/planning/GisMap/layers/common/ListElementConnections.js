@@ -27,8 +27,8 @@ import GisMapPopupLoader from "planning/GisMap/components/GisMapPopups/GisMapPop
 import { setMapState } from "planning/data/planningGis.reducer";
 import { fetchElementConnections } from "planning/data/layer.services";
 import {
+  onAssociatedElementShowOnMapClick,
   onElementAddConnectionEvent,
-  onElementListItemClick,
 } from "planning/data/planning.actions";
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings } from "planning/GisMap/utils";
@@ -63,13 +63,8 @@ const ListElementConnections = ({ layerKey }) => {
   };
 
   const handleShowOnMap = useCallback(
-    (layerKey, elementId) => () => {
-      dispatch(
-        onElementListItemClick({
-          layerKey,
-          id: elementId,
-        })
-      );
+    (layerKey, element) => () => {
+      dispatch(onAssociatedElementShowOnMapClick(element, layerKey));
     },
     []
   );
@@ -262,7 +257,7 @@ const ConnectionList = ({
                 marginRight: "8px",
               }}
               aria-label="show-location"
-              onClick={handleShowOnMap(layer_info.layer_key, element.id)}
+              onClick={handleShowOnMap(layer_info.layer_key, element)}
             >
               <LanguageIcon />
             </IconButton>
