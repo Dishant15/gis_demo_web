@@ -11,7 +11,7 @@ export const PRE_UID = "CBL";
 export const LAYER_FEATURE_TYPE = FEATURE_TYPES.POLYLINE;
 
 const dashLineSymbol = {
-  path: "M 0,-1 0,1",
+  path: "M 0,-2 0,2",
   strokeOpacity: 1,
 };
 
@@ -56,7 +56,7 @@ export const getViewOptions = ({ color_on_map, cable_type }) => {
           {
             icon: dashLineSymbol,
             offset: "0px",
-            repeat: "20px",
+            repeat: "18px",
           },
         ],
         icon: CableIcon,

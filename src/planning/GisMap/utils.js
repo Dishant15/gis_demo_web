@@ -31,6 +31,7 @@ export const PLANNING_EVENT = {
   showElementConnections: 6,
   addElementConnection: 7,
   showPortDetails: 10,
+  showSplicingView: 14,
   // association events
   showAssociatedElements: 9,
   showPossibleAddAssociatiation: 8,

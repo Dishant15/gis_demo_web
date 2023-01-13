@@ -26,10 +26,10 @@ export const transformCablePortData = (portList = []) => {
       portNameWiseData[portName]["common_name"] = portName;
     }
     if (port.is_input) {
-      portNameWiseData[portName]["conn__to_A_end"] = port.element_unique_id;
+      portNameWiseData[portName]["conn__to_A_end"] = port.connected_to;
     }
     if (!port.is_input) {
-      portNameWiseData[portName]["conn__to_B_end"] = port.element_unique_id;
+      portNameWiseData[portName]["conn__to_B_end"] = port.connected_to;
     }
   }
   return Object.values(portNameWiseData);
