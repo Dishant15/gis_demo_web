@@ -103,6 +103,7 @@ export const CABLE_TYPE_OPTIONS = [
 export const CONFIG_LIST_TABLE_COL_DEFS = [
   { headerName: "Name", field: "config_name" },
   { headerName: "Tubes", field: "no_of_tube" },
+  { headerName: "Ribbon count", field: "ribbon_count" },
   { headerName: "Core / Tube", field: "core_per_tube" },
   { headerName: "Color", field: "color_on_map" },
 ];
@@ -187,6 +188,11 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           field_type: "input",
         },
         {
+          field_key: "ribbon_count",
+          label: "Ribbon Count",
+          field_type: "input",
+        },
+        {
           field_key: "color_on_map",
           label: "Color on map",
           field_type: "input",
@@ -214,6 +220,7 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Start Reading", field: "start_reading", type: "simple" },
   { label: "End Reading", field: "end_reading", type: "simple" },
   { label: "No of tubes", field: "no_of_tube", type: "simple" },
+  { label: "Ribbon Count", field: "ribbon_count", type: "simple" },
   { label: "Core / Tube", field: "core_per_tube", type: "simple" },
   { label: "Specification", field: "specification", type: "simple" },
   { label: "Vendor", field: "vendor", type: "simple" },

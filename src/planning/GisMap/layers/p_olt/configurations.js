@@ -58,6 +58,7 @@ export const ELEMENT_TABLE_FIELDS = [
   ...ELEMENT_TABLE_ABSTRACT_FIELDS,
   { label: "IP Address", field: "ip_address", type: "simple" },
   { label: "NMS Reference Name", field: "nms_ref_name", type: "simple" },
+  { label: "Card Count", field: "card_count", type: "simple" },
   { label: "Uplink Port Count", field: "uplink_port_count", type: "simple" },
   {
     label: "Downlink Port Count",
@@ -74,6 +75,7 @@ export const INITIAL_CONFIG_DATA = {
 
 export const CONFIG_LIST_TABLE_COL_DEFS = [
   { headerName: "Name", field: "config_name" },
+  { headerName: "Card count", field: "card_count" },
   { headerName: "Uplink port count", field: "uplink_port_count" },
   { headerName: "Downlink port count", field: "downlink_port_count" },
 ];
@@ -86,6 +88,11 @@ export const ELEMENT_CONFIG_TEMPLATE = {
         {
           field_key: "config_name",
           label: "Name",
+          field_type: "input",
+        },
+        {
+          field_key: "card_count",
+          label: "Card count",
           field_type: "input",
         },
         {

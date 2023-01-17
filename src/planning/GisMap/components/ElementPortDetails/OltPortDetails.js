@@ -21,6 +21,10 @@ const tableConfig = [
     key: "status_display",
   },
   {
+    label: "Card",
+    key: "card",
+  },
+  {
     label: "Port Type",
     key: "port_type_display",
   },
