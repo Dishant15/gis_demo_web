@@ -23,6 +23,10 @@ const tableConfig = [
     type: "color",
   },
   {
+    label: "Ribbon",
+    key: "ribbon",
+  },
+  {
     label: "Fiber Color",
     key: "fiber_color",
     type: "color",
