@@ -31,6 +31,7 @@ export const getFeedbackLink = () =>
   "https://drive.google.com/drive/folders/1HgHi4fqTuRau8eEKiiC6lgnlVN1FJ2YV?usp=sharing";
 
 /* External server apis **/
+export const apiGetHealthCheck = () => "/api/health/check/";
 export const apiGetDashboard = () => "/api/dashboard/";
 export const apiGetDashboardSurveyTicketSummery = () =>
   "/api/survey-ticket-summery/";
