@@ -184,7 +184,7 @@ export const ELEMENT_CONFIG_TEMPLATE = {
         },
         {
           field_key: "core_per_tube",
-          label: "Cores per tube",
+          label: "No Of Cores",
           field_type: "input",
         },
         {
