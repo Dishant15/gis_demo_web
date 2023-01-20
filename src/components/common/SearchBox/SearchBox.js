@@ -35,14 +35,7 @@ const SearchBox = ({ onSearchPress }) => {
           ),
         }}
       />
-      <IconButton
-        color="secondary"
-        variant="outlined"
-        onClick={handleSearch}
-        sx={{
-          marginLeft: 1,
-        }}
-      >
+      <IconButton color="secondary" variant="outlined" onClick={handleSearch}>
         <SearchIcon />
       </IconButton>
     </Stack>

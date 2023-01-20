@@ -150,7 +150,9 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
         <Box display="flex" justifyContent="space-between">
           {hasDownloadPermission ? (
             <DownloadLayer layerConfig={layerConfig} />
-          ) : null}
+          ) : (
+            <Box />
+          )}
           <Button
             color="secondary"
             startIcon={<SearchIcon />}
