@@ -4,13 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import noop from "lodash/noop";
 import size from "lodash/size";
-import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandMore from "components/common/ExpandMore";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import SearchIcon from "@mui/icons-material/Search";
 
 import DownloadLayer from "./DownloadLayer";
 
@@ -25,7 +33,10 @@ import {
   setActiveTab,
 } from "planning/data/planningState.reducer";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { openElementDetails } from "planning/data/planning.actions";
+import {
+  onLayerTabElementList,
+  openElementDetails,
+} from "planning/data/planning.actions";
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { checkUserPermission } from "redux/selectors/auth.selectors";
 
@@ -85,6 +96,10 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
     }
   };
 
+  const handleSearchClick = useCallback(() => {
+    dispatch(onLayerTabElementList(layer_key));
+  }, [layer_key]);
+
   return (
     <Box className="reg-list-pill">
       <Stack direction="row" width="100%" spacing={2}>
@@ -132,11 +147,18 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
       <Divider flexItem />
 
       {isExpanded ? (
-        <Box>
+        <Box display="flex" justifyContent="space-between">
           {hasDownloadPermission ? (
             <DownloadLayer layerConfig={layerConfig} />
           ) : null}
-          <ElementList layerKey={layer_key} />
+          <Button
+            color="secondary"
+            startIcon={<SearchIcon />}
+            onClick={handleSearchClick}
+          >
+            Search
+          </Button>
+          {/* <ElementList layerKey={layer_key} /> */}
         </Box>
       ) : null}
     </Box>

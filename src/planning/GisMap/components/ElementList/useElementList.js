@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 
 import get from "lodash/get";
 import merge from "lodash/merge";
+import Fuse from "fuse.js";
 
 import useValidateGeometry from "planning/GisMap/hooks/useValidateGeometry";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
@@ -33,6 +34,12 @@ export const useElementListHook = () => {
   } = eventData;
 
   const [elementToAssociate, setElementToAssociate] = useState(null);
+  const [searchedKey, setSearchedKey] = useState("");
+  const elementListSearch = new Fuse(elementList, {
+    keys: ["name"],
+    ignoreFieldNorm: true,
+    fieldNormWeight: 0,
+  });
 
   const { mutate: editElement, isLoading: isEditLoading } = useMutation(
     editElementDetails,
@@ -174,8 +181,15 @@ export const useElementListHook = () => {
 
   const handleHidePopup = useCallback(() => setElementToAssociate(null), []);
 
+  const handleElementListFilter = useCallback((searchText) => {
+    setSearchedKey(searchText);
+  }, []);
+
   return {
-    elementList,
+    elementList: searchedKey
+      ? elementListSearch.search(searchedKey)
+      : elementList,
+    searchedKey,
     parentData,
     isAssociationList,
     selectedElement: elementToAssociate,
@@ -186,5 +200,6 @@ export const useElementListHook = () => {
     handleAddExistingAssociation,
     handleShowPopup,
     handleHidePopup,
+    handleElementListFilter,
   };
 };
