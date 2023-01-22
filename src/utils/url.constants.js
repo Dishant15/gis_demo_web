@@ -114,6 +114,7 @@ export const apiGetPlanningLayerData = () => "/api/planning/layer/";
 
 export const apiPostValidateElementGeometry = () =>
   "/api/planning/layer/validate/geometry/";
+
 export const apiPostAddElement = (layerKey) =>
   `/api/planning/layer/${layerKey}/add/`;
 
@@ -174,3 +175,6 @@ export const getGoogleAddress = (long, lat) =>
 
 export const apiGetElementPortDetails = (layerKey, elementId) =>
   `/api/planning/layer/${layerKey}/${elementId}/ports/`;
+
+export const apiPostElementSplicingDetails = () =>
+  "/api/planning/layer/splicing/details/";

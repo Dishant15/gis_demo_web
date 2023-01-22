@@ -35,6 +35,7 @@ import { LayerKeyMappings } from "planning/GisMap/utils";
 import { DRAG_ICON_WIDTH } from "utils/constant";
 import { filter } from "lodash";
 import { showSplicingView } from "planning/data/event.actions";
+import { addNotification } from "redux/reducers/notification.reducer";
 
 const ListElementConnections = ({ layerKey }) => {
   const [leftElement, setLeftElement] = useState(null);
@@ -69,24 +70,44 @@ const ListElementConnections = ({ layerKey }) => {
     []
   );
 
-  const handleSetLeftElement = useCallback((element) => () => {
-    setLeftElement(element);
-  });
+  const handleSetLeftElement = useCallback(
+    (connection) => () => {
+      setLeftElement({
+        element_id: connection.element.id,
+        layer_key: connection.layer_info.layer_key,
+      });
+    },
+    []
+  );
 
-  const handleSetRighttElement = useCallback((element) => () => {
-    setRightElement(element);
-  });
+  const handleSetRightElement = useCallback(
+    (connection) => () => {
+      setRightElement({
+        element_id: connection.element.id,
+        layer_key: connection.layer_info.layer_key,
+      });
+    },
+    []
+  );
 
   const handleSplicingClick = useCallback(() => {
-    console.log("clicked");
-    dispatch(
-      showSplicingView({
-        layerKey,
-        elementId,
-        leftElement,
-        rightElement,
-      })
-    );
+    if (!rightElement && !leftElement) {
+      // need atleast 1 input or output selected
+      dispatch(
+        addNotification({
+          type: "error",
+          title: "Selection incorrect",
+          text: "Select input or output element for splicing",
+        })
+      );
+    } else {
+      let actionPayload = {
+        middle: { element_id: elementId, layer_key: layerKey },
+        left: !!leftElement ? { ...leftElement } : undefined,
+        right: !!rightElement ? { ...rightElement } : undefined,
+      };
+      dispatch(showSplicingView(actionPayload));
+    }
   }, [layerKey, elementId, leftElement, rightElement]);
 
   const leftSideConnList = filter(elemConnectionData, (data) => {
@@ -164,10 +185,10 @@ const ListElementConnections = ({ layerKey }) => {
             </Typography>
 
             <ConnectionList
-              connections={leftSideConnList}
+              connections={rightSideConnList}
               handleShowOnMap={handleShowOnMap}
-              handleElementClick={handleSetLeftElement}
-              activeElementId={get(leftElement, "element.id")}
+              handleElementClick={handleSetRightElement}
+              activeElementId={get(rightElement, "element_id")}
             />
 
             <Typography variant="h6" px={1}>
@@ -175,10 +196,10 @@ const ListElementConnections = ({ layerKey }) => {
             </Typography>
 
             <ConnectionList
-              connections={rightSideConnList}
+              connections={leftSideConnList}
               handleShowOnMap={handleShowOnMap}
-              handleElementClick={handleSetRighttElement}
-              activeElementId={get(rightElement, "element.id")}
+              handleElementClick={handleSetLeftElement}
+              activeElementId={get(leftElement, "element_id")}
             />
           </Stack>
         )}

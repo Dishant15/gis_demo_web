@@ -1,5 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "react-query";
+
+import { get } from "lodash";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,23 +11,34 @@ import noop from "lodash/noop";
 
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
+import SplicingContainer from "./SplicingContainer";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
+import { fetchElementPortSplicingDetails } from "planning/data/layer.services";
 
 const SplicingView = () => {
   const dispatch = useDispatch();
-  // shape: {
-  //   layerKey: parent layer key - ie. spliter,
-  //   elementId: parent element id - ie. spliter element id,
-  //   leftElement,
-  //   rightElement
-  // }
-  const mapStateData = useSelector(getPlanningMapStateData);
-  console.log(
-    "🚀 ~ file: SplicingView.js:18 ~ SplicingView ~ mapStateData",
-    mapStateData
+  const splicingPostData = useSelector(getPlanningMapStateData);
+
+  const [leftData, setLeftData] = useState(null);
+  const [rightData, setRightData] = useState(null);
+  const [middleData, setMiddleData] = useState(null);
+
+  const { mutate: getElementSplicingData, isLoading } = useMutation(
+    fetchElementPortSplicingDetails,
+    {
+      onSuccess: (res) => {
+        setLeftData(get(res, "left", null));
+        setRightData(get(res, "right", null));
+        setMiddleData(get(res, "middle", null));
+      },
+    }
   );
+
+  useEffect(() => {
+    getElementSplicingData(splicingPostData);
+  }, [splicingPostData]);
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -40,7 +54,15 @@ const SplicingView = () => {
           handleCloseDetails={handleCloseDetails}
         />
       </Box>
-      <Typography variant="h6">SplicingView</Typography>
+      {isLoading ? (
+        <Typography variant="h6">Loading...</Typography>
+      ) : (
+        <SplicingContainer
+          left={leftData}
+          right={rightData}
+          middle={middleData}
+        />
+      )}
     </GisMapPopups>
   );
 };

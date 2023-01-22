@@ -109,14 +109,11 @@ export const showElementPortDetails =
     );
   };
 
-export const showSplicingView =
-  ({ layerKey, elementId, leftElement, rightElement }) =>
-  (dispatch) => {
-    dispatch(
-      setMapState({
-        event: PLANNING_EVENT.showSplicingView,
-        layerKey,
-        data: { elementId, leftElement, rightElement },
-      })
-    );
-  };
+export const showSplicingView = (actionPayload) => (dispatch) => {
+  dispatch(
+    setMapState({
+      event: PLANNING_EVENT.showSplicingView,
+      data: actionPayload,
+    })
+  );
+};
