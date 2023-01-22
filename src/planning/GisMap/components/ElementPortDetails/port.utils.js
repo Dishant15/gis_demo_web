@@ -1,5 +1,12 @@
 import replace from "lodash/replace";
 
+export const PORT_STATUS_COLOR_MAPPING = {
+  V: "grey",
+  C: "green",
+  R: "blue",
+  F: "red",
+};
+
 export const FIBER_COLOR_CODE_HEX_MAPPING = {
   blue: "#0142f2",
   orange: "#f37b02",

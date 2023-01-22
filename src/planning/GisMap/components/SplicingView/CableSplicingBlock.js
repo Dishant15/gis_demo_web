@@ -2,17 +2,24 @@ import React, { useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { find, orderBy, range } from "lodash";
+import Typography from "@mui/material/Typography";
 
-import { FIBER_COLOR_CODE_HEX_MAPPING } from "../ElementPortDetails/port.utils";
+import find from "lodash/find";
+import orderBy from "lodash/orderBy";
+import range from "lodash/range";
+
+import {
+  FIBER_COLOR_CODE_HEX_MAPPING,
+  PORT_STATUS_COLOR_MAPPING,
+} from "../ElementPortDetails/port.utils";
 
 const CableSplicingBlock = ({ portData, side }) => {
-  const { configuration, ports } = portData;
+  const { name, configuration, ports } = portData;
 
   const { core_per_tube, ribbon_count, no_of_tube } = configuration;
 
-  const fiberWrapperHeight = 50;
-  const fiberHeight = 25;
+  const fiberWrapperHeight = 40;
+  const fiberHeight = 15;
   const ribbonHeight = core_per_tube * fiberWrapperHeight;
   const hasRibbon = !!ribbon_count;
   const tubeHeight = hasRibbon
@@ -39,22 +46,24 @@ const CableSplicingBlock = ({ portData, side }) => {
         {tubes.map((t, tInd) => {
           const { color, tube_no } = t;
           return (
-            <Stack direction={side === "left" ? "row" : "row-reverse"} flex={1}>
+            <Stack
+              key={tInd}
+              direction={side === "left" ? "row" : "row-reverse"}
+              flex={1}
+            >
               <Stack
-                flex={1}
-                sx={{ background: color, height: tubeHeight }}
-                key={tInd}
+                sx={{ background: color, height: tubeHeight, width: "80px" }}
               >
                 T{tube_no}
               </Stack>
               {!!ribbon_count ? (
-                <Stack direction="column" flex={1}>
+                <Stack direction="column">
                   {range(ribbon_count).map((r) => {
                     return (
                       <Box
                         sx={{
                           height: ribbonHeight,
-                          width: "100%",
+                          width: "30px",
                           border: "1px solid black",
                         }}
                         key={r}
@@ -79,52 +88,73 @@ const CableSplicingBlock = ({ portData, side }) => {
     let OpFiber = [];
 
     for (let fInd = 0; fInd < orderedPorts.length; fInd++) {
-      const currPort = ports[fInd];
-      const { id, fiber_color } = currPort;
+      const currPort = orderedPorts[fInd];
+      const { id, fiber_color, is_input, status } = currPort;
       const isDash = fiber_color.includes("d-");
       const currFibColor = isDash ? fiber_color.substring(2) : fiber_color;
+      // if side is left show fiber color on output side
+      // if side is right show fiber color on input side
+      const showFiberColor =
+        (side === "left" && !is_input) || (side === "right" && is_input);
 
       const Fiber = (
         <Box
           key={id}
           alignItems="center"
+          flexDirection={side === "left" ? "row-reverse" : "row"}
           sx={{
             display: "flex",
-            width: "100%",
             height: fiberWrapperHeight,
           }}
         >
           <Box
             flex={1}
             sx={{
-              backgroundColor: FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
-              width: "100%",
-              height: fiberHeight,
+              background: PORT_STATUS_COLOR_MAPPING[status],
+              height: fiberHeight - 8,
+              width: "25px",
             }}
-          >
-            {currPort.name}
-          </Box>
+          ></Box>
+          {showFiberColor ? (
+            <Box
+              flex={1}
+              sx={{
+                background: FIBER_COLOR_CODE_HEX_MAPPING[currFibColor],
+                height: fiberHeight,
+                width: "25px",
+                position: "relative",
+              }}
+            >
+              {isDash ? (
+                <Box
+                  sx={{
+                    border: "1px dashed black",
+                    marginTop: "6px",
+                  }}
+                ></Box>
+              ) : null}
+            </Box>
+          ) : null}
         </Box>
       );
-      if (currPort.is_input) IpFiber.push(Fiber);
+      if (is_input) IpFiber.push(Fiber);
       else OpFiber.push(Fiber);
     }
 
     return [IpFiber, OpFiber];
-  }, [ports]);
+  }, [ports, side]);
 
   return (
-    <Stack direction="row" sx={{ height: totalHeight }}>
-      <Stack direction="column-reverse" sx={{ width: "50px" }}>
-        {InputFibers}
+    <Box>
+      <Typography textAlign="center" variant="h6">
+        {name}
+      </Typography>
+      <Stack direction="row" sx={{ height: totalHeight }}>
+        <Stack direction="column">{InputFibers}</Stack>
+        <Stack direction="row">{TubeContainer}</Stack>
+        <Stack direction="column">{OutputFibers}</Stack>
       </Stack>
-      <Stack direction="row" sx={{ width: "100px" }}>
-        {TubeContainer}
-      </Stack>
-      <Stack direction="column" sx={{ width: "50px" }}>
-        {OutputFibers}
-      </Stack>
-    </Stack>
+    </Box>
   );
 };
 

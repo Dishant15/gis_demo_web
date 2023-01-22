@@ -4,10 +4,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 import CableSplicingBlock from "./CableSplicingBlock";
-
-const SplitterSplicingBlock = ({ portData }) => {
-  return <Box>{portData.name}</Box>;
-};
+import SplitterSplicingBlock from "./SplitterSplicingBlock";
 
 const SplicingContainer = ({ left, right, middle }) => {
   // middle will always be there which is selected element, left and right is optional but one of them will be there
@@ -35,8 +32,8 @@ const SplicingContainer = ({ left, right, middle }) => {
   }, [right]);
 
   return (
-    <Box>
-      <Stack spacing={5} direction="row" overflow="auto">
+    <Box p={5}>
+      <Stack spacing={15} direction="row" overflow="auto">
         {mayBeLeftComponent}
         {middleComponent}
         {mayBeRightComponent}
