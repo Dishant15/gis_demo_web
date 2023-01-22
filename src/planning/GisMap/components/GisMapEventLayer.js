@@ -13,11 +13,12 @@ import ElementList from "./ElementList";
 import { GisLayerForm } from "./GisLayerForm";
 import ShowAssociatedElements from "./ShowAssociatedElements";
 import MapEventInfoCard from "./MapEventInfoCard";
+import ElementPortDetails from "./ElementPortDetails";
+import SplicingView from "./SplicingView";
+import LayerElementList from "./LayerElementList";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import ElementPortDetails from "./ElementPortDetails";
-import SplicingView from "./SplicingView";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -77,6 +78,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.listElementsOnMap:
       return <ElementList />;
+
+    case PLANNING_EVENT.layerElementsOnMap:
+      return <LayerElementList />;
 
     case PLANNING_EVENT.showPortDetails:
       return <ElementPortDetails />;

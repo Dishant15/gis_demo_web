@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 
 import size from "lodash/size";
 import get from "lodash/get";
-import isNull from "lodash/isNull";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -17,14 +16,13 @@ import LanguageIcon from "@mui/icons-material/Language";
 
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
-import ConfirmDialog from "components/common/ConfirmDialog";
+import SearchBox from "components/common/SearchBox";
 
 import { setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings } from "../../utils";
-import { useElementListHook } from "./useElementList";
-import SearchBox from "components/common/SearchBox";
+import { useLayerElementList } from "./useLayerElementList";
 
-const ElementList = () => {
+const LayerElementList = () => {
   const [minimized, setMinimized] = useState(false);
   const dispatch = useDispatch();
 
@@ -53,29 +51,21 @@ const ElementList = () => {
 
 const ElementListTable = () => {
   const {
+    elementLayerKey,
     elementList,
     searchedKey,
-    isAssociationList,
-    selectedElement,
-    isEditLoading,
     handleShowOnMap,
     handleShowDetails,
-    handleAddExistingAssociation,
-    handleShowPopup,
-    handleHidePopup,
     handleElementListFilter,
-  } = useElementListHook();
-
-  const showPopup = !isNull(selectedElement);
+  } = useLayerElementList();
 
   if (!size(elementList))
     return (
       <>
         <SearchBox onSearchPress={handleElementListFilter} />
-
         <Box p={2}>
           <Typography variant="h6" color="text.secondary">
-            No element available arround selected area
+            No element available
           </Typography>
         </Box>
       </>
@@ -93,9 +83,8 @@ const ElementListTable = () => {
       >
         {elementList.map((currItem) => {
           const element = searchedKey ? currItem.item : currItem;
-
           const Icon =
-            LayerKeyMappings[element.layerKey]["getViewOptions"](element).icon;
+            LayerKeyMappings[elementLayerKey]["getViewOptions"](element).icon;
           const networkId = get(element, "network_id", "");
 
           return (
@@ -119,18 +108,14 @@ const ElementListTable = () => {
                 <img
                   className="responsive-img"
                   src={Icon}
-                  alt={element.layerKey}
+                  alt={elementLayerKey}
                 />
               </Paper>
               <Stack flex={1} flexDirection="row">
                 <Box
                   className="clickable"
                   flex={1}
-                  onClick={
-                    isAssociationList
-                      ? handleShowPopup(element)
-                      : handleShowDetails(element)
-                  }
+                  onClick={handleShowDetails(element.id, elementLayerKey)}
                 >
                   <Typography variant="subtitle1" lineHeight={1.1}>
                     {get(element, "name", "")}
@@ -144,7 +129,7 @@ const ElementListTable = () => {
                       marginRight: "8px",
                     }}
                     aria-label="show-location"
-                    onClick={handleShowOnMap(element)}
+                    onClick={handleShowOnMap(element.id, elementLayerKey)}
                   >
                     <LanguageIcon />
                   </IconButton>
@@ -154,17 +139,8 @@ const ElementListTable = () => {
           );
         })}
       </Stack>
-      <ConfirmDialog
-        show={showPopup}
-        onClose={handleHidePopup}
-        onConfirm={handleAddExistingAssociation}
-        isLoading={isEditLoading}
-        title={`Associate ${selectedElement?.name}`}
-        text={`Are you sure you want to add association with element : ${selectedElement?.name} #${selectedElement?.unique_id}`}
-        confirmText="Associate"
-      />
     </>
   );
 };
 
-export default ElementList;
+export default LayerElementList;

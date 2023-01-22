@@ -23,6 +23,7 @@ import { fetchLayerDataThunk } from "./actionBar.services";
 import {
   getAllLayersData,
   getLayerViewData,
+  getMasterViewData,
   getPlanningMapStateData,
   getPlanningMapStateEvent,
 } from "./planningGis.selectors";
@@ -412,4 +413,20 @@ export const onFetchLayerListDetailsSuccess = (layerConfData) => (dispatch) => {
       }
     }
   }
+};
+
+export const onLayerTabElementList = (layerKey) => (dispatch, getState) => {
+  const storeState = getState();
+  // element list based on cached or master data list
+  let elementResultList = getMasterViewData(layerKey)(storeState);
+  // fire next event : listElementsOnMap, with new list data
+  dispatch(
+    setMapState({
+      event: PLANNING_EVENT.layerElementsOnMap,
+      data: {
+        elementList: elementResultList,
+        elementLayerKey: layerKey,
+      },
+    })
+  );
 };
