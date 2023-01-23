@@ -138,8 +138,11 @@ const RegionPage = () => {
 
   const handleRegionDetails = useCallback(
     (regionId) => {
-      if (isNull(createRegion)) {
-        setShowRegionDetails(regionId);
+      // show form if user have add / edit perm
+      if (canUserAddRegion || canUserEditRegion) {
+        if (isNull(createRegion)) {
+          setShowRegionDetails(regionId);
+        }
       }
     },
     [setShowRegionDetails, createRegion]
