@@ -1,7 +1,7 @@
 import replace from "lodash/replace";
 
 export const PORT_STATUS_COLOR_MAPPING = {
-  V: "grey",
+  V: "silver",
   C: "green",
   R: "blue",
   F: "red",

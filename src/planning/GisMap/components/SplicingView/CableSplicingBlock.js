@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import CircleIcon from "@mui/icons-material/Circle";
 
 import find from "lodash/find";
 import orderBy from "lodash/orderBy";
@@ -12,10 +13,15 @@ import {
   FIBER_COLOR_CODE_HEX_MAPPING,
   PORT_STATUS_COLOR_MAPPING,
 } from "../ElementPortDetails/port.utils";
+import {
+  connectionDotStyles,
+  elementBorders,
+  elementLabelCenter,
+  portBoxShadow,
+} from "./style.constants";
 
 const CableSplicingBlock = ({ portData, side }) => {
   const { name, configuration, ports } = portData;
-
   const { core_per_tube, ribbon_count, no_of_tube } = configuration;
 
   const fiberWrapperHeight = 40;
@@ -52,9 +58,15 @@ const CableSplicingBlock = ({ portData, side }) => {
               flex={1}
             >
               <Stack
-                sx={{ background: color, height: tubeHeight, width: "80px" }}
+                sx={{
+                  background: color,
+                  height: tubeHeight,
+                  width: "80px",
+                  position: "relative",
+                  border: elementBorders,
+                }}
               >
-                T{tube_no}
+                <Box sx={elementLabelCenter}>T{tube_no}</Box>
               </Stack>
               {!!ribbon_count ? (
                 <Stack direction="column">
@@ -62,13 +74,16 @@ const CableSplicingBlock = ({ portData, side }) => {
                     return (
                       <Box
                         sx={{
+                          position: "relative",
                           height: ribbonHeight,
                           width: "30px",
-                          border: "1px solid black",
+                          border: elementBorders,
                         }}
                         key={r}
                       >
-                        R{r + 1}
+                        <Box sx={{ ...elementLabelCenter, padding: "3px" }}>
+                          R{r + 1}
+                        </Box>
                       </Box>
                     );
                   })}
@@ -89,7 +104,7 @@ const CableSplicingBlock = ({ portData, side }) => {
 
     for (let fInd = 0; fInd < orderedPorts.length; fInd++) {
       const currPort = orderedPorts[fInd];
-      const { id, fiber_color, is_input, status } = currPort;
+      const { id, fiber_color, sr_no, is_input, status } = currPort;
       const isDash = fiber_color.includes("d-");
       const currFibColor = isDash ? fiber_color.substring(2) : fiber_color;
       // if side is left show fiber color on output side
@@ -107,6 +122,18 @@ const CableSplicingBlock = ({ portData, side }) => {
             height: fiberWrapperHeight,
           }}
         >
+          {showFiberColor ? (
+            <>
+              <Box textAlign="center" p={1}>
+                {sr_no}
+              </Box>
+              {status === "C" ? null : (
+                <Box display="flex" sx={connectionDotStyles(is_input)}>
+                  <CircleIcon fontSize="small" />
+                </Box>
+              )}
+            </>
+          ) : null}
           <Box
             flex={1}
             sx={{
@@ -123,6 +150,7 @@ const CableSplicingBlock = ({ portData, side }) => {
                 height: fiberHeight,
                 width: "25px",
                 position: "relative",
+                boxShadow: portBoxShadow,
               }}
             >
               {isDash ? (

@@ -187,8 +187,8 @@ const ListElementConnections = ({ layerKey }) => {
             <ConnectionList
               connections={rightSideConnList}
               handleShowOnMap={handleShowOnMap}
-              handleElementClick={handleSetRightElement}
-              activeElementId={get(rightElement, "element_id")}
+              handleElementClick={handleSetLeftElement}
+              activeElementId={get(leftElement, "element_id")}
             />
 
             <Typography variant="h6" px={1}>
@@ -198,8 +198,8 @@ const ListElementConnections = ({ layerKey }) => {
             <ConnectionList
               connections={leftSideConnList}
               handleShowOnMap={handleShowOnMap}
-              handleElementClick={handleSetLeftElement}
-              activeElementId={get(leftElement, "element_id")}
+              handleElementClick={handleSetRightElement}
+              activeElementId={get(rightElement, "element_id")}
             />
           </Stack>
         )}
