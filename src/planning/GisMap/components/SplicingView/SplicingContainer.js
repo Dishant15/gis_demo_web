@@ -15,14 +15,20 @@ const SplicingContainer = ({ left, right, middle }) => {
     }
   }, [left]);
 
-  const middleComponent = useMemo(() => {
-    if (!middle) return null;
-    if (middle.layer_key === "p_cable") {
-      return <CableSplicingBlock portData={middle} />;
-    } else if (middle.layer_key === "p_splitter") {
-      return <SplitterSplicingBlock portData={middle} />;
-    }
-  }, [middle]);
+  let middleComponent;
+  if (!middle) {
+    middleComponent = null;
+  } else if (middle.layer_key === "p_cable") {
+    middleComponent = <CableSplicingBlock portData={middle} />;
+  } else if (middle.layer_key === "p_splitter") {
+    middleComponent = (
+      <SplitterSplicingBlock
+        portData={middle}
+        hasLeft={!!left}
+        hasRight={!!right}
+      />
+    );
+  }
 
   const mayBeRightComponent = useMemo(() => {
     if (!right) return null;
