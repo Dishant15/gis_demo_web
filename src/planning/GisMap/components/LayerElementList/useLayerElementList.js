@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Fuse from "fuse.js";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
-import { openElementDetails } from "planning/data/planning.actions";
-import { onElementListItemClick } from "planning/data/planning.actions";
+import {
+  onLayerElementListItemClick,
+  openElementDetails,
+} from "planning/data/planning.actions";
 
 export const useLayerElementList = () => {
   const dispatch = useDispatch();
@@ -23,13 +25,8 @@ export const useLayerElementList = () => {
   // const elementListSearch = [];
 
   const handleShowOnMap = useCallback(
-    (elementId, layerKey) => () => {
-      dispatch(
-        onElementListItemClick({
-          layerKey: layerKey,
-          id: elementId,
-        })
-      );
+    (element, layerKey) => () => {
+      dispatch(onLayerElementListItemClick(element, layerKey));
     },
     []
   );

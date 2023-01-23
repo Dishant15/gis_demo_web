@@ -1,7 +1,10 @@
 import React from "react";
 
 import get from "lodash/get";
+import size from "lodash/size";
 
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -39,6 +42,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => {
 });
 
 const PortList = ({ portList, tableConfig }) => {
+  if (!size(portList)) {
+    return (
+      <Box pb={1}>
+        <Typography variant="h6" color="text.secondary">
+          No port details available
+        </Typography>
+      </Box>
+    );
+  }
   return (
     <TableContainer component={Paper} sx={{ paddingBottom: 1 }}>
       <Table>

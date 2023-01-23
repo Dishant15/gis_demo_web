@@ -27,11 +27,7 @@ import {
 } from "redux/selectors/auth.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
 import { LayerKeyMappings, PLANNING_EVENT } from "planning/GisMap/utils";
-import {
-  onPointShowOnMap,
-  onPolygonShowOnMap,
-} from "planning/data/planning.actions";
-import { FEATURE_TYPES } from "planning/GisMap/layers/common/configuration";
+import { onTableDetailsShowOnMapClick } from "planning/data/planning.actions";
 import {
   editElementGeometry,
   showAssociatiationList,
@@ -154,23 +150,7 @@ const TableActions = ({
       name: "Show on map",
       Icon: LanguageIcon,
       onClick: () => {
-        const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
-        switch (featureType) {
-          case FEATURE_TYPES.POINT:
-            dispatch(
-              onPointShowOnMap(elemData.coordinates, elemData.id, layerKey)
-            );
-            break;
-          case FEATURE_TYPES.POLYGON:
-          case FEATURE_TYPES.POLYLINE:
-          case FEATURE_TYPES.MULTI_POLYGON:
-            dispatch(
-              onPolygonShowOnMap(elemData.center, elemData.id, layerKey)
-            );
-            break;
-          default:
-            break;
-        }
+        dispatch(onTableDetailsShowOnMapClick(elemData, layerKey));
       },
     });
 

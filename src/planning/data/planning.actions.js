@@ -288,11 +288,15 @@ export const onAddElementDetails =
     );
   };
 
+//////////////////////////////////////////////
+//         show on map utils                //
+//////////////////////////////////////////////
+
 export const onPointShowOnMap =
   (coordinates, elementId, layerKey) => (dispatch) => {
     dispatch(
       setMapPosition({
-        center: pointCoordsToLatLongMap(coordinates),
+        center: coordinates,
         zoom: 18,
       })
     );
@@ -310,7 +314,7 @@ export const onPolygonShowOnMap =
   (center, elementId, layerKey) => (dispatch) => {
     dispatch(
       setMapPosition({
-        center: pointCoordsToLatLongMap(center),
+        center: center,
         zoom: 18,
       })
     );
@@ -362,7 +366,82 @@ export const onTicketWoShowOnMapClick = (woData) => (dispatch) => {
   }
 };
 
+export const onTableDetailsShowOnMapClick =
+  (element, layerKey) => (dispatch) => {
+    const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+    switch (featureType) {
+      case FEATURE_TYPES.POINT:
+        dispatch(
+          onPointShowOnMap(
+            pointCoordsToLatLongMap(element.coordinates),
+            element.id,
+            layerKey
+          )
+        );
+        break;
+      case FEATURE_TYPES.POLYGON:
+      case FEATURE_TYPES.POLYLINE:
+      case FEATURE_TYPES.MULTI_POLYGON:
+        dispatch(
+          onPolygonShowOnMap(
+            pointCoordsToLatLongMap(element.center),
+            element.id,
+            layerKey
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  };
+
 export const onAssociatedElementShowOnMapClick =
+  (element, layerKey) => (dispatch) => {
+    const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+    switch (featureType) {
+      case FEATURE_TYPES.POINT:
+        dispatch(
+          onPointShowOnMap(
+            pointCoordsToLatLongMap(element.coordinates),
+            element.id,
+            layerKey
+          )
+        );
+        break;
+      case FEATURE_TYPES.POLYGON:
+      case FEATURE_TYPES.POLYLINE:
+      case FEATURE_TYPES.MULTI_POLYGON:
+        dispatch(
+          onPolygonShowOnMap(
+            pointCoordsToLatLongMap(element.center),
+            element.id,
+            layerKey
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  };
+
+export const onElementListItemClick = (element) => (dispatch) => {
+  const layerKey = element.layerKey;
+  const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
+  switch (featureType) {
+    case FEATURE_TYPES.POINT:
+      dispatch(onPointShowOnMap(element.coordinates, element.id, layerKey));
+      break;
+    case FEATURE_TYPES.POLYGON:
+    case FEATURE_TYPES.POLYLINE:
+    case FEATURE_TYPES.MULTI_POLYGON:
+      dispatch(onPolygonShowOnMap(element.center, element.id, layerKey));
+      break;
+    default:
+      break;
+  }
+};
+
+export const onLayerElementListItemClick =
   (element, layerKey) => (dispatch) => {
     const featureType = get(LayerKeyMappings, [layerKey, "featureType"]);
     switch (featureType) {
@@ -378,16 +457,6 @@ export const onAssociatedElementShowOnMapClick =
         break;
     }
   };
-
-export const onElementListItemClick = (element) => (dispatch) => {
-  dispatch(
-    setMapHighlight({
-      layerKey: element.layerKey,
-      elementId: element.id,
-    })
-  );
-  dispatch(resetTicketMapHighlight());
-};
 
 export const onFetchLayerListDetailsSuccess = (layerConfData) => (dispatch) => {
   // res shape same as layerConfigs bellow

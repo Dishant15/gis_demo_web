@@ -83,6 +83,7 @@ const ElementListTable = () => {
       >
         {elementList.map((currItem) => {
           const element = searchedKey ? currItem.item : currItem;
+
           const Icon =
             LayerKeyMappings[elementLayerKey]["getViewOptions"](element).icon;
           const networkId = get(element, "network_id", "");
@@ -129,7 +130,7 @@ const ElementListTable = () => {
                       marginRight: "8px",
                     }}
                     aria-label="show-location"
-                    onClick={handleShowOnMap(element.id, elementLayerKey)}
+                    onClick={handleShowOnMap(element, elementLayerKey)}
                   >
                     <LanguageIcon />
                   </IconButton>

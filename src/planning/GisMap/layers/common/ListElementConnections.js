@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 
 import size from "lodash/size";
 import get from "lodash/get";
+import filter from "lodash/filter";
 
 import {
   Divider,
@@ -33,7 +34,6 @@ import {
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings } from "planning/GisMap/utils";
 import { DRAG_ICON_WIDTH } from "utils/constant";
-import { filter } from "lodash";
 import { showSplicingView } from "planning/data/event.actions";
 import { addNotification } from "redux/reducers/notification.reducer";
 
@@ -214,6 +214,16 @@ const ConnectionList = ({
   handleElementClick,
   activeElementId,
 }) => {
+  if (!size(connections)) {
+    return (
+      <Box pl={1} pb={1}>
+        <Typography variant="h6" color="text.secondary">
+          No connections available
+        </Typography>
+      </Box>
+    );
+  }
+
   return connections.map((connection) => {
     const { element, layer_info } = connection;
     const EndIcon =
