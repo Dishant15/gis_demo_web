@@ -15,30 +15,33 @@ import SplicingContainer from "./SplicingContainer";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { fetchElementPortSplicingDetails } from "planning/data/layer.services";
+import { resetSelectedPorts, setElement } from "planning/data/splicing.reducer";
+import { fetchElementPortSplicingDetails } from "planning/data/port.services";
 
 const SplicingView = () => {
   const dispatch = useDispatch();
   const splicingPostData = useSelector(getPlanningMapStateData);
 
-  const [leftData, setLeftData] = useState(null);
-  const [rightData, setRightData] = useState(null);
-  const [middleData, setMiddleData] = useState(null);
-
   const { mutate: getElementSplicingData, isLoading } = useMutation(
     fetchElementPortSplicingDetails,
     {
       onSuccess: (res) => {
-        setLeftData(get(res, "left", null));
-        setRightData(get(res, "right", null));
-        setMiddleData(get(res, "middle", null));
+        dispatch(setElement({ element: get(res, "left", null), side: "left" }));
+        dispatch(
+          setElement({ element: get(res, "right", null), side: "right" })
+        );
+        dispatch(
+          setElement({ element: get(res, "middle", null), side: "middle" })
+        );
       },
     }
   );
 
   useEffect(() => {
     getElementSplicingData(splicingPostData);
-  }, [splicingPostData]);
+    // clear port selection on window close
+    return () => dispatch(resetSelectedPorts());
+  }, []);
 
   const handleCloseDetails = useCallback(() => {
     dispatch(setMapState({}));
@@ -57,11 +60,7 @@ const SplicingView = () => {
       {isLoading ? (
         <Typography variant="h6">Loading...</Typography>
       ) : (
-        <SplicingContainer
-          left={leftData}
-          right={rightData}
-          middle={middleData}
-        />
+        <SplicingContainer />
       )}
     </GisMapPopups>
   );

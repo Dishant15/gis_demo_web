@@ -12,7 +12,7 @@ import OltPortDetails from "./OltPortDetails";
 import { GisElementTableLoader } from "planning/GisMap/components/GisMapPopups/GisMapPopupLoader";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
-import { fetchElementPortDetails } from "planning/data/layer.services";
+import { fetchElementPortDetails } from "planning/data/port.services";
 import { setMapState } from "planning/data/planningGis.reducer";
 
 import { LAYER_KEY as CableLayerKey } from "planning/GisMap/layers/p_cable";

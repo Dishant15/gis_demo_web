@@ -178,3 +178,6 @@ export const apiGetElementPortDetails = (layerKey, elementId) =>
 
 export const apiPostElementSplicingDetails = () =>
   "/api/planning/layer/splicing/details/";
+
+export const apiPostAddPortConnection = () =>
+  "/api/planning/layer/connect/ports/";

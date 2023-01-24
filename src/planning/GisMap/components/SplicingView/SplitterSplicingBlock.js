@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import orderBy from "lodash/orderBy";
 import max from "lodash/max";
@@ -7,6 +8,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
 import { PORT_STATUS_COLOR_MAPPING } from "../ElementPortDetails/port.utils";
 import {
@@ -14,14 +16,26 @@ import {
   elementBorders,
   elementLabelCenter,
 } from "./style.constants";
+import { handleConnectionAdd } from "planning/data/splicing.actions";
+import { getFirstSelectedPort } from "planning/data/splicing.selectors";
 
 const SplitterSplicingBlock = ({
   portData,
   hasLeft = false,
   hasRight = false,
 }) => {
-  const { name, unique_id, configuration, ports } = portData;
+  const dispatch = useDispatch();
+  const { name, unique_id, layer_key, configuration, ports } = portData;
   const { input_ports, output_ports } = configuration;
+
+  const selectedPort = useSelector(getFirstSelectedPort);
+
+  const onAddConnectionClick = useCallback(
+    (port) => () => {
+      dispatch(handleConnectionAdd(port, layer_key));
+    },
+    [layer_key]
+  );
 
   const portWrapperHeight = 40;
   const portHeight = 15;
@@ -34,7 +48,7 @@ const SplitterSplicingBlock = ({
 
   for (let pInd = 0; pInd < orderedPorts.length; pInd++) {
     const currPort = orderedPorts[pInd];
-    const { id, sr_no, is_input, status } = currPort;
+    const { id, sr_no, is_input, status, element } = currPort;
     // show conn dot if has left and curr port is input
     // else has right and curr port is output
     const showConnDot = (hasLeft && is_input) || (hasRight && !is_input);
@@ -57,9 +71,17 @@ const SplitterSplicingBlock = ({
             width: "25px",
           }}
         ></Box>
-        {showConnDot ? (
-          <Box display="flex" sx={connectionDotStyles(is_input)}>
-            <CircleIcon fontSize="small" />
+        {showConnDot && status !== "C" ? (
+          <Box
+            display="flex"
+            sx={connectionDotStyles(is_input)}
+            onClick={onAddConnectionClick(currPort)}
+          >
+            {selectedPort.id === id && selectedPort.element === element ? ( // check if this port is selected
+              <RadioButtonCheckedIcon fontSize="small" />
+            ) : (
+              <CircleIcon fontSize="small" />
+            )}
           </Box>
         ) : null}
         <Box flex={1} textAlign="center">

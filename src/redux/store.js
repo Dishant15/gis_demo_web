@@ -17,6 +17,7 @@ import appStateReducer, { setWindowSize } from "./reducers/appState.reducer";
 import notificationReducer from "./reducers/notification.reducer";
 import planningStateReducer from "planning/data/planningState.reducer";
 import planningGisReducer from "planning/data/planningGis.reducer";
+import splicingReducer from "planning/data/splicing.reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
 
   planningState: planningStateReducer,
   planningGis: planningGisReducer,
+  splicing: splicingReducer,
 });
 
 const persistConfig = {
