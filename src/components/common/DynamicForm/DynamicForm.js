@@ -42,175 +42,138 @@ export const FIELD_TYPES = {
  * @formConfigs {sections: { title, fieldConfigs: [ { field_key, label, field_type } ] } }
  * @data initial data for edit forms
  */
-const DynamicForm = forwardRef(
-  (
-    {
-      formConfigs,
-      data,
-      onSubmit,
-      onCancel,
-      isLoading,
-      configurationOptions = [],
+const DynamicForm = forwardRef((props, ref) => {
+  const {
+    formConfigs,
+    data,
+    watchFields,
+    onSubmit,
+    onCancel,
+    isLoading,
+    configurationOptions = [],
+  } = props;
+  const { sections } = formConfigs;
+
+  const {
+    formState: { errors },
+    register,
+    control,
+    setError,
+    clearErrors,
+    handleSubmit,
+  } = useForm({ defaultValues: data });
+
+  useImperativeHandle(ref, () => ({
+    onError: (fieldKey, errorMsg) => {
+      setError(fieldKey, { type: "custom", message: errorMsg });
     },
-    ref
-  ) => {
-    const { sections } = formConfigs;
+  }));
 
-    const {
-      formState: { errors },
-      register,
-      control,
-      setError,
-      clearErrors,
-      handleSubmit,
-    } = useForm({ defaultValues: data });
+  const onFormSubmit = useCallback((data) => {
+    onSubmit(data, setError, clearErrors);
+  }, []);
 
-    useImperativeHandle(ref, () => ({
-      onError: (fieldKey, errorMsg) => {
-        setError(fieldKey, { type: "custom", message: errorMsg });
-      },
-    }));
-
-    const onFormSubmit = useCallback((data) => {
-      onSubmit(data, setError, clearErrors);
-    }, []);
-
-    return (
-      <Box
-        ref={ref}
-        component="form"
-        onSubmit={handleSubmit(onFormSubmit)}
-        position="relative"
+  return (
+    <Box
+      ref={ref}
+      component="form"
+      onSubmit={handleSubmit(onFormSubmit)}
+      position="relative"
+    >
+      <IconButton
+        sx={{ position: "absolute", top: "10px", right: "10px" }}
+        aria-label="close"
+        onClick={onCancel}
       >
-        <IconButton
-          sx={{ position: "absolute", top: "10px", right: "10px" }}
-          aria-label="close"
-          onClick={onCancel}
-        >
-          <CloseIcon />
-        </IconButton>
-        <Stack p={2}>
-          {sections.map((section, s_id) => {
-            const { title, fieldConfigs, section_type } = section;
+        <CloseIcon />
+      </IconButton>
+      <Stack p={2}>
+        {sections.map((section, s_id) => {
+          const { title, fieldConfigs, section_type } = section;
 
-            return (
-              <Stack key={s_id} spacing={2}>
-                <Stack direction="row" width="100%">
-                  <Typography color="primary.dark" flex={1} variant="h5">
-                    {title}
-                  </Typography>
-                </Stack>
+          return (
+            <Stack key={s_id} spacing={2}>
+              <Stack direction="row" width="100%">
+                <Typography color="primary.dark" flex={1} variant="h5">
+                  {title}
+                </Typography>
+              </Stack>
 
-                <Divider />
+              <Divider />
 
-                <Grid container pr={2} spacing={2} width="100%">
-                  {fieldConfigs.map((config) => {
-                    const {
-                      field_key,
-                      label,
-                      field_type,
-                      options = [],
-                      validationProps,
-                      disabled,
-                    } = config;
-                    const required = !!get(validationProps, "required");
-                    switch (field_type) {
-                      case FIELD_TYPES.Input:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <TextField
-                              className="full-width"
-                              label={label}
-                              {...register(field_key, validationProps)}
-                              disabled={!!disabled}
-                              error={!!get(errors, [field_key])}
-                              helperText={get(
-                                errors,
-                                [field_key, "message"],
-                                ""
-                              )}
-                              InputLabelProps={{
-                                required,
-                              }}
-                            />
-                          </Grid>
-                        );
+              <Grid container pr={2} spacing={2} width="100%">
+                {fieldConfigs.map((config) => {
+                  const {
+                    field_key,
+                    label,
+                    field_type,
+                    options = [],
+                    validationProps,
+                    disabled,
+                  } = config;
+                  const required = !!get(validationProps, "required");
+                  switch (field_type) {
+                    case FIELD_TYPES.Input:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <TextField
+                            className="full-width"
+                            label={label}
+                            {...register(field_key, validationProps)}
+                            disabled={!!disabled}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
+                            InputLabelProps={{
+                              required,
+                            }}
+                          />
+                        </Grid>
+                      );
 
-                      case FIELD_TYPES.TextArea:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <TextField
-                              className="full-width"
-                              multiline
-                              rows={3}
-                              label={label}
-                              {...register(field_key, validationProps)}
-                              disabled={!!disabled}
-                              error={!!get(errors, [field_key])}
-                              helperText={get(
-                                errors,
-                                [field_key, "message"],
-                                ""
-                              )}
-                              InputLabelProps={{
-                                required,
-                              }}
-                            />
-                          </Grid>
-                        );
+                    case FIELD_TYPES.TextArea:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <TextField
+                            className="full-width"
+                            multiline
+                            rows={3}
+                            label={label}
+                            {...register(field_key, validationProps)}
+                            disabled={!!disabled}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
+                            InputLabelProps={{
+                              required,
+                            }}
+                          />
+                        </Grid>
+                      );
 
-                      case FIELD_TYPES.CheckBox:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <FormCheckbox
-                              label={label}
-                              name={field_key}
-                              control={control}
-                              rules={validationProps}
-                              disabled={!!disabled}
-                              required={required}
-                              error={!!get(errors, [field_key])}
-                              helperText={get(
-                                errors,
-                                [field_key, "message"],
-                                ""
-                              )}
-                            />
-                          </Grid>
-                        );
-                      case FIELD_TYPES.ConfigSelect:
-                        return (
-                          <Grid item xs={12} sm={12} key={field_key}>
-                            <Box
-                              sx={{
-                                margin: "0 auto",
-                                width: "50%",
-                                paddingBottom: "24px",
-                              }}
-                            >
-                              <FormSelect
-                                label={label}
-                                name={field_key}
-                                control={control}
-                                rules={validationProps}
-                                isDisabled={!!disabled}
-                                required={required}
-                                options={configurationOptions}
-                                error={!!get(errors, [field_key])}
-                                helperText={get(
-                                  errors,
-                                  [field_key, "message"],
-                                  ""
-                                )}
-                                labelKey="config_name"
-                                valueKey="id"
-                              />
-                            </Box>
-                          </Grid>
-                        );
-                      case FIELD_TYPES.Select:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
+                    case FIELD_TYPES.CheckBox:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <FormCheckbox
+                            label={label}
+                            name={field_key}
+                            control={control}
+                            rules={validationProps}
+                            disabled={!!disabled}
+                            required={required}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
+                          />
+                        </Grid>
+                      );
+                    case FIELD_TYPES.ConfigSelect:
+                      return (
+                        <Grid item xs={12} sm={12} key={field_key}>
+                          <Box
+                            sx={{
+                              margin: "0 auto",
+                              width: "50%",
+                              paddingBottom: "24px",
+                            }}
+                          >
                             <FormSelect
                               label={label}
                               name={field_key}
@@ -218,24 +181,64 @@ const DynamicForm = forwardRef(
                               rules={validationProps}
                               isDisabled={!!disabled}
                               required={required}
-                              options={options || []}
+                              options={configurationOptions}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
                                 [field_key, "message"],
                                 ""
                               )}
+                              labelKey="config_name"
+                              valueKey="id"
                             />
-                          </Grid>
-                        );
+                          </Box>
+                        </Grid>
+                      );
+                    case FIELD_TYPES.Select:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <FormSelect
+                            label={label}
+                            name={field_key}
+                            control={control}
+                            rules={validationProps}
+                            isDisabled={!!disabled}
+                            required={required}
+                            options={options || []}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
+                          />
+                        </Grid>
+                      );
 
-                      case FIELD_TYPES.SelectMulti:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <FormSelect
+                    case FIELD_TYPES.SelectMulti:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <FormSelect
+                            isMulti
+                            label={label}
+                            name={field_key}
+                            control={control}
+                            rules={validationProps}
+                            isDisabled={!!disabled}
+                            required={required}
+                            options={config.options || []}
+                            error={!!get(errors, [field_key])}
+                            helperText={get(errors, [field_key, "message"], "")}
+                          />
+                        </Grid>
+                      );
+
+                    case FIELD_TYPES.SelectCreatable:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <Stack width="100%">
+                            <FormCreatableSelect
                               isMulti
                               label={label}
                               name={field_key}
+                              labelKey={config.labelKey}
+                              valueKey={config.valueKey}
                               control={control}
                               rules={validationProps}
                               isDisabled={!!disabled}
@@ -248,92 +251,66 @@ const DynamicForm = forwardRef(
                                 ""
                               )}
                             />
-                          </Grid>
-                        );
+                          </Stack>
+                        </Grid>
+                      );
 
-                      case FIELD_TYPES.SelectCreatable:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <Stack width="100%">
-                              <FormCreatableSelect
-                                isMulti
-                                label={label}
-                                name={field_key}
-                                labelKey={config.labelKey}
-                                valueKey={config.valueKey}
-                                control={control}
-                                rules={validationProps}
-                                isDisabled={!!disabled}
-                                required={required}
-                                options={config.options || []}
-                                error={!!get(errors, [field_key])}
-                                helperText={get(
-                                  errors,
-                                  [field_key, "message"],
-                                  ""
-                                )}
-                              />
-                            </Stack>
-                          </Grid>
-                        );
+                    case FIELD_TYPES.DateTime:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <Stack width="100%">
+                            <FormDateTimePicker
+                              label={label}
+                              name={field_key}
+                              control={control}
+                              rules={validationProps}
+                              isDisabled={!!disabled}
+                              error={!!get(errors, [field_key])}
+                              helperText={get(
+                                errors,
+                                [field_key, "message"],
+                                ""
+                              )}
+                            />
+                          </Stack>
+                        </Grid>
+                      );
+                    default:
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <div className="full-width">
+                            <div>{label}</div>
+                          </div>
+                        </Grid>
+                      );
+                  }
+                })}
+              </Grid>
 
-                      case FIELD_TYPES.DateTime:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <Stack width="100%">
-                              <FormDateTimePicker
-                                label={label}
-                                name={field_key}
-                                control={control}
-                                rules={validationProps}
-                                isDisabled={!!disabled}
-                                error={!!get(errors, [field_key])}
-                                helperText={get(
-                                  errors,
-                                  [field_key, "message"],
-                                  ""
-                                )}
-                              />
-                            </Stack>
-                          </Grid>
-                        );
-                      default:
-                        return (
-                          <Grid item xs={12} sm={6} key={field_key}>
-                            <div className="full-width">
-                              <div>{label}</div>
-                            </div>
-                          </Grid>
-                        );
-                    }
-                  })}
-                </Grid>
-
-                {/* {section_type === "configuration" ? (
+              {/* {section_type === "configuration" ? (
                   <ConfigTable data={configurationOptions} section={section} />
                 ) : null} */}
-              </Stack>
-            );
-          })}
-        </Stack>
-        <Stack p={3} spacing={3} direction="row">
-          <Button sx={{ minWidth: "10em" }} color="error" onClick={onCancel}>
-            Cancel
-          </Button>
-          <LoadingButton
-            sx={{ minWidth: "10em" }}
-            variant="contained"
-            disableElevation
-            color="success"
-            type="submit"
-            loading={isLoading}
-          >
-            Submit
-          </LoadingButton>
-        </Stack>
-      </Box>
-    );
-  }
-);
+            </Stack>
+          );
+        })}
+      </Stack>
+      <Stack p={3} spacing={3} direction="row">
+        <Button sx={{ minWidth: "10em" }} color="error" onClick={onCancel}>
+          Cancel
+        </Button>
+        <LoadingButton
+          sx={{ minWidth: "10em" }}
+          variant="contained"
+          disableElevation
+          color="success"
+          type="submit"
+          loading={isLoading}
+        >
+          Submit
+        </LoadingButton>
+      </Stack>
+    </Box>
+  );
+});
 
 export default DynamicForm;
