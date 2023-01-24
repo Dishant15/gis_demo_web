@@ -1,4 +1,9 @@
-import React, { forwardRef, useCallback, useImperativeHandle } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+} from "react";
 import { useForm } from "react-hook-form";
 
 import get from "lodash/get";
@@ -58,6 +63,7 @@ const DynamicForm = forwardRef((props, ref) => {
     formState: { errors },
     register,
     control,
+    watch,
     setError,
     clearErrors,
     handleSubmit,
@@ -72,6 +78,15 @@ const DynamicForm = forwardRef((props, ref) => {
   const onFormSubmit = useCallback((data) => {
     onSubmit(data, setError, clearErrors);
   }, []);
+
+  // watchValues : [0: true, 1: "abc"] => return value list according to watchFields
+  const watchValues = watch(watchFields);
+  // convert value list to {key, value}
+  const watchValuesKeyValues = useMemo(() => {
+    let result = {};
+    watchFields.forEach((field, i) => (result[field] = watchValues[i]));
+    return result;
+  }, [watchValues, watchFields]);
 
   return (
     <Box
@@ -111,7 +126,15 @@ const DynamicForm = forwardRef((props, ref) => {
                     validationProps,
                     disabled,
                   } = config;
+
                   const required = !!get(validationProps, "required");
+
+                  const isHidden = config.checkHidden
+                    ? config.checkHidden(watchValuesKeyValues)
+                    : false;
+
+                  if (isHidden) return null;
+
                   switch (field_type) {
                     case FIELD_TYPES.Input:
                       return (

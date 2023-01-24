@@ -20,6 +20,7 @@ const TestDynamicForm = () => {
             console.log("🚀 ~ file: HomePage ~ res", res);
           }}
           isLoading={false}
+          watchFields={["over_head_cable"]}
         />
       </Paper>
     </Container>
@@ -141,6 +142,10 @@ const ELEMENT_FORM_TEMPLATE = {
           validationProps: {
             required: "Start time is required",
           },
+          checkHidden: (props) => {
+            return !!props.over_head_cable;
+          },
+          dependencyFields: ["over_head_cable"],
         },
       ],
     },
