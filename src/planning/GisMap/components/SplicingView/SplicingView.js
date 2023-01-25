@@ -15,7 +15,10 @@ import SplicingContainer from "./SplicingContainer";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
-import { resetSelectedPorts, setElement } from "planning/data/splicing.reducer";
+import {
+  resetSelectedPorts,
+  setSplicingElements,
+} from "planning/data/splicing.reducer";
 import { fetchElementPortSplicingDetails } from "planning/data/port.services";
 
 const SplicingView = () => {
@@ -26,13 +29,7 @@ const SplicingView = () => {
     fetchElementPortSplicingDetails,
     {
       onSuccess: (res) => {
-        dispatch(setElement({ element: get(res, "left", null), side: "left" }));
-        dispatch(
-          setElement({ element: get(res, "right", null), side: "right" })
-        );
-        dispatch(
-          setElement({ element: get(res, "middle", null), side: "middle" })
-        );
+        dispatch(setSplicingElements(res));
       },
     }
   );

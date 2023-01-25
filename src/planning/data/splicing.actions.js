@@ -1,6 +1,9 @@
 import size from "lodash/size";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { postAddPortConnectionThunk } from "./port.services";
+import {
+  postAddPortConnectionThunk,
+  postRemovePortConnectionThunk,
+} from "./port.services";
 import { resetSelectedPorts, setSelectedPorts } from "./splicing.reducer";
 import { getSplicingSelectedPorts } from "./splicing.selectors";
 
@@ -63,4 +66,9 @@ export const handleConnectionAdd =
         postAddPortConnectionThunk({ connection: addConnectionPostData })
       );
     }
+  };
+
+export const handleConnectionRemove =
+  (port_id, port_layer_key) => (dispatch) => {
+    dispatch(postRemovePortConnectionThunk({ port_id, port_layer_key }));
   };
