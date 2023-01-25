@@ -97,11 +97,11 @@ export const ELEMENT_FORM_TEMPLATE = {
   ],
   dependencyFields: ["is_rented"],
   // this shows where dependant template data comes from
-  metaData: {
-    getElementAddressData: (address, submitData) => {
-      submitData.address = address.address;
-    },
-  },
+  // metaData: {
+  //   getElementAddressData: (address, submitData) => {
+  //     submitData.address = address.address;
+  //   },
+  // },
 };
 
 export const ELEMENT_TABLE_FIELDS = [
