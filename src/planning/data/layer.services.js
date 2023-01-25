@@ -45,13 +45,22 @@ export const fetchElementConnections = async ({ queryKey }) => {
 };
 
 export const addNewElement = async ({ data, layerKey }) => {
+  console.log(
+    "🚀 ~ file: layer.services.js:48 ~ addNewElement ~ data, layerKey",
+    data,
+    layerKey
+  );
   if (layerKey === "region") {
     let submitData = pick(data, ["name", "unique_id", "layer", "parentId"]);
     submitData.coordinates = data.geometry;
     const res = await Api.post(apiPostRegionAdd(), submitData);
     return res.data;
   } else {
-    const res = await Api.post(apiPostAddElement(layerKey), data);
+    const res = await Api.post(apiPostAddElement(layerKey), data, null, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
     return res.data;
   }
 };

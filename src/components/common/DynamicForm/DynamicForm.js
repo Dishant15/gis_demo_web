@@ -26,6 +26,7 @@ import {
   FormCheckbox,
   FormCreatableSelect,
   FormDateTimePicker,
+  FormFileField,
 } from "../FormFields";
 
 export const FIELD_TYPES = {
@@ -33,6 +34,7 @@ export const FIELD_TYPES = {
   TextArea: "textArea",
   CheckBox: "checkBox",
   DateTime: "datetime",
+  FileUpload: "upload",
   // single select
   Select: "select",
   SelectMulti: "selectMulti",
@@ -51,13 +53,12 @@ const DynamicForm = forwardRef((props, ref) => {
   const {
     formConfigs,
     data,
-    watchFields,
     onSubmit,
     onCancel,
     isLoading,
     configurationOptions = [],
   } = props;
-  const { sections } = formConfigs;
+  const { sections, dependencyFields = [] } = formConfigs;
 
   const {
     formState: { errors },
@@ -68,6 +69,7 @@ const DynamicForm = forwardRef((props, ref) => {
     clearErrors,
     handleSubmit,
   } = useForm({ defaultValues: data });
+  console.log("🚀 ~ file: DynamicForm.js:65 ~ errors", errors);
 
   useImperativeHandle(ref, () => ({
     onError: (fieldKey, errorMsg) => {
@@ -79,14 +81,14 @@ const DynamicForm = forwardRef((props, ref) => {
     onSubmit(data, setError, clearErrors);
   }, []);
 
-  // watchValues : [0: true, 1: "abc"] => return value list according to watchFields
-  const watchValues = watch(watchFields);
+  // watchValues : [0: true, 1: "abc"] => return value list according to dependencyFields
+  const watchValues = watch(dependencyFields);
   // convert value list to {key, value}
   const watchValuesKeyValues = useMemo(() => {
     let result = {};
-    watchFields.forEach((field, i) => (result[field] = watchValues[i]));
+    dependencyFields.forEach((field, i) => (result[field] = watchValues[i]));
     return result;
-  }, [watchValues, watchFields]);
+  }, [watchValues, dependencyFields]);
 
   return (
     <Box
@@ -129,8 +131,8 @@ const DynamicForm = forwardRef((props, ref) => {
 
                   const required = !!get(validationProps, "required");
 
-                  const isHidden = config.checkHidden
-                    ? config.checkHidden(watchValuesKeyValues)
+                  const isHidden = config.isHidden
+                    ? config.isHidden(watchValuesKeyValues)
                     : false;
 
                   if (isHidden) return null;
@@ -298,6 +300,28 @@ const DynamicForm = forwardRef((props, ref) => {
                           </Stack>
                         </Grid>
                       );
+                    case FIELD_TYPES.FileUpload: {
+                      return (
+                        <Grid item xs={12} sm={6} key={field_key}>
+                          <Stack width="100%">
+                            <FormFileField
+                              label={label}
+                              name={field_key}
+                              control={control}
+                              rules={validationProps}
+                              disabled={!!disabled}
+                              required={required}
+                              error={!!get(errors, [field_key])}
+                              helperText={get(
+                                errors,
+                                [field_key, "message"],
+                                ""
+                              )}
+                            />
+                          </Stack>
+                        </Grid>
+                      );
+                    }
                     default:
                       return (
                         <Grid item xs={12} sm={6} key={field_key}>
