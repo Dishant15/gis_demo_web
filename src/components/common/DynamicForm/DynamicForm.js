@@ -51,10 +51,10 @@ const DynamicForm = forwardRef((props, ref) => {
   const {
     formConfigs,
     data,
-    watchFields,
     onSubmit,
     onCancel,
     isLoading,
+    watchFields = [],
     configurationOptions = [],
   } = props;
   const { sections } = formConfigs;
