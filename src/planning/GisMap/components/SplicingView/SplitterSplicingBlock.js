@@ -84,6 +84,7 @@ const SplitterSplicingBlock = ({
             position: "relative",
             width: "150px",
             border: elementBorders,
+            borderRadius: "8px",
           }}
         >
           <Box sx={elementLabelCenter}>{unique_id}</Box>
