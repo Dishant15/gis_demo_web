@@ -70,7 +70,6 @@ const splicingSlice = createSlice({
       }
     },
     [postAddPortConnectionThunk.rejected]: (state, { error }) => {
-      console.log("🚀 ~ file: splicing.reducer.js:66 ~ error", error);
       state.addConnectionLoading = false;
       state.addConnectionError = true;
     },

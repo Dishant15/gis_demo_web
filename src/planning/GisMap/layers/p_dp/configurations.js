@@ -6,6 +6,7 @@ import {
 
 import { default as Icon } from "assets/markers/p_dp_view.svg";
 import { default as EditIcon } from "assets/markers/p_dp_edit.svg";
+import { FIELD_TYPES } from "components/common/DynamicForm";
 
 export const LAYER_KEY = "p_dp";
 export const PRE_UID = "DP";
@@ -36,17 +37,71 @@ export const ELEMENT_FORM_TEMPLATE = {
         {
           field_key: "address",
           label: "Address",
-          field_type: "textArea",
+          field_type: FIELD_TYPES.TextArea,
+        },
+        {
+          field_key: "contact_name",
+          label: "Contact Name",
+          field_type: FIELD_TYPES.Input,
+          validationProps: {
+            required: "Contact Name is required",
+          },
+        },
+        {
+          field_key: "contact_no",
+          label: "Contact No",
+          field_type: FIELD_TYPES.Input,
+          validationProps: {
+            required: "Contact No is required",
+          },
+        },
+        {
+          field_key: "is_rented",
+          label: "Rented",
+          field_type: FIELD_TYPES.CheckBox,
+        },
+        {
+          field_key: "rent_amount",
+          label: "Amount",
+          field_type: FIELD_TYPES.Input,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
+        {
+          field_key: "agreement_start_date",
+          label: "Agreement start date",
+          field_type: FIELD_TYPES.DateTime,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
+        {
+          field_key: "agreement_end_date",
+          label: "Agreement end date",
+          field_type: FIELD_TYPES.DateTime,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
+        {
+          field_key: "agreement_file",
+          label: "Agreement Attechment",
+          field_type: FIELD_TYPES.FileUpload,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
         },
       ],
     },
   ],
+  dependencyFields: ["is_rented"],
   // this shows where dependant template data comes from
-  metaData: {
-    getElementAddressData: (address, submitData) => {
-      submitData.address = address.address;
-    },
-  },
+  // metaData: {
+  //   getElementAddressData: (address, submitData) => {
+  //     submitData.address = address.address;
+  //   },
+  // },
 };
 
 export const ELEMENT_TABLE_FIELDS = [

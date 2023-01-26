@@ -51,7 +51,19 @@ export const addNewElement = async ({ data, layerKey }) => {
     const res = await Api.post(apiPostRegionAdd(), submitData);
     return res.data;
   } else {
-    const res = await Api.post(apiPostAddElement(layerKey), data);
+    const formData = new FormData();
+    for (const key in data) {
+      if (Object.hasOwnProperty.call(data, key)) {
+        if (data[key]) {
+          formData.append(key, data[key]);
+        }
+      }
+    }
+    const res = await Api.post(apiPostAddElement(layerKey), formData, null, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
     return res.data;
   }
 };
