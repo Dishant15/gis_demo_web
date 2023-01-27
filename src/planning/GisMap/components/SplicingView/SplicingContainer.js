@@ -1,16 +1,24 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import CableSplicingBlock from "./CableSplicingBlock";
 import SplitterSplicingBlock from "./SplitterSplicingBlock";
-import { useSelector } from "react-redux";
-import { getSplicingElement } from "planning/data/splicing.selectors";
 import JcSplicingBlock from "./JcSplicingBlock";
 import CableThroughConnect from "./CableThroughConnect";
 
+import {
+  getSplicingElement,
+  isPortUpdateLoading,
+} from "planning/data/splicing.selectors";
+import { getContentHeight } from "redux/selectors/appState.selectors";
+
 const SplicingContainer = ({ onConnectionAdd }) => {
+  const windowHeight = useSelector(getContentHeight);
+  const portUpdateLoading = useSelector(isPortUpdateLoading);
   // middle will always be there which is selected element, left and right is optional but one of them will be there
   const left = useSelector(getSplicingElement("left"));
   const right = useSelector(getSplicingElement("right"));
@@ -25,6 +33,9 @@ const SplicingContainer = ({ onConnectionAdd }) => {
     left.layer_key === "p_cable" &&
     hasRight &&
     right.layer_key === "p_cable";
+
+  // contentHeight = windowHeight - (10% margin * 2 top & bot) - (title)
+  const contentHeight = windowHeight - 60;
 
   const renderSplicingElement = (elementData, side) => {
     if (!elementData) {
@@ -47,7 +58,14 @@ const SplicingContainer = ({ onConnectionAdd }) => {
   };
 
   return (
-    <Box p={5}>
+    <Box
+      p={5}
+      sx={{
+        maxHeight: `${contentHeight}px`,
+        overflowY: portUpdateLoading ? "hidden" : "auto",
+        position: "relative",
+      }}
+    >
       {showThroughConnection ? (
         <CableThroughConnect fromData={left} toData={right} />
       ) : null}
@@ -56,6 +74,23 @@ const SplicingContainer = ({ onConnectionAdd }) => {
         {renderSplicingElement(middle, "middle")}
         {renderSplicingElement(right, "right")}
       </Stack>
+      {portUpdateLoading ? (
+        <Box
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress sx={{ color: "white" }} />
+        </Box>
+      ) : null}
     </Box>
   );
 };

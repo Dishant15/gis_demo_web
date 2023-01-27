@@ -1,17 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation } from "react-query";
 
-import { get } from "lodash";
-
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 import noop from "lodash/noop";
 
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
 import SplicingContainer from "./SplicingContainer";
+import SplicingContainerLoader from "./SplicingContainerLoader";
 
 import { getPlanningMapStateData } from "planning/data/planningGis.selectors";
 import { setMapState } from "planning/data/planningGis.reducer";
@@ -54,11 +52,7 @@ const SplicingView = () => {
           handleCloseDetails={handleCloseDetails}
         />
       </Box>
-      {isLoading ? (
-        <Typography variant="h6">Loading...</Typography>
-      ) : (
-        <SplicingContainer />
-      )}
+      {isLoading ? <SplicingContainerLoader /> : <SplicingContainer />}
     </GisMapPopups>
   );
 };

@@ -52,7 +52,7 @@ const PortList = ({ portList, tableConfig }) => {
     );
   }
   return (
-    <TableContainer component={Paper} sx={{ paddingBottom: 1 }}>
+    <TableContainer component={Paper} sx={{ marginBottom: 1 }}>
       <Table>
         <StyledTableHead>
           <TableRow>

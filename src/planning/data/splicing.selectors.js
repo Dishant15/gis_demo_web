@@ -9,3 +9,5 @@ export const getFirstSelectedPort = (store) => {
   const selectedPort = get(store, "splicing.selectedPorts.0", {});
   return { id: selectedPort.id || null, element: selectedPort.element || null };
 };
+
+export const isPortUpdateLoading = (store) => store.splicing.portUpdateLoading;
