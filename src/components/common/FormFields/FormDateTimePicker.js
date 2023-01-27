@@ -5,9 +5,8 @@ import Popover from "@mui/material/Popover";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-import { format } from "date-fns";
-
 import { DateTimePicker } from "react-datetime-range-super-picker";
+import { getDateValue } from "./field.utils";
 
 export const FormDateTimePicker = ({
   label,
@@ -34,6 +33,8 @@ export const FormDateTimePicker = ({
   return (
     <Controller
       render={({ field }) => {
+        const value = getDateValue(field.value);
+
         return (
           <>
             <Box onClick={handleClick}>
@@ -46,11 +47,7 @@ export const FormDateTimePicker = ({
                 error={error}
                 label={label}
                 helperText={helperText}
-                value={
-                  field.value
-                    ? format(field.value, "dd/MM/YYY hh:mm aaa")
-                    : null
-                }
+                value={value}
               />
             </Box>
             <Popover

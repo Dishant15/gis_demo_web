@@ -20,7 +20,6 @@ const TestDynamicForm = () => {
             console.log("🚀 ~ file: HomePage ~ res", res);
           }}
           isLoading={false}
-          watchFields={["over_head_cable"]}
         />
       </Paper>
     </Container>
@@ -142,12 +141,21 @@ const ELEMENT_FORM_TEMPLATE = {
           validationProps: {
             required: "Start time is required",
           },
-          checkHidden: (props) => {
-            return !!props.over_head_cable;
+          // isHidden: (props) => {
+          //   return !!props.over_head_cable;
+          // },
+        },
+        {
+          field_key: "agreement_file",
+          label: "agreement file",
+          field_type: FIELD_TYPES.FileUpload,
+          // disabled: true,
+          validationProps: {
+            required: "agreement file is required",
           },
-          dependencyFields: ["over_head_cable"],
         },
       ],
     },
   ],
+  dependencyFields: ["over_head_cable"],
 };

@@ -3,6 +3,7 @@ import { FormCheckbox } from "./FormCheckbox";
 import { FormDatePicker } from "./FormDatePicker";
 import { FormDateTimePicker } from "./FormDateTimePicker";
 import { FormHelperTextControl } from "./FormHelperText";
+import { FormFileField } from "./FormFileField";
 export {
   FormSelect,
   FormCreatableSelect,
@@ -10,4 +11,5 @@ export {
   FormDatePicker,
   FormHelperTextControl,
   FormDateTimePicker,
+  FormFileField,
 };

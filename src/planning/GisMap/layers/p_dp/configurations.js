@@ -66,9 +66,55 @@ export const ELEMENT_FORM_TEMPLATE = {
           field_type: FIELD_TYPES.Select,
           options: CABINET_TYPE_OPTIONS,
         },
+        {
+          field_key: "contact_name",
+          label: "Contact Name",
+          field_type: FIELD_TYPES.Input,
+          validationProps: {
+            required: "Contact Name is required",
+          },
+        },
+        {
+          field_key: "contact_no",
+          label: "Contact No",
+          field_type: FIELD_TYPES.Input,
+          validationProps: {
+            required: "Contact No is required",
+          },
+        },
+        {
+          field_key: "is_rented",
+          label: "Rented",
+          field_type: FIELD_TYPES.CheckBox,
+        },
+        {
+          field_key: "rent_amount",
+          label: "Rent Amount",
+          field_type: FIELD_TYPES.Input,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
+        {
+          field_key: "agreement_start_date",
+          label: "Agreement start date",
+          field_type: FIELD_TYPES.DateTime,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
+        {
+          field_key: "agreement_end_date",
+          label: "Agreement end date",
+          field_type: FIELD_TYPES.DateTime,
+          isHidden: (props) => {
+            return !props.is_rented;
+          },
+        },
       ],
     },
   ],
+  dependencyFields: ["is_rented"],
   // this shows where dependant template data comes from
   metaData: {
     getElementAddressData: (address, submitData) => {
@@ -82,6 +128,16 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "Address", field: "address", type: "simple" },
   { label: "Dp Type", field: "dp_type_display", type: "simple" },
   { label: "Cabinet Type", field: "cabinet_type_display", type: "simple" },
+  { label: "Contact Name", field: "contact_name", type: "simple" },
+  { label: "Contact No", field: "contact_no", type: "simple" },
+  { label: "Rented", field: "is_rented", type: "boolean" },
+  { label: "Rent Amount", field: "rent_amount", type: "simple" },
+  {
+    label: "Agreement start date",
+    field: "agreement_start_date",
+    type: "date",
+  },
+  { label: "Agreement end date", field: "agreement_end_date", type: "date" },
 ];
 
 export const ELEMENT_TABLE_EXTRA_CONTROLS = [
