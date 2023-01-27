@@ -1,3 +1,4 @@
+import { reject } from "lodash";
 import get from "lodash/get";
 import {
   postAddPortConnectionThunk,
@@ -13,6 +14,8 @@ const initialState = {
   middle: null,
   // selection data
   selectedPorts: [],
+  // shape : [ {connType: new | old, elem1, elem2}]
+  connections: [],
   // network states
   portUpdateLoading: false,
   portUpdateError: null,
@@ -40,6 +43,32 @@ const updatePortsFromPayload = (state, payload) => {
       }
     }
   }
+};
+
+const addConnectionFromPayload = (state, payload) => {
+  for (let pInd = 0; pInd < payload.length; pInd++) {
+    const { is_input, element_unique_id, connected_to } = payload[pInd];
+    // create connection from all input ports
+    if (is_input) {
+      state.connections.push({
+        connType: "new",
+        elem1: connected_to,
+        elem2: element_unique_id,
+      });
+    }
+  }
+};
+
+const removeConnectionFromPayload = (state, payload) => {
+  let newConnections = [...state.connections];
+  for (let pInd = 0; pInd < payload.length; pInd++) {
+    const { is_input, element_unique_id } = payload[pInd];
+    // find and remove
+    if (is_input) {
+      newConnections = reject(newConnections, { elem2: element_unique_id });
+    }
+  }
+  state.connections = newConnections;
 };
 
 const splicingSlice = createSlice({
@@ -72,6 +101,7 @@ const splicingSlice = createSlice({
       state.portUpdateLoading = false;
       state.portUpdateError = null;
       updatePortsFromPayload(state, payload);
+      addConnectionFromPayload(state, payload);
     },
     [postAddPortConnectionThunk.rejected]: (state, { error }) => {
       console.log("🚀 ~ file: splicing.reducer.js:66 ~ error", error);
@@ -87,6 +117,7 @@ const splicingSlice = createSlice({
       state.portUpdateLoading = false;
       state.portUpdateError = null;
       updatePortsFromPayload(state, payload);
+      removeConnectionFromPayload(state, payload);
     },
     [postRemovePortConnectionThunk.rejected]: (state, { error }) => {
       console.log("🚀 ~ file: splicing.reducer.js:107 ~ error", error);

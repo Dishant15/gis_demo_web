@@ -17,7 +17,7 @@ const ConnectionToggleBtn = ({ portData, layer_key }) => {
   const dispatch = useDispatch();
 
   const selectedPort = useSelector(getFirstSelectedPort);
-  const { status, id, is_input, element } = portData;
+  const { status, id, element_unique_id, is_input, element } = portData;
 
   const onAddConnectionClick = useCallback(
     (port) => () => {
@@ -37,6 +37,7 @@ const ConnectionToggleBtn = ({ portData, layer_key }) => {
     // if port is connected show disconnect btn
     return (
       <Box
+        id={element_unique_id}
         display="flex"
         sx={connectionDotStyles(is_input)}
         onClick={onRemoveConnectionClick(id)}
@@ -48,6 +49,7 @@ const ConnectionToggleBtn = ({ portData, layer_key }) => {
     // if port is vacant / reserved / faulty show connect btn
     return (
       <Box
+        id={element_unique_id}
         display="flex"
         sx={connectionDotStyles(is_input)}
         onClick={onAddConnectionClick(portData)}

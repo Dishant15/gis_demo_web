@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
@@ -7,11 +7,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import CableSplicingBlock from "./CableSplicingBlock";
 import SplitterSplicingBlock from "./SplitterSplicingBlock";
+
 import JcSplicingBlock from "./JcSplicingBlock";
 import CableThroughConnect from "./CableThroughConnect";
 
 import {
   getSplicingElement,
+  getSplicingConnections,
   isPortUpdateLoading,
 } from "planning/data/splicing.selectors";
 import { getContentHeight } from "redux/selectors/appState.selectors";
@@ -19,10 +21,58 @@ import { getContentHeight } from "redux/selectors/appState.selectors";
 const SplicingContainer = ({ onConnectionAdd }) => {
   const windowHeight = useSelector(getContentHeight);
   const portUpdateLoading = useSelector(isPortUpdateLoading);
+  const connLinesRefs = useRef([]);
   // middle will always be there which is selected element, left and right is optional but one of them will be there
   const left = useSelector(getSplicingElement("left"));
   const right = useSelector(getSplicingElement("right"));
   const middle = useSelector(getSplicingElement("middle"));
+  const connections = useSelector(getSplicingConnections);
+
+  useEffect(() => {
+    const $scrollBox = document.getElementById("splicing-container");
+    if (!!$scrollBox) {
+      $scrollBox.addEventListener(
+        "scroll",
+        function () {
+          for (let llInd = 0; llInd < connLinesRefs.current.length; llInd++) {
+            try {
+              connLinesRefs.current[llInd].position();
+            } catch (error) {}
+          }
+        },
+        false
+      );
+    }
+
+    return () => {
+      // clear "scroll event listener"
+    };
+  }, []);
+
+  useEffect(() => {
+    for (let cIn = 0; cIn < connections.length; cIn++) {
+      const currConn = connections[cIn];
+      const elem1 = document.getElementById(currConn.elem1);
+      const elem2 = document.getElementById(currConn.elem2);
+      if (!!elem1 && !!elem2) {
+        connLinesRefs.current.push(
+          new window.LeaderLine(elem1, elem2, {
+            size: 2,
+            startPlug: "square",
+            endPlug: "square",
+          })
+        );
+      }
+    }
+
+    return () => {
+      for (let llInd = 0; llInd < connLinesRefs.current.length; llInd++) {
+        try {
+          connLinesRefs.current[llInd].remove();
+        } catch (error) {}
+      }
+    };
+  }, [connections]);
   // render helpers
   const hasLeft = !!left;
   const hasRight = !!right;
@@ -59,6 +109,7 @@ const SplicingContainer = ({ onConnectionAdd }) => {
 
   return (
     <Box
+      id="splicing-container"
       p={5}
       sx={{
         maxHeight: `${contentHeight}px`,
