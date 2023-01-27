@@ -158,7 +158,7 @@ const CollapsibleContent = ({
         spacing={2}
         onClick={toggleExpand}
       >
-        <Box className="pl-layer-icon-block">
+        <Box className="pl-layer-icon-block" ml={0.5}>
           <Box
             className="icon-wrapper"
             sx={{
