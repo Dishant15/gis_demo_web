@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-
-import noop from "lodash/noop";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -23,7 +21,7 @@ import {
   addIntoConnectionLine,
   removeAllConnectionLine,
   updateConnectionLinePositions,
-} from "./SplicingConnLines";
+} from "./splicing.utils";
 
 const SplicingContainer = ({ onConnectionAdd }) => {
   const windowHeight = useSelector(getContentHeight);
@@ -39,16 +37,14 @@ const SplicingContainer = ({ onConnectionAdd }) => {
     if (!!$scrollBox) {
       $scrollBox.addEventListener(
         "scroll",
-        () => {
-          updateConnectionLinePositions();
-        },
+        updateConnectionLinePositions,
         false
       );
     }
 
     return () => {
       // clear "scroll event listener"
-      $scrollBox.removeEventListener("scroll", noop);
+      $scrollBox.removeEventListener("scroll", updateConnectionLinePositions);
     };
   }, []);
 

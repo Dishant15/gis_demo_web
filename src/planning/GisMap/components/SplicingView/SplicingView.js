@@ -18,7 +18,7 @@ import {
   setSplicingElements,
 } from "planning/data/splicing.reducer";
 import { fetchElementPortSplicingDetails } from "planning/data/port.services";
-import { updateConnectionLinePositions } from "./SplicingConnLines";
+import { updateConnectionLinePositions } from "./splicing.utils";
 
 const SplicingView = () => {
   const dispatch = useDispatch();

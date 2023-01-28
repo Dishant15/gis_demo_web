@@ -126,8 +126,8 @@ const CableThroughConnect = ({ fromData, toData }) => {
         show={!!showPopup}
         onClose={handleHidePopup}
         onConfirm={handleConnectClick}
-        title="Confirm !!"
-        text="Are you sure ?"
+        title="Connect Ports"
+        text="This will connect multiple ports, do you want to proceed ?"
         confirmText="Connect"
       />
     </>

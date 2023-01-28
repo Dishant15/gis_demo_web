@@ -2,6 +2,8 @@ import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 import noop from "lodash/noop";
+
+import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 
 import {
@@ -34,7 +36,9 @@ const GoogleMapWrapper = ({
       libraries={MAP_LIBRARIES}
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
       loadingElement={
-        <Skeleton height="400px" width="100%" sx={{ transform: "unset" }} />
+        <Box p={5} display="flex">
+          <Skeleton height="400px" width="100%" sx={{ transform: "unset" }} />
+        </Box>
       }
     >
       <GoogleMap

@@ -56,8 +56,8 @@ const ConnectionToggleBtn = ({ portData, layer_key }) => {
           show={!!selectedPortId}
           onClose={handleHidePopup}
           onConfirm={onRemoveConnectionClick}
-          title="Remove Port"
-          text="Are you sure to remove ?"
+          title="Disconnect Port"
+          text="Are you sure you want to remove connection of this port ?"
           confirmText="Remove"
         />
       </>
