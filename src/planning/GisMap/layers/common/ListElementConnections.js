@@ -256,8 +256,8 @@ const ConnectionList = ({
         alignItems="center"
         py={0.5}
         sx={{
-          border: "2px solid",
-          borderColor: isActive ? "secondary.dark" : "transparent",
+          borderLeft: "5px solid",
+          borderLeftColor: isActive ? "secondary.dark" : "transparent",
         }}
       >
         <Paper
