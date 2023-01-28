@@ -18,6 +18,7 @@ import {
   setSplicingElements,
 } from "planning/data/splicing.reducer";
 import { fetchElementPortSplicingDetails } from "planning/data/port.services";
+import { updateConnectionLinePositions } from "./SplicingConnLines";
 
 const SplicingView = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const SplicingView = () => {
   }, [dispatch]);
 
   return (
-    <GisMapPopups dragId="SplicingView">
+    <GisMapPopups dragId="SplicingView" onDrag={updateConnectionLinePositions}>
       <Box minWidth="350px">
         <TableHeader
           title="Splicing View"

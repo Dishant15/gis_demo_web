@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
+import noop from "lodash/noop";
+
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -17,11 +19,15 @@ import {
   isPortUpdateLoading,
 } from "planning/data/splicing.selectors";
 import { getContentHeight } from "redux/selectors/appState.selectors";
+import {
+  addIntoConnectionLine,
+  removeAllConnectionLine,
+  updateConnectionLinePositions,
+} from "./SplicingConnLines";
 
 const SplicingContainer = ({ onConnectionAdd }) => {
   const windowHeight = useSelector(getContentHeight);
   const portUpdateLoading = useSelector(isPortUpdateLoading);
-  const connLinesRefs = useRef([]);
   // middle will always be there which is selected element, left and right is optional but one of them will be there
   const left = useSelector(getSplicingElement("left"));
   const right = useSelector(getSplicingElement("right"));
@@ -33,12 +39,8 @@ const SplicingContainer = ({ onConnectionAdd }) => {
     if (!!$scrollBox) {
       $scrollBox.addEventListener(
         "scroll",
-        function () {
-          for (let llInd = 0; llInd < connLinesRefs.current.length; llInd++) {
-            try {
-              connLinesRefs.current[llInd].position();
-            } catch (error) {}
-          }
+        () => {
+          updateConnectionLinePositions();
         },
         false
       );
@@ -46,6 +48,7 @@ const SplicingContainer = ({ onConnectionAdd }) => {
 
     return () => {
       // clear "scroll event listener"
+      $scrollBox.removeEventListener("scroll", noop);
     };
   }, []);
 
@@ -55,7 +58,7 @@ const SplicingContainer = ({ onConnectionAdd }) => {
       const elem1 = document.getElementById(currConn.elem1);
       const elem2 = document.getElementById(currConn.elem2);
       if (!!elem1 && !!elem2) {
-        connLinesRefs.current.push(
+        addIntoConnectionLine(
           new window.LeaderLine(elem1, elem2, {
             size: 2,
             startPlug: "square",
@@ -66,13 +69,10 @@ const SplicingContainer = ({ onConnectionAdd }) => {
     }
 
     return () => {
-      for (let llInd = 0; llInd < connLinesRefs.current.length; llInd++) {
-        try {
-          connLinesRefs.current[llInd].remove();
-        } catch (error) {}
-      }
+      removeAllConnectionLine();
     };
   }, [connections]);
+
   // render helpers
   const hasLeft = !!left;
   const hasRight = !!right;
