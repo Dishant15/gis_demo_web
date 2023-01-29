@@ -1,8 +1,14 @@
 import size from "lodash/size";
+import get from "lodash/get";
+
 import { addNotification } from "redux/reducers/notification.reducer";
-import { postAddPortConnectionThunk } from "./port.services";
+import {
+  postAddPortConnectionThunk,
+  postRemovePortConnectionThunk,
+} from "./port.services";
 import { resetSelectedPorts, setSelectedPorts } from "./splicing.reducer";
 import { getSplicingSelectedPorts } from "./splicing.selectors";
+import { find } from "lodash";
 
 const convertPortDataToAddConnection = (portData) => {
   const [fromPort, toPort] = portData;
@@ -60,7 +66,86 @@ export const handleConnectionAdd =
       ]);
 
       dispatch(
-        postAddPortConnectionThunk({ connection: addConnectionPostData })
+        postAddPortConnectionThunk({ connection: [addConnectionPostData] })
       );
     }
+  };
+
+export const handleConnectionRemove =
+  (port_id, port_layer_key) => (dispatch) => {
+    dispatch(postRemovePortConnectionThunk({ port_id, port_layer_key }));
+  };
+
+// connect all the port from left side cable to right side cable
+// fromData | toData shape : {layer_key, ports, sr_no: [start, end]}
+export const handleThroughConnect =
+  (fromData, toData, connectionCount) => (dispatch) => {
+    const fromPorts = fromData.ports;
+    // get the start sr no of cable
+    let fromInd = get(fromData, "sr_no.0");
+    // const fromLastInd = get(fromData, "sr_no.1");
+    const toPorts = toData.ports;
+    let toInd = get(toData, "sr_no.0");
+    const toLastInd = get(toData, "sr_no.1");
+
+    const finalPortConnectionData = [];
+
+    let loopInd = 0;
+    while (loopInd <= connectionCount) {
+      // find from port
+      const matchedFrPort = find(fromPorts, {
+        sr_no: fromInd,
+        is_input: false,
+      });
+      if (!matchedFrPort) {
+        // port not found wrong serial no
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Invalid port selection",
+            text: `Sr No ${fromInd} not found in FROM element`,
+          })
+        );
+        return;
+      }
+      // find to port
+      const matchedToPort = find(toPorts, { sr_no: toInd, is_input: true });
+      if (!matchedToPort) {
+        // port not found wrong serial no
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Invalid port selection",
+            text: `Sr No ${toInd} not found in TO element`,
+          })
+        );
+        return;
+      }
+      // check if both are vacant
+      if (matchedFrPort.status === "C" || matchedToPort.status === "C") {
+        dispatch(
+          addNotification({
+            type: "error",
+            title: "Invalid port selection",
+            text: "Selected ports are already CONNECTED",
+          })
+        );
+        return;
+      }
+      // create connection data
+      const addConnectionPostData = convertPortDataToAddConnection([
+        { ...matchedFrPort, elem_layer_key: fromData.layer_key },
+        { ...matchedToPort, elem_layer_key: toData.layer_key },
+      ]);
+
+      loopInd += 1;
+      fromInd += 1;
+      toInd += 1;
+
+      finalPortConnectionData.push([...addConnectionPostData]);
+    }
+
+    dispatch(
+      postAddPortConnectionThunk({ connection: finalPortConnectionData })
+    );
   };

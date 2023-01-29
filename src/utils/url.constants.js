@@ -181,3 +181,6 @@ export const apiPostElementSplicingDetails = () =>
 
 export const apiPostAddPortConnection = () =>
   "/api/planning/layer/connect/ports/";
+
+export const apiPostRemovePortConnection = () =>
+  "/api/planning/layer/disconnect/ports/";

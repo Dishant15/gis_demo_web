@@ -116,11 +116,6 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
             <ExpandMoreIcon />
           </ExpandMore>
         </Box>
-        <Box className="pl-layer-icon-block">
-          <Box className="icon-wrapper">
-            <img src={Icon} alt={name} />
-          </Box>
-        </Box>
         <Stack
           direction="row"
           flex={1}
@@ -128,12 +123,19 @@ const LayerTab = ({ layerConfig, regionIdList }) => {
             cursor: "pointer",
             alignItems: "center",
             justifyContent: "space-between",
+            marginLeft: "0px !important",
+            paddingLeft: "8px",
           }}
           onClick={onLayerClick}
         >
-          <span>
+          <Box className="pl-layer-icon-block" ml={0}>
+            <Box className="icon-wrapper">
+              <img src={Icon} alt={name} />
+            </Box>
+          </Box>
+          <Box component="span" flex={1} ml={1}>
             {name} {isFetched ? `(${count})` : ""}
-          </span>
+          </Box>
           <Box display="flex" alignItems="center">
             {isLoading ? (
               <LoadingButton loading />

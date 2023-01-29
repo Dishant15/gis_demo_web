@@ -1,42 +1,28 @@
-import React, { useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import CircleIcon from "@mui/icons-material/Circle";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import React, { useMemo } from "react";
 
 import find from "lodash/find";
 import orderBy from "lodash/orderBy";
 import range from "lodash/range";
+
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+import ConnectionToggleBtn from "./ConnectionToggleBtn";
 
 import {
   FIBER_COLOR_CODE_HEX_MAPPING,
   PORT_STATUS_COLOR_MAPPING,
 } from "../ElementPortDetails/port.utils";
 import {
-  connectionDotStyles,
   elementBorders,
   elementLabelCenter,
   portBoxShadow,
 } from "./style.constants";
-import { handleConnectionAdd } from "planning/data/splicing.actions";
-import { getFirstSelectedPort } from "planning/data/splicing.selectors";
 
 const CableSplicingBlock = ({ portData, side }) => {
-  const dispatch = useDispatch();
   const { name, layer_key, configuration, ports } = portData;
   const { core_per_tube, ribbon_count, no_of_tube } = configuration;
-
-  const selectedPort = useSelector(getFirstSelectedPort);
-
-  const onAddConnectionClick = useCallback(
-    (port) => () => {
-      dispatch(handleConnectionAdd(port, layer_key));
-    },
-    [layer_key]
-  );
 
   const fiberWrapperHeight = 40;
   const fiberHeight = 15;
@@ -118,7 +104,7 @@ const CableSplicingBlock = ({ portData, side }) => {
 
     for (let fInd = 0; fInd < orderedPorts.length; fInd++) {
       const currPort = orderedPorts[fInd];
-      const { id, fiber_color, sr_no, is_input, status, element } = currPort;
+      const { id, fiber_color, sr_no, is_input, status } = currPort;
       const isDash = fiber_color.includes("d-");
       const currFibColor = isDash ? fiber_color.substring(2) : fiber_color;
       // if side is left show fiber color on output side
@@ -141,20 +127,7 @@ const CableSplicingBlock = ({ portData, side }) => {
               <Box textAlign="center" p={1}>
                 {sr_no}
               </Box>
-              {status === "C" ? null : (
-                <Box
-                  display="flex"
-                  sx={connectionDotStyles(is_input)}
-                  onClick={onAddConnectionClick(currPort)}
-                >
-                  {selectedPort.id === id &&
-                  selectedPort.element === element ? ( // check if this port is selected
-                    <RadioButtonCheckedIcon fontSize="small" />
-                  ) : (
-                    <CircleIcon fontSize="small" />
-                  )}
-                </Box>
-              )}
+              <ConnectionToggleBtn portData={currPort} layer_key={layer_key} />
             </>
           ) : null}
           <Box
@@ -193,7 +166,7 @@ const CableSplicingBlock = ({ portData, side }) => {
     }
 
     return [IpFiber, OpFiber];
-  }, [ports, side, selectedPort]);
+  }, [ports, side, layer_key]);
 
   return (
     <Box>

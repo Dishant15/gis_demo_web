@@ -216,8 +216,8 @@ const ConnectionList = ({
 }) => {
   if (!size(connections)) {
     return (
-      <Box pl={1} pb={1}>
-        <Typography variant="h6" color="text.secondary">
+      <Box px={1} pt={2} pb={3}>
+        <Typography variant="body1" color="text.secondary" textAlign="center">
           No connections available
         </Typography>
       </Box>
@@ -226,6 +226,7 @@ const ConnectionList = ({
 
   return connections.map((connection) => {
     const { element, layer_info } = connection;
+    const isActive = activeElementId === element.id;
     const EndIcon =
       element.cable_end === "A" ? (
         <SwipeRightAltIcon
@@ -242,11 +243,23 @@ const ConnectionList = ({
           }}
         />
       );
+
     const Icon = LayerKeyMappings[layer_info.layer_key]["getViewOptions"](
       {}
     ).icon;
+
     return (
-      <Stack key={element.id} direction="row" spacing={1} alignItems="center">
+      <Stack
+        key={element.id}
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        py={0.5}
+        sx={{
+          borderLeft: "5px solid",
+          borderLeftColor: isActive ? "secondary.dark" : "transparent",
+        }}
+      >
         <Paper
           sx={{
             width: "42px",
@@ -267,13 +280,6 @@ const ConnectionList = ({
             flex={1}
             className="clickable"
             onClick={handleElementClick(connection)}
-            sx={{
-              border: "1px solid",
-              borderColor:
-                activeElementId === element.id
-                  ? "secondary.dark"
-                  : "transparent",
-            }}
           >
             <Typography variant="subtitle1" lineHeight={1.1}>
               {get(element, "name", "")}

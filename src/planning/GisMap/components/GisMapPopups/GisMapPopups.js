@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Box, Paper, Portal } from "@mui/material";
+import noop from "lodash/noop";
 
 import Draggable from "react-draggable";
 
@@ -18,13 +19,20 @@ import "planning/styles/gis-map-popup.scss";
  *  DynamicForm
  *  Paper popups on map add / edit events
  */
-const GisMapPopups = ({ children, dragId }) => {
+const GisMapPopups = ({
+  children,
+  dragId,
+  onDrag = noop,
+  onDragStop = noop,
+}) => {
   return (
     <Portal>
       <Draggable
         handle={`#${dragId}`}
         disabled={!Boolean(dragId)}
         bounds="body" // do not overflow out of body
+        onDrag={onDrag}
+        onStop={onDragStop}
       >
         <Box
           sx={{

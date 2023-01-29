@@ -4,6 +4,7 @@ import {
   apiGetElementPortDetails,
   apiPostAddPortConnection,
   apiPostElementSplicingDetails,
+  apiPostRemovePortConnection,
 } from "utils/url.constants";
 
 export const fetchElementPortDetails = async ({ queryKey }) => {
@@ -25,4 +26,14 @@ export const postAddPortConnection = async (data) => {
 export const postAddPortConnectionThunk = createAsyncThunk(
   "splicing/postAddPortConnection",
   postAddPortConnection
+);
+
+export const postRemovePortConnection = async (data) => {
+  const res = await Api.post(apiPostRemovePortConnection(), data);
+  return res.data;
+};
+
+export const postRemovePortConnectionThunk = createAsyncThunk(
+  "splicing/postRemovePortConnection",
+  postRemovePortConnection
 );
