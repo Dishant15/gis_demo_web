@@ -217,6 +217,7 @@ export const GisLayerForm = ({ layerKey }) => {
           formConfigs={formConfig}
           data={mapStateData}
           configurationOptions={configList}
+          isEdit={isEdit}
           onSubmit={onSubmit}
           onCancel={onClose}
           isLoading={isEdit ? isEditLoading : isAddLoading}

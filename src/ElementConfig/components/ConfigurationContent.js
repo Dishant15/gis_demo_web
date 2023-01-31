@@ -1,6 +1,9 @@
 import React, { useCallback, useState, useRef, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
+import get from "lodash/get";
+import has from "lodash/has";
+
 import {
   Container,
   Paper,
@@ -17,8 +20,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { LoadingButton } from "@mui/lab";
-
-import { get } from "lodash";
 
 import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
@@ -172,12 +173,14 @@ const ConfigurationContent = ({ layerKey }) => {
   }, []);
 
   const mayRenderFormDialog = useMemo(() => {
+    const isEdit = has(formData, "id");
     return (
       <Dialog onClose={handleFormClose} open={!!showForm}>
         {!!showForm ? (
           <DynamicForm
             formConfigs={LayerKeyMappings[layerKey]["ConfigFormTemplate"]}
             data={formData || LayerKeyMappings[layerKey]["ConfigInitData"]}
+            isEdit={isEdit}
             onSubmit={upsertElementConfigMutation}
             onCancel={handleFormClose}
             isLoading={upsertElementConfigLoading}

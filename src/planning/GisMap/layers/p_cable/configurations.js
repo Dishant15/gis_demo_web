@@ -181,16 +181,19 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           field_key: "no_of_tube",
           label: "No Of Tubes",
           field_type: "input",
+          disable_on_edit: true,
         },
         {
           field_key: "core_per_tube",
           label: "No Of Cores",
           field_type: "input",
+          disable_on_edit: true,
         },
         {
           field_key: "ribbon_count",
           label: "Ribbon Count",
           field_type: "input",
+          disable_on_edit: true,
         },
         {
           field_key: "color_on_map",

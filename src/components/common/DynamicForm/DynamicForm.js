@@ -55,6 +55,7 @@ const DynamicForm = forwardRef((props, ref) => {
     data,
     onSubmit,
     onCancel,
+    isEdit = false,
     isLoading,
     watchFields = [],
     configurationOptions = [],
@@ -127,9 +128,11 @@ const DynamicForm = forwardRef((props, ref) => {
                     options = [],
                     validationProps,
                     disabled,
+                    disable_on_edit,
                   } = config;
 
                   const required = !!get(validationProps, "required");
+                  const isDisabled = disabled || (disable_on_edit && isEdit);
 
                   const isHidden = config.isHidden
                     ? config.isHidden(watchValuesKeyValues)
@@ -145,7 +148,7 @@ const DynamicForm = forwardRef((props, ref) => {
                             className="full-width"
                             label={label}
                             {...register(field_key, validationProps)}
-                            disabled={!!disabled}
+                            disabled={!!isDisabled}
                             error={!!get(errors, [field_key])}
                             helperText={get(errors, [field_key, "message"], "")}
                             InputLabelProps={{
@@ -164,7 +167,7 @@ const DynamicForm = forwardRef((props, ref) => {
                             rows={3}
                             label={label}
                             {...register(field_key, validationProps)}
-                            disabled={!!disabled}
+                            disabled={!!isDisabled}
                             error={!!get(errors, [field_key])}
                             helperText={get(errors, [field_key, "message"], "")}
                             InputLabelProps={{
@@ -182,7 +185,7 @@ const DynamicForm = forwardRef((props, ref) => {
                             name={field_key}
                             control={control}
                             rules={validationProps}
-                            disabled={!!disabled}
+                            disabled={!!isDisabled}
                             required={required}
                             error={!!get(errors, [field_key])}
                             helperText={get(errors, [field_key, "message"], "")}
@@ -204,7 +207,8 @@ const DynamicForm = forwardRef((props, ref) => {
                               name={field_key}
                               control={control}
                               rules={validationProps}
-                              isDisabled={!!disabled}
+                              // can not edit configuration
+                              isDisabled={!!isDisabled || isEdit}
                               required={required}
                               options={configurationOptions}
                               error={!!get(errors, [field_key])}
@@ -227,7 +231,7 @@ const DynamicForm = forwardRef((props, ref) => {
                             name={field_key}
                             control={control}
                             rules={validationProps}
-                            isDisabled={!!disabled}
+                            isDisabled={!!isDisabled}
                             required={required}
                             options={options || []}
                             error={!!get(errors, [field_key])}
@@ -245,7 +249,7 @@ const DynamicForm = forwardRef((props, ref) => {
                             name={field_key}
                             control={control}
                             rules={validationProps}
-                            isDisabled={!!disabled}
+                            isDisabled={!!isDisabled}
                             required={required}
                             options={config.options || []}
                             error={!!get(errors, [field_key])}
@@ -266,7 +270,7 @@ const DynamicForm = forwardRef((props, ref) => {
                               valueKey={config.valueKey}
                               control={control}
                               rules={validationProps}
-                              isDisabled={!!disabled}
+                              isDisabled={!!isDisabled}
                               required={required}
                               options={config.options || []}
                               error={!!get(errors, [field_key])}
@@ -289,7 +293,7 @@ const DynamicForm = forwardRef((props, ref) => {
                               name={field_key}
                               control={control}
                               rules={validationProps}
-                              isDisabled={!!disabled}
+                              isDisabled={!!isDisabled}
                               error={!!get(errors, [field_key])}
                               helperText={get(
                                 errors,
@@ -309,7 +313,7 @@ const DynamicForm = forwardRef((props, ref) => {
                               name={field_key}
                               control={control}
                               rules={validationProps}
-                              disabled={!!disabled}
+                              disabled={!!isDisabled}
                               required={required}
                               error={!!get(errors, [field_key])}
                               helperText={get(
