@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 
+import orderBy from "lodash/orderBy";
 import Box from "@mui/material/Box";
 
 import GisMapPopups from "../GisMapPopups";
@@ -52,13 +53,26 @@ const ElementPortDetails = () => {
     switch (layerKey) {
       case CableLayerKey: {
         const transformedDetails = transformCablePortData(portDetails);
-        return <CablePortDetails portDetails={transformedDetails} />;
+
+        return (
+          <CablePortDetails
+            portDetails={orderBy(transformedDetails, ["sr_no"], ["asc"])}
+          />
+        );
       }
       case OltLayerKey: {
-        return <OltPortDetails portDetails={portDetails} />;
+        return (
+          <OltPortDetails
+            portDetails={orderBy(portDetails, ["sr_no"], ["asc"])}
+          />
+        );
       }
       case SplitterLayerKey: {
-        return <SpliterPortDetails portDetails={portDetails} />;
+        return (
+          <SpliterPortDetails
+            portDetails={orderBy(portDetails, ["sr_no"], ["asc"])}
+          />
+        );
       }
 
       default:

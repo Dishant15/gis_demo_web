@@ -43,10 +43,7 @@ export const handleConnectionAdd =
     } else {
       const firstPort = selectedPorts[0];
       // check if second selected port is valid
-      if (
-        firstPort.is_input === selectedPort.is_input ||
-        firstPort.element === selectedPort.element
-      ) {
+      if (firstPort.element === selectedPort.element) {
         dispatch(
           addNotification({
             type: "error",
