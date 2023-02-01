@@ -47,6 +47,7 @@ import LOGO from "assets/gtpl.jpeg";
 import "./navigation-bar.scss";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 import { format } from "date-fns";
+import NavLogo from "./NavLogo";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -190,7 +191,7 @@ const NavigationBar = () => {
           justifyContent: "space-between",
         }}
       >
-        <img src={LOGO} className="logo" />
+        <NavLogo />
         {menuContent}
         <Menu
           id="administration-menu"
