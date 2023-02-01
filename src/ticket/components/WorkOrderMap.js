@@ -9,7 +9,7 @@ import CardContent from "@mui/material/CardContent";
 
 import Map from "components/common/Map";
 import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
-import { GreenMarker, RedMarker } from "components/common/Map/GoogleMapWrapper";
+import { GreenMarker, RedMarker } from "components/common/Map/CustomMarkers";
 
 import { getCoordinatesFromFeature } from "utils/map.utils";
 import { workOrderStatusTypes } from "utils/constant";
