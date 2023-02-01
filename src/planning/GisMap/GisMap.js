@@ -14,6 +14,7 @@ import MapActionBar from "./components/MapActionBar";
 
 import { getPlanningMapPosition } from "planning/data/planningGis.selectors";
 import { onGisMapClick } from "planning/data/planning.actions";
+import MapSearchbox from "./components/MapSearchbox";
 
 const GisMap = React.memo(({ ticketId }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const GisMap = React.memo(({ ticketId }) => {
   return (
     <Box width="100%" height="100%">
       <Map center={center} zoom={zoom} onClick={handleMapClick}>
+        <MapSearchbox />
         {/* show gis map popups and other info table/forms as per events */}
         <GisMapEventLayer />
         {/* show gis map common layer elements as user selects them */}

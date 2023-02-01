@@ -14,10 +14,6 @@ const tableConfig = [
     key: "common_name",
   },
   {
-    label: "Status",
-    key: "status_display",
-  },
-  {
     label: "Tube Color",
     key: "tube_color",
     type: "color",

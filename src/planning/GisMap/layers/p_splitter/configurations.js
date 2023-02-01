@@ -130,11 +130,13 @@ export const ELEMENT_CONFIG_TEMPLATE = {
           field_key: "input_ports",
           label: "Input Ports",
           field_type: "input",
+          disable_on_edit: true,
         },
         {
           field_key: "output_ports",
           label: "Output Ports",
           field_type: "input",
+          disable_on_edit: true,
         },
         {
           field_key: "specification",
