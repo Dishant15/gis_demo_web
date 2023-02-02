@@ -57,7 +57,6 @@ const DynamicForm = forwardRef((props, ref) => {
     onCancel,
     isEdit = false,
     isLoading,
-    watchFields = [],
     configurationOptions = [],
   } = props;
   const { sections, dependencyFields = [] } = formConfigs;

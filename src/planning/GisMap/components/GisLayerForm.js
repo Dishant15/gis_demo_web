@@ -46,27 +46,28 @@ export const GisLayerForm = ({ layerKey }) => {
   ]);
   const isConfigurable = !!get(mapStateData, "configuration");
 
+  const formConfig = get(LayerKeyMappings, [layerKey, "formConfig"]);
   /**
    * get form config from LayerKeyMappings > layerKey
    * check in form config have modifyProperty function or not
    * modifyProperty used to update fieldConfig based on Edit flag
    */
-  const formConfig = useMemo(() => {
-    let config = get(LayerKeyMappings, [layerKey, "formConfig"]);
-    for (let index = 0; index < config.sections.length; index++) {
-      let section = config.sections[index];
+  // const formConfig = useMemo(() => {
+  //   let config = get(LayerKeyMappings, [layerKey, "formConfig"]);
+  //   for (let index = 0; index < config.sections.length; index++) {
+  //     let section = config.sections[index];
 
-      for (let secInd = 0; secInd < section.fieldConfigs.length; secInd++) {
-        let fieldConfig = section.fieldConfigs[secInd];
+  //     for (let secInd = 0; secInd < section.fieldConfigs.length; secInd++) {
+  //       let fieldConfig = section.fieldConfigs[secInd];
 
-        if (fieldConfig.modifyProperty) {
-          const modifiedProperties = fieldConfig.modifyProperty(isEdit);
-          merge(fieldConfig, modifiedProperties);
-        }
-      }
-    }
-    return config;
-  }, [layerKey, isEdit]);
+  //       if (fieldConfig.modifyProperty) {
+  //         const modifiedProperties = fieldConfig.modifyProperty(isEdit);
+  //         merge(fieldConfig, modifiedProperties);
+  //       }
+  //     }
+  //   }
+  //   return config;
+  // }, [layerKey, isEdit]);
 
   const queryRes = useQuery(
     "planningLayerConfigsDetails",
