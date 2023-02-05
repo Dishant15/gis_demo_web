@@ -42,10 +42,8 @@ import {
   getUserPermissions,
 } from "redux/selectors/auth.selectors";
 import { handleLogoutUser } from "redux/actions/auth.actions";
-import LOGO from "assets/gtpl.jpeg";
 
 import "./navigation-bar.scss";
-import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 import { format } from "date-fns";
 import NavLogo from "./NavLogo";
 
@@ -104,11 +102,6 @@ const NavigationBar = () => {
           <Button to={getHomePath()} component={Link} color="inherit">
             Home
           </Button>
-          {canSurveyView ? (
-            <Button component={Link} to={getGeoSurveyPath()} color="inherit">
-              Survey
-            </Button>
-          ) : null}
           {canPlanningView ? (
             <Button component={Link} to={getPlanningPage()} color="inherit">
               Planning
@@ -236,25 +229,6 @@ const NavigationBar = () => {
               to={getTicketListPage()}
             >
               Ticket Management
-            </MenuItem>
-          ) : null}
-          {isSuperAdminUser ? (
-            <MenuItem
-              onClick={handleClose}
-              component={Link}
-              to={getElementConfigPage()}
-            >
-              Element Configuration
-            </MenuItem>
-          ) : null}
-          {isSuperAdminUser ? (
-            <MenuItem
-              onClick={handleClose}
-              component="a"
-              href={getFeedbackLink()}
-              target="__blank"
-            >
-              Feedback
             </MenuItem>
           ) : null}
         </Menu>
