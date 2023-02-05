@@ -27,20 +27,8 @@ import { fetchUserRoles, updateUserPerm } from "gis_user/data/services";
 import { parseErrorMessagesWithFields } from "utils/api.utils";
 
 export const USER_LAYER_PERMS_CONFIG = [
-  { name: "Distribution Point", layerKey: "p_dp" },
-  { name: "Spliter", layerKey: "p_splitter" },
-  { name: "Cable", layerKey: "p_cable" },
-  { name: "Survey building", layerKey: "p_survey_building" },
-  { name: "Survey area", layerKey: "p_survey_area" },
   { name: "Pop Location", layerKey: "p_pop" },
-  { name: "Sub Pop Location", layerKey: "p_spop" },
-  { name: "Feeder Service Area", layerKey: "p_fsa" },
-  { name: "OLT", layerKey: "p_olt" },
-  { name: "Distribution Service Area", layerKey: "p_dsa" },
-  { name: "Customer Service Area", layerKey: "p_csa" },
-  { name: "Pole", layerKey: "p_pole" },
-  { name: "Manhole", layerKey: "p_manhole" },
-  { name: "Joint Closer", layerKey: "p_jointcloser" },
+  { name: "Gp Location", layerKey: "p_gp" },
 ];
 
 /**

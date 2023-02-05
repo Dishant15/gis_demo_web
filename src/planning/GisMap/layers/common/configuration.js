@@ -78,8 +78,8 @@ export const ELEMENT_FORM_ABSTRACT_TEMPLATE = [
     disabled: true,
   },
   {
-    field_key: "ref_code",
-    label: "Reff Code",
+    field_key: "fid",
+    label: "FID",
     field_type: FIELD_TYPES.Input,
   },
   {
@@ -94,6 +94,6 @@ export const ELEMENT_TABLE_ABSTRACT_FIELDS = [
   { label: "Name", field: "name", type: "simple" },
   { label: "Unique Id", field: "unique_id", type: "simple" },
   { label: "Network Id", field: "network_id", type: "simple" },
-  { label: "Reff Code", field: "ref_code", type: "simple" },
+  { label: "FID", field: "fid", type: "simple" },
   { label: "Status", field: "status", type: "status" },
 ];
