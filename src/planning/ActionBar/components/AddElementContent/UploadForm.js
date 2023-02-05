@@ -52,7 +52,7 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
             addNotification({
               type: "error",
               title: "Upload layer data",
-              text: "Invalid excel data",
+              text: "Invalid file data",
             })
           );
         }
@@ -60,6 +60,7 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
       onSuccess: (res) => {
         const success_count = get(res, "success_count", 0);
         const error_list = get(res, "error_list", []);
+
         if (error_list?.length) {
           console.log("failed => ", error_list);
           dispatch(
@@ -191,7 +192,7 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
             <UploadButton
               text="Select File"
               variant="contained"
-              accept=".xlsx, .xls, .csv"
+              accept=".kml, .kmz"
               onChange={handleFileUpload}
             />
             <Typography variant="body2" pl={1} pt={0.5}>
