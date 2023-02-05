@@ -42,14 +42,14 @@ const LoginPage = (props) => {
         <div className="login-page-content">
           <div className="heading hide-on-small-and-down">
             <div className="text">
-              Your network under your control <br /> Network GIS
+              Your network under your control <br /> Gis Demo
             </div>
           </div>
           <div className="form-block">
             <LoginForm />
-            <div className="privacy-policy-link">
+            {/* <div className="privacy-policy-link">
               <a href={getPrivacyPolicy()}>Read Privacy Policy</a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@ const LoginForm = () => {
       id="login-form"
       className="form-inner-block"
     >
-      <div className="company-title">NETWORK GIS</div>
+      <div className="company-title">GIS DEMO</div>
       <Stack spacing={4}>
         <TextField
           error={!!errors.username}
