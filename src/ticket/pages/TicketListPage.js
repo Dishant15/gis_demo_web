@@ -21,7 +21,7 @@ import { AgGridReact } from "ag-grid-react";
 import TicketListDummyLoader from "ticket/components/TicketListDummyLoader";
 import TicketSummeryDownload from "ticket/components/TicketSummeryDownload";
 
-import { fetchTicketSummeryList } from "ticket/data/services";
+import { fetchTicketList } from "ticket/data/services";
 import {
   getAddTicketPage,
   getEditTicketPage,
@@ -42,19 +42,12 @@ const TicketListPage = () => {
     checkUserPermission("ticket_workorder_view")
   );
 
-  // const { isLoading, data } = useQuery("ticketList", fetchTicketList);
-  const { isLoading, data } = useQuery(
-    "ticketSummeryList",
-    fetchTicketSummeryList,
-    {
-      staleTime: Infinity,
-    }
-  );
+  const { isLoading, data } = useQuery("ticketList", fetchTicketList);
 
   const gridRef = useRef();
 
   const onGridReady = () => {
-    // gridRef.current.api.sizeColumnsToFit();
+    gridRef.current.api.sizeColumnsToFit();
   };
 
   const onEditClick = (ticketId) => {
@@ -157,7 +150,7 @@ const TicketListPage = () => {
               {
                 field: "network_type",
                 headerName: "Network Type",
-                width: 180,
+                width: 150,
                 valueFormatter: (params) => {
                   if (params.value === "L1") {
                     return "L1 Design";
@@ -168,53 +161,6 @@ const TicketListPage = () => {
                   } else {
                     return "In Active";
                   }
-                },
-              },
-              {
-                field: "today_workorders",
-                headerName: "Workorder created today",
-                width: 130,
-              },
-              {
-                field: "today_elements",
-                headerName: "Homepass today",
-                width: 110,
-                valueFormatter: ({ value, data }) => {
-                  if (data.ticket_type === "S") {
-                    return value;
-                  }
-                  return "--";
-                },
-              },
-              {
-                field: "submited_workorders",
-                headerName: "Submitted",
-                width: 130,
-              },
-              {
-                field: "rejected_workorders",
-                headerName: "Rejected",
-                width: 120,
-              },
-              {
-                field: "approved_workorders",
-                headerName: "Approved",
-                width: 120,
-              },
-              {
-                field: "total_workorders",
-                headerName: "Total WO",
-                width: 100,
-              },
-              {
-                field: "element_count",
-                headerName: "Total Homepass",
-                width: 100,
-                valueFormatter: ({ value, data }) => {
-                  if (data.ticket_type === "S") {
-                    return value;
-                  }
-                  return "--";
                 },
               },
               {
