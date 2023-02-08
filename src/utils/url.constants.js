@@ -100,8 +100,8 @@ export const apiGetTicketListSummeryExport = () =>
   `/api/ticket/list/summery-export/`;
 
 // workorder apis
-export const apiPutWorkOrderEdit = (workOrderId) =>
-  `/api/geo/survey/boundary/${workOrderId}/edit/`;
+export const apiPutWorkOrderEdit = (surveyId) =>
+  `/api/survey/${surveyId}/status-change/`;
 
 export const apiPutUnitEdit = (unitId = ":unit_id") =>
   `/api/geo/survey/unit/${unitId}/edit/`;
@@ -184,3 +184,6 @@ export const apiPostAddPortConnection = () =>
 
 export const apiPostRemovePortConnection = () =>
   "/api/planning/layer/disconnect/ports/";
+
+export const apiGetSurveyTicketWorkorders = (ticketId) =>
+  `/api/survey/ticket/${ticketId}/list/`;

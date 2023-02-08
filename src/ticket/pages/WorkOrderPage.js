@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import {
-  cloneDeep,
   filter,
   isEqual,
   isNull,
@@ -13,7 +12,6 @@ import {
   get,
   orderBy,
   countBy,
-  includes,
 } from "lodash";
 
 import {
@@ -23,37 +21,23 @@ import {
   Typography,
   Chip,
   Popover,
-  Dialog,
   Button,
 } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import GetAppIcon from "@mui/icons-material/GetApp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import WorkOrderLoading from "ticket/components/WorkOrderLoading";
 import WorkOrderMap from "ticket/components/WorkOrderMap";
 import WorkOrderItem from "ticket/components/WorkOrderItem";
 import StatusChangeForm from "ticket/components/StatusChangeForm";
-import SurveyEditForm from "ticket/components/SurveyEditForm";
-import UnitEditForm from "ticket/components/UnitEditForm";
-import FilePickerDialog from "components/common/FilePickerDialog";
 
 import {
-  exportTicket,
+  fetchTicketDetails,
   fetchTicketWorkorders,
-  importTicket,
-  updateUnitWorkOrder,
   updateWorkOrder,
 } from "ticket/data/services";
-import { coordsToLatLongMap, latLongMapToCoords } from "utils/map.utils";
-import { SURVEY_TAG_LIST, workOrderStatusTypes } from "utils/constant";
+import { workOrderStatusTypes } from "utils/constant";
 import { addNotification } from "redux/reducers/notification.reducer";
-import { getTicketListPage } from "utils/url.constants";
-import {
-  checkUserPermission,
-  getIsSuperAdminUser,
-} from "redux/selectors/auth.selectors";
-import { parseErrorMessagesWithFields } from "utils/api.utils";
+import { checkUserPermission } from "redux/selectors/auth.selectors";
 
 import "../styles/ticket_survey_list.scss";
 
@@ -71,17 +55,16 @@ const WorkOrderPage = () => {
   const canTicketWorkorderEdit = useSelector(
     checkUserPermission("ticket_workorder_edit")
   );
-  const isSuperUser = useSelector(getIsSuperAdminUser);
-  const hasDownloadSArea = useSelector(
-    checkUserPermission("p_survey_area_download")
-  );
-  const hasDownloadBuilding = useSelector(
-    checkUserPermission("p_survey_building_download")
-  );
 
-  const { isLoading, data, refetch } = useQuery(
-    ["ticketWorkOrderList", ticketId],
-    fetchTicketWorkorders
+  const {
+    isLoading,
+    data: work_orders,
+    refetch,
+  } = useQuery(["ticketWorkOrderList", ticketId], fetchTicketWorkorders);
+
+  const { isLoading: isTicketLoading, data: ticketData } = useQuery(
+    ["ticketDetails", ticketId],
+    fetchTicketDetails
   );
 
   const { mutate: editSurveyMutation, isLoading: editSurveyLoading } =
@@ -104,115 +87,13 @@ const WorkOrderPage = () => {
       }
     );
 
-  const { mutate: editUnitMutation, isLoading: editUnitLoading } = useMutation(
-    updateUnitWorkOrder,
-    {
-      onSuccess: () => {
-        dispatch(
-          addNotification({
-            type: "success",
-            title: "Unit update",
-            text: "Unit updated successfully",
-          })
-        );
-        refetch();
-      },
-    }
-  );
-
-  const { mutate: exportTicketMutation, isLoading: loadingExportTicket } =
-    useMutation(exportTicket, {
-      onSuccess: (res) => {
-        const fileBlob = new Blob([res], {
-          type: "application/zip",
-        });
-        const url = window.URL.createObjectURL(fileBlob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `${data.name}.zip`);
-        // have to add element to doc for firefox
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      },
-    });
-
-  const { mutate: importTicketMutation, isLoading: loadingImportTicket } =
-    useMutation(importTicket, {
-      onError: (err) => {
-        const { fieldList, messageList } = parseErrorMessagesWithFields(err);
-        for (let index = 0; index < fieldList.length; index++) {
-          const field = fieldList[index];
-          const errorMessage = messageList[index];
-          dispatch(
-            addNotification({
-              type: "error",
-              title: field,
-              text: errorMessage,
-            })
-          );
-        }
-      },
-      onSuccess: (res) => {
-        handleFilePickerCancel();
-        dispatch(
-          addNotification({
-            type: "success",
-            title: "Upload shapefile",
-            text: "Shapefile uploaded successfully",
-          })
-        );
-        refetch();
-      },
-    });
-  // data Transformation stage
-  const ticketData = useMemo(() => {
-    let ticket = cloneDeep(data || {});
-    if (!size(ticket)) return {};
-    // work order here is Survey workorder
-    let { area_pocket, work_orders } = ticket;
-
-    ticket.survey_count = size(work_orders);
-    // convert area coordinate data
-    area_pocket.coordinates = coordsToLatLongMap(area_pocket.coordinates);
-    area_pocket.center = coordsToLatLongMap([area_pocket.center])[0];
-    // get counts
-    ticket.countByStatus = countBy(work_orders, "status");
-
-    // convert work_orders coordinate, tags data
-    for (let s_ind = 0; s_ind < work_orders.length; s_ind++) {
-      const survey = work_orders[s_ind];
-      const { units } = survey;
-      // convert work_orders.units coordinate, tags data
-      survey.coordinates = coordsToLatLongMap(survey.coordinates);
-      survey.center = coordsToLatLongMap([survey.center])[0];
-      // survey.tags = survey.tags.toString().split(",");
-      for (let u_ind = 0; u_ind < units.length; u_ind++) {
-        const unit = units[u_ind];
-        // convert work_orders.units coordinate, tags data
-        unit.coordinates = coordsToLatLongMap([unit.coordinates])[0];
-        // unit.tags = unit.tags.toString().split(",");
-      }
-    }
-
-    return ticket;
-  }, [data]);
-
-  const { area_pocket, work_orders = [], countByStatus = {} } = ticketData;
-
+  const { area_pocket } = {};
+  const countByStatus = countBy(work_orders, "status");
   // set states
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
-  const [surveyMapEdit, setSurveyMapEdit] = useState(null);
-  const [unitMapEdit, setUnitMapEdit] = useState(null);
-  const [unitFormEdit, setUnitFormEdit] = useState(false);
-  const [surveyDetailsEdit, setSurveyDetailsEdit] = useState(false);
   const [surveyStatusEdit, setSurveyStatusEdit] = useState(null); // set clicked anchor
   const [surveyData, setSurveyData] = useState({});
-  // importData = ticket id
-  const [importData, setImportData] = useState(null);
 
-  const [expanded, setExpanded] = useState(new Set([]));
   const [mapCenter, setMapCenter] = useState(undefined);
   const [statusFilter, setStatusFilter] = useState(null);
 
@@ -224,24 +105,10 @@ const WorkOrderPage = () => {
     }
   }, [area_pocket, mapCenter]);
 
-  // file import logic
-  const handleFilePickerCancel = useCallback(() => {
-    setImportData(null);
-  }, [setImportData]);
-
-  const handleZipFileUpload = useCallback(
-    (files) => {
-      const data = new FormData();
-      data.append("file", files[0], ticketData.name + ".zip");
-      importTicketMutation({ ticketId: ticketData.id, data });
-    },
-    [ticketData]
-  );
-
   // filter work orders according to statusFilter
   const filteredWorkOrders = isNull(statusFilter)
-    ? [...work_orders]
-    : filter(work_orders, ["status", statusFilter]);
+    ? [...(work_orders || [])]
+    : filter(work_orders || [], ["status", statusFilter]);
 
   // Survey filter logic
   const handleFilterClick = useCallback(
@@ -273,90 +140,6 @@ const WorkOrderPage = () => {
       }
     },
     [selectedSurveyId]
-  );
-
-  // unit edit logic
-  const handleUnitDetailsEdit = useCallback(
-    (data, parentId, selectedSurveyTags) => () => {
-      let formData = pick(data, [
-        "id",
-        "name",
-        "category",
-        "tags",
-        "floors",
-        "house_per_floor",
-        "total_home_pass",
-      ]);
-      formData.parentId = parentId;
-      formData.selectedSurveyTags = selectedSurveyTags;
-      setSurveyData(formData);
-      setUnitFormEdit(true);
-    },
-    [setSurveyData, setUnitFormEdit]
-  );
-
-  const handleUnitDetailsCancel = useCallback(() => {
-    setUnitFormEdit(false);
-    setSurveyData({});
-  }, [setUnitFormEdit, setSurveyData]);
-
-  const handleUnitDetailSubmit = useCallback((data, isDirty) => {
-    if (isDirty) {
-      editUnitMutation(data, { onSuccess: handleUnitDetailsCancel });
-    } else {
-      handleUnitDetailsCancel();
-    }
-  }, []);
-
-  // survey details edit logic
-
-  const handleSurveyDetailsEdit = useCallback(
-    (data) => () => {
-      setSurveyDetailsEdit(true);
-      setSurveyData(
-        pick(data, [
-          "id",
-          "name",
-          "address",
-          "area",
-          "city",
-          "state",
-          "pincode",
-          "tags",
-          "broadband_availability",
-          "cable_tv_availability",
-          "over_head_cable",
-          "cabling_required",
-          "poll_cabling_possible",
-          "locality_status",
-        ])
-      );
-    },
-    [setSurveyDetailsEdit, setSurveyData]
-  );
-
-  const handleSurveyDetailsCancel = useCallback(() => {
-    setSurveyDetailsEdit(false);
-    setSurveyData({});
-  }, [setSurveyDetailsEdit, setSurveyData]);
-
-  const handleDetailsEditSubmit = useCallback(
-    (data, isDirty) => {
-      if (isDirty) {
-        editSurveyMutation(
-          {
-            workOrderId: data.id,
-            data,
-          },
-          {
-            onSuccess: handleSurveyDetailsCancel,
-          }
-        );
-      } else {
-        handleSurveyDetailsCancel();
-      }
-    },
-    [handleSurveyDetailsCancel]
   );
 
   // survey status edit logic
@@ -393,65 +176,6 @@ const WorkOrderPage = () => {
     [surveyData, handleSurveyStatusCancel]
   );
 
-  // survey polygon edit logic
-
-  const handleSurveyMapEdit = useCallback(
-    (survey) => () => {
-      setSurveyMapEdit(survey);
-      setMapCenter(survey.center);
-    },
-    [setSurveyMapEdit]
-  );
-
-  const handleEditCancel = useCallback(() => {
-    setSurveyMapEdit(null);
-  }, [setSurveyMapEdit]);
-
-  const handleEditSubmit = useCallback(
-    (data) => {
-      editSurveyMutation({
-        workOrderId: data.id,
-        data: { coordinates: latLongMapToCoords(data.coordinates) },
-      });
-      setSurveyMapEdit(null);
-    },
-    [setSurveyMapEdit]
-  );
-
-  // unit marker edit logic
-  const handleUnitMapEdit = useCallback(
-    (unit) => () => {
-      setUnitMapEdit(unit);
-    },
-    [setUnitMapEdit]
-  );
-
-  const handleUnitMapEditCancel = useCallback(() => {
-    setUnitMapEdit(null);
-  }, [setUnitMapEdit]);
-
-  const handleUnitMapEditSubmit = useCallback(
-    (data) => {
-      editUnitMutation(data, { onSuccess: handleUnitMapEditCancel });
-    },
-    [setUnitMapEdit]
-  );
-
-  const handleExpandClick = useCallback(
-    (surveyId) => () => {
-      setExpanded((surveyIdSet) => {
-        let newSet = new Set(surveyIdSet);
-        if (newSet.has(surveyId)) {
-          newSet.delete(surveyId);
-        } else {
-          newSet.add(surveyId);
-        }
-        return newSet;
-      });
-    },
-    []
-  );
-
   const handleGoBack = useCallback(() => {
     navigate(-1);
   }, []);
@@ -459,11 +183,8 @@ const WorkOrderPage = () => {
   const showStatusPopover = !isNull(surveyStatusEdit);
   const hasWorkorders = size(work_orders);
   const hasFilteredWorkOrders = size(filteredWorkOrders);
-  const showFilePicker = !isNull(importData);
-  const hasDownloadPermission =
-    isSuperUser || (hasDownloadSArea && hasDownloadBuilding);
 
-  if (isLoading) {
+  if (isLoading || isTicketLoading) {
     return <WorkOrderLoading />;
   }
 
@@ -478,32 +199,8 @@ const WorkOrderPage = () => {
           Go Back
         </Button>
         <Typography className="dtl-title" variant="h5" color="primary.dark">
-          Workorders : {ticketData.name}
+          Workorders : {ticketData?.name}
         </Typography>
-        <Stack direction="row" alignItems="center">
-          {/* {canTicketWorkorderAdd ? (
-            <LoadingButton
-              color="secondary"
-              startIcon={<BackupIcon />}
-              // loading={loadingExportTicket}
-              onClick={() => setImportData(ticketData.id)}
-              sx={{ ml: 1 }}
-            >
-              Upload
-            </LoadingButton>
-          ) : null} */}
-          {hasDownloadPermission ? (
-            <LoadingButton
-              color="secondary"
-              startIcon={<GetAppIcon />}
-              loading={loadingExportTicket}
-              onClick={() => exportTicketMutation(ticketData.id)}
-              sx={{ ml: 1 }}
-            >
-              Download
-            </LoadingButton>
-          ) : null}
-        </Stack>
       </Stack>
 
       <Divider flexItem />
@@ -557,15 +254,9 @@ const WorkOrderPage = () => {
                     <WorkOrderItem
                       key={surveyWorkorder.id}
                       surveyWorkorder={surveyWorkorder}
-                      expanded={expanded}
-                      handleExpandClick={handleExpandClick}
                       selectedSurveyId={selectedSurveyId}
                       handleSurveySelect={handleSurveySelect}
-                      handleSurveyMapEdit={handleSurveyMapEdit}
-                      handleUnitMapEdit={handleUnitMapEdit}
                       handleSurveyStatusEdit={handleSurveyStatusEdit}
-                      handleSurveyDetailsEdit={handleSurveyDetailsEdit}
-                      handleUnitDetailsEdit={handleUnitDetailsEdit}
                       canTicketWorkorderEdit={canTicketWorkorderEdit}
                     />
                   );
@@ -582,17 +273,8 @@ const WorkOrderPage = () => {
         <Box sx={{ flex: 4 }} py={2}>
           <WorkOrderMap
             areaPocket={area_pocket}
-            surveyList={work_orders}
-            surveyMapEdit={surveyMapEdit}
-            editSurveyLoading={editSurveyLoading}
-            onEditCancel={handleEditCancel}
-            onEditComplete={handleEditSubmit}
-            highlightSurvey={selectedSurveyId}
+            surveyList={work_orders || []}
             onSurveySelect={handleSurveySelect}
-            unitMapEdit={unitMapEdit}
-            editUnitLoading={editUnitLoading}
-            onUnitEditCancel={handleUnitMapEditCancel}
-            onUnitEditComplete={handleUnitMapEditSubmit}
             center={mapCenter}
           />
         </Box>
@@ -614,50 +296,6 @@ const WorkOrderPage = () => {
             />
           ) : null}
         </Popover>
-        <Dialog onClose={handleSurveyDetailsCancel} open={surveyDetailsEdit}>
-          {surveyDetailsEdit ? (
-            <SurveyEditForm
-              formData={surveyData}
-              editSurveyLoading={editSurveyLoading}
-              onEditComplete={handleDetailsEditSubmit}
-              handleSurveyDetailsCancel={handleSurveyDetailsCancel}
-            />
-          ) : null}
-        </Dialog>
-        <Dialog onClose={handleUnitDetailsCancel} open={unitFormEdit}>
-          {unitFormEdit ? (
-            <UnitEditForm
-              formData={surveyData}
-              editUnitLoading={editUnitLoading}
-              onEditComplete={handleUnitDetailSubmit}
-              handleUnitDetailsCancel={handleUnitDetailsCancel}
-              surveyTagList={filter(SURVEY_TAG_LIST, function (o) {
-                return includes(
-                  get(surveyData, "selectedSurveyTags", []),
-                  o.value
-                );
-              })}
-            />
-          ) : null}
-        </Dialog>
-        <Dialog
-          onClose={handleFilePickerCancel}
-          open={showFilePicker}
-          scroll="paper" // used to scroll content into dialog
-          aria-labelledby="scroll-dialog-title"
-          aria-describedby="scroll-dialog-description"
-          fullWidth
-          maxWidth="sm"
-        >
-          {showFilePicker ? (
-            <FilePickerDialog
-              onSubmit={handleZipFileUpload}
-              onClose={handleFilePickerCancel}
-              accept=".zip"
-              heading="Import Shapefiles"
-            />
-          ) : null}
-        </Dialog>
       </Stack>
     </Box>
   );

@@ -29,31 +29,28 @@ import InprogressImg from "assets/inprogress.png";
 
 const WorkOrderItem = ({
   surveyWorkorder,
-  expanded,
-  handleExpandClick,
   selectedSurveyId,
   handleSurveySelect,
-  handleSurveyMapEdit,
-  handleUnitMapEdit,
   handleSurveyStatusEdit,
-  handleSurveyDetailsEdit,
-  handleUnitDetailsEdit,
   canTicketWorkorderEdit,
 }) => {
   /**
    * Parent:
    *    WorkOrderPage
    */
-  const { id, name, status, address, tags, updated_on, units, center, remark } =
-    surveyWorkorder;
+  const {
+    id,
+    name,
+    status,
+    address,
+    updated_on,
+    lat,
+    long: lng,
+  } = surveyWorkorder;
 
   const formatedUpdatedOn = format(new Date(updated_on), "do MMM, hh:mm aaa");
-  const totalHomePass = units.reduce(function (sum, u) {
-    return sum + u.total_home_pass;
-  }, 0);
-  const isExpanded = expanded.has(id);
+
   const isVerified = status === "V";
-  const hasUnits = !!size(units);
   const showActions = canTicketWorkorderEdit && !isVerified;
   const isActive = id === selectedSurveyId;
 
@@ -86,23 +83,23 @@ const WorkOrderItem = ({
         <Typography mb={1} variant="body2" color="text.secondary">
           {address}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        {/* <Typography variant="body2" color="text.secondary">
           Home Pass : <b>{totalHomePass}</b>
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
+        </Typography> */}
+        {/* <Typography variant="body2" color="text.secondary">
           {tags}
-        </Typography>
+        </Typography> */}
       </CardContent>
       <CardActions disableSpacing>
         <Tooltip title="View on map" placement="top">
           <IconButton
             aria-label="add to favorites"
-            onClick={handleSurveySelect(id, center)}
+            onClick={handleSurveySelect(id, { lat, lng })}
           >
             {isActive ? <MyLocationIcon /> : <LocationSearchingIcon />}
           </IconButton>
         </Tooltip>
-        {showActions ? (
+        {/* {showActions ? (
           <>
             <Tooltip title="Edit Survey Details" placement="top">
               <IconButton
@@ -121,62 +118,8 @@ const WorkOrderItem = ({
               </IconButton>
             </Tooltip>
           </>
-        ) : null}
-        {hasUnits ? (
-          <Tooltip
-            title={isExpanded ? "Hide Units" : "Show Units"}
-            placement="top"
-          >
-            <ExpandMore
-              expand={isExpanded}
-              onClick={handleExpandClick(id)}
-              aria-expanded={isExpanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore>
-          </Tooltip>
-        ) : null}
+        ) : null} */}
       </CardActions>
-      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-        {units.map((unit, uInd, { length }) => {
-          return (
-            <CardContent key={unit.id}>
-              <Typography sx={{ fontWeight: "bold" }} paragraph>
-                {unit.name}
-              </Typography>
-              <Typography paragraph>
-                Home pass: {unit.total_home_pass} <br />
-                {unit.tags}
-              </Typography>
-
-              {showActions ? (
-                <CardActions disableSpacing>
-                  <Button
-                    color="secondary"
-                    startIcon={<EditIcon />}
-                    onClick={handleUnitDetailsEdit(unit, id, tags)}
-                  >
-                    Edit Details
-                  </Button>
-
-                  <Button
-                    color="secondary"
-                    startIcon={<AddLocationAltOutlinedIcon />}
-                    onClick={handleUnitMapEdit({
-                      id: unit.id,
-                      coordinates: unit.coordinates,
-                    })}
-                  >
-                    Edit Location
-                  </Button>
-                </CardActions>
-              ) : null}
-              {length - 1 === uInd ? null : <Divider flexItem />}
-            </CardContent>
-          );
-        })}
-      </Collapse>
     </Card>
   );
 };

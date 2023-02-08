@@ -1,77 +1,13 @@
-import React, { Fragment, useRef, useMemo, useCallback } from "react";
-import get from "lodash/get";
+import React from "react";
 
 import { Polygon } from "@react-google-maps/api";
-import { Box, Button, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+import { Box } from "@mui/material";
 
 import Map from "components/common/Map";
-import EditPolygonLayer from "components/common/Map/EditPolygonLayer";
-import { GreenMarker, RedMarker } from "components/common/Map/CustomMarkers";
+import { RedMarker } from "components/common/Map/CustomMarkers";
 
-import { getCoordinatesFromFeature } from "utils/map.utils";
-import { workOrderStatusTypes } from "utils/constant";
-import { COLORS } from "App/theme";
-
-const WorkOrderMap = ({
-  areaPocket = null,
-  surveyList,
-  highlightSurvey,
-  onSurveySelect,
-  surveyMapEdit,
-  editSurveyLoading,
-  onEditCancel,
-  onEditComplete,
-  unitMapEdit,
-  editUnitLoading,
-  onUnitEditCancel,
-  onUnitEditComplete,
-  center,
-}) => {
-  const polyRef = useRef(null);
-  const showEdit = !!surveyMapEdit || editSurveyLoading;
-  const showUnitEdit = !!unitMapEdit || editUnitLoading;
-
-  const handleEdit = useCallback(() => {
-    const newCoords = getCoordinatesFromFeature(polyRef.current);
-    onEditComplete({ id: surveyMapEdit.id, coordinates: newCoords });
-  }, [onEditComplete, surveyMapEdit]);
-
-  const handleUnitEdit = useCallback(() => {
-    const newCoords = {
-      latitude: polyRef.current.position.lat(),
-      longitude: polyRef.current.position.lng(),
-    };
-    onUnitEditComplete({ ...unitMapEdit, coordinates: newCoords });
-  }, [unitMapEdit]);
-
-  const mayBeEditMarker = useMemo(() => {
-    if (!!unitMapEdit) {
-      return (
-        <GreenMarker
-          draggable
-          clickable
-          onLoad={(marker) => (polyRef.current = marker)}
-          position={unitMapEdit.coordinates}
-          zIndex={10}
-        />
-      );
-    }
-  }, [unitMapEdit]);
-
-  const mayBeEditPolygon = useMemo(() => {
-    if (!!surveyMapEdit) {
-      return (
-        <EditPolygonLayer
-          ref={polyRef}
-          coordinates={surveyMapEdit.coordinates}
-        />
-      );
-    }
-    return null;
-  }, [surveyMapEdit]);
+const WorkOrderMap = (props) => {
+  const { areaPocket = null, surveyList, onSurveySelect, center } = props;
 
   return (
     <Box
@@ -81,81 +17,7 @@ const WorkOrderMap = ({
         position: "relative",
       }}
     >
-      {showEdit ? (
-        <div className="reg-map-details">
-          <Card sx={{ maxWidth: 345 }} elevation={3}>
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                Click and drag marker points to Edit region polygon
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                disableElevation
-                variant="contained"
-                color="error"
-                onClick={onEditCancel}
-                size="small"
-              >
-                Cancel
-              </Button>
-              {editSurveyLoading ? (
-                <Button variant="contained" disableElevation size="small">
-                  Loading ...
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  disableElevation
-                  size="small"
-                  onClick={handleEdit}
-                >
-                  Update
-                </Button>
-              )}
-            </CardActions>
-          </Card>
-        </div>
-      ) : null}
-      {showUnitEdit ? (
-        <div className="reg-map-details">
-          <Card sx={{ maxWidth: 345 }} elevation={3}>
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                Drag building marker to edit location
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                variant="contained"
-                disableElevation
-                color="error"
-                onClick={onUnitEditCancel}
-                size="small"
-              >
-                Cancel
-              </Button>
-              {editUnitLoading ? (
-                <Button variant="contained" disableElevation size="small">
-                  Loading ...
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  disableElevation
-                  size="small"
-                  onClick={handleUnitEdit}
-                >
-                  Update
-                </Button>
-              )}
-            </CardActions>
-          </Card>
-        </div>
-      ) : null}
       <Map center={center} zoom={14}>
-        {mayBeEditPolygon}
-        {mayBeEditMarker}
         {!!areaPocket ? (
           <Polygon
             options={{
@@ -174,42 +36,13 @@ const WorkOrderMap = ({
           />
         ) : null}
         {surveyList.map((survey) => {
-          const { id, coordinates, status, units } = survey;
-          // polygon = Blue if selected
-          // else Change color according to status
-          const color =
-            id === highlightSurvey
-              ? "blue"
-              : get(
-                  COLORS,
-                  `${workOrderStatusTypes[status].color}.main`,
-                  "orange"
-                );
+          const { id, lat, long: lng } = survey;
           return (
-            <Fragment key={id}>
-              <Polygon
-                key={id}
-                options={{
-                  fillColor: color,
-                  fillOpacity: 0.3,
-                  strokeColor: color,
-                  strokeOpacity: 1,
-                  strokeWeight: 1,
-                  clickable: true,
-                  draggable: false,
-                  editable: false,
-                  geodesic: false,
-                  zIndex: 2,
-                }}
-                paths={coordinates}
-                onClick={onSurveySelect(id)}
-              />
-              {units.map((unit) => {
-                const { id, coordinates } = unit;
-                if (get(unitMapEdit, "id") == id) return null;
-                return <RedMarker key={id} position={coordinates} />;
-              })}
-            </Fragment>
+            <RedMarker
+              key={id}
+              position={{ lat, lng }}
+              onClick={onSurveySelect(id)}
+            />
           );
         })}
       </Map>

@@ -12,6 +12,7 @@ import {
   apiImportTicket,
   apiGetTicketListSummery,
   apiGetTicketListSummeryExport,
+  apiGetSurveyTicketWorkorders,
 } from "utils/url.constants";
 
 export const fetchTicketSummeryList = async () => {
@@ -32,7 +33,7 @@ export const fetchTicketDetails = async ({ queryKey }) => {
 
 export const fetchTicketWorkorders = async ({ queryKey }) => {
   const [_key, ticketId] = queryKey;
-  const res = await Api.get(apiGetTicketWorkorders(ticketId));
+  const res = await Api.get(apiGetSurveyTicketWorkorders(ticketId));
   return res.data;
 };
 
