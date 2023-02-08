@@ -190,3 +190,5 @@ export const apiGetSurveyTicketWorkorders = (ticketId) =>
 
 export const apiGetSurveyWoDetails = (layerKey, elementId) =>
   `/api/survey/${layerKey}/${elementId}/details/`;
+
+export const apiGetSurveyExportPdf = () => `/api/survey/export-pdf/`;
