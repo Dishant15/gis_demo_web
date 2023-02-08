@@ -12,6 +12,11 @@
     .section-title {
       text-align: center;
       padding: 6px 8px;
+      font-weight: bold;
+
+      &.left-t {
+        text-align: left;
+      }
     }
 
     td {

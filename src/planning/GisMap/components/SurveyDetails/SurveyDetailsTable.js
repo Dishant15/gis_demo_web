@@ -70,24 +70,22 @@ const SurveyDetailsTable = ({ surveyData }) => {
         <table className="survey-table">
           <tbody>
             {CONFIG.map((conf, index) => {
+              const { section, isLeft } = conf;
               return (
                 <Fragment key={index}>
                   <tr>
-                    <td colSpan={4} className="section-title">
-                      {conf.section}
+                    <td
+                      colSpan={4}
+                      className={`section-title ${isLeft ? "left-t" : ""}`}
+                    >
+                      {section}
                     </td>
                   </tr>
                   {conf.fields.map((fieldChunk, ind) => {
                     return (
                       <tr key={ind}>
                         {fieldChunk.map((fieldConf, fInd) => {
-                          const {
-                            type,
-                            colSpan,
-                            label,
-                            field,
-                            options = [],
-                          } = fieldConf;
+                          const { colSpan, label, field } = fieldConf;
                           const value = get(surveyData, field, "");
                           if (colSpan) {
                             return <td key={fInd} colSpan={colSpan} />;
@@ -95,24 +93,7 @@ const SurveyDetailsTable = ({ surveyData }) => {
                           return (
                             <Fragment key={fInd}>
                               <td>{label}</td>
-                              {type === "radio" ? (
-                                <td>
-                                  {options.map((op) => {
-                                    return (
-                                      <Fragment key={op.value}>
-                                        <input
-                                          type="radio"
-                                          readOnly
-                                          checked={op.value === value}
-                                        ></input>
-                                        {op.label}
-                                      </Fragment>
-                                    );
-                                  })}
-                                </td>
-                              ) : (
-                                <td>{value}</td>
-                              )}
+                              <td>{value}</td>
                             </Fragment>
                           );
                         })}

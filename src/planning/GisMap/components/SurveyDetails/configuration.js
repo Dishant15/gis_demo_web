@@ -13,7 +13,11 @@ export const CONFIG = [
     section: "PoP Survey Format",
     fields: [
       [
-        { label: "Package (A/B/C/D)", field: "package", type: "simple" },
+        {
+          label: "Package (A/B/C/D)",
+          field: "package_display",
+          type: "simple",
+        },
         { label: "MSI/SI Name", field: "msi_name", type: "simple" },
       ],
       [
@@ -29,7 +33,11 @@ export const CONFIG = [
         { label: "POP Code", field: "pop_code", type: "simple" },
       ],
       [
-        { label: "POP type (Block/Gp)", field: "pop_type", type: "simple" },
+        {
+          label: "POP type (Block/Gp)",
+          field: "pop_type_display",
+          type: "simple",
+        },
         {
           label: "Floor for installation",
           field: "installation_floor",
@@ -60,40 +68,37 @@ export const CONFIG = [
   },
   {
     section: "Civil & Electrical",
+    isLeft: true,
     fields: [
       [
         {
           label: "Building Condition",
-          field: "building_condition",
-          type: "radio",
-          options: GOOD_BAD_OPTS,
+          field: "building_condition_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
       [
         {
           label: "Rooftop/ceiling Condition",
-          field: "ceil_condition",
-          type: "radio",
-          options: GOOD_BAD_OPTS,
+          field: "ceil_condition_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
       [
         {
           label: "Pop location reachability",
-          field: "pop_location_reachability",
-          type: "radio",
-          options: YES_NO_OPTS,
+          field: "pop_location_reachability_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
       [
         {
           label: "Availability of EB service connection",
-          field: "eb_service_connection_availability",
-          type: "radio",
-          options: YES_NO_OPTS,
+          field: "eb_service_connection_availability_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
@@ -173,18 +178,16 @@ export const CONFIG = [
       [
         {
           label: "Seepage",
-          field: "seepage",
-          type: "radio",
-          options: YES_NO_OPTS,
+          field: "seepage_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
       [
         {
           label: "Power backup (availibility of DG)",
-          field: "power_backup",
-          type: "radio",
-          options: YES_NO_OPTS,
+          field: "power_backup_display",
+          type: "simple",
         },
 
         { colSpan: 2 },
@@ -193,26 +196,22 @@ export const CONFIG = [
   },
   {
     section: "Other Details",
+    isLeft: true,
     fields: [
       [
         {
           label: "Availibility of SWAN connectivity",
-          field: "avail_swan_connectivity",
-          type: "radio",
-          options: YES_NO_OPTS,
+          field: "avail_swan_connectivity_display",
+          type: "simple",
         },
         { colSpan: 2 },
       ],
       [
         {
           label: "Distance from nearest SWAN Pop",
-          field: "nearest_swan_distance",
+          field: "dist_near_swan_pop",
           type: "simple",
         },
-        { colSpan: 2 },
-      ],
-      [
-        { label: "Room Condition", field: "room_condition", type: "simple" },
         { colSpan: 2 },
       ],
     ],
@@ -220,6 +219,7 @@ export const CONFIG = [
   {
     section:
       "Contact Details of Panchayat Secretaty / Block Representative / GP Representative",
+    isLeft: true,
     fields: [
       [
         {
