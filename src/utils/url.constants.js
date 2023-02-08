@@ -187,3 +187,6 @@ export const apiPostRemovePortConnection = () =>
 
 export const apiGetSurveyTicketWorkorders = (ticketId) =>
   `/api/survey/ticket/${ticketId}/list/`;
+
+export const apiGetSurveyWoDetails = (layerKey, elementId) =>
+  `/api/survey/${layerKey}/${elementId}/details/`;

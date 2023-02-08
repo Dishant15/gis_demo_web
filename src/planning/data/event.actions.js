@@ -117,3 +117,15 @@ export const showSplicingView = (actionPayload) => (dispatch) => {
     })
   );
 };
+
+export const showSurveyDetails =
+  ({ layerKey, elementId }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.showSurveyDetails,
+        layerKey,
+        data: { elementId },
+      })
+    );
+  };

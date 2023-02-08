@@ -73,4 +73,8 @@ export const ELEMENT_TABLE_FIELDS = [
   { label: "District", field: "district", type: "simple" },
 ];
 
-export const ELEMENT_TABLE_EXTRA_CONTROLS = [];
+export const ELEMENT_TABLE_EXTRA_CONTROLS = [
+  {
+    control: "add-survey",
+  },
+];

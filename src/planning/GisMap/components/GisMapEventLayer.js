@@ -19,6 +19,7 @@ import LayerElementList from "./LayerElementList";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
+import SurveyDetails from "./SurveyDetails";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -97,6 +98,9 @@ const GisMapEventLayer = React.memo(() => {
       return (
         <MapEventInfoCard helpText="Click on map to get element you want to associate with selected element" />
       );
+
+    case PLANNING_EVENT.showSurveyDetails:
+      return <SurveyDetails />;
 
     default:
       return null;

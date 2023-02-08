@@ -41,6 +41,9 @@ export const PLANNING_EVENT = {
   selectElementsOnMapClick: 11,
   listElementsOnMap: 12,
   layerElementsOnMap: 15,
+
+  // survey form
+  showSurveyDetails: 16,
 };
 
 export const LayerKeyMappings = {

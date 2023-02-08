@@ -18,6 +18,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import LanIcon from "@mui/icons-material/Lan";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SettingsInputCompositeIcon from "@mui/icons-material/SettingsInputComposite";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 
 import ConfirmDialog from "components/common/ConfirmDialog";
 
@@ -33,6 +34,7 @@ import {
   showAssociatiationList,
   showElementPortDetails,
   showPossibleAddAssociatiation,
+  showSurveyDetails,
 } from "planning/data/event.actions";
 import { deleteLayer } from "planning/data/layer.services";
 import {
@@ -230,6 +232,21 @@ const TableActions = ({
             onClick: () => {
               dispatch(
                 showElementPortDetails({
+                  layerKey,
+                  elementId: elemData.id,
+                })
+              );
+            },
+          });
+        }
+        //
+        else if (control === "add-survey") {
+          baseActionsList.push({
+            name: "Show Survey Form",
+            Icon: SummarizeIcon,
+            onClick: () => {
+              dispatch(
+                showSurveyDetails({
                   layerKey,
                   elementId: elemData.id,
                 })
