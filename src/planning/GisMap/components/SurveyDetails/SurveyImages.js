@@ -66,8 +66,13 @@ const SurveyImages = () => {
 const SurveyImageList = ({ images }) => {
   if (!size(images)) {
     return (
-      <Box>
-        <Typography variant="h5">No images uploaded yet</Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "400px", minWidth: "300px" }}
+      >
+        <Typography variant="h5">No images uploaded</Typography>
       </Box>
     );
   } else {

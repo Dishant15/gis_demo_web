@@ -59,7 +59,7 @@ const SurveyDetails = () => {
             handleCloseDetails={handleCloseDetails}
           />
           <Typography color="text.secondary" textAlign="center" py={8}>
-            Survey Not found
+            No survey uploaded
           </Typography>
         </Box>
       </GisMapPopups>
