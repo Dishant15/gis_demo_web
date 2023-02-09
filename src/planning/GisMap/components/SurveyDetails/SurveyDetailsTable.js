@@ -1,19 +1,22 @@
-import React, { Fragment, useCallback, useRef } from "react";
-import { get } from "lodash";
+import React, { Fragment, useRef } from "react";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 
-import { Box, Button } from "@mui/material";
+import { get } from "lodash";
+import { format } from "date-fns";
+
+import { Box } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import ImageIcon from "@mui/icons-material/Image";
+
+import { fetchExportSurveyForm } from "planning/data/ticket.services";
+import { addNotification } from "redux/reducers/notification.reducer";
 import { CONFIG } from "./configuration";
 
 import "./survey-table.scss";
-import { useMutation } from "react-query";
-import { fetchExportSurveyForm } from "planning/data/ticket.services";
-import { format } from "date-fns";
-import { useDispatch } from "react-redux";
-import { addNotification } from "redux/reducers/notification.reducer";
-import GetAppIcon from "@mui/icons-material/GetApp";
-import LoadingButton from "@mui/lab/LoadingButton";
 
-const SurveyDetailsTable = ({ surveyData }) => {
+const SurveyDetailsTable = ({ surveyData, onShowImages }) => {
   const tableRef = useRef();
 
   const dispatch = useDispatch();
@@ -64,6 +67,14 @@ const SurveyDetailsTable = ({ surveyData }) => {
           onClick={handleGeneratePdf}
         >
           Download
+        </LoadingButton>
+        <LoadingButton
+          color="secondary"
+          startIcon={<ImageIcon />}
+          loading={false}
+          onClick={onShowImages}
+        >
+          Images
         </LoadingButton>
       </Box>
       <Box className="survey-table-wrapper" ref={tableRef}>

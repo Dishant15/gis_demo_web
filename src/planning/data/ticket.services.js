@@ -4,6 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   apiGetSurveyExportPdf,
   apiGetSurveyWoDetails,
+  apiGetSurveyWoImages,
   apiGetTicketWorkorderElements,
   apiPutTicketWorkorderEdit,
 } from "utils/url.constants";
@@ -25,7 +26,12 @@ export const updateTicketWorkOrder = async ({ workOrderId, data }) => {
 };
 
 export const fetchSurveyWoDetails = async ({ queryKey }) => {
-  const res = await Api.get(apiGetSurveyWoDetails(queryKey[0], queryKey[1]));
+  const res = await Api.get(apiGetSurveyWoDetails(queryKey[1], queryKey[2]));
+  return res.data;
+};
+
+export const fetchSurveyWoImages = async ({ queryKey }) => {
+  const res = await Api.get(apiGetSurveyWoImages(queryKey[1], queryKey[2]));
   return res.data;
 };
 

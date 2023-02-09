@@ -58,4 +58,9 @@ const GisMapPopups = ({
   );
 };
 
+export const POPUP_CHILD_STYLES = {
+  minWidth: "750px",
+  maxWidth: "950px",
+};
+
 export default GisMapPopups;

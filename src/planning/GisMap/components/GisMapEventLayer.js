@@ -16,10 +16,11 @@ import MapEventInfoCard from "./MapEventInfoCard";
 import ElementPortDetails from "./ElementPortDetails";
 import SplicingView from "./SplicingView";
 import LayerElementList from "./LayerElementList";
+import SurveyDetails from "./SurveyDetails";
+import SurveyImages from "./SurveyDetails/SurveyImages";
 
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
 import { LayerKeyMappings, PLANNING_EVENT } from "../utils";
-import SurveyDetails from "./SurveyDetails";
 
 /**
  * Intermediate component to handle what to render on which event
@@ -101,6 +102,9 @@ const GisMapEventLayer = React.memo(() => {
 
     case PLANNING_EVENT.showSurveyDetails:
       return <SurveyDetails />;
+
+    case PLANNING_EVENT.showSurveyImages:
+      return <SurveyImages />;
 
     default:
       return null;

@@ -129,3 +129,15 @@ export const showSurveyDetails =
       })
     );
   };
+
+export const showSurveyImages =
+  ({ layerKey, elementId }) =>
+  (dispatch) => {
+    dispatch(
+      setMapState({
+        event: PLANNING_EVENT.showSurveyImages,
+        layerKey,
+        data: { elementId },
+      })
+    );
+  };

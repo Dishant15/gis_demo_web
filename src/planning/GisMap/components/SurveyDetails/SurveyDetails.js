@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
@@ -9,10 +10,11 @@ import TableHeader from "../ElementDetailsTable/TableHeader";
 import SurveyDetailsTable from "./SurveyDetailsTable";
 
 import { setMapState } from "planning/data/planningGis.reducer";
-import { useQuery } from "react-query";
 import { fetchSurveyWoDetails } from "planning/data/ticket.services";
 import { GisElementTableLoader } from "../GisMapPopups/GisMapPopupLoader";
 import { getPlanningMapState } from "planning/data/planningGis.selectors";
+import { showSurveyImages } from "planning/data/event.actions";
+import { POPUP_CHILD_STYLES } from "../GisMapPopups/GisMapPopups";
 
 const SurveyDetails = () => {
   const [minimized, setMinimized] = useState(false);
@@ -20,7 +22,7 @@ const SurveyDetails = () => {
   const mapState = useSelector(getPlanningMapState);
 
   const { data, isLoading, isError } = useQuery(
-    [mapState.layerKey, mapState.data.elementId],
+    ["surveyWoDetails", mapState.layerKey, mapState.data.elementId],
     fetchSurveyWoDetails,
     {
       retry: false,
@@ -34,6 +36,15 @@ const SurveyDetails = () => {
   const handlePopupMinimize = useCallback(() => {
     setMinimized((val) => !val);
   }, []);
+
+  const handleShowImages = useCallback(() => {
+    dispatch(
+      showSurveyImages({
+        layerKey: mapState.layerKey,
+        elementId: mapState.data.elementId,
+      })
+    );
+  }, [mapState]);
 
   if (isLoading) {
     return <GisElementTableLoader />;
@@ -57,14 +68,21 @@ const SurveyDetails = () => {
 
   return (
     <GisMapPopups dragId="surveyDetails">
-      <Box minWidth="750px" maxWidth="950px">
+      <Box sx={POPUP_CHILD_STYLES}>
         <TableHeader
           title="Survey Details"
           minimized={minimized}
           handlePopupMinimize={handlePopupMinimize}
           handleCloseDetails={handleCloseDetails}
         />
-        {minimized ? null : <SurveyDetailsTable surveyData={data} />}
+        {minimized ? null : (
+          <Box sx={{ maxHeight: "80vh", overflow: "auto" }}>
+            <SurveyDetailsTable
+              onShowImages={handleShowImages}
+              surveyData={data}
+            />
+          </Box>
+        )}
       </Box>
     </GisMapPopups>
   );

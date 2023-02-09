@@ -16,12 +16,17 @@ const TableHeader = ({
   minimized,
   handlePopupMinimize,
   handleCloseDetails,
+  isSticky = false,
 }) => {
+  const stickyStyles = isSticky
+    ? { position: "absolute", top: 0, left: 0, right: 0, zIndex: 20 }
+    : {};
   return (
     <Stack
       sx={{
         backgroundColor: "primary.main",
         color: "background.default",
+        ...stickyStyles,
       }}
       direction="row"
       alignItems="center"

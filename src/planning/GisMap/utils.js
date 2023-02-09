@@ -44,6 +44,7 @@ export const PLANNING_EVENT = {
 
   // survey form
   showSurveyDetails: 16,
+  showSurveyImages: 17,
 };
 
 export const LayerKeyMappings = {
