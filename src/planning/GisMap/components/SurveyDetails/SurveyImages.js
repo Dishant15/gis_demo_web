@@ -2,13 +2,13 @@ import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { size } from "lodash";
+import { format } from "date-fns";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import ListSubheader from "@mui/material/ListSubheader";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -88,7 +88,10 @@ const SurveyImageList = ({ images }) => {
             />
             <ImageListItemBar
               title={item.caption}
-              subtitle={item.updated_on}
+              subtitle={format(
+                new Date(item.updated_on),
+                "do MMM yyyy, h:mm aaa"
+              )}
               actionIcon={
                 <IconButton
                   sx={{ color: "rgba(255, 255, 255, 0.54)" }}
