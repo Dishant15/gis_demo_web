@@ -84,4 +84,5 @@ export const GisElementTableLoader = () => {
     </GisMapPopups>
   );
 };
+
 export default GisMapPopupLoader;

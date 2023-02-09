@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 import GisMapPopups from "../GisMapPopups";
 import TableHeader from "../ElementDetailsTable/TableHeader";
@@ -18,9 +19,12 @@ const SurveyDetails = () => {
   const dispatch = useDispatch();
   const mapState = useSelector(getPlanningMapState);
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isError } = useQuery(
     [mapState.layerKey, mapState.data.elementId],
-    fetchSurveyWoDetails
+    fetchSurveyWoDetails,
+    {
+      retry: false,
+    }
   );
 
   const handleCloseDetails = useCallback(() => {
@@ -33,6 +37,22 @@ const SurveyDetails = () => {
 
   if (isLoading) {
     return <GisElementTableLoader />;
+  } else if (isError) {
+    return (
+      <GisMapPopups dragId="surveyDetails">
+        <Box minWidth="350px" maxWidth="550px">
+          <TableHeader
+            title="Survey Details"
+            minimized={minimized}
+            handlePopupMinimize={handlePopupMinimize}
+            handleCloseDetails={handleCloseDetails}
+          />
+          <Typography color="text.secondary" textAlign="center" py={8}>
+            Survey Not found
+          </Typography>
+        </Box>
+      </GisMapPopups>
+    );
   }
 
   return (
