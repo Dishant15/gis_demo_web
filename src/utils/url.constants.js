@@ -167,6 +167,9 @@ export const apiGetElementAssociations = (layerKey, elementId) =>
 export const apiPostLayerDownload = (layerKey = ":layer_key") =>
   `/api/planning/layer/${layerKey}/download/`;
 
+export const apiPostLayerKmlUpload = (layerKey = ":layer_key") =>
+  `/api/planning/layer/${layerKey}/upload-kml/`;
+
 export const apiPostLayerUpload = (layerKey = ":layer_key") =>
   `/api/planning/layer/${layerKey}/upload/`;
 

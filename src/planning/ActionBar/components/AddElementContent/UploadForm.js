@@ -7,6 +7,8 @@ import get from "lodash/get";
 import size from "lodash/size";
 
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -25,6 +27,7 @@ import { LayerKeyMappings } from "planning/GisMap/utils";
 import { getSelectedRegionIds } from "planning/data/planningState.selectors";
 import { NOTIFICATION_TYPE } from "components/common/Notification/Notification";
 import { setActiveTab } from "planning/data/planningState.reducer";
+import { find } from "lodash";
 
 const UploadForm = ({ importLayerCofigs, onClose }) => {
   /**
@@ -94,12 +97,21 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
   const {
     formState: { errors },
     control,
+    watch,
     handleSubmit,
   } = useForm({
     defaultValues: { layerKey: "" },
   });
 
   const [files, setFiles] = useState(null);
+  const [fileType, setFileType] = useState(null);
+
+  const selectedLayerKey = watch("layerKey");
+  const selectedLayerData = find(importLayerCofigs, [
+    "layer_key",
+    selectedLayerKey,
+  ]);
+  const importAs = get(selectedLayerData, "import_as", []);
 
   const handleFileUpload = useCallback((event) => {
     setFiles(event.target.files);
@@ -128,13 +140,26 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
           })
         );
       }
+      if (!fileType) {
+        dispatch(
+          addNotification({
+            type: NOTIFICATION_TYPE.ERROR,
+            title: "Input",
+            text: "Please select fileType",
+          })
+        );
+      }
       const formData = new FormData();
       formData.append("file", files[0], files[0].name);
 
       const featureType = get(LayerKeyMappings, [data.layerKey, "featureType"]);
       formData.append("featureType", featureType);
       formData.append("region_ids", selectedRegionIds);
-      uploadLayerDataMutation({ layerKey: data.layerKey, data: formData });
+      uploadLayerDataMutation({
+        layerKey: data.layerKey,
+        data: formData,
+        fileType,
+      });
     },
     [files, selectedRegionIds]
   );
@@ -179,26 +204,49 @@ const UploadForm = ({ importLayerCofigs, onClose }) => {
             labelKey="name"
             valueKey="layer_key"
           />
-          <Box py={2}>
-            <Typography
-              pl={1}
-              pb={0.5}
-              variant="caption"
-              color="GrayText"
-              component="div"
-            >
-              Upload File
-            </Typography>
-            <UploadButton
-              text="Select File"
-              variant="contained"
-              accept=".kml, .kmz"
-              onChange={handleFileUpload}
-            />
-            <Typography variant="body2" pl={1} pt={0.5}>
-              {get(files, "0.name", "")}
-            </Typography>
-          </Box>
+          {size(importAs) ? (
+            <>
+              <Box pt={2} pl={1}>
+                <Typography variant="caption" pb={1} component="div">
+                  File type
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  {importAs.map((currStatus) => {
+                    return (
+                      <Chip
+                        label={currStatus}
+                        key={currStatus}
+                        onClick={() => setFileType(currStatus)}
+                        variant={
+                          currStatus === fileType ? "filled" : "outlined"
+                        }
+                      />
+                    );
+                  })}
+                </Stack>
+              </Box>
+              <Box py={2}>
+                <Typography
+                  pl={1}
+                  pb={0.5}
+                  variant="caption"
+                  color="GrayText"
+                  component="div"
+                >
+                  Upload File
+                </Typography>
+                <UploadButton
+                  text="Select File"
+                  variant="contained"
+                  // accept=".kml, .kmz"
+                  onChange={handleFileUpload}
+                />
+                <Typography variant="body2" pl={1} pt={0.5}>
+                  {get(files, "0.name", "")}
+                </Typography>
+              </Box>
+            </>
+          ) : null}
         </Box>
       </DialogContent>
       <DialogActions>

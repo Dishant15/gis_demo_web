@@ -16,6 +16,7 @@ import {
   apiDeteleElement,
   apiPutRegionEdit,
   apiUpdateElementConnections,
+  apiPostLayerKmlUpload,
 } from "utils/url.constants";
 
 export const fetchElementDetails = async ({ queryKey }) => {
@@ -88,8 +89,17 @@ export const fetchDownloadLayerData = async ({ data, layerKey }) => {
   return res.data;
 };
 
-export const uploadLayerData = async ({ data, layerKey }) => {
-  const res = await Api.post(apiPostLayerUpload(layerKey), data);
+export const uploadLayerData = async ({ data, layerKey, fileType }) => {
+  const url =
+    fileType === "kml"
+      ? apiPostLayerKmlUpload(layerKey)
+      : apiPostLayerUpload(layerKey);
+  const res = await Api.post(url, data);
+  return res.data;
+};
+
+export const uploadLayerKmlData = async ({ data, layerKey }) => {
+  const res = await Api.post(apiPostLayerKmlUpload(layerKey), data);
   return res.data;
 };
 
